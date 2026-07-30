@@ -1,0 +1,73 @@
+import {
+  ancestries,
+  armor,
+  classes,
+  communities,
+  domainCards,
+  subclasses,
+  weapons,
+  type Ancestry,
+  type Armor,
+  type CharacterClass,
+  type Community,
+  type DomainCard,
+  type Subclass,
+  type Weapon,
+} from '@daggerheart/srd-data';
+
+import type { CreationState } from './types.js';
+
+/** Characters are created at Tier 1 and can't equip gear above their tier (SRD p.44). */
+export const STARTING_TIER = 1;
+
+export const findClass = (id: string | null): CharacterClass | null =>
+  classes.find((c) => c.id === id) ?? null;
+
+export const findSubclass = (id: string | null): Subclass | null =>
+  subclasses.find((s) => s.id === id) ?? null;
+
+export const findAncestry = (id: string | null): Ancestry | null =>
+  ancestries.find((a) => a.id === id) ?? null;
+
+export const findCommunity = (id: string | null): Community | null =>
+  communities.find((c) => c.id === id) ?? null;
+
+export const findWeapon = (id: string | null): Weapon | null =>
+  weapons.find((w) => w.id === id) ?? null;
+
+export const findArmor = (id: string | null): Armor | null =>
+  armor.find((a) => a.id === id) ?? null;
+
+export const findDomainCard = (id: string | null): DomainCard | null =>
+  domainCards.find((c) => c.id === id) ?? null;
+
+/**
+ * The Spellcast trait comes from the subclass, and is null for every Guardian and
+ * Warrior subclass. Magic weapons require one (SRD p.44).
+ */
+export function spellcastTrait(state: CreationState): Subclass['spellcastTrait'] | null {
+  return findSubclass(state.subclassId)?.spellcastTrait ?? null;
+}
+
+export const canUseMagicWeapons = (state: CreationState): boolean =>
+  spellcastTrait(state) !== null;
+
+/** True for weapons whose use requires a Spellcast trait. */
+export function requiresSpellcast(weapon: Weapon): boolean {
+  // Arcane-frame combat wheelchairs use the subclass's Spellcast trait directly.
+  return weapon.damageType !== 'physical' || weapon.trait === 'spellcast';
+}
+
+/**
+ * The two options in a class's `classItems`, which the SRD prints as "X or Y".
+ * Falls back to the whole string if it isn't a two-way choice.
+ */
+export function classItemOptions(characterClass: CharacterClass): readonly string[] {
+  const parts = characterClass.classItems.split(' or ');
+  if (parts.length !== 2) return [characterClass.classItems];
+  const [first, second] = parts;
+  if (first === undefined || second === undefined) return [characterClass.classItems];
+  // "A romance novel or a letter never opened" -> the second half keeps no article,
+  // so both halves are used exactly as printed.
+  return [first.trim(), second.trim()];
+}

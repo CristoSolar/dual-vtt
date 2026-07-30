@@ -1,0 +1,312 @@
+import { createMapState, type RoomState } from '@daggerheart/protocol';
+import { scriptedRng } from '@daggerheart/rules';
+import { classes } from '@daggerheart/srd-data';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Route, Routes } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
+import { describe, expect, it } from 'vitest';
+
+import { GMPanel } from '../src/components/gm/GMPanel.js';
+import { CampaignRoute } from '../src/routes/CampaignRoute.js';
+import { CharactersRoute } from '../src/routes/CharactersRoute.js';
+import { WizardRoute } from '../src/routes/WizardRoute.js';
+import { SheetRoute } from '../src/routes/SheetRoute.js';
+import {
+  createSheet,
+  makeDualityRoll,
+  takeDamage,
+  type SheetEffect,
+  type SheetState,
+} from '../src/state/sheet.js';
+import { saveCreation } from '../src/state/storage.js';
+import { buildCharacter, buildCreationState } from './helpers.js';
+
+/**
+ * Renders the real component tree to markup. This catches crashes that typechecking
+ * can't — a bad hook order, an undefined field read during render — without needing
+ * a DOM or any test-library dependency.
+ */
+const render = (element: JSX.Element, path = '/') =>
+  renderToStaticMarkup(<StaticRouter location={path}>{element}</StaticRouter>);
+
+const noopUpdate = (
+  transition: (sheet: SheetState) => { sheet: SheetState; effect: SheetEffect },
+): SheetEffect | null => transition(createSheet(buildCharacter())).effect;
+
+describe('sheet renders', () => {
+  it('shows a populated sheet for a finished character', () => {
+    const sheet = createSheet(buildCharacter('bard'));
+    const html = render(<SheetRoute sheet={sheet} update={noopUpdate} rng={() => 0.5} />);
+
+    expect(html).toContain('Test Character');
+    expect(html).toContain('Bard');
+    // Core sheet regions are all present.
+    for (const heading of [
+      'Traits',
+      'Defenses',
+      'Hit Points',
+      'Stress',
+      'Hope',
+      'Armor Slots',
+      'Gold',
+      'Active weapons',
+      'Experiences',
+      'Features',
+      'Inventory',
+      'Loadout',
+      'Vault',
+      'Roll log',
+    ]) {
+      expect(html, heading).toContain(heading);
+    }
+
+    // Derived numbers come through, not placeholders.
+    expect(html).toContain(`>${sheet.character.evasion}<`);
+    expect(html).toContain(`>${sheet.character.major}<`);
+    expect(html).toContain(`>${sheet.character.severe}<`);
+    expect(html).toContain('Blacksmith');
+  });
+
+  it('renders every class without crashing', () => {
+    for (const classId of [
+      'bard',
+      'druid',
+      'guardian',
+      'ranger',
+      'rogue',
+      'seraph',
+      'sorcerer',
+      'warrior',
+      'wizard',
+    ] as const) {
+      const sheet = createSheet(buildCharacter(classId));
+      expect(() =>
+        render(<SheetRoute sheet={sheet} update={noopUpdate} rng={() => 0.5} />),
+      ).not.toThrow();
+    }
+  });
+
+  it('offers a Spellcast roll only to a subclass that has the trait', () => {
+    const caster = createSheet(buildCharacter('wizard'));
+    const nonCaster = createSheet(buildCharacter('guardian'));
+
+    expect(render(<SheetRoute sheet={caster} update={noopUpdate} rng={() => 0.5} />)).toContain(
+      'Spellcast Roll',
+    );
+    expect(
+      render(<SheetRoute sheet={nonCaster} update={noopUpdate} rng={() => 0.5} />),
+    ).not.toContain('Spellcast Roll');
+  });
+
+  it('marks a Vulnerable character on the sheet', () => {
+    const sheet = createSheet(buildCharacter());
+    const stressed: SheetState = { ...sheet, stressMarked: sheet.character.stressSlots };
+    expect(render(<SheetRoute sheet={stressed} update={noopUpdate} rng={() => 0.5} />)).toContain(
+      'Vulnerable',
+    );
+  });
+});
+
+describe('characters list renders', () => {
+  it('shows an empty state with no saved characters', () => {
+    const html = render(
+      <CharactersRoute
+        characters={[]}
+        activeId={null}
+        onSelect={() => {}}
+        onDelete={() => {}}
+        hasCreationInProgress={false}
+      />,
+    );
+    expect(html).toContain('No characters yet');
+    expect(html).toContain('New character');
+  });
+
+  it('lists a saved character and offers to resume a creation', () => {
+    const sheet = createSheet(buildCharacter('rogue'));
+    const html = render(
+      <CharactersRoute
+        characters={[{ id: 'pc-1', sheet, updatedAt: 1 }]}
+        activeId="pc-1"
+        onSelect={() => {}}
+        onDelete={() => {}}
+        hasCreationInProgress
+      />,
+    );
+    expect(html).toContain('Test Character');
+    expect(html).toContain('Rogue');
+    expect(html).toContain('Active');
+    expect(html).toContain('Resume creation');
+  });
+});
+
+describe('wizard renders', () => {
+  const storage = () => {
+    const data = new Map<string, string>();
+    return {
+      getItem: (k: string) => data.get(k) ?? null,
+      setItem: (k: string, v: string) => void data.set(k, v),
+      removeItem: (k: string) => void data.delete(k),
+      clear: () => data.clear(),
+      key: () => null,
+      length: 0,
+    } as unknown as Storage;
+  };
+
+  const wizardAt = (path: string, store = storage()) =>
+    renderToStaticMarkup(
+      <StaticRouter location={path}>
+        <Routes>
+          <Route
+            path="/create/:step"
+            element={
+              <WizardRoute storage={store} addCharacter={() => 'pc-1'} onFinish={() => {}} />
+            }
+          />
+        </Routes>
+      </StaticRouter>,
+    );
+
+  it('lists class options sourced from the SRD data, not hardcoded', () => {
+    const html = wizardAt('/create/1');
+    // Every class in the dataset is offered.
+    for (const characterClass of classes) {
+      expect(html, characterClass.name).toContain(characterClass.name);
+    }
+    expect(html).toContain('Step 1');
+    expect(html).toContain('Class &amp; Subclass');
+  });
+
+  it('disables Next until the step validates', () => {
+    const html = wizardAt('/create/1');
+    // The Next button renders disabled while nothing has been chosen.
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>Next/);
+  });
+
+  it('resumes a saved creation at its step with choices intact', () => {
+    const store = storage();
+    saveCreation(store, buildCreationState('sorcerer'));
+    const html = wizardAt('/create/8', store);
+
+    expect(html).toContain('Step 8');
+    // A Sorcerer's domains are Arcana and Midnight, so only those cards are offered.
+    expect(html).toContain('Arcana');
+    expect(html).toContain('Midnight');
+    expect(html).not.toContain('Codex');
+  });
+});
+
+describe('offline mode', () => {
+  it('renders and mutates a sheet with no server and no campaign props', () => {
+    // No characterId/send: the sheet must fall back to local pure reducers.
+    const sheet = createSheet(buildCharacter('bard'));
+    const html = render(<SheetRoute sheet={sheet} update={noopUpdate} rng={() => 0.5} />);
+    expect(html).toContain('Test Character');
+
+    // The same transitions the offline sheet uses still work with no socket at all.
+    const damaged = takeDamage(sheet, {
+      incoming: sheet.character.thresholds.severe,
+      damageType: 'physical',
+      direct: false,
+      armorSlotsToMark: 0,
+    });
+    expect(damaged.sheet.hpMarked).toBe(3);
+
+    const rolled = makeDualityRoll(
+      sheet,
+      {
+        label: 'Offline roll',
+        modifiers: 0,
+        difficulty: 10,
+        advantage: 0,
+        disadvantage: 0,
+        experiences: [],
+      },
+      scriptedRng([6, 6]),
+    );
+    expect(rolled.outcome?.result.outcome).toBe('criticalSuccess');
+  });
+
+  it('shows the campaign screen with no connection', () => {
+    const html = render(
+      <CampaignRoute
+        status="offline"
+        error={null}
+        code={null}
+        role={null}
+        onCreate={() => {}}
+        onJoin={() => {}}
+        onLeave={() => {}}
+      />,
+    );
+    expect(html).toContain('Create a campaign');
+    expect(html).toContain('Join a campaign');
+    // Offline play is explicitly still supported.
+    expect(html).toContain('Playing offline');
+  });
+});
+
+describe('GM panel renders', () => {
+  it('shows Fear, party, countdowns, adversaries, environment, presence and log', () => {
+    const sheet = createSheet(buildCharacter('seraph'));
+    const room: RoomState = {
+      code: 'ABC234',
+      gm: { id: 'gm-1', name: 'The GM', connected: true },
+      players: [{ id: 'p1', name: 'Alice', connected: false, characterId: 'pc1' }],
+      characters: { pc1: sheet },
+      fear: 4,
+      spotlight: 'p1',
+      countdowns: [
+        {
+          id: 'c1',
+          name: 'The Siege',
+          kind: 'consequence',
+          value: 3,
+          startingValue: 5,
+          loop: 'none',
+          triggered: false,
+        },
+      ],
+      adversaryInstances: [
+        { instanceId: 'a1', adversaryId: 'courtier', name: 'Courtier', hpMarked: 1, stressMarked: 0 },
+      ],
+      activeEnvironment: null,
+      map: createMapState(),
+      rollLog: [
+        {
+          kind: 'duality',
+          id: 'r1',
+          at: 0,
+          by: 'Alice',
+          label: 'Agility Roll',
+          roll: {
+            hope: 7,
+            fear: 3,
+            total: 10,
+            critical: false,
+            withHope: true,
+            advantageRoll: null,
+            disadvantageRoll: null,
+          },
+          difficulty: 10,
+          outcome: 'successHope',
+          experiences: [],
+        },
+      ],
+    };
+
+    const html = render(<GMPanel room={room} send={() => {}} />);
+
+    expect(html).toContain('GM Panel');
+    expect(html).toContain('ABC234');
+    expect(html).toContain('Fear');
+    expect(html).toContain('The Siege');
+    expect(html).toContain('Courtier');
+    expect(html).toContain('Environment');
+    expect(html).toContain('At the table');
+    // Presence shows a disconnected player, and the shared log names the roller.
+    expect(html).toContain('offline');
+    expect(html).toContain('Alice');
+    expect(html).toContain('Success with Hope');
+  });
+});

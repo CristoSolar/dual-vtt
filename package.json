@@ -1,0 +1,21 @@
+{
+  "name": "daggerheart-vtt",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @daggerheart/server --filter @daggerheart/web dev",
+    "dev:web": "pnpm -F @daggerheart/web dev",
+    "dev:server": "pnpm -F @daggerheart/server dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "validate": "pnpm -r validate"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

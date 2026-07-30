@@ -1,0 +1,193 @@
+/*
+ * Design tokens: the single source of truth for colour, type, spacing, radii,
+ * borders and shadows. Component styles reference these and never hardcode a
+ * value, so the whole look can be retuned from this one file.
+ *
+ * Palette direction: warm near-black with a brown/ink cast, brass for Hope and
+ * emphasis, cool violet for Fear and the GM side.
+ */
+
+/* Latin subsets only, served from the app itself — no runtime CDN request. */
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/spectral-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Spectral';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/spectral-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/inter-var-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+:root {
+  /* --- surfaces: warm near-black, three elevations ----------------------- */
+  --c-bg: #14100d;
+  --c-surface-1: #1d1813;
+  --c-surface-2: #262019;
+  --c-surface-3: #322a21;
+
+  /* --- ink ---------------------------------------------------------------
+   * Every value here clears WCAG AA (4.5:1) against the lightest surface,
+   * --c-surface-3, so body text is legible wherever it lands.
+   *   text 12.0:1 · muted 6.1:1 · faint 4.8:1
+   */
+  --c-text: #f2ece1;
+  --c-text-muted: #b6a894;
+  --c-text-faint: #a29481;
+
+  /* --- lines ------------------------------------------------------------- */
+  --c-line: #3d332a;
+  --c-line-strong: #55483a;
+
+  /* --- brass: primary accent, Hope, emphasis ----------------------------- */
+  --c-brass: #d8a441;
+  --c-brass-bright: #f0c46a;
+  --c-brass-dim: #8a6a2a;
+
+  /* --- violet: secondary accent, Fear, GM side --------------------------- */
+  --c-violet: #7b6bc4;
+  --c-violet-bright: #9d8fe0;
+  --c-violet-dim: #443a72;
+
+  /* --- state -------------------------------------------------------------
+   * The -bright variants are the text-safe ones (>=4.5:1 on every surface).
+   * The base --c-violet and --c-crimson are for strokes and fills only.
+   */
+  --c-crimson: #b8443c;
+  --c-crimson-bright: #e87369;
+  --c-success: #6fae7c;
+  --c-focus: #8fb6ff;
+
+  /*
+   * Hope and Fear must be told apart without colour. Brass is deliberately a
+   * high-luminance fill on a dark face; violet is a low-luminance face with a
+   * bright rim. In greyscale one reads as a light disc, the other as a dark ring.
+   */
+  --c-hope-fill: var(--c-brass-bright);
+  --c-hope-ink: #2a1e08;
+  --c-hope-edge: var(--c-brass);
+  --c-fear-fill: #221c33;
+  --c-fear-ink: var(--c-violet-bright);
+  --c-fear-edge: var(--c-violet);
+
+  /* --- domain colours, for domain cards ---------------------------------- */
+  --c-domain-arcana: #8d6fd1;
+  --c-domain-blade: #b8443c;
+  --c-domain-bone: #b9ac96;
+  --c-domain-codex: #4f7fc4;
+  --c-domain-grace: #c4699f;
+  --c-domain-midnight: #5b5f8c;
+  --c-domain-sage: #6fae7c;
+  --c-domain-splendor: #d8a441;
+  --c-domain-valor: #cf8340;
+
+  /* --- typography -------------------------------------------------------- */
+  --font-display: 'Spectral', 'Iowan Old Style', Palatino, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Type scale. Root is 17px so the app reads at arm's length on a laptop. */
+  --fs-root: 17px;
+  --fs-xs: 0.76rem;
+  --fs-sm: 0.87rem;
+  --fs-base: 1rem;
+  --fs-md: 1.1rem;
+  --fs-lg: 1.3rem;
+  --fs-xl: 1.62rem;
+  --fs-2xl: 2.05rem;
+  --fs-3xl: 2.6rem;
+
+  --lh-tight: 1.15;
+  --lh-snug: 1.3;
+  --lh-body: 1.55;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --ls-tight: -0.01em;
+  --ls-wide: 0.06em;
+  --ls-wider: 0.14em;
+
+  /* --- spacing ----------------------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.4rem;
+  --sp-3: 0.6rem;
+  --sp-4: 0.8rem;
+  --sp-5: 1rem;
+  --sp-6: 1.4rem;
+  --sp-7: 2rem;
+  --sp-8: 3rem;
+
+  /* --- sizing ------------------------------------------------------------ */
+  /* Nothing interactive goes below this. */
+  --size-tap: 44px;
+  --size-cell: 40px;
+  --size-rule: 1px;
+  --size-rule-thick: 2px;
+  --size-bevel: 10px;
+  --size-bevel-sm: 6px;
+  --size-content: 1180px;
+  --size-sidebar: 340px;
+
+  /* --- radii ------------------------------------------------------------- */
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-pill: 999px;
+
+  /* --- elevation --------------------------------------------------------- */
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 45%);
+  --shadow-2: 0 6px 18px rgb(0 0 0 / 45%);
+  --shadow-3: 0 18px 48px rgb(0 0 0 / 60%);
+  --shadow-inset: inset 0 1px 0 rgb(255 255 255 / 4%);
+
+  /* --- motion: subtle and fast, never decorative ------------------------- */
+  --motion-fast: 90ms;
+  --motion-base: 150ms;
+  --ease: cubic-bezier(0.3, 0.7, 0.4, 1);
+
+  --focus-ring: 3px;
+  --focus-offset: 2px;
+
+  color-scheme: dark;
+}
+
+/* Honour a reduced-motion preference across the whole app. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-base: 1ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

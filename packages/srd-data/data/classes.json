@@ -1,0 +1,197 @@
+[
+  {
+    "id": "bard",
+    "name": "Bard",
+    "domains": ["grace", "codex"],
+    "startingEvasion": 10,
+    "startingHP": 5,
+    "classItems": "A romance novel or a letter never opened",
+    "hopeFeature": {
+      "name": "Make a Scene",
+      "text": "Spend 3 Hope to temporarily Distract a target within Close range, giving them a -2 penalty to their Difficulty."
+    },
+    "features": [
+      {
+        "name": "Rally",
+        "text": "Once per session, describe how you rally the party and give yourself and each of your allies a Rally Die. At level 1, your Rally Die is a d6. A PC can spend their Rally Die to roll it, adding the result to their action roll, reaction roll, damage roll, or to clear a number of Stress equal to the result. At the end of each session, clear all unspent Rally Dice. At level 5, your Rally Die increases to a d8."
+      }
+    ],
+    "subclasses": ["troubadour", "wordsmith"]
+  },
+  {
+    "id": "druid",
+    "name": "Druid",
+    "domains": ["sage", "arcana"],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "A small bag of rocks and bones or a strange pendant found in the dirt",
+    "hopeFeature": {
+      "name": "Evolution",
+      "text": "Spend 3 Hope to transform into a Beastform without marking a Stress. When you do, choose one trait to raise by +1 until you drop out of that Beastform."
+    },
+    "features": [
+      {
+        "name": "Beastform",
+        "text": "Mark a Stress to magically transform into a creature of your tier or lower from the Beastform list. You can drop out of this form at any time. While transformed, you can't use weapons or cast spells from domain cards, but you can still use other features or abilities you have access to. Spells you cast before you transform stay active and last for their normal duration, and you can talk and communicate as normal. Additionally, you gain the Beastform's features, add their Evasion bonus to your Evasion, and use the trait specified in their statistics for your attack. While you're in a Beastform, your armor becomes part of your body and you mark Armor Slots as usual; when you drop out of a Beastform, those marked Armor Slots remain marked. If you mark your last Hit Point, you automatically drop out of this form."
+      },
+      {
+        "name": "Wildtouch",
+        "text": "You can perform harmless, subtle effects that involve nature—such as causing a flower to rapidly grow, summoning a slight gust of wind, or starting a campfire—at will."
+      }
+    ],
+    "subclasses": ["warden-of-the-elements", "warden-of-renewal"]
+  },
+  {
+    "id": "guardian",
+    "name": "Guardian",
+    "domains": ["valor", "blade"],
+    "startingEvasion": 9,
+    "startingHP": 7,
+    "classItems": "A totem from your mentor or a secret key",
+    "hopeFeature": {
+      "name": "Frontline Tank",
+      "text": "Spend 3 Hope to clear 2 Armor Slots."
+    },
+    "features": [
+      {
+        "name": "Unstoppable",
+        "text": "Once per long rest, you can become Unstoppable. You gain an Unstoppable Die. At level 1, your Unstoppable Die is a d4. Place it on your character sheet in the space provided, starting with the 1 value facing up. After you make a damage roll that deals 1 or more Hit Points to a target, increase the Unstoppable Die value by one. When the die's value would exceed its maximum value or when the scene ends, remove the die and drop out of Unstoppable. At level 5, your Unstoppable Die increases to a d6.\nWhile Unstoppable, you gain the following benefits:\n• You reduce the severity of physical damage by one threshold (Severe to Major, Major to Minor, Minor to None).\n• You add the current value of the Unstoppable Die to your damage roll.\n• You can't be Restrained or Vulnerable."
+      }
+    ],
+    "subclasses": ["stalwart", "vengeance"]
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "domains": ["bone", "sage"],
+    "startingEvasion": 12,
+    "startingHP": 6,
+    "classItems": "A trophy from your first kill or a seemingly broken compass",
+    "hopeFeature": {
+      "name": "Hold Them Off",
+      "text": "Spend 3 Hope when you succeed on an attack with a weapon to use that same roll against two additional adversaries within range of the attack."
+    },
+    "features": [
+      {
+        "name": "Ranger's Focus",
+        "text": "Spend a Hope and make an attack against a target. On a success, deal your attack's normal damage and temporarily make the attack's target your Focus. Until this feature ends or you make a different creature your Focus, you gain the following benefits against your Focus:\n• You know precisely what direction they are in.\n• When you deal damage to them, they must mark a Stress.\n• When you fail an attack against them, you can end your Ranger's Focus feature to reroll your Duality Dice."
+      }
+    ],
+    "subclasses": ["beastbound", "wayfinder"]
+  },
+  {
+    "id": "rogue",
+    "name": "Rogue",
+    "domains": ["midnight", "grace"],
+    "startingEvasion": 12,
+    "startingHP": 6,
+    "classItems": "A set of forgery tools or a grappling hook",
+    "hopeFeature": {
+      "name": "Rogue's Dodge",
+      "text": "Spend 3 Hope to gain a +2 bonus to your Evasion until the next time an attack succeeds against you. Otherwise, this bonus lasts until your next rest."
+    },
+    "features": [
+      {
+        "name": "Cloaked",
+        "text": "Any time you would be Hidden, you are instead Cloaked. In addition to the benefits of the Hidden condition, while Cloaked you remain unseen if you are stationary when an adversary moves to where they would normally see you. After you make an attack or end a move within line of sight of an adversary, you are no longer Cloaked."
+      },
+      {
+        "name": "Sneak Attack",
+        "text": "When you succeed on an attack while Cloaked or while an ally is within Melee range of your target, add a number of d6s equal to your tier to your damage roll."
+      }
+    ],
+    "subclasses": ["nightwalker", "syndicate"]
+  },
+  {
+    "id": "seraph",
+    "name": "Seraph",
+    "domains": ["splendor", "valor"],
+    "startingEvasion": 9,
+    "startingHP": 7,
+    "classItems": "A bundle of offerings or a sigil of your god",
+    "hopeFeature": {
+      "name": "Life Support",
+      "text": "Spend 3 Hope to clear a Hit Point on an ally within Close range."
+    },
+    "features": [
+      {
+        "name": "Prayer Dice",
+        "text": "At the beginning of each session, roll a number of d4s equal to your subclass's Spellcast trait and place them on your character sheet in the space provided. These are your Prayer Dice. You can spend any number of Prayer Dice to aid yourself or an ally within Far range. You can use a spent die's value to reduce incoming damage, add to a roll's result after the roll is made, or gain Hope equal to the result. At the end of each session, clear all unspent Prayer Dice."
+      }
+    ],
+    "subclasses": ["divine-wielder", "winged-sentinel"]
+  },
+  {
+    "id": "sorcerer",
+    "name": "Sorcerer",
+    "domains": ["arcana", "midnight"],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "A whispering orb or a family heirloom",
+    "hopeFeature": {
+      "name": "Volatile Magic",
+      "text": "Spend 3 Hope to reroll any number of your damage dice on an attack that deals magic damage."
+    },
+    "features": [
+      {
+        "name": "Arcane Sense",
+        "text": "You can sense the presence of magical people and objects within Close range."
+      },
+      {
+        "name": "Minor Illusion",
+        "text": "Make a Spellcast Roll (10). On a success, you create a minor visual illusion no larger than yourself within Close range. This illusion is convincing to anyone at Close range or farther."
+      },
+      {
+        "name": "Channel Raw Power",
+        "text": "Once per long rest, you can place a domain card from your loadout into your vault and choose to either:\n• Gain Hope equal to the level of the card.\n• Enhance a spell that deals damage, gaining a bonus to your damage roll equal to twice the level of the card."
+      }
+    ],
+    "subclasses": ["elemental-origin", "primal-origin"]
+  },
+  {
+    "id": "warrior",
+    "name": "Warrior",
+    "domains": ["blade", "bone"],
+    "startingEvasion": 11,
+    "startingHP": 6,
+    "classItems": "The drawing of a lover or a sharpening stone",
+    "hopeFeature": {
+      "name": "No Mercy",
+      "text": "Spend 3 Hope to gain a +1 bonus to your attack rolls until your next rest."
+    },
+    "features": [
+      {
+        "name": "Attack of Opportunity",
+        "text": "If an adversary within Melee range attempts to leave that range, make a reaction roll using a trait of your choice against their Difficulty. Choose one effect on a success, or two if you critically succeed:\n• They can't move from where they are.\n• You deal damage to them equal to your primary weapon's damage.\n• You move with them."
+      },
+      {
+        "name": "Combat Training",
+        "text": "You ignore burden when equipping weapons. When you deal physical damage, you gain a bonus to your damage roll equal to your level."
+      }
+    ],
+    "subclasses": ["call-of-the-brave", "call-of-the-slayer"]
+  },
+  {
+    "id": "wizard",
+    "name": "Wizard",
+    "domains": ["codex", "splendor"],
+    "startingEvasion": 11,
+    "startingHP": 5,
+    "classItems": "A book you're trying to translate or a tiny, harmless elemental pet",
+    "hopeFeature": {
+      "name": "Not This Time",
+      "text": "Spend 3 Hope to force an adversary within Far range to reroll an attack or damage roll."
+    },
+    "features": [
+      {
+        "name": "Prestidigitation",
+        "text": "You can perform harmless, subtle magical effects at will. For example, you can change an object's color, create a smell, light a candle, cause a tiny object to float, illuminate a room, or repair a small object."
+      },
+      {
+        "name": "Strange Patterns",
+        "text": "Choose a number between 1 and 12. When you roll that number on a Duality Die, gain a Hope or clear a Stress.\nYou can change this number when you take a long rest."
+      }
+    ],
+    "subclasses": ["school-of-knowledge", "school-of-war"]
+  }
+]

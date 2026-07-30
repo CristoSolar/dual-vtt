@@ -1,0 +1,961 @@
+/*
+ * Application styles. Every value here references a token from tokens.css —
+ * no raw colours, no ad-hoc font sizes.
+ */
+
+@import './tokens.css';
+
+/* ===================================================================== base */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--fs-root);
+}
+
+body {
+  margin: 0;
+  background-color: var(--c-bg);
+  /* A faint warm vignette, so the near-black reads as ink rather than grey. */
+  background-image: radial-gradient(
+    ellipse at 50% 0%,
+    rgb(90 62 30 / 12%) 0%,
+    transparent 60%
+  );
+  background-attachment: fixed;
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--c-text);
+}
+
+h1 {
+  font-size: var(--fs-xl);
+}
+
+h2 {
+  font-size: var(--fs-lg);
+}
+
+h3 {
+  font-size: var(--fs-md);
+}
+
+p {
+  margin: 0 0 var(--sp-3);
+}
+
+ul {
+  margin: 0 0 var(--sp-3);
+  padding-left: var(--sp-6);
+}
+
+/* Numbers are read at a glance mid-session: keep them aligned and even. */
+.stat-value,
+.trait-mod,
+.die-value,
+.pip,
+.step-pip,
+.join-code {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ================================================================= controls */
+
+button {
+  font: inherit;
+  font-weight: var(--fw-medium);
+  color: var(--c-text);
+  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-2));
+  border: var(--size-rule) solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-4);
+  min-height: var(--size-tap);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease);
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* A pressed control is marked by weight and a brass rule, not by hue alone. */
+button[aria-pressed='true'] {
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+  box-shadow: inset 0 0 0 var(--size-rule) var(--c-brass-dim);
+}
+
+/* Focus must be obvious: this gets driven fast, at a table. */
+:focus-visible {
+  outline: var(--focus-ring) solid var(--c-focus);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--c-text);
+  background: var(--c-bg);
+  border: var(--size-rule) solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: var(--size-tap);
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--c-brass);
+}
+
+textarea {
+  min-height: calc(var(--size-tap) * 3);
+  resize: vertical;
+  line-height: var(--lh-body);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--sp-1);
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wide);
+}
+
+fieldset {
+  border: var(--size-rule) solid var(--c-line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  margin: 0 0 var(--sp-5);
+}
+
+legend {
+  padding: 0 var(--sp-2);
+  color: var(--c-text-muted);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+/* =================================================================== layout */
+
+.app {
+  max-width: var(--size-content);
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-5) var(--sp-8);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+  padding: var(--sp-3) 0 var(--sp-5);
+  border-bottom: var(--size-rule) solid var(--c-line);
+  margin-bottom: var(--sp-6);
+}
+
+.topbar nav {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* Wordmark: styled text only — no brand asset ships in this repo. */
+.brand {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-md);
+  letter-spacing: var(--ls-wider);
+  color: var(--c-brass);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.brand:hover {
+  color: var(--c-brass-bright);
+}
+
+.row {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.grid.cols-2 {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.grid.cols-3 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.sheet-layout {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .sheet-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==================================================================== panel */
+
+/*
+ * Panels and cards are clipped at two opposite corners rather than rounded,
+ * echoing the cut-corner frames on the printed sheet.
+ */
+.panel {
+  background: linear-gradient(180deg, var(--c-surface-1), var(--c-surface-2));
+  border: var(--size-rule) solid var(--c-line);
+  box-shadow: var(--shadow-1), var(--shadow-inset);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-5);
+  clip-path: polygon(
+    var(--size-bevel) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel)),
+    calc(100% - var(--size-bevel)) 100%,
+    0 100%,
+    0 var(--size-bevel)
+  );
+}
+
+.card {
+  background: var(--c-surface-2);
+  border: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-3);
+  clip-path: polygon(
+    var(--size-bevel-sm) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel-sm)),
+    calc(100% - var(--size-bevel-sm)) 100%,
+    0 100%,
+    0 var(--size-bevel-sm)
+  );
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.card-text {
+  white-space: pre-wrap;
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+  margin: var(--sp-2) 0 0;
+}
+
+.muted {
+  color: var(--c-text-muted);
+}
+
+/*
+ * Section header: a centred label flanked by angled brackets, after the bars on
+ * the official sheet. Drawn in CSS and inline SVG so no image is needed.
+ */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-4);
+}
+
+.section-head::before,
+.section-head::after {
+  content: '';
+  flex: 1;
+  height: var(--size-rule-thick);
+  background: linear-gradient(90deg, transparent, var(--c-brass-dim), transparent);
+}
+
+.section-head > h2,
+.section-head > h3 {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-brass);
+  white-space: nowrap;
+}
+
+.section-head .chevron {
+  flex: none;
+  width: var(--sp-4);
+  height: var(--sp-4);
+  color: var(--c-brass-dim);
+}
+
+/* =================================================================== badges */
+
+.badge {
+  display: inline-block;
+  padding: 0 var(--sp-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  border: var(--size-rule) solid var(--c-line-strong);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+}
+
+.badge.warn {
+  border-color: var(--c-crimson);
+  color: var(--c-crimson-bright);
+}
+
+/* ============================================================= option lists */
+
+.options {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-4);
+  background: var(--c-surface-2);
+  border-radius: 0;
+  clip-path: polygon(
+    var(--size-bevel-sm) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel-sm)),
+    calc(100% - var(--size-bevel-sm)) 100%,
+    0 100%,
+    0 var(--size-bevel-sm)
+  );
+}
+
+.option[aria-pressed='true'] {
+  border-color: var(--c-brass);
+  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-2));
+  box-shadow: inset var(--size-rule-thick) 0 0 var(--c-brass);
+}
+
+.option .option-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--c-text);
+}
+
+.option .option-meta {
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+}
+
+/* ========================================================== wizard progress */
+
+.steps {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0 0 var(--sp-5);
+  list-style: none;
+}
+
+/*
+ * Three states, each readable without colour: a done step is ticked, the
+ * current one is ringed and bold, an incomplete one is a plain dim outline.
+ */
+.step-pip {
+  position: relative;
+  min-height: var(--size-cell);
+  min-width: var(--size-cell);
+  padding: 0 var(--sp-2);
+  font-weight: var(--fw-semibold);
+  border-radius: 0;
+  clip-path: polygon(
+    var(--size-bevel-sm) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel-sm)),
+    calc(100% - var(--size-bevel-sm)) 100%,
+    0 100%,
+    0 var(--size-bevel-sm)
+  );
+}
+
+.step-pip[data-state='done'] {
+  border-color: var(--c-success);
+  color: var(--c-success);
+}
+
+.step-pip[data-state='done']::after {
+  content: '✓';
+  position: absolute;
+  right: var(--sp-1);
+  bottom: 0;
+  font-size: var(--fs-xs);
+  line-height: 1;
+}
+
+.step-pip[data-state='current'] {
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+  background: var(--c-surface-3);
+  box-shadow: 0 0 0 var(--size-rule-thick) var(--c-brass-dim);
+}
+
+.step-pip[data-state='todo'] {
+  color: var(--c-text-faint);
+}
+
+/* =================================================================== errors */
+
+.errors {
+  border: var(--size-rule) solid var(--c-crimson);
+  border-left-width: var(--sp-1);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-5);
+  background: color-mix(in srgb, var(--c-crimson) 12%, transparent);
+}
+
+.errors ul {
+  margin: var(--sp-1) 0 0;
+  padding-left: var(--sp-5);
+}
+
+.field-error {
+  color: var(--c-crimson-bright);
+  font-size: var(--fs-sm);
+  margin-top: var(--sp-1);
+}
+
+/* ================================================================= trackers */
+
+.tracker {
+  margin-bottom: var(--sp-4);
+}
+
+.tracker-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.tracker-head h3 {
+  margin: 0;
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.pips {
+  display: flex;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Outlined square cells that fill when marked, sized as a comfortable target. */
+.pip {
+  width: var(--size-cell);
+  height: var(--size-cell);
+  min-height: var(--size-cell);
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+  border: var(--size-rule-thick) solid var(--c-line-strong);
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+}
+
+.pip[data-filled='true'] {
+  background: var(--c-crimson);
+  border-color: var(--c-crimson-bright);
+  color: var(--c-text);
+  font-weight: var(--fw-semibold);
+}
+
+/* Hope: a bright filled cell — the lightest thing on the screen. */
+.pip.hope[data-filled='true'] {
+  background: var(--c-hope-fill);
+  border-color: var(--c-hope-edge);
+  color: var(--c-hope-ink);
+}
+
+.pip.armor[data-filled='true'] {
+  background: var(--c-line-strong);
+  border-color: var(--c-text-faint);
+  color: var(--c-text);
+}
+
+/* The GM's Fear pool: Hope's opposite — a dark face with a bright violet rim. */
+.pip.fear[data-filled='true'] {
+  background: var(--c-fear-fill);
+  border-color: var(--c-fear-edge);
+  color: var(--c-fear-ink);
+  font-weight: var(--fw-semibold);
+}
+
+/* ==================================================================== stats */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--sp-3);
+}
+
+.stat {
+  background: var(--c-surface-2);
+  border: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-3);
+  text-align: center;
+  clip-path: polygon(
+    var(--size-bevel-sm) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel-sm)),
+    calc(100% - var(--size-bevel-sm)) 100%,
+    0 100%,
+    0 var(--size-bevel-sm)
+  );
+}
+
+.stat .stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--c-text);
+}
+
+.stat .stat-label {
+  color: var(--c-text-muted);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+}
+
+.trait-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-3) var(--sp-2);
+}
+
+.trait-button .trait-mod {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--c-brass);
+}
+
+.trait-button:hover:not(:disabled) .trait-mod {
+  color: var(--c-brass-bright);
+}
+
+/* =================================================================== dialog */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(8 5 3 / 78%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-5);
+  z-index: 50;
+}
+
+.dialog {
+  background: linear-gradient(180deg, var(--c-surface-1), var(--c-surface-2));
+  border: var(--size-rule) solid var(--c-line-strong);
+  box-shadow: var(--shadow-3);
+  padding: var(--sp-5);
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  clip-path: polygon(
+    var(--size-bevel) 0,
+    100% 0,
+    100% calc(100% - var(--size-bevel)),
+    calc(100% - var(--size-bevel)) 100%,
+    0 100%,
+    0 var(--size-bevel)
+  );
+}
+
+.dialog .card-head h2 {
+  font-size: var(--fs-lg);
+  color: var(--c-brass);
+}
+
+/* ============================================================= duality dice */
+
+.roll-result {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin: var(--sp-4) 0;
+}
+
+/*
+ * Hope and Fear are told apart three ways, so neither depends on hue: Hope is a
+ * light face with dark ink, Fear a dark face with a bright rim, and both are
+ * labelled. In greyscale they read as opposites.
+ */
+.die {
+  min-width: calc(var(--size-tap) * 1.8);
+  text-align: center;
+  border: var(--size-rule-thick) solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--c-surface-2);
+}
+
+.die .die-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+.die .die-label {
+  font-size: var(--fs-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+.die.hope {
+  background: var(--c-hope-fill);
+  border-color: var(--c-hope-edge);
+}
+
+.die.hope .die-value,
+.die.hope .die-label {
+  color: var(--c-hope-ink);
+}
+
+.die.fear {
+  background: var(--c-fear-fill);
+  border-color: var(--c-fear-edge);
+  box-shadow: inset 0 0 0 var(--size-rule) var(--c-violet-dim);
+}
+
+.die.fear .die-value {
+  color: var(--c-fear-ink);
+}
+
+.die.fear .die-label {
+  color: var(--c-violet-bright);
+}
+
+.outcome {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}
+
+/* A critical is unmistakable: brass, upper-case, and flanked by marks. */
+.outcome[data-tone='critical'] {
+  color: var(--c-brass-bright);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+.outcome[data-tone='critical']::before,
+.outcome[data-tone='critical']::after {
+  content: '✦';
+  color: var(--c-brass);
+  padding: 0 var(--sp-1);
+}
+
+.outcome[data-tone='success'] {
+  color: var(--c-success);
+}
+
+.outcome[data-tone='failure'] {
+  color: var(--c-crimson-bright);
+}
+
+/* ================================================================= roll log */
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.log li {
+  border-bottom: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-3) 0;
+  font-size: var(--fs-sm);
+}
+
+.log li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================================= domain cards */
+
+/*
+ * Loadout cards are laid out like the physical cards: level top-left, recall
+ * cost top-right, domain colour down the spine, title in the display serif.
+ */
+.domain-card {
+  position: relative;
+  padding: var(--sp-6) var(--sp-4) var(--sp-3) var(--sp-6);
+  border-color: var(--c-line-strong);
+}
+
+.domain-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sp-2);
+  background: var(--domain-color, var(--c-line-strong));
+}
+
+.domain-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--c-text);
+}
+
+.domain-type {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  color: var(--domain-color, var(--c-text-muted));
+}
+
+.domain-corner {
+  position: absolute;
+  top: var(--sp-2);
+  min-width: var(--sp-6);
+  text-align: center;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-muted);
+}
+
+.domain-corner.level {
+  left: var(--sp-6);
+}
+
+.domain-corner.recall {
+  right: var(--sp-3);
+  color: var(--c-brass);
+}
+
+/* ================================================================= GM panel */
+
+/*
+ * The GM screen is deliberately a different room: violet rules and headings, so
+ * it is never mistaken for a player sheet mid-session.
+ */
+.gm-scope .panel {
+  border-color: var(--c-violet-dim);
+}
+
+.gm-scope .section-head::before,
+.gm-scope .section-head::after {
+  background: linear-gradient(90deg, transparent, var(--c-violet-dim), transparent);
+}
+
+.gm-scope .section-head > h2,
+.gm-scope .section-head > h3 {
+  color: var(--c-violet-bright);
+}
+
+.gm-scope h1 {
+  color: var(--c-violet-bright);
+}
+
+.gm-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  border-left: var(--sp-1) solid var(--c-violet);
+  background: color-mix(in srgb, var(--c-violet) 10%, transparent);
+  padding: var(--sp-2) var(--sp-4);
+  margin-bottom: var(--sp-5);
+  font-family: var(--font-display);
+  letter-spacing: var(--ls-wide);
+  color: var(--c-violet-bright);
+  text-transform: uppercase;
+  font-size: var(--fs-sm);
+}
+
+/* ================================================================= campaign */
+
+.join-code {
+  font-family: var(--font-mono);
+  letter-spacing: var(--ls-wider);
+  color: var(--c-brass);
+  font-size: var(--fs-lg);
+}
+
+/* ====================================================================== map */
+
+.map-layout {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, var(--size-sidebar));
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.map-stage {
+  border: var(--size-rule) solid var(--c-line-strong);
+  background: var(--c-bg);
+  padding: var(--sp-2);
+  box-shadow: var(--shadow-2);
+}
+
+.map-stage input[type='file'] {
+  padding: var(--sp-2);
+}
+
+/* ==================================================================== toast */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--sp-5);
+  transform: translateX(-50%);
+  background: var(--c-surface-3);
+  border: var(--size-rule) solid var(--c-brass);
+  border-left-width: var(--sp-1);
+  color: var(--c-text);
+  padding: var(--sp-3) var(--sp-5);
+  z-index: 60;
+  max-width: min(640px, 92vw);
+  box-shadow: var(--shadow-2);
+}
+
+/* ================================================================== details */
+
+details summary {
+  cursor: pointer;
+  min-height: var(--size-tap);
+  display: flex;
+  align-items: center;
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wide);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ================================================================ utilities */
+
+/*
+ * A small set of spacing helpers so components never carry hardcoded lengths in
+ * inline styles. Every value comes from the spacing scale.
+ */
+.spread {
+  justify-content: space-between;
+}
+
+.mt-2 {
+  margin-top: var(--sp-2);
+}
+
+.mt-3 {
+  margin-top: var(--sp-3);
+}
+
+.mt-4 {
+  margin-top: var(--sp-4);
+}
+
+.mt-5 {
+  margin-top: var(--sp-5);
+}
+
+.mb-3 {
+  margin-bottom: var(--sp-3);
+}
+
+.mb-4 {
+  margin-bottom: var(--sp-4);
+}
+
+.w-auto {
+  width: auto;
+}
+
+.cols-1 {
+  grid-template-columns: 1fr;
+}

@@ -1,0 +1,880 @@
+[
+  {
+    "id": "agile-scout",
+    "name": "Agile Scout",
+    "tier": 1,
+    "examples": "Fox, Mouse, Weasel, etc.",
+    "trait": "agility",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 4,
+        "modifier": 0
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "deceive",
+      "locate",
+      "sneak"
+    ],
+    "features": [
+      {
+        "name": "Agile",
+        "text": "Your movement is silent, and you can spend a Hope to move up to Far range without rolling."
+      },
+      {
+        "name": "Fragile",
+        "text": "When you take Major or greater damage, you drop out of Beastform."
+      }
+    ]
+  },
+  {
+    "id": "household-friend",
+    "name": "Household Friend",
+    "tier": 1,
+    "examples": "Cat, Dog, Rabbit, etc.",
+    "trait": "instinct",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "instinct",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 6,
+        "modifier": 0
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "climb",
+      "locate",
+      "protect"
+    ],
+    "features": [
+      {
+        "name": "Companion",
+        "text": "When you Help an Ally, you can roll a d8 as your advantage die."
+      },
+      {
+        "name": "Fragile",
+        "text": "When you take Major or greater damage, you drop out of Beastform."
+      }
+    ]
+  },
+  {
+    "id": "nimble-grazer",
+    "name": "Nimble Grazer",
+    "tier": 1,
+    "examples": "Deer, Gazelle, Goat, etc.",
+    "trait": "agility",
+    "traitBonus": 1,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 6,
+        "modifier": 0
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "leap",
+      "sneak",
+      "sprint"
+    ],
+    "features": [
+      {
+        "name": "Elusive Prey",
+        "text": "When an attack roll against you would succeed, you can mark a Stress and roll a d4. Add the result to your Evasion against this attack."
+      },
+      {
+        "name": "Fragile",
+        "text": "When you take Major or greater damage, you drop out of Beastform."
+      }
+    ]
+  },
+  {
+    "id": "pack-predator",
+    "name": "Pack Predator",
+    "tier": 1,
+    "examples": "Coyote, Hyena, Wolf, etc.",
+    "trait": "strength",
+    "traitBonus": 2,
+    "evasionBonus": 1,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 2
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "sprint",
+      "track"
+    ],
+    "features": [
+      {
+        "name": "Hobbling Strike",
+        "text": "When you succeed on an attack against a target within Melee range, you can mark a Stress to make the target temporarily Vulnerable."
+      },
+      {
+        "name": "Pack Hunting",
+        "text": "When you succeed on an attack against the same target as an ally who acts immediately before you, add a d8 to your damage roll."
+      }
+    ]
+  },
+  {
+    "id": "aquatic-scout",
+    "name": "Aquatic Scout",
+    "tier": 1,
+    "examples": "Eel, Fish, Octopus, etc.",
+    "trait": "agility",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 4,
+        "modifier": 0
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "navigate",
+      "sneak",
+      "swim"
+    ],
+    "features": [
+      {
+        "name": "Aquatic",
+        "text": "You can breathe and move naturally underwater."
+      },
+      {
+        "name": "Fragile",
+        "text": "When you take Major or greater damage, you drop out of Beastform."
+      }
+    ]
+  },
+  {
+    "id": "stalking-arachnid",
+    "name": "Stalking Arachnid",
+    "tier": 1,
+    "examples": "Tarantula, Wolf Spider, etc.",
+    "trait": "finesse",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "finesse",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 6,
+        "modifier": 1
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "climb",
+      "sneak"
+    ],
+    "features": [
+      {
+        "name": "Venomous Bite",
+        "text": "When you succeed on an attack against a target within Melee range, the target becomes temporarily Poisoned. A Poisoned creature takes 1d10 direct physical damage each time they act."
+      },
+      {
+        "name": "Webslinger",
+        "text": "You can create a strong web material useful for both adventuring and battle. The web is resilient enough to support one creature. You can temporarily Restrain a target within Close range by succeeding on a Finesse Roll against them."
+      }
+    ]
+  },
+  {
+    "id": "armored-sentry",
+    "name": "Armored Sentry",
+    "tier": 2,
+    "examples": "Armadillo, Pangolin, Turtle, etc.",
+    "trait": "strength",
+    "traitBonus": 1,
+    "evasionBonus": 1,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 2
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "dig",
+      "locate",
+      "protect"
+    ],
+    "features": [
+      {
+        "name": "Armored Shell",
+        "text": "Your hardened exterior gives you resistance to physical damage. Additionally, mark an Armor Slot to retract into your shell. While in your shell, physical damage is reduced by a number equal to your Armor Score (after applying resistance), but you can’t perform other actions without leaving this form."
+      },
+      {
+        "name": "Cannonball",
+        "text": "Mark a Stress to allow an ally to throw or launch you at an adversary. To do so, the ally makes an attack roll using Agility or Strength (their choice) against a target within Close range. On a success, the adversary takes d12+2 physical damage using the thrower’s Proficiency. You can spend a Hope to target an additional adversary within Very Close range of the first. The second target takes half the damage dealt to the first target."
+      }
+    ]
+  },
+  {
+    "id": "powerful-beast",
+    "name": "Powerful Beast",
+    "tier": 2,
+    "examples": "Bear, Bull, Moose, etc.",
+    "trait": "strength",
+    "traitBonus": 3,
+    "evasionBonus": 1,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 4
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "navigate",
+      "protect",
+      "scare"
+    ],
+    "features": [
+      {
+        "name": "Rampage",
+        "text": "When you roll a 1 on a damage die, you can roll a d10 and add the result to the damage roll. Additionally, before you make an attack roll, you can mark a Stress to gain a +1 bonus to your Proficiency for that attack."
+      },
+      {
+        "name": "Thick Hide",
+        "text": "You gain a +2 bonus to your damage thresholds."
+      }
+    ]
+  },
+  {
+    "id": "mighty-strider",
+    "name": "Mighty Strider",
+    "tier": 2,
+    "examples": "Camel, Horse, Zebra, etc.",
+    "trait": "agility",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 1
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "leap",
+      "navigate",
+      "sprint"
+    ],
+    "features": [
+      {
+        "name": "Carrier",
+        "text": "You can carry up to two willing allies with you when you move."
+      },
+      {
+        "name": "Trample",
+        "text": "Mark a Stress to move up to Close range in a straight line and make an attack against all targets within Melee range of the line. Targets you succeed against take d8+1 physical damage using your Proficiency and are temporarily Vulnerable."
+      }
+    ]
+  },
+  {
+    "id": "striking-serpent",
+    "name": "Striking Serpent",
+    "tier": 2,
+    "examples": "Cobra, Rattlesnake, Viper, etc.",
+    "trait": "finesse",
+    "traitBonus": 1,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "finesse",
+      "range": "veryClose",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 4
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "climb",
+      "deceive",
+      "sprint"
+    ],
+    "features": [
+      {
+        "name": "Venomous Strike",
+        "text": "Make an attack against any number of targets within Very Close range. On a success, a target is temporarily Poisoned. A Poisoned creature takes 1d10 direct physical damage each time they act."
+      },
+      {
+        "name": "Warning Hiss",
+        "text": "Mark a Stress to force any number of targets within Melee range to move back to Very Close range."
+      }
+    ]
+  },
+  {
+    "id": "pouncing-predator",
+    "name": "Pouncing Predator",
+    "tier": 2,
+    "examples": "Cheetah, Lion, Panther, etc.",
+    "trait": "instinct",
+    "traitBonus": 1,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "instinct",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 6
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "climb",
+      "sneak"
+    ],
+    "features": [
+      {
+        "name": "Fleet",
+        "text": "Spend a Hope to move up to Far range without rolling."
+      },
+      {
+        "name": "Takedown",
+        "text": "Mark a Stress to move into Melee range of a target and make an attack roll against them. On a success, you gain a +2 bonus to your Proficiency for this attack and the target must mark a Stress."
+      }
+    ]
+  },
+  {
+    "id": "winged-beast",
+    "name": "Winged Beast",
+    "tier": 2,
+    "examples": "Hawk, Owl, Raven, etc.",
+    "trait": "finesse",
+    "traitBonus": 1,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "finesse",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 4,
+        "modifier": 2
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "deceive",
+      "locate",
+      "scare"
+    ],
+    "features": [
+      {
+        "name": "Bird’s-Eye View",
+        "text": "You can fly at will. Once per rest while you are airborne, you can ask the GM a question about the scene below you without needing to roll. The first time a character makes a roll to act on this information, they gain advantage on the roll."
+      },
+      {
+        "name": "Hollow Bones",
+        "text": "You gain a −2 penalty to your damage thresholds."
+      }
+    ]
+  },
+  {
+    "id": "great-predator",
+    "name": "Great Predator",
+    "tier": 3,
+    "examples": "Dire Wolf, Velociraptor, Sabertooth Tiger, etc.",
+    "trait": "strength",
+    "traitBonus": 2,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 12,
+        "modifier": 8
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "sneak",
+      "sprint"
+    ],
+    "features": [
+      {
+        "name": "Carrier",
+        "text": "You can carry up to two willing allies with you when you move."
+      },
+      {
+        "name": "Vicious Maul",
+        "text": "When you succeed on an attack against a target, you can spend a Hope to make them temporarily Vulnerable and gain a +1 bonus to your Proficiency for this attack."
+      }
+    ]
+  },
+  {
+    "id": "mighty-lizard",
+    "name": "Mighty Lizard",
+    "tier": 3,
+    "examples": "Alligator, Crocodile, Gila Monster, etc.",
+    "trait": "instinct",
+    "traitBonus": 2,
+    "evasionBonus": 1,
+    "attack": {
+      "trait": "instinct",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 7
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "sneak",
+      "track"
+    ],
+    "features": [
+      {
+        "name": "Physical Defense",
+        "text": "You gain a +3 bonus to your damage thresholds."
+      },
+      {
+        "name": "Snapping Strike",
+        "text": "When you succeed on an attack against a target within Melee range, you can spend a Hope to clamp that opponent in your jaws, making them temporarily Restrained and Vulnerable."
+      }
+    ]
+  },
+  {
+    "id": "great-winged-beast",
+    "name": "Great Winged Beast",
+    "tier": 3,
+    "examples": "Giant Eagle, Falcon, etc.",
+    "trait": "finesse",
+    "traitBonus": 2,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "finesse",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 8,
+        "modifier": 6
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "deceive",
+      "distract",
+      "locate"
+    ],
+    "features": [
+      {
+        "name": "Bird’s-Eye View",
+        "text": "You can fly at will. Once per rest while you are airborne, you can ask the GM a question about the scene below you without needing to roll. The first time a character makes a roll to act on this information, they gain advantage on the roll."
+      },
+      {
+        "name": "Carrier",
+        "text": "You can carry up to two willing allies with you when you move."
+      }
+    ]
+  },
+  {
+    "id": "aquatic-predator",
+    "name": "Aquatic Predator",
+    "tier": 3,
+    "examples": "Dolphin, Orca, Shark, etc.",
+    "trait": "agility",
+    "traitBonus": 2,
+    "evasionBonus": 4,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 6
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "swim",
+      "track"
+    ],
+    "features": [
+      {
+        "name": "Aquatic",
+        "text": "You can breathe and move naturally underwater."
+      },
+      {
+        "name": "Vicious Maul",
+        "text": "When you succeed on an attack against a target, you can spend a Hope to make them Vulnerable and gain a +1 bonus to your Proficiency for this attack."
+      },
+      {
+        "name": "Evolved",
+        "text": "Pick a Tier 1 Beastform option and become a larger, more powerful version of that creature. While you’re in this form, you retain all traits and features from the original form and gain the following bonuses: • A +6 bonus to damage rolls • A +1 bonus to the trait used by this form • A +2 bonus to Evasion"
+      }
+    ]
+  },
+  {
+    "id": "legendary-hybrid",
+    "name": "Legendary Hybrid",
+    "tier": 3,
+    "examples": "Griffon, Sphinx, etc.",
+    "trait": "strength",
+    "traitBonus": 2,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 8
+      },
+      "damageType": "physical"
+    },
+    "advantages": [],
+    "features": [
+      {
+        "name": "Hybrid Features",
+        "text": "To transform into this creature, mark an additional Stress. Choose any two Beastform options from Tiers 1–2. Choose a total of four advantages and two features from those options."
+      }
+    ]
+  },
+  {
+    "id": "legendary-beast",
+    "name": "Legendary Beast",
+    "tier": 3,
+    "examples": "Upgraded Tier 1 Options",
+    "trait": null,
+    "traitBonus": null,
+    "evasionBonus": null,
+    "attack": null,
+    "advantages": [],
+    "features": [
+      {
+        "name": "Evolved",
+        "text": "Pick a Tier 1 Beastform option and become a larger, more powerful version of that creature. While you’re in this form, you retain all traits and features from the original form and gain the following bonuses: • A +6 bonus to damage rolls • A +1 bonus to the trait used by this form • A +2 bonus to Evasion"
+      }
+    ]
+  },
+  {
+    "id": "massive-behemoth",
+    "name": "Massive Behemoth",
+    "tier": 4,
+    "examples": "Elephant, Mammoth, Rhinoceros, etc.",
+    "trait": "strength",
+    "traitBonus": 3,
+    "evasionBonus": 1,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 12,
+        "modifier": 12
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "locate",
+      "protect",
+      "scare",
+      "sprint"
+    ],
+    "features": [
+      {
+        "name": "Carrier",
+        "text": "You can carry up to four willing allies with you when you move."
+      },
+      {
+        "name": "Demolish",
+        "text": "Spend a Hope to move up to Far range in a straight line and make an attack against all targets within Melee range of the line. Targets you succeed against take d8+10 physical damage using your Proficiency and are temporarily Vulnerable."
+      },
+      {
+        "name": "Undaunted",
+        "text": "You gain a +2 bonus to all your damage thresholds."
+      }
+    ]
+  },
+  {
+    "id": "terrible-lizard",
+    "name": "Terrible Lizard",
+    "tier": 4,
+    "examples": "Brachiosaurus, Tyrannosaurus, etc.",
+    "trait": "strength",
+    "traitBonus": 3,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 12,
+        "modifier": 10
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "deceive",
+      "scare",
+      "track"
+    ],
+    "features": [
+      {
+        "name": "Devastating Strikes",
+        "text": "When you deal Severe damage to a target within Melee range, you can mark a Stress to force them to mark an additional Hit Point."
+      },
+      {
+        "name": "Massive Stride",
+        "text": "You can move up to Far range without rolling. You ignore rough terain (at the GM’s discretion) due to your size."
+      }
+    ]
+  },
+  {
+    "id": "mythic-aerial-hunter",
+    "name": "Mythic Aerial Hunter",
+    "tier": 4,
+    "examples": "Dragon, Pterodactyl, Roc, Wyvern, etc.",
+    "trait": "finesse",
+    "traitBonus": 3,
+    "evasionBonus": 4,
+    "attack": {
+      "trait": "finesse",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 11
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "attack",
+      "deceive",
+      "locate",
+      "navigate"
+    ],
+    "features": [
+      {
+        "name": "Carrier",
+        "text": "You can carry up to three willing allies with you when you move."
+      },
+      {
+        "name": "Deadly Raptor",
+        "text": "You can fly at will and move up to Far range as part of your action. When you move in a straight line into Melee range of a target from at least Close range and make an attack against that target in the same action, you can reroll all damage dice that rolled a result lower than your Proficiency."
+      }
+    ]
+  },
+  {
+    "id": "epic-aquatic-beast",
+    "name": "Epic Aquatic Beast",
+    "tier": 4,
+    "examples": "Giant Squid, Whale, etc.",
+    "trait": "agility",
+    "traitBonus": 3,
+    "evasionBonus": 3,
+    "attack": {
+      "trait": "agility",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 10,
+        "modifier": 10
+      },
+      "damageType": "physical"
+    },
+    "advantages": [
+      "locate",
+      "protect",
+      "scare",
+      "track"
+    ],
+    "features": [
+      {
+        "name": "Ocean Master",
+        "text": "You can breathe and move naturally underwater. When you succeed on an attack against a target within Melee range, you can temporarily Restrain them."
+      },
+      {
+        "name": "Unyielding",
+        "text": "When you would mark an Armor Slot, roll a d6. On a result of 5 or higher, reduce the severity by one threshold without marking an Armor Slot."
+      },
+      {
+        "name": "Evolved",
+        "text": "Pick a Tier 1 or Tier 2 Beastform option and become a larger, more powerful version of that creature. While you’re in this form, you retain all traits and features from the original form and gain the following bonuses: • A +9 bonus to damage rolls • A +2 bonus to the trait used by this form • A +3 bonus to Evasion • Your damage die increases by one size (d6 becomes d8, d8 becomes d10, etc.)"
+      }
+    ]
+  },
+  {
+    "id": "mythic-hybrid",
+    "name": "Mythic Hybrid",
+    "tier": 4,
+    "examples": "Chimera, Cockatrice, Manticore, etc.",
+    "trait": "strength",
+    "traitBonus": 3,
+    "evasionBonus": 2,
+    "attack": {
+      "trait": "strength",
+      "range": "melee",
+      "damage": {
+        "count": 1,
+        "die": 12,
+        "modifier": 10
+      },
+      "damageType": "physical"
+    },
+    "advantages": [],
+    "features": [
+      {
+        "name": "Hybrid Features",
+        "text": "To transform into this creature, mark 2 additional Stress. Choose any three Beastform options from Tiers 1-3. Choose a total of five advantages and three features from those options. The title of guardian represents an array of martial professions, speaking more to their moral compass and unshakeable fortitude than the means by which they fight. While many guardians join groups of militants for either a country or cause, they’re more likely to follow those few they truly care for, majority be damned. Guardians are known for fighting with remarkable ferocity even against overwhelming odds, defending their cohort above all else. Woe betide those who harm the ally of a guardian, as the guardian will answer this injury in kind. DOMAINS - Valor and Blade CLASS ITEMS - A totem from your mentor or a secret key"
+      },
+      {
+        "name": "Frontline Tank",
+        "text": "Spend 3 Hope to clear 2 Armor Slots."
+      },
+      {
+        "name": "Unstoppable",
+        "text": "Once per long rest, you can become Unstoppable. You gain an Unstoppable Die. At level 1, your Unstoppable Die is a d4. Place it on your character sheet in the space provided, starting with the 1 value facing up. After you make a damage roll that deals 1 or more Hit Points to a target, increase the Unstoppable Die value by one. When the die’s value would exceed its maximum value or when the scene ends, remove the die and drop out of Unstoppable. At level 5, your Unstoppable Die increases to a d6. While Unstoppable, you gain the following benefits: • You reduce the severity of physical damage by one threshold (Severe to Major, Major to Minor, Minor to None). • You add the current value of the Unstoppable Die to your damage roll. • You can’t be Restrained or Vulnerable."
+      },
+      {
+        "name": "Tip",
+        "text": "If your Unstoppable Die is a d4 and the 4 is currently facing up, you remove the die the next time you would increase it. However, if your Unstoppable Die has increased to a d6 and the 4 is currently facing up, you’ll turn it to 5 the next time you would increase it. In this case, you’ll remove the die after you would need to increase it higher than 6. Choose either the Stalwart or Vengeance subclass. Play the Stalwart if you want to take heavy blows and keep fighting."
+      },
+      {
+        "name": "Unwavering",
+        "text": "Gain a permanent +1 bonus to your damage thresholds."
+      },
+      {
+        "name": "Iron Will",
+        "text": "When you take physical damage, you can mark an additional Armor Slot to reduce the severity."
+      },
+      {
+        "name": "Unrelenting",
+        "text": "Gain a permanent +2 bonus to your damage thresholds."
+      },
+      {
+        "name": "Partners-in-Arms",
+        "text": "When an ally within Very Close range takes damage, you can mark an Armor Slot to reduce the severity by one threshold."
+      },
+      {
+        "name": "Undaunted",
+        "text": "Gain a permanent +3 bonus to your damage thresholds."
+      },
+      {
+        "name": "Loyal Protector",
+        "text": "When an ally within Close range has 2 or fewer Hit Points and would take damage, you can mark a Stress to sprint to their side and take the damage instead. Play the Vengeance if you want to strike down enemies who harm you or your allies."
+      },
+      {
+        "name": "At Ease",
+        "text": "Gain an additional Stress slot."
+      },
+      {
+        "name": "Revenge",
+        "text": "When an adversary within Melee range succeeds on an attack against you, you can mark 2 Stress to force the attacker to mark a Hit Point."
+      },
+      {
+        "name": "Act of Reprisal",
+        "text": "When an adversary damages an ally within Melee range, you gain a +1 bonus to your Proficiency for the next successful attack you make against that adversary."
+      },
+      {
+        "name": "Nemesis",
+        "text": "Spend 2 Hope to Prioritize an adversary until your next rest. When you make an attack against your Prioritized adversary, you can swap the results of your Hope and Fear Dice. You can only Prioritize one adversary at a time. Answer any of the following background questions. You can also create your own questions. • Who from your community did you fail to protect, and why do you still think of them? • You’ve been tasked with protecting something important and delivering it somewhere dangerous. What is it, and where does it need to go? • You consider an aspect of yourself to be a weakness. What is it, and how has it affected you? Ask your fellow players one of the following questions for their character to answer, or create your own questions. • How did I save your life the first time we met? • What small gift did you give me that you notice I always carry with me? • What lie have you told me about yourself that I absolutely believe? Rangers are highly skilled hunters who, despite their martial abilities, rarely lend their skills to an army. Through mastery of the body and a deep understanding of the wilderness, rangers become sly tacticians, pursuing their quarry with cunning and patience. Many rangers track and fight alongside an animal companion with whom they’ve forged a powerful spiritual bond. By honing their skills in the wild, rangers become expert trackers, as likely to ensnare their foes in a trap as they are to assail them head-on. DOMAINS - Bone & Sage CLASS ITEMS - A trophy from your first kill or a seemingly broken compass"
+      },
+      {
+        "name": "Hold Them Off",
+        "text": "Spend 3 Hope when you succeed on an attack with a weapon to use that same roll against two additional adversaries within range of the attack."
+      },
+      {
+        "name": "Ranger’s Focus",
+        "text": "Spend a Hope and make an attack against a target. On a success, deal your attack’s normal damage and temporarily make the attack’s target your Focus. Until this feature ends or you make a different creature your Focus, you gain the following benefits against your Focus: • You know precisely what direction they are in. • When you deal damage to them, they must mark a Stress. • When you fail an attack against them, you can end your Ranger’s Focus feature to reroll your Duality Dice. Choose either the Beastbound or Wayfinder subclass. Play the Beastbound if you want to form a deep bond with an animal ally. Agility"
+      },
+      {
+        "name": "Companion",
+        "text": "You have an animal companion of your choice (at the GM’s discretion). They stay by your side unless you tell them otherwise. Take the Ranger Companion sheet. When you level up your character, choose a level-up option for your companion from this sheet as well."
+      },
+      {
+        "name": "Expert Training",
+        "text": "Choose an additional level-up option for your companion."
+      },
+      {
+        "name": "Battle-Bonded",
+        "text": "When an adversary attacks you while they’re within your companion’s Melee range, you gain a +2 bonus to your Evasion against the attack."
+      },
+      {
+        "name": "Advanced Training",
+        "text": "Choose two additional level-up options for your companion."
+      },
+      {
+        "name": "Loyal Friend",
+        "text": "Once per long rest, when the damage from an attack would mark your companion’s last Stress or your last Hit Point and you’re within Close range of each other, you or your companion can rush to the other’s side and take that damage instead. Play the Wayfinder if you want to hunt your prey and strike with deadly force. Agility"
+      },
+      {
+        "name": "Ruthless Predator",
+        "text": "When you make a damage roll, you can mark a Stress to gain a +1 bonus to your Proficiency. Additionally, when you deal Severe damage to an adversary, they must mark a Stress."
+      },
+      {
+        "name": "Path Forward",
+        "text": "When you’re traveling to a place you’ve previously visited or you carry an object that has been at the location before, you can identify the shortest, most direct path to your destination."
+      },
+      {
+        "name": "Elusive Predator",
+        "text": "When your Focus makes an attack against you, you gain a +2 bonus to your Evasion against the attack."
+      },
+      {
+        "name": "Apex Predator",
+        "text": "Before you make an attack roll against your Focus, you can spend a Hope. On a successful attack, you remove a Fear from the GM’s Fear pool. Answer any of the following background questions. You can also create your own questions. • A terrible creature hurt your community, and you’ve vowed to hunt them down. What are they, and what unique trail or sign do they leave behind? • Your first kill almost killed you, too. What was it, and what part of you was never the same after that event? • You’ve traveled many dangerous lands, but what is the one place you refuse to go? Ask your fellow players one of the following questions for their character to answer, or create your own questions. • What friendly competition do we have? • Why do you act differently when we’re alone than when others are around? • What threat have you asked me to watch for, and why are you worried about it?"
+      }
+    ]
+  },
+  {
+    "id": "mythic-beast",
+    "name": "Mythic Beast",
+    "tier": 4,
+    "examples": "Upgraded Tier 1 or Tier 2 Options",
+    "trait": null,
+    "traitBonus": null,
+    "evasionBonus": null,
+    "attack": null,
+    "advantages": [],
+    "features": [
+      {
+        "name": "Evolved",
+        "text": "Pick a Tier 1 or Tier 2 Beastform option and become a larger, more powerful version of that creature. While you’re in this form, you retain all traits and features from the original form and gain the following bonuses: • A +9 bonus to damage rolls • A +2 bonus to the trait used by this form • A +3 bonus to Evasion • Your damage die increases by one size (d6 becomes d8, d8 becomes d10, etc.)"
+      }
+    ]
+  }
+]
