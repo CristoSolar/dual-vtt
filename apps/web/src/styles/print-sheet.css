@@ -43,8 +43,7 @@
 
 .print-sheet {
   width: 210mm;
-  height: 297mm;
-  overflow: hidden;
+  min-height: 297mm;
   margin: 0 auto;
   background: #fff;
   color: #1a1a1a;
@@ -293,10 +292,18 @@
   border: 1.5pt solid #1a1a1a;
   clip-path: polygon(0 0, 100% 0, 100% 96%, 97% 100%, 0 100%);
   padding: 3mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .ps-section--grow {
   flex: 1;
+  /* Unlike the compact sections above, this one may genuinely be longer than
+     the space left on page 1 (many class features, a long inventory) — let
+     it flow onto page 2 as a whole rather than forcing an impossible
+     one-page fit. Individual entries inside it still don't split, below. */
+  break-inside: auto;
+  page-break-inside: auto;
 }
 
 .ps-section-title {
@@ -342,6 +349,8 @@
 .ps-feature-text {
   font-size: 7.5pt;
   margin: 0 0 1mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .ps-feature-group-heading {
@@ -350,16 +359,19 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 0.5mm;
-}
-
-.ps-feature-list {
-  overflow: hidden;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .ps-lines {
   margin: 0;
   padding-left: 4mm;
   font-size: 7.5pt;
+}
+
+.ps-lines li {
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .ps-line {
@@ -389,6 +401,8 @@
 
 .ps-weapon {
   margin-bottom: 2mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .ps-weapon-row {
@@ -409,15 +423,6 @@
   color: #777;
   text-align: center;
   margin: 0;
-}
-
-/* ------------------------------------------------------------- overflow */
-
-.ps-section--grow .ps-feature-list,
-.ps-section--grow .ps-lines {
-  max-height: 40mm;
-  overflow: hidden;
-  font-size: 7pt;
 }
 
 /* ----------------------------------------------------------------- print */
@@ -447,7 +452,22 @@
     box-shadow: none;
     margin: 0;
     width: 210mm;
-    height: 297mm;
+    min-height: 297mm;
+  }
+
+  /* Chrome fragments plain block flow across printed pages far more
+     reliably than a two-column grid — stack the columns for print so
+     overflow content (a long class-feature or inventory list) flows onto
+     page 2 in order instead of being clipped or laid out sideways. */
+  .ps-columns,
+  .ps-col {
+    display: block;
+  }
+
+  /* `gap` only affected these as flex/grid children — restore the spacing
+     with a margin now that they're plain block boxes. */
+  .ps-col .ps-section {
+    margin-bottom: 4mm;
   }
 
   .no-print {
