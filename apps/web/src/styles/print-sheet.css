@@ -288,6 +288,23 @@
   gap: 4mm;
 }
 
+/* Rasgo de clase / Inventario are open-ended in length (unlike the rest of
+   the sheet, which mirrors the original one-page design) — they always
+   start their own page rather than relying on the browser to fragment a
+   two-column grid mid-page, which Chrome does unreliably. */
+.ps-page-break {
+  break-before: page;
+  page-break-before: always;
+}
+
+@media screen {
+  .ps-page-break {
+    margin-top: 10mm;
+    padding-top: 10mm;
+    border-top: 1px dashed #999;
+  }
+}
+
 .ps-section {
   border: 1.5pt solid #1a1a1a;
   clip-path: polygon(0 0, 100% 0, 100% 96%, 97% 100%, 0 100%);
@@ -453,21 +470,6 @@
     margin: 0;
     width: 210mm;
     min-height: 297mm;
-  }
-
-  /* Chrome fragments plain block flow across printed pages far more
-     reliably than a two-column grid — stack the columns for print so
-     overflow content (a long class-feature or inventory list) flows onto
-     page 2 in order instead of being clipped or laid out sideways. */
-  .ps-columns,
-  .ps-col {
-    display: block;
-  }
-
-  /* `gap` only affected these as flex/grid children — restore the spacing
-     with a margin now that they're plain block boxes. */
-  .ps-col .ps-section {
-    margin-bottom: 4mm;
   }
 
   .no-print {

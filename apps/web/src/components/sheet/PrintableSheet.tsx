@@ -171,28 +171,6 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
               </div>
             </section>
 
-            <section className="ps-section ps-section--grow">
-              <h2 className="ps-section-title">RASGO DE CLASE</h2>
-              <div className="ps-feature-list">
-                {[
-                  { heading: view.className, features: view.classFeatures },
-                  { heading: view.subclassName, features: view.subclassFeatures },
-                  { heading: view.heritageLabel, features: view.ancestryFeatures },
-                  { heading: view.communityName, features: [view.communityFeature] },
-                ].map((group) => (
-                  <div key={group.heading}>
-                    <p className="ps-feature-group-heading">{group.heading}</p>
-                    {group.features
-                      .filter((feature) => feature.name !== '')
-                      .map((feature) => (
-                        <p className="ps-feature-text" key={feature.name}>
-                          <strong>{feature.name}:</strong> {feature.text}
-                        </p>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </section>
           </div>
 
           <div className="ps-col">
@@ -255,6 +233,36 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
               )}
             </section>
 
+          </div>
+        </div>
+
+        <div className="ps-columns ps-page-break">
+          <div className="ps-col">
+            <section className="ps-section ps-section--grow">
+              <h2 className="ps-section-title">RASGO DE CLASE</h2>
+              <div className="ps-feature-list">
+                {[
+                  { heading: view.className, features: view.classFeatures },
+                  { heading: view.subclassName, features: view.subclassFeatures },
+                  { heading: view.heritageLabel, features: view.ancestryFeatures },
+                  { heading: view.communityName, features: [view.communityFeature] },
+                ].map((group) => (
+                  <div key={group.heading}>
+                    <p className="ps-feature-group-heading">{group.heading}</p>
+                    {group.features
+                      .filter((feature) => feature.name !== '')
+                      .map((feature) => (
+                        <p className="ps-feature-text" key={feature.name}>
+                          <strong>{feature.name}:</strong> {feature.text}
+                        </p>
+                      ))}
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="ps-col">
             <section className="ps-section ps-section--grow">
               <h2 className="ps-section-title">INVENTARIO</h2>
               <ul className="ps-lines">
