@@ -6,6 +6,7 @@ import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
 import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
+import { PrintableSheet } from '../components/sheet/PrintableSheet.js';
 import { RollDialog, type RollDialogSpec } from '../components/sheet/RollDialog.js';
 import { RollLogPanel } from '../components/sheet/RollLogPanel.js';
 import { SectionHead } from '../components/SectionHead.js';
@@ -90,6 +91,7 @@ export function SheetRoute({
   const [showDamage, setShowDamage] = useState(false);
   const [showDeathMove, setShowDeathMove] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [showPrint, setShowPrint] = useState(false);
   const [duringRest, setDuringRest] = useState(false);
 
   /**
@@ -264,6 +266,9 @@ export function SheetRoute({
           </button>
           <button type="button" onClick={() => setShowLevelUp(true)}>
             Subir de nivel
+          </button>
+          <button type="button" onClick={() => setShowPrint(true)}>
+            Exportar PDF
           </button>
           <Link to="/">
             <button type="button">Personajes</button>
@@ -573,6 +578,8 @@ export function SheetRoute({
           onClose={() => setShowLevelUp(false)}
         />
       ) : null}
+
+      {showPrint ? <PrintableSheet sheet={sheet} onClose={() => setShowPrint(false)} /> : null}
 
       {toast !== null ? <Toast message={toast} onDismiss={() => setToast(null)} /> : null}
     </section>
