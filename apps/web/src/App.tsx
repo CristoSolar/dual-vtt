@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
-import { HashRouter, Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
-import { CampaignRoute } from './routes/CampaignRoute.js';
 import { CharactersRoute } from './routes/CharactersRoute.js';
+import { HomeRoute } from './routes/HomeRoute.js';
 import { MapRoute } from './routes/MapRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
@@ -21,6 +21,9 @@ const rng = () => Math.random();
 function Shell() {
   const storage = window.localStorage;
   const navigate = useNavigate();
+  // The map is a Foundry-style fullscreen stage: it owns the whole viewport
+  // and draws its own thin scene bar instead of sharing the page chrome.
+  const isMapRoute = useLocation().pathname === '/map';
   const { characters, active, activeId, setActiveId, addCharacter, updateActive, deleteCharacter } =
     useCharacters(storage);
   const room = useRoom(storage);
@@ -48,50 +51,57 @@ function Shell() {
   }, [active, room]);
 
   return (
-    <div className="app">
-      <header className="topbar">
+    <div className={isMapRoute ? 'app app--map' : 'app'}>
+      <header className={isMapRoute ? 'topbar topbar--overlay' : 'topbar'}>
         <Link to="/" className="brand">
           DAGGERHEART VTT
         </Link>
         <nav>
           <Link to="/">
-            <button type="button">Characters</button>
-          </Link>
-          <Link to="/create/1">
-            <button type="button">Create</button>
-          </Link>
-          {active !== null ? (
-            <Link to="/sheet">
-              <button type="button">Sheet</button>
-            </Link>
-          ) : null}
-          <Link to="/campaign">
-            <button type="button">
-              {inCampaign ? `Campaign ${room.session?.code ?? ''}` : 'Campaign'}
-            </button>
+            <button type="button">Inicio</button>
           </Link>
           {inCampaign ? (
-            <Link to="/map">
-              <button type="button">Map</button>
-            </Link>
-          ) : null}
-          {isGameMaster ? (
-            <Link to="/gm">
-              <button type="button">GM Panel</button>
-            </Link>
-          ) : null}
+            <>
+              <Link to="/map">
+                <button type="button">Mapa</button>
+              </Link>
+              {isGameMaster ? (
+                <Link to="/gm">
+                  <button type="button">Panel del DJ</button>
+                </Link>
+              ) : active !== null ? (
+                <Link to="/sheet">
+                  <button type="button">Hoja</button>
+                </Link>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <Link to="/characters">
+                <button type="button">Personajes</button>
+              </Link>
+              <Link to="/create/1">
+                <button type="button">Crear</button>
+              </Link>
+              {active !== null ? (
+                <Link to="/sheet">
+                  <button type="button">Hoja</button>
+                </Link>
+              ) : null}
+            </>
+          )}
         </nav>
       </header>
 
-      {inCampaign && active !== null && syncedSheet === null && !isGameMaster ? (
+      {!isMapRoute && inCampaign && active !== null && syncedSheet === null && !isGameMaster ? (
         <div className="panel">
           <div className="row spread">
             <span>
-              You’re in campaign <strong>{room.session?.code}</strong> but haven’t claimed a
-              character.
+              Estás en la campaña <strong>{room.session?.code}</strong> pero todavía no reclamaste
+              un personaje.
             </span>
             <button type="button" onClick={claimActive}>
-              Claim {active.sheet.character.name ?? 'this character'}
+              Reclamar {active.sheet.character.name ?? 'este personaje'}
             </button>
           </div>
         </div>
@@ -100,6 +110,24 @@ function Shell() {
       <Routes>
         <Route
           path="/"
+          element={
+            <HomeRoute
+              status={room.status}
+              error={room.error}
+              code={room.session?.code ?? null}
+              role={room.session?.role ?? null}
+              hasActiveCharacter={active !== null}
+              onCreate={(gmName) => {
+                room.createRoom(gmName);
+                navigate('/gm');
+              }}
+              onJoin={room.joinRoom}
+              onLeave={room.leave}
+            />
+          }
+        />
+        <Route
+          path="/characters"
           element={
             <CharactersRoute
               characters={characters}
@@ -121,28 +149,12 @@ function Shell() {
           }
         />
         <Route path="/create" element={<Navigate to="/create/1" replace />} />
-        <Route
-          path="/campaign"
-          element={
-            <CampaignRoute
-              status={room.status}
-              error={room.error}
-              code={room.session?.code ?? null}
-              role={room.session?.role ?? null}
-              onCreate={(gmName) => {
-                room.createRoom(gmName);
-                navigate('/gm');
-              }}
-              onJoin={room.joinRoom}
-              onLeave={room.leave}
-            />
-          }
-        />
+        <Route path="/campaign" element={<Navigate to="/" replace />} />
         <Route
           path="/gm"
           element={
             room.room === null || !isGameMaster ? (
-              <Navigate to="/campaign" replace />
+              <Navigate to="/" replace />
             ) : (
               <GMPanel room={room.room} send={room.send} />
             )
@@ -170,7 +182,7 @@ function Shell() {
           path="/map"
           element={
             room.room === null ? (
-              <Navigate to="/campaign" replace />
+              <Navigate to="/" replace />
             ) : (
               <MapRoute
                 room={room.room}

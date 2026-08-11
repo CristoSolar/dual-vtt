@@ -348,6 +348,68 @@ legend {
   color: var(--c-crimson-bright);
 }
 
+/* ===================================================================== hero */
+
+.hero {
+  text-align: center;
+  padding: var(--sp-8) var(--sp-5) var(--sp-6);
+  margin: calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) var(--sp-5);
+  background:
+    linear-gradient(180deg, rgb(10 8 6 / 55%) 0%, rgb(10 8 6 / 88%) 75%, var(--c-bg) 100%),
+    url('/images/backgrounds/bck-02.webp') center 60% / cover no-repeat;
+  border-bottom: var(--size-rule) solid var(--c-line);
+}
+
+.hero h1 {
+  font-size: var(--fs-xxl, var(--fs-xl));
+  letter-spacing: var(--ls-wider);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 70%);
+}
+
+.hero .muted {
+  text-shadow: 0 1px 6px rgb(0 0 0 / 80%);
+}
+
+.home-option {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The sheet is read for a whole session: the art sits fixed behind it, dim
+   enough that the panels on top stay the thing you're actually reading. */
+.sheet-backdrop::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgb(10 8 6 / 92%) 0%, rgb(10 8 6 / 97%) 40%, var(--c-bg) 85%),
+    url('/images/backgrounds/bck-01.webp') center 30% / cover no-repeat fixed;
+}
+
+/* ============================================================== trait points */
+
+.trait-points-bar {
+  align-items: center;
+}
+
+.trait-points-remaining {
+  color: var(--c-brass-bright);
+  font-weight: var(--fw-semibold);
+}
+
+.trait-points-remaining.trait-points-done {
+  color: var(--c-text-muted);
+  font-weight: var(--fw-medium);
+}
+
+.trait-primary-badge {
+  margin-left: var(--sp-2);
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+}
+
 /* ============================================================= option lists */
 
 .options {
@@ -380,6 +442,16 @@ legend {
   border-color: var(--c-brass);
   background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-2));
   box-shadow: inset var(--size-rule-thick) 0 0 var(--c-brass);
+}
+
+.option-portrait {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  object-position: top center;
+  margin-bottom: var(--sp-3);
+  border-radius: 0;
 }
 
 .option .option-name {
@@ -553,11 +625,22 @@ legend {
   gap: var(--sp-3);
 }
 
-.stat {
-  background: var(--c-surface-2);
-  border: var(--size-rule) solid var(--c-line);
-  padding: var(--sp-3);
-  text-align: center;
+/*
+ * Stat and trait plaques: a bordered badge with a brass top rule and an
+ * inner glow, the number given normal flow (no absolute-positioned shape
+ * behind it) so it can never be clipped by a border or a pseudo-element.
+ */
+.stat,
+.trait-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-1));
+  border: var(--size-rule) solid var(--c-brass-dim);
+  border-top-width: calc(var(--size-rule) * 2);
+  box-shadow: var(--shadow-1), inset 0 var(--size-rule) 0 rgb(255 220 150 / 10%);
+  padding: var(--sp-3) var(--sp-2);
   clip-path: polygon(
     var(--size-bevel-sm) 0,
     100% 0,
@@ -568,39 +651,31 @@ legend {
   );
 }
 
-.stat .stat-value {
+.stat:hover,
+.trait-button:hover:not(:disabled) {
+  border-color: var(--c-brass);
+}
+
+.stat .stat-value,
+.trait-button .trait-mod {
   display: block;
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
-  color: var(--c-text);
-}
-
-.stat .stat-label {
-  color: var(--c-text-muted);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--ls-wider);
-}
-
-.trait-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-3) var(--sp-2);
-}
-
-.trait-button .trait-mod {
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
   color: var(--c-brass);
 }
 
 .trait-button:hover:not(:disabled) .trait-mod {
   color: var(--c-brass-bright);
+}
+
+.stat .stat-label,
+.trait-button .stat-label {
+  color: var(--c-text-muted);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
 }
 
 /* =================================================================== dialog */
@@ -880,6 +955,181 @@ legend {
   padding: var(--sp-2);
 }
 
+/* ============================================================ fullscreen map */
+
+/* On the map route the page itself becomes the stage: no max-width, no
+   scroll, chrome floats on top instead of pushing content down. */
+.app--map {
+  max-width: none;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topbar--overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--size-map-topbar);
+  z-index: 40;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-5);
+  border-bottom: none;
+  background: linear-gradient(180deg, rgb(10 8 6 / 85%), transparent);
+  pointer-events: none;
+}
+
+.topbar--overlay .brand,
+.topbar--overlay nav {
+  pointer-events: auto;
+}
+
+.map-fullscreen {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--c-bg);
+}
+
+.map-scene-bar {
+  position: absolute;
+  top: var(--size-map-topbar);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-5);
+  pointer-events: none;
+}
+
+.map-scene-bar > * {
+  pointer-events: auto;
+}
+
+.map-scene-name {
+  font-family: var(--font-display);
+  letter-spacing: var(--ls-wide);
+  color: var(--c-text-muted);
+  background: rgb(10 8 6 / 70%);
+  border: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-1) var(--sp-4);
+}
+
+.map-stage-full {
+  position: absolute;
+  inset: 0;
+}
+
+.map-empty-notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 28rem;
+}
+
+/* Left icon rail — Foundry's scene-control toolbar, in text glyphs so no
+   icon dependency ships. */
+.map-rail {
+  position: absolute;
+  top: 50%;
+  left: var(--sp-3);
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  background: rgb(10 8 6 / 70%);
+  border: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-2);
+}
+
+.map-rail-button {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  font-size: var(--fs-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-selection-bar {
+  position: absolute;
+  bottom: var(--sp-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: rgb(10 8 6 / 70%);
+  border: var(--size-rule) solid var(--c-line);
+  padding: var(--sp-2) var(--sp-4);
+}
+
+/* Floating windows — draggable by their header, stacked by z-index the
+   caller assigns on focus. */
+.floating-panel {
+  position: absolute;
+  z-index: 50;
+  width: 20rem;
+  max-height: calc(100vh - var(--sp-6));
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--c-surface-1), var(--c-surface-2));
+  border: var(--size-rule) solid var(--c-line-strong);
+  box-shadow: var(--shadow-2);
+}
+
+.floating-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--c-surface-3);
+  border-bottom: var(--size-rule) solid var(--c-line);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.floating-panel-close {
+  min-height: 0;
+  padding: 0 var(--sp-2);
+  border: none;
+  background: transparent;
+  font-size: var(--fs-md);
+  line-height: 1;
+}
+
+.floating-panel-body {
+  padding: var(--sp-4);
+  overflow-y: auto;
+}
+
+.floating-panel-body .panel,
+.floating-panel-body fieldset {
+  margin-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .floating-panel {
+    width: calc(100vw - var(--sp-6));
+  }
+}
+
 /* ==================================================================== toast */
 
 .toast {
@@ -938,6 +1188,10 @@ details summary {
 
 .mt-4 {
   margin-top: var(--sp-4);
+}
+
+.mb-0 {
+  margin-bottom: 0;
 }
 
 .mt-5 {

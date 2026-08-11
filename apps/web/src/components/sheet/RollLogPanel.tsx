@@ -10,15 +10,15 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
   if (entries.length === 0) {
     return (
       <div className="panel">
-        <SectionHead>Roll log</SectionHead>
-        <p className="muted">No rolls yet this session.</p>
+        <SectionHead>Registro de tiradas</SectionHead>
+        <p className="muted">Todavía no hay tiradas en esta sesión.</p>
       </div>
     );
   }
 
   return (
     <div className="panel">
-      <SectionHead>Roll log</SectionHead>
+      <SectionHead>Registro de tiradas</SectionHead>
       <ul className="log">
         {entries.map((entry) => (
           <li key={entry.id}>
@@ -31,8 +31,8 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
                   </span>
                 </div>
                 <span className="muted">
-                  Hope {entry.roll.hope} · Fear {entry.roll.fear} · total {entry.roll.total} vs{' '}
-                  {entry.difficulty}
+                  Esperanza {entry.roll.hope} · Miedo {entry.roll.fear} · total{' '}
+                  {entry.roll.total} vs {entry.difficulty}
                   {entry.experiences.length > 0 ? ` · ${entry.experiences.join(', ')}` : ''}
                 </span>
               </>
@@ -40,12 +40,12 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
               <>
                 <div className="row spread">
                   <strong>{entry.label}</strong>
-                  <span>{entry.roll.total} damage</span>
+                  <span>{entry.roll.total} de daño</span>
                 </div>
                 <span className="muted">
-                  Dice {entry.roll.rolls.join(', ')}
-                  {entry.roll.modifier !== 0 ? ` · modifier ${entry.roll.modifier}` : ''}
-                  {entry.critical ? ` · critical +${entry.roll.criticalBonus}` : ''}
+                  Dados {entry.roll.rolls.join(', ')}
+                  {entry.roll.modifier !== 0 ? ` · modificador ${entry.roll.modifier}` : ''}
+                  {entry.critical ? ` · crítico +${entry.roll.criticalBonus}` : ''}
                 </span>
               </>
             )}

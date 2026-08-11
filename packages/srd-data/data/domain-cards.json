@@ -1,1119 +1,1119 @@
 [
   {
     "id": "rune-ward",
-    "name": "RUNE WARD",
+    "name": "GUARDA RÚNICA",
     "level": 1,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 0,
-    "text": "You have a deeply personal trinket that can be infused with protective magic and held as a ward by you or an ally. Describe what it is and why it’s important to you. The ward’s holder can spend a Hope to reduce incoming damage by 1d8. If the Ward Die result is 8, the ward’s power ends after it reduces damage this turn. It can be recharged for free on your next rest."
+    "text": "Tienes un objeto profundamente personal que puede infundirse con magia protectora y sostenerse como amuleto por ti o un aliado. Describe qué es y por qué es importante para ti. Quien porte el amuleto puede gastar una Esperanza para reducir el daño entrante en 1d8. Si el resultado del Dado del Amuleto es 8, su poder se agota tras reducir el daño de este turno. Puede recargarse gratis en tu próximo descanso."
   },
   {
     "id": "unleash-chaos",
-    "name": "UNLEASH CHAOS",
+    "name": "DESATAR EL CAOS",
     "level": 1,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "At the beginning of a session, place a number of tokens equal to your Spellcast trait on this card. Make a Spellcast Roll against a target within Far range and spend any number of tokens to channel raw energy from within yourself to unleash against them. On a success, roll a number of d10s equal to the tokens you spent and deal that much magic damage to the target. Mark a Stress to replenish this card with tokens (up to your Spellcast trait). At the end of each session, clear all unspent tokens."
+    "text": "Al comienzo de una sesión, coloca en esta carta una cantidad de fichas igual a tu rasgo de Lanzamiento. Haz una Tirada de Lanzamiento contra un objetivo a distancia Lejana y gasta cualquier cantidad de fichas para canalizar energía en bruto desde tu interior y desatarla contra él. Con éxito, tira una cantidad de d10 igual a las fichas gastadas y causa esa cantidad de daño mágico al objetivo. Marca Estrés para reponer fichas en esta carta (hasta tu rasgo de Lanzamiento). Al final de cada sesión, elimina las fichas no gastadas."
   },
   {
     "id": "wall-walk",
-    "name": "WALL WALK",
+    "name": "CAMINAR POR MUROS",
     "level": 1,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend a Hope to allow a creature you can touch to climb on walls and ceilings as easily as walking on the ground. This lasts until the end of the scene or you cast Wall Walk again"
+    "text": "Gasta una Esperanza para permitir que una criatura a la que puedas tocar trepe por muros y techos con la misma facilidad que al caminar por el suelo. Esto dura hasta el final de la escena o hasta que vuelvas a lanzar Caminar por Muros."
   },
   {
     "id": "cinder-grasp",
-    "name": "CINDER GRASP",
+    "name": "GARRA DE ASCUAS",
     "level": 2,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Melee range. On a success, the target instantly bursts into flames, takes 1d20+3 magic damage, and is temporarily lit On Fire. When a creature acts while On Fire, they must take an extra 2d6 magic damage if they are still On Fire at the end of their action."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo a distancia de Cuerpo a Cuerpo. Con éxito, el objetivo estalla instantáneamente en llamas, recibe 1d20+3 de daño mágico y queda Ardiendo temporalmente. Cuando una criatura actúa mientras está Ardiendo, debe recibir 2d6 de daño mágico adicional si sigue Ardiendo al final de su acción."
   },
   {
     "id": "floating-eye",
-    "name": "FLOATING EYE",
+    "name": "OJO FLOTANTE",
     "level": 2,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 0,
-    "text": "Spend a Hope to create a single, small floating orb that you can move anywhere within Very Far range. While this spell is active, you can see through the orb as though you’re looking out from its position. You can transition between using your own senses and seeing through the orb freely. If the orb takes damage or moves out of range, the spell ends."
+    "text": "Gasta una Esperanza para crear un pequeño orbe flotante que puedes mover libremente dentro de distancia Muy Lejana. Mientras este hechizo esté activo, puedes ver a través del orbe como si observaras desde su posición. Puedes alternar libremente entre usar tus propios sentidos y ver a través del orbe. Si el orbe recibe daño o sale del alcance, el hechizo termina."
   },
   {
     "id": "counterspell",
-    "name": "COUNTERSPELL",
+    "name": "CONTRAHECHIZO",
     "level": 3,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "You can interrupt a magical effect taking place by making a reaction roll using your Spellcast trait. On a success, the effect stops and any consequences are avoided, and this card is placed in your vault."
+    "text": "Puedes interrumpir un efecto mágico en curso haciendo una tirada de reacción con tu rasgo de Lanzamiento. Con éxito, el efecto se detiene y se evitan sus consecuencias, y esta carta se coloca en tu bóveda."
   },
   {
     "id": "flight",
-    "name": "FLIGHT",
+    "name": "VUELO",
     "level": 3,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (15). On a success, place a number of tokens equal to your Agility on this card (minimum 1). When you make an action roll while flying, spend a token from this card. After the action that spends the last token is resolved, you descend to the ground directly below you."
+    "text": "Haz una Tirada de Lanzamiento (15). Con éxito, coloca en esta carta una cantidad de fichas igual a tu Agilidad (mínimo 1). Cuando hagas una tirada de acción mientras vuelas, gasta una ficha de esta carta. Después de resolver la acción que gasta la última ficha, desciendes hasta el suelo directamente debajo de ti."
   },
   {
     "id": "blink-out",
-    "name": "BLINK OUT",
+    "name": "PARPADEO",
     "level": 4,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (12). On a success, spend a Hope to teleport to another point you can see within Far range. If any willing creatures are within Very Close range, spend an additional Hope for each creature to bring them with you."
+    "text": "Haz una Tirada de Lanzamiento (12). Con éxito, gasta una Esperanza para teletransportarte a otro punto que puedas ver dentro de distancia Lejana. Si hay criaturas dispuestas dentro de distancia Muy Cercana, gasta una Esperanza adicional por cada una para llevarlas contigo."
   },
   {
     "id": "preservation-blast",
-    "name": "PRESERVATION BLAST",
+    "name": "EXPLOSIÓN DE PRESERVACIÓN",
     "level": 4,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll against all targets within Melee range. Targets you succeed against are forced back to Far range and take d8+3 magic damage using your Spellcast trait."
+    "text": "Haz una Tirada de Lanzamiento contra todos los objetivos dentro de distancia de Cuerpo a Cuerpo. Los objetivos contra los que tengas éxito son empujados hasta distancia Lejana y reciben d8+3 de daño mágico usando tu rasgo de Lanzamiento."
   },
   {
     "id": "chain-lightning",
-    "name": "CHAIN LIGHTNING",
+    "name": "CADENA DE RELÁMPAGOS",
     "level": 5,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Mark 2 Stress to make a Spellcast Roll, unleashing lightning on all targets within Close range. Targets you succeed against must make a reaction roll with a Difficulty equal to the result of your Spellcast Roll. Targets who fail take 2d8+4 magic damage. Additional adversaries not already targeted by Chain Lightning and within Close range of previous targets who took damage must also make the reaction roll. Targets who fail take 2d8+4 magic damage. This chain continues until there are no more adversaries within range."
+    "text": "Marca 2 de Estrés para hacer una Tirada de Lanzamiento, liberando un rayo sobre todos los objetivos dentro de distancia Cercana. Los objetivos contra los que tengas éxito deben hacer una tirada de reacción con Dificultad igual al resultado de tu Tirada de Lanzamiento. Quienes fallen reciben 2d8+4 de daño mágico. Los adversarios adicionales aún no alcanzados por Cadena de Relámpagos y que estén dentro de distancia Cercana de objetivos previos que recibieron daño también deben hacer la tirada de reacción. Quienes fallen reciben 2d8+4 de daño mágico. Esta cadena continúa hasta que no queden más adversarios dentro de alcance."
   },
   {
     "id": "premonition",
-    "name": "PREMONITION",
+    "name": "PREMONICIÓN",
     "level": 5,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "You can channel arcane energy to have visions of the future. Once per long rest, immediately after the GM conveys the consequences of a roll you made, you can rescind the move and consequences like they never happened and make another move instead."
+    "text": "Puedes canalizar energía arcana para tener visiones del futuro. Una vez por descanso largo, inmediatamente después de que el GM te transmita las consecuencias de una tirada que hiciste, puedes anular esa acción y sus consecuencias como si nunca hubieran ocurrido, y realizar otra acción en su lugar."
   },
   {
     "id": "rift-walker",
-    "name": "RIFT WALKER",
+    "name": "CAMINANTE DE FISURAS",
     "level": 6,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (15). On a success, you place an arcane marking on the ground where you currently stand. The next time you successfully cast Rift Walker, a rift in space opens up, providing safe passage back to the exact spot where the marking was placed. This rift stays open until you choose to close it or you cast another spell. You can drop the spell at any time to cast Rift Walker again and place the marking somewhere new."
+    "text": "Haz una Tirada de Lanzamiento (15). Con éxito, colocas una marca arcana en el suelo donde te encuentras. La próxima vez que lances Caminante de Fisuras con éxito, se abre una fisura en el espacio que ofrece paso seguro de vuelta al lugar exacto donde colocaste la marca. Esta fisura permanece abierta hasta que decidas cerrarla o lances otro hechizo. Puedes cancelar el hechizo en cualquier momento para volver a lanzar Caminante de Fisuras y colocar la marca en otro lugar."
   },
   {
     "id": "telekinesis",
-    "name": "TELEKINESIS",
+    "name": "TELEQUINESIS",
     "level": 6,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 0,
-    "text": "Make a Spellcast Roll against a target within Far range. On a success, you can use your mind to move them anywhere within Far range of their original position. You can throw the lifted target as an attack by making an additional Spellcast Roll against the second target you’re trying to attack. On a success, deal d12+4 physical damage to the second target using your Proficiency. This spell then ends."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, puedes usar tu mente para moverlo a cualquier punto dentro de distancia Lejana de su posición original. Puedes arrojar al objetivo levitado como ataque haciendo una Tirada de Lanzamiento adicional contra un segundo objetivo al que intentas atacar. Con éxito, causa d12+4 de daño físico al segundo objetivo usando tu Competencia. Entonces el hechizo termina."
   },
   {
     "id": "arcana-touched",
-    "name": "ARCANA-TOUCHED",
+    "name": "TOCADO POR ARCANA",
     "level": 7,
     "domain": "arcana",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Arcana domain, gain the following benefits:\n• +1 bonus to your Spellcast Rolls\n• Once per rest, you can switch the results of your Hope and Fear Dice."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Arcana, obtienes los siguientes beneficios:\n• +1 a tus Tiradas de Lanzamiento\n• Una vez por descanso, puedes intercambiar los resultados de tus Dados de Esperanza y de Miedo."
   },
   {
     "id": "cloaking-blast",
-    "name": "CLOAKING BLAST",
+    "name": "RÁFAGA OCULTADORA",
     "level": 7,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "When you make a successful Spellcast Roll to cast a different spell, you can spend a Hope to become Cloaked. While Cloaked, you remain unseen if you are stationary when an adversary moves to where they would normally see you. When you move into or within an adversary’s line of sight or make an attack, you are no longer Cloaked."
+    "text": "Cuando tengas éxito en una Tirada de Lanzamiento para lanzar un hechizo diferente, puedes gastar una Esperanza para volverte Oculto. Mientras estés Oculto, permaneces sin ser visto si te mantienes quieto cuando un adversario se mueve a un punto desde el que normalmente te vería. Cuando te muevas hacia o dentro del campo de visión de un adversario, o realices un ataque, dejas de estar Oculto."
   },
   {
     "id": "arcane-reflection",
-    "name": "ARCANE REFLECTION",
+    "name": "REFLEJO ARCANO",
     "level": 8,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "When you would take magic damage, you can spend any number of Hope to roll that many d6s. If any roll a 6, the attack is reflected back to the caster, dealing the damage to them instead."
+    "text": "Cuando vayas a recibir daño mágico, puedes gastar cualquier cantidad de Esperanza para tirar esa cantidad de d6. Si alguno muestra un 6, el ataque se refleja hacia quien lo lanzó, causándole el daño a él en su lugar."
   },
   {
     "id": "confusing-aura",
-    "name": "CONFUSING AURA",
+    "name": "AURA CONFUSA",
     "level": 8,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (14). Once per long rest on a success, you create a layer of illusion over your body that makes it hard to tell exactly where you are. Mark any number of Stress to make that many additional layers. When an adversary makes an attack against you, roll a number of d6s equal to the number of layers currently active. If any roll a 5 or higher, one layer of the aura is destroyed and the attack fails. If all the results are 4 or lower, you take the damage and this spell ends"
+    "text": "Haz una Tirada de Lanzamiento (14). Una vez por descanso largo, con éxito, creas una capa de ilusión sobre tu cuerpo que dificulta saber exactamente dónde estás. Marca cualquier cantidad de Estrés para crear esa cantidad de capas adicionales. Cuando un adversario te ataque, tira una cantidad de d6 igual al número de capas activas. Si alguno muestra un 5 o más, una capa del aura se destruye y el ataque falla. Si todos los resultados son 4 o menos, recibes el daño y este hechizo termina."
   },
   {
     "id": "earthquake",
-    "name": "EARTHQUAKE",
+    "name": "TERREMOTO",
     "level": 9,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (16). Once per rest on a success, all targets within Very Far range who aren’t flying must make a Reaction Roll (18). Targets who fail take 3d10+8 physical damage and are temporarily Vulnerable. Targets who succeed take half damage. Additionally, when you succeed on the Spellcast Roll, all terrain within Very Far range becomes difficult to move through and structures within this range might sustain damage or crumble."
+    "text": "Haz una Tirada de Lanzamiento (16). Una vez por descanso, con éxito, todos los objetivos dentro de distancia Muy Lejana que no estén volando deben hacer una Tirada de Reacción (18). Quienes fallen reciben 3d10+8 de daño físico y quedan temporalmente Vulnerables. Quienes tengan éxito reciben la mitad del daño. Además, cuando tengas éxito en la Tirada de Lanzamiento, todo el terreno dentro de distancia Muy Lejana se vuelve difícil de atravesar y las estructuras en ese rango pueden sufrir daños o derrumbarse."
   },
   {
     "id": "sensory-projection",
-    "name": "SENSORY PROJECTION",
+    "name": "PROYECCIÓN SENSORIAL",
     "level": 9,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 0,
-    "text": "Once per rest, make a Spellcast Roll (15). On a success, drop into a vision that lets you clearly see and hear any place you have been before as though you are standing there in this moment. You can move freely in this vision and are not constrained by the physics or impediments of a physical body. This spell cannot be detected by mundane or magical means. You drop out of this vision upon taking damage or casting another spell."
+    "text": "Una vez por descanso, haz una Tirada de Lanzamiento (15). Con éxito, entras en una visión que te permite ver y oír con claridad cualquier lugar en el que hayas estado antes, como si estuvieras allí en ese momento. Puedes moverte libremente en esta visión y no estás limitado por la física ni los impedimentos de un cuerpo físico. Este hechizo no puede detectarse por medios mundanos ni mágicos. Sales de esta visión al recibir daño o al lanzar otro hechizo."
   },
   {
     "id": "adjust-reality",
-    "name": "ADJUST REALITY",
+    "name": "AJUSTAR LA REALIDAD",
     "level": 10,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "After you or a willing ally make any roll, you can spend 5 Hope to change the numerical result of that roll to a result of your choice instead. The result must be plausible within the range of the dice."
+    "text": "Después de que tú o un aliado dispuesto hagáis cualquier tirada, puedes gastar 5 de Esperanza para cambiar el resultado numérico de esa tirada por otro de tu elección. El resultado debe ser plausible dentro del rango de los dados."
   },
   {
     "id": "falling-sky",
-    "name": "FALLING SKY",
+    "name": "CIELO EN CAÍDA",
     "level": 10,
     "domain": "arcana",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against all adversaries within Far range. Mark any number of Stress to make shards of arcana rain down from above. Targets you succeed against take 1d20+2 magic damage for each Stress marked."
+    "text": "Haz una Tirada de Lanzamiento contra todos los adversarios dentro de distancia Lejana. Marca cualquier cantidad de Estrés para hacer que fragmentos de energía arcana caigan del cielo. Los objetivos contra los que tengas éxito reciben 1d20+2 de daño mágico por cada punto de Estrés marcado."
   },
   {
     "id": "get-back-up",
-    "name": "GET BACK UP",
+    "name": "VOLVER A LEVANTARSE",
     "level": 1,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you take Severe damage, you can mark a Stress to reduce the severity by one threshold."
+    "text": "Cuando recibas daño Severo, puedes marcar Estrés para reducir la severidad en un umbral."
   },
   {
     "id": "not-good-enough",
-    "name": "NOT GOOD ENOUGH",
+    "name": "NO ES SUFICIENTE",
     "level": 1,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you roll your damage dice, you can reroll any 1s or 2s."
+    "text": "Cuando tires tus dados de daño, puedes volver a tirar cualquier 1 o 2."
   },
   {
     "id": "whirlwind",
-    "name": "WHIRLWIND",
+    "name": "TORBELLINO",
     "level": 1,
     "domain": "blade",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you make a successful attack against a target within Very Close range, you can spend a Hope to use the attack against all other targets within Very Close range. All additional adversaries you succeed against with this ability take half damage."
+    "text": "Cuando hagas un ataque exitoso contra un objetivo dentro de distancia Muy Cercana, puedes gastar una Esperanza para usar el ataque contra todos los demás objetivos dentro de distancia Muy Cercana. Todos los adversarios adicionales contra los que tengas éxito con esta habilidad reciben la mitad del daño."
   },
   {
     "id": "a-soldiers-bond",
-    "name": "A SOLDIER’S BOND",
+    "name": "VÍNCULO DE SOLDADO",
     "level": 2,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per long rest, when you compliment someone or ask them about something they’re good at, you can both gain 3 Hope."
+    "text": "Una vez por descanso largo, cuando halagas a alguien o le preguntas sobre algo en lo que es bueno, ambos podéis ganar 3 de Esperanza."
   },
   {
     "id": "reckless",
-    "name": "RECKLESS",
+    "name": "TEMERARIO",
     "level": 2,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "Mark a Stress to gain advantage on an attack."
+    "text": "Marca Estrés para obtener ventaja en un ataque."
   },
   {
     "id": "scramble",
-    "name": "SCRAMBLE",
+    "name": "ESCABULLIRSE",
     "level": 3,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per rest, when a creature within Melee range would deal damage to you, you can avoid the attack and safely move out of Melee range of the enemy."
+    "text": "Una vez por descanso, cuando una criatura dentro de distancia de Cuerpo a Cuerpo vaya a causarte daño, puedes evitar el ataque y alejarte de su distancia de Cuerpo a Cuerpo sin sufrir consecuencias."
   },
   {
     "id": "versatile-fighter",
-    "name": "VERSATILE FIGHTER",
+    "name": "LUCHADOR VERSÁTIL",
     "level": 3,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "You can use a different character trait for an equipped weapon, rather than the trait the weapon calls for. When you deal damage, you can mark a Stress to use the maximum result of one of your damage dice instead of rolling it."
+    "text": "Puedes usar un rasgo de personaje distinto para un arma equipada, en lugar del rasgo que el arma requiere. Cuando causes daño, puedes marcar Estrés para usar el resultado máximo de uno de tus dados de daño en lugar de tirarlo."
   },
   {
     "id": "deadly-focus",
-    "name": "DEADLY FOCUS",
+    "name": "ENFOQUE LETAL",
     "level": 4,
     "domain": "blade",
     "type": "ability",
     "recallCost": 2,
-    "text": "Once per rest, you can apply all your focus toward a target of your choice. Until you attack another creature, you defeat the target, or the battle ends, gain a +1 bonus to your Proficiency."
+    "text": "Una vez por descanso, puedes concentrar toda tu atención en un objetivo de tu elección. Hasta que ataques a otra criatura, derrotes al objetivo o termine el combate, obtienes un +1 a tu Competencia."
   },
   {
     "id": "fortified-armor",
-    "name": "FORTIFIED ARMOR",
+    "name": "ARMADURA FORTIFICADA",
     "level": 4,
     "domain": "blade",
     "type": "ability",
     "recallCost": 0,
-    "text": "While you are wearing armor, gain a +2 bonus to your damage thresholds."
+    "text": "Mientras lleves armadura puesta, obtienes un +2 a tus umbrales de daño."
   },
   {
     "id": "champions-edge",
-    "name": "CHAMPION’S EDGE",
+    "name": "FILO DEL CAMPEÓN",
     "level": 5,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you critically succeed on an attack, you can spend up to 3 Hope and choose one of the following options for each Hope spent:\n• You clear a Hit Point.\n• You clear an Armor Slot.\n• The target must mark an additional Hit Point.\nYou can’t choose the same option more than once."
+    "text": "Cuando obtengas un éxito crítico en un ataque, puedes gastar hasta 3 de Esperanza y elegir una de las siguientes opciones por cada punto gastado:\n• Despejas un Punto de Vida.\n• Despejas una Ranura de Armadura.\n• El objetivo debe marcar un Punto de Vida adicional.\nNo puedes elegir la misma opción más de una vez."
   },
   {
     "id": "vitality",
-    "name": "VITALITY",
+    "name": "VITALIDAD",
     "level": 5,
     "domain": "blade",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you choose this card, permanently gain two of the following benefits:\n• One Stress slot\n• One Hit Point slot\n• +2 bonus to your damage thresholds Then place this card in your vault permanently."
+    "text": "Cuando elijas esta carta, obtén de forma permanente dos de los siguientes beneficios:\n• Una ranura de Estrés\n• Una ranura de Punto de Vida\n• +2 a tus umbrales de daño\nLuego coloca esta carta en tu bóveda de forma permanente."
   },
   {
     "id": "battle-hardened",
-    "name": "BATTLE-HARDENED",
+    "name": "CURTIDO EN BATALLA",
     "level": 6,
     "domain": "blade",
     "type": "ability",
     "recallCost": 2,
-    "text": "Once per long rest when you would make a Death Move, you can spend a Hope to clear a Hit Point instead."
+    "text": "Una vez por descanso largo, cuando debas hacer una Jugada de Muerte, puedes gastar una Esperanza para despejar un Punto de Vida en su lugar."
   },
   {
     "id": "rage-up",
-    "name": "RAGE UP",
+    "name": "FURIA CRECIENTE",
     "level": 6,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "Before you make an attack, you can mark a Stress to gain a bonus to your damage roll equal to twice your Strength. You can Rage Up twice per attack."
+    "text": "Antes de hacer un ataque, puedes marcar Estrés para obtener un bono a tu tirada de daño igual al doble de tu Fuerza. Puedes usar Furia Creciente dos veces por ataque."
   },
   {
     "id": "blade-touched",
-    "name": "BLADE-TOUCHED",
+    "name": "TOCADO POR EL FILO",
     "level": 7,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "When 4 or more of the domain cards in your loadout are from the Blade domain, gain the following benefits:\n• +2 bonus to your attack rolls\n• +4 bonus to your Severe damage threshold"
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Filo, obtienes los siguientes beneficios:\n• +2 a tus tiradas de ataque\n• +4 a tu umbral de daño Severo"
   },
   {
     "id": "glancing-blow",
-    "name": "GLANCING BLOW",
+    "name": "GOLPE DE ROCE",
     "level": 7,
     "domain": "blade",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you fail an attack, you can mark a Stress to deal weapon damage using half your Proficiency."
+    "text": "Cuando falles un ataque, puedes marcar Estrés para causar el daño de tu arma usando la mitad de tu Competencia."
   },
   {
     "id": "battle-cry",
-    "name": "BATTLE CRY",
+    "name": "GRITO DE GUERRA",
     "level": 8,
     "domain": "blade",
     "type": "ability",
     "recallCost": 2,
-    "text": "Once per long rest, while you’re charging into danger, you can muster a rousing call that inspires your allies. All allies who can hear you each clear a Stress and gain a Hope. Additionally, your allies gain advantage on attack rolls until you or an ally rolls a failure with Fear."
+    "text": "Una vez por descanso largo, mientras te lanzas al peligro, puedes proferir un grito inspirador que aliente a tus aliados. Todos los aliados que puedan oírte despejan un punto de Estrés y ganan una Esperanza. Además, tus aliados obtienen ventaja en sus tiradas de ataque hasta que tú o un aliado obtengáis un fallo con Miedo."
   },
   {
     "id": "frenzy",
-    "name": "FRENZY",
+    "name": "FRENESÍ",
     "level": 8,
     "domain": "blade",
     "type": "ability",
     "recallCost": 3,
-    "text": "Once per long rest, you can go into a Frenzy until there are no more adversaries within sight. While Frenzied, you can’t use Armor Slots, and you gain a +10 bonus to your damage rolls and a +8 bonus to your Severe damage threshold."
+    "text": "Una vez por descanso largo, puedes entrar en Frenesí hasta que no queden adversarios a la vista. Mientras estés en Frenesí, no puedes usar Ranuras de Armadura, y obtienes un +10 a tus tiradas de daño y un +8 a tu umbral de daño Severo."
   },
   {
     "id": "gore-and-glory",
-    "name": "GORE AND GLORY",
+    "name": "SANGRE Y GLORIA",
     "level": 9,
     "domain": "blade",
     "type": "ability",
     "recallCost": 2,
-    "text": "When you critically succeed on a weapon attack, gain an additional Hope or clear an additional Stress. Additionally, when you deal enough damage to defeat an enemy, gain a Hope or clear a Stress."
+    "text": "Cuando obtengas un éxito crítico en un ataque con arma, gana una Esperanza adicional o despeja un Estrés adicional. Además, cuando causes suficiente daño para derrotar a un enemigo, gana una Esperanza o despeja un Estrés."
   },
   {
     "id": "deft-maneuvers",
-    "name": "DEFT MANEUVERS",
+    "name": "MANIOBRAS DIESTRAS",
     "level": 1,
     "domain": "bone",
     "type": "ability",
     "recallCost": 0,
-    "text": "Once per rest, mark a Stress to sprint anywhere within Far range without making an Agility Roll to get there. If you end this movement within Melee range of an adversary and immediately make an attack against them, gain a +1 bonus to the attack roll."
+    "text": "Una vez por descanso, marca Estrés para desplazarte a toda velocidad a cualquier punto dentro de distancia Lejana sin hacer una Tirada de Agilidad para llegar allí. Si terminas este movimiento dentro de distancia de Cuerpo a Cuerpo de un adversario y atacas de inmediato, obtienes un +1 a la tirada de ataque."
   },
   {
     "id": "i-see-it-coming",
-    "name": "I SEE IT COMING",
+    "name": "LO VEO VENIR",
     "level": 1,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you’re targeted by an attack made from beyond Melee range, you can mark a Stress to roll a d4 and gain a bonus to your Evasion equal to the result against the attack."
+    "text": "Cuando seas objetivo de un ataque realizado desde más allá de distancia de Cuerpo a Cuerpo, puedes marcar Estrés para tirar un d4 y obtener un bono a tu Evasión igual al resultado contra ese ataque."
   },
   {
     "id": "untouchable",
-    "name": "UNTOUCHABLE",
+    "name": "INTOCABLE",
     "level": 1,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Gain a bonus to your Evasion equal to half your Agility."
+    "text": "Obtienes un bono a tu Evasión igual a la mitad de tu Agilidad."
   },
   {
     "id": "ferocity",
-    "name": "FEROCITY",
+    "name": "FEROCIDAD",
     "level": 2,
     "domain": "bone",
     "type": "ability",
     "recallCost": 2,
-    "text": "When you cause an adversary to mark 1 or more Hit Points, you can spend 2 Hope to increase your Evasion by the number of Hit Points they marked. This bonus lasts until after the next attack made against you."
+    "text": "Cuando hagas que un adversario marque uno o más Puntos de Vida, puedes gastar 2 de Esperanza para aumentar tu Evasión en una cantidad igual a los Puntos de Vida marcados. Este bono dura hasta después del siguiente ataque que se haga contra ti."
   },
   {
     "id": "reapers-strike",
-    "name": "REAPER’S STRIKE",
+    "name": "GOLPE DEL SEGADOR",
     "level": 9,
     "domain": "blade",
     "type": "ability",
     "recallCost": 3,
-    "text": "Once per long rest, spend a Hope to make an attack roll. The GM tells you which targets within range it would succeed against. Choose one of these targets and force them to mark 5 Hit Points."
+    "text": "Una vez por descanso largo, gasta una Esperanza para hacer una tirada de ataque. El GM te dice contra qué objetivos dentro de alcance tendría éxito. Elige uno de esos objetivos y fuérzalo a marcar 5 Puntos de Vida."
   },
   {
     "id": "battle-monster",
-    "name": "BATTLE MONSTER",
+    "name": "MONSTRUO DE BATALLA",
     "level": 10,
     "domain": "blade",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you make a successful attack against an adversary, you can mark 4 Stress to force the target to mark a number of Hit Points equal to the number of Hit Points you currently have marked instead of rolling for damage."
+    "text": "Cuando hagas un ataque exitoso contra un adversario, puedes marcar 4 de Estrés para forzar al objetivo a marcar una cantidad de Puntos de Vida igual a la cantidad de Puntos de Vida que tú tengas marcados actualmente, en lugar de tirar el daño."
   },
   {
     "id": "onslaught",
-    "name": "ONSLAUGHT",
+    "name": "ARREMETIDA",
     "level": 10,
     "domain": "blade",
     "type": "ability",
     "recallCost": 3,
-    "text": "When you successfully make an attack with your weapon, you never deal damage beneath a target’s Major damage threshold (the target always marks a minimum of 2 Hit Points). Additionally, when a creature within your weapon’s range deals damage to an ally with an attack that doesn’t include you, you can mark a Stress to force them to make a Reaction Roll (15). On a failure, the target must mark a Hit Point."
+    "text": "Cuando hagas un ataque exitoso con tu arma, nunca causas daño por debajo del umbral de daño Mayor del objetivo (el objetivo siempre marca un mínimo de 2 Puntos de Vida). Además, cuando una criatura dentro del alcance de tu arma cause daño a un aliado con un ataque que no te incluya a ti, puedes marcar Estrés para forzarla a hacer una Tirada de Reacción (15). Con un fallo, el objetivo debe marcar un Punto de Vida."
   },
   {
     "id": "strategic-approach",
-    "name": "STRATEGIC APPROACH",
+    "name": "ENFOQUE ESTRATÉGICO",
     "level": 2,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "After a long rest, place a number of tokens equal to your Knowledge on this card (minimum 1). The first time you move within Close range of an adversary and make an attack against them, you can spend one token to choose one of the following options:\n• You make the attack with advantage.\n• You clear a Stress on an ally within Melee range of the adversary.\n• You add a d8 to your damage roll.\nWhen you take a long rest, clear all unspent tokens."
+    "text": "Después de un descanso largo, coloca en esta carta una cantidad de fichas igual a tu Conocimiento (mínimo 1). La primera vez que te acerques a distancia Cercana de un adversario y lo ataques, puedes gastar una ficha para elegir una de las siguientes opciones:\n• Haces el ataque con ventaja.\n• Despejas un punto de Estrés a un aliado dentro de distancia de Cuerpo a Cuerpo del adversario.\n• Añades un d8 a tu tirada de daño.\nAl tomar un descanso largo, elimina las fichas no gastadas."
   },
   {
     "id": "brace",
-    "name": "BRACE",
+    "name": "AFIANZARSE",
     "level": 3,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you mark an Armor Slot to reduce incoming damage, you can mark a Stress to mark an additional Armor Slot."
+    "text": "Cuando marques una Ranura de Armadura para reducir el daño entrante, puedes marcar Estrés para marcar una Ranura de Armadura adicional."
   },
   {
     "id": "tactician",
-    "name": "TACTICIAN",
+    "name": "TÁCTICO",
     "level": 3,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you Help an Ally, they can spend a Hope to add one of your Experiences to their roll alongside your advantage die. When making a Tag Team Roll, you can roll a d20 as your Hope Die."
+    "text": "Cuando Ayudes a un Aliado, este puede gastar una Esperanza para añadir una de tus Experiencias a su tirada junto con tu dado de ventaja. Al hacer una Tirada en Equipo, puedes tirar un d20 como tu Dado de Esperanza."
   },
   {
     "id": "boost",
-    "name": "BOOST",
+    "name": "IMPULSO",
     "level": 4,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Mark a Stress to boost off a willing ally within Close range, fling yourself into the air, and perform an aerial attack against a target within Far range. You have advantage on the attack, add a d10 to the damage roll, and end your move within Melee range of the target."
+    "text": "Marca Estrés para impulsarte desde un aliado dispuesto dentro de distancia Cercana, lanzarte al aire y realizar un ataque aéreo contra un objetivo dentro de distancia Lejana. Tienes ventaja en el ataque, añades un d10 a la tirada de daño y terminas tu movimiento dentro de distancia de Cuerpo a Cuerpo del objetivo."
   },
   {
     "id": "redirect",
-    "name": "REDIRECT",
+    "name": "REDIRIGIR",
     "level": 4,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When an attack made against you from beyond Melee range fails, roll a number of d6s equal to your Proficiency. If any roll a 6, you can mark a Stress to redirect the attack to damage an adversary within Very Close range instead."
+    "text": "Cuando un ataque hecho contra ti desde más allá de distancia de Cuerpo a Cuerpo falle, tira una cantidad de d6 igual a tu Competencia. Si alguno muestra un 6, puedes marcar Estrés para redirigir el ataque y dañar en su lugar a un adversario dentro de distancia Muy Cercana."
   },
   {
     "id": "know-thy-enemy",
-    "name": "KNOW THY ENEMY",
+    "name": "CONOCE A TU ENEMIGO",
     "level": 5,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When observing a creature, you can make an Instinct Roll against them. On a success, spend a Hope and ask the GM for one set of information about the target from the following options:\n• Their unmarked Hit Points and Stress.\n• Their Difficulty and damage thresholds.\n• Their tactics and standard attack damage dice.\n• Their features and Experiences.\nAdditionally on a success, you can mark a Stress to remove a Fear from the GM’s Fear Pool."
+    "text": "Al observar a una criatura, puedes hacer una Tirada de Instinto contra ella. Con éxito, gasta una Esperanza y pide al GM un conjunto de información sobre el objetivo entre las siguientes opciones:\n• Sus Puntos de Vida y Estrés sin marcar.\n• Su Dificultad y umbrales de daño.\n• Sus tácticas y el dado de daño de su ataque estándar.\n• Sus rasgos especiales y Experiencias.\nAdemás, con éxito, puedes marcar Estrés para eliminar un punto de Miedo de la Reserva de Miedo del GM."
   },
   {
     "id": "signature-move",
-    "name": "SIGNATURE MOVE",
+    "name": "MOVIMIENTO DE FIRMA",
     "level": 5,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Name and describe your signature combat move. Once per rest, when you perform this signature move as part of an action you’re taking, you can roll a d20 as your Hope Die. On a success, clear a Stress."
+    "text": "Nombra y describe tu movimiento de combate característico. Una vez por descanso, cuando realices este movimiento como parte de una acción, puedes tirar un d20 como tu Dado de Esperanza. Con éxito, despeja un punto de Estrés."
   },
   {
     "id": "rapid-riposte",
-    "name": "RAPID RIPOSTE",
+    "name": "RESPUESTA RÁPIDA",
     "level": 6,
     "domain": "bone",
     "type": "ability",
     "recallCost": 0,
-    "text": "When an attack made against you from within Melee range fails, you can mark a Stress and seize the opportunity to deal the weapon damage of one of your active weapons to the attacker."
+    "text": "Cuando un ataque hecho contra ti desde distancia de Cuerpo a Cuerpo falle, puedes marcar Estrés y aprovechar la oportunidad para causar el daño de una de tus armas activas al atacante."
   },
   {
     "id": "recovery",
-    "name": "RECOVERY",
+    "name": "RECUPERACIÓN",
     "level": 6,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "During a short rest, you can choose a long rest downtime move instead. You can spend a Hope to let an ally do the same."
+    "text": "Durante un descanso corto, puedes elegir en su lugar una jugada de tiempo libre de descanso largo. Puedes gastar una Esperanza para que un aliado haga lo mismo."
   },
   {
     "id": "bone-touched",
-    "name": "BONE-TOUCHED",
+    "name": "TOCADO POR EL HUESO",
     "level": 7,
     "domain": "bone",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Bone domain, gain the following benefits:\n• +1 bonus to Agility\n• Once per rest, you can spend 3 Hope to cause an attack that succeeded against you to fail instead."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Hueso, obtienes los siguientes beneficios:\n• +1 a Agilidad\n• Una vez por descanso, puedes gastar 3 de Esperanza para hacer que un ataque que tuvo éxito contra ti falle en su lugar."
   },
   {
     "id": "cruel-precision",
-    "name": "CRUEL PRECISION",
+    "name": "PRECISIÓN CRUEL",
     "level": 7,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you make a successful attack with a weapon, gain a bonus to your damage roll equal to either your Finesse or Agility."
+    "text": "Cuando hagas un ataque exitoso con un arma, obtienes un bono a tu tirada de daño igual a tu Destreza o tu Agilidad."
   },
   {
     "id": "breaking-blow",
-    "name": "BREAKING BLOW",
+    "name": "GOLPE DEMOLEDOR",
     "level": 8,
     "domain": "bone",
     "type": "ability",
     "recallCost": 3,
-    "text": "When you make a successful attack, you can mark a Stress to make the next successful attack against that same target deal an extra 2d12 damage."
+    "text": "Cuando hagas un ataque exitoso, puedes marcar Estrés para que el próximo ataque exitoso contra ese mismo objetivo cause 2d12 de daño extra."
   },
   {
     "id": "wrangle",
-    "name": "WRANGLE",
+    "name": "ARREAR",
     "level": 8,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Make an Agility Roll against all targets within Close range. Spend a Hope to move targets you succeed against, and any willing allies within Close range, to another point within Close range."
+    "text": "Haz una Tirada de Agilidad contra todos los objetivos dentro de distancia Cercana. Gasta una Esperanza para mover a los objetivos contra los que tuviste éxito, y a cualquier aliado dispuesto dentro de distancia Cercana, a otro punto dentro de distancia Cercana."
   },
   {
     "id": "on-the-brink",
-    "name": "ON THE BRINK",
+    "name": "AL BORDE",
     "level": 9,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you have 2 or fewer Hit Points unmarked, you don’t take Minor damage."
+    "text": "Cuando tengas 2 o menos Puntos de Vida sin marcar, no recibes daño Menor."
   },
   {
     "id": "splintering-strike",
-    "name": "SPLINTERING STRIKE",
+    "name": "GOLPE ASTILLANTE",
     "level": 9,
     "domain": "bone",
     "type": "ability",
     "recallCost": 3,
-    "text": "Spend a Hope and make an attack against all adversaries within your weapon’s range. Once per long rest, on a success against any targets, roll your weapon's damage and distribute that damage however you wish between the targets you succeeded against. Before you deal damage to each target, roll an additional damage die and add its result to the damage you deal to them."
+    "text": "Gasta una Esperanza y haz un ataque contra todos los adversarios dentro del alcance de tu arma. Una vez por descanso largo, con éxito contra cualquier objetivo, tira el daño de tu arma y distribúyelo como quieras entre los objetivos contra los que tuviste éxito. Antes de causar daño a cada objetivo, tira un dado de daño adicional y suma su resultado al daño que le causas."
   },
   {
     "id": "deathrun",
-    "name": "DEATHRUN",
+    "name": "CARRERA MORTAL",
     "level": 10,
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Spend 3 Hope to run a straight path through the battlefield to a point within Far range, making an attack against all adversaries within your weapon’s range along that path. Choose the order in which you deal damage to the targets you succeeded against. For the first, roll your weapon damage with a +1 bonus to your Proficiency. Then remove a die from your damage roll and deal the remaining damage to the next target. Continue to remove a die for each subsequent target until you have no more damage dice or adversaries. You can’t target the same adversary more than once per attack."
+    "text": "Gasta 3 de Esperanza para recorrer un camino recto por el campo de batalla hasta un punto dentro de distancia Lejana, atacando a todos los adversarios dentro del alcance de tu arma a lo largo de ese camino. Elige el orden en que causas daño a los objetivos contra los que tuviste éxito. Para el primero, tira el daño de tu arma con un +1 a tu Competencia. Luego elimina un dado de tu tirada de daño y causa el daño restante al siguiente objetivo. Continúa eliminando un dado por cada objetivo subsiguiente hasta que no tengas más dados de daño o adversarios. No puedes atacar al mismo adversario más de una vez por ataque."
   },
   {
     "id": "swift-step",
-    "name": "SWIFT STEP",
+    "name": "PASO VELOZ",
     "level": 10,
     "domain": "bone",
     "type": "ability",
     "recallCost": 2,
-    "text": "When an attack made against you fails, clear a Stress. If you can’t clear a Stress, gain a Hope."
+    "text": "Cuando un ataque hecho contra ti falle, despeja un punto de Estrés. Si no puedes despejar Estrés, gana una Esperanza."
   },
   {
     "id": "book-of-ava",
-    "name": "BOOK OF AVA",
+    "name": "LIBRO DE AVA",
     "level": 1,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Power Push: Make a Spellcast Roll against a target within Melee range. On a success, they’re knocked back to Far range and take d10+2 magic damage using your Proficiency. Tava’s Armor: Spend a Hope to give a target you can touch a +1 bonus to their Armor Score until their next rest or you cast Tava’s Armor again. Ice Spike: Make a Spellcast Roll (12) to summon a large ice spike within Far range. If you use it as a weapon, make the Spellcast Roll against the target’s Difficulty instead. On a success, deal d6 physical damage using your Proficiency."
+    "text": "Empuje de Poder: Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia de Cuerpo a Cuerpo. Con éxito, es lanzado hacia atrás hasta distancia Lejana y recibe d10+2 de daño mágico usando tu Competencia. Armadura de Tava: Gasta una Esperanza para otorgar a un objetivo al que puedas tocar un +1 a su Puntuación de Armadura hasta su próximo descanso o hasta que vuelvas a lanzar Armadura de Tava. Pico de Hielo: Haz una Tirada de Lanzamiento (12) para invocar un gran pico de hielo dentro de distancia Lejana. Si lo usas como arma, haz la Tirada de Lanzamiento contra la Dificultad del objetivo en su lugar. Con éxito, causa d6 de daño físico usando tu Competencia."
   },
   {
     "id": "book-of-illiat",
-    "name": "BOOK OF ILLIAT",
+    "name": "LIBRO DE ILLIAT",
     "level": 1,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Slumber: Make a Spellcast Roll against a target within Very Close range. On a success, they’re Asleep until they take damage or the GM spends a Fear on their turn to clear this condition. Arcane Barrage: Once per rest, spend any number of Hope and shoot magical projectiles that strike a target of your choice within Close range. Roll a number of d6s equal to the Hope spent and deal that much magic damage to the target. Telepathy: Spend a Hope to open a line of mental communication with one target you can see. This connection lasts until your next rest or you cast Telepathy again."
+    "text": "Sopor: Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Cercana. Con éxito, queda Dormido hasta que reciba daño o el GM gaste un punto de Miedo en su turno para despejar esta condición. Descarga Arcana: Una vez por descanso, gasta cualquier cantidad de Esperanza y dispara proyectiles mágicos que golpean a un objetivo de tu elección dentro de distancia Cercana. Tira una cantidad de d6 igual a la Esperanza gastada y causa esa cantidad de daño mágico al objetivo. Telepatía: Gasta una Esperanza para abrir una línea de comunicación mental con un objetivo que puedas ver. Esta conexión dura hasta tu próximo descanso o hasta que vuelvas a lanzar Telepatía."
   },
   {
     "id": "book-of-tyfar",
-    "name": "BOOK OF TYFAR",
+    "name": "LIBRO DE TYFAR",
     "level": 1,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Wild Flame: Make a Spellcast Roll against up to three adversaries within Melee range. Targets you succeed against take 2d6 magic damage and must mark a Stress as flames erupt from your hand. Magic Hand: You conjure a magical hand with the same size and strength as your own within Far range. Mysterious Mist: Make a Spellcast Roll (13) to cast a temporary thick fog that gathers in a stationary area within Very Close range. The fog heavily obscures this area and everything in it."
+    "text": "Llama Salvaje: Haz una Tirada de Lanzamiento contra hasta tres adversarios dentro de distancia de Cuerpo a Cuerpo. Los objetivos contra los que tengas éxito reciben 2d6 de daño mágico y deben marcar Estrés mientras las llamas brotan de tu mano. Mano Mágica: Conjuras una mano mágica con el mismo tamaño y fuerza que la tuya dentro de distancia Lejana. Niebla Misteriosa: Haz una Tirada de Lanzamiento (13) para conjurar una niebla espesa y temporal que se acumula en un área fija dentro de distancia Muy Cercana. La niebla oscurece intensamente esa área y todo lo que hay en ella."
   },
   {
     "id": "book-of-sitil",
-    "name": "BOOK OF SITIL",
+    "name": "LIBRO DE SITIL",
     "level": 2,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Adjust Appearance: You magically shift your appearance and clothing to avoid recognition. Parallela: Spend 2 Hope to cast this spell on yourself or an ally within Close range. The next time the target makes an attack, they can hit an additional target within range that their attack roll would succeed against. You can only hold this spell on one creature at a time. Illusion: Make a Spellcast Roll (14). On a success, create a temporary visual illusion no larger than you within Close range that lasts for as long as you look at it. It holds up to scrutiny until an observer is within Melee range."
+    "text": "Ajustar Apariencia: Cambias mágicamente tu apariencia y ropa para evitar ser reconocido. Paralela: Gasta 2 de Esperanza para lanzar este hechizo sobre ti mismo o un aliado dentro de distancia Cercana. La próxima vez que el objetivo ataque, puede golpear a un objetivo adicional dentro de alcance contra el cual su tirada de ataque tendría éxito. Solo puedes mantener este hechizo sobre una criatura a la vez. Ilusión: Haz una Tirada de Lanzamiento (14). Con éxito, crea una ilusión visual temporal no mayor que tú dentro de distancia Cercana, que dura mientras la observes. Resiste el escrutinio hasta que un observador esté dentro de distancia de Cuerpo a Cuerpo."
   },
   {
     "id": "book-of-vagras",
-    "name": "BOOK OF VAGRAS",
+    "name": "LIBRO DE VAGRAS",
     "level": 2,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Runic Lock: Make a Spellcast Roll (15) on an object you’re touching that can close (such as a lock, chest, or box). Once per rest on a success, you can lock the object so it can only be opened by creatures of your choice. Someone with access to magic and an hour of time to study the spell can break it. Arcane Door: When you have no adversaries within Melee range, make a Spellcast Roll (13). On a success, spend a Hope to create a portal from where you are to a point within Far range you can see. It closes once a creature has passed through it. Reveal: Make a Spellcast Roll. If there is anything magically hidden within Close range, it is revealed."
+    "text": "Cerradura Rúnica: Haz una Tirada de Lanzamiento (15) sobre un objeto que estés tocando y que pueda cerrarse (como una cerradura, un cofre o una caja). Una vez por descanso, con éxito, puedes cerrar el objeto para que solo lo abran las criaturas que elijas. Alguien con acceso a la magia y una hora para estudiar el hechizo puede romperlo. Puerta Arcana: Cuando no tengas adversarios dentro de distancia de Cuerpo a Cuerpo, haz una Tirada de Lanzamiento (13). Con éxito, gasta una Esperanza para crear un portal desde donde estás hasta un punto dentro de distancia Lejana que puedas ver. Se cierra en cuanto una criatura lo cruza. Revelar: Haz una Tirada de Lanzamiento. Si hay algo oculto mágicamente dentro de distancia Cercana, queda revelado."
   },
   {
     "id": "book-of-korvax",
-    "name": "BOOK OF KORVAX",
+    "name": "LIBRO DE KORVAX",
     "level": 3,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Levitation: Make a Spellcast Roll to temporarily lift a target you can see up into the air and move them within Close range of their original position. Recant: Spend a Hope to force a target within Melee range to make a Reaction Roll (15). On a failure, they forget the last minute of your conversation. Rune Circle: Mark a Stress to create a temporary magical circle on the ground where you stand. All adversaries within Melee range, or who enter Melee range, take 2d12+4 magic damage and are knocked back to Very Close range."
+    "text": "Levitación: Haz una Tirada de Lanzamiento para elevar temporalmente por el aire a un objetivo que puedas ver y moverlo dentro de distancia Cercana de su posición original. Retracción: Gasta una Esperanza para forzar a un objetivo dentro de distancia de Cuerpo a Cuerpo a hacer una Tirada de Reacción (15). Con un fallo, olvida el último minuto de tu conversación. Círculo Rúnico: Marca Estrés para crear un círculo mágico temporal en el suelo donde te encuentras. Todos los adversarios dentro de distancia de Cuerpo a Cuerpo, o que entren en ella, reciben 2d12+4 de daño mágico y son lanzados hacia atrás hasta distancia Muy Cercana."
   },
   {
     "id": "book-of-norai",
-    "name": "BOOK OF NORAI",
+    "name": "LIBRO DE NORAI",
     "level": 3,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Mystic Tether: Make a Spellcast Roll against a target within Far range. On a success, they’re temporarily Restrained and must mark a Stress. If you target a flying creature, this spell grounds and temporarily Restrains them. Fireball: Make a Spellcast Roll against a target within Very Far range. On a success, hurl a sphere of fire toward them that explodes on impact. The target and all creatures within Very Close range of them must make a Reaction Roll (13). Targets who fail take d20+5 magic damage using your Proficiency. Targets who succeed take half damage."
+    "text": "Atadura Mística: Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, queda temporalmente Restringido y debe marcar Estrés. Si el objetivo es una criatura voladora, este hechizo la hace aterrizar y la Restringe temporalmente. Bola de Fuego: Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Lejana. Con éxito, arrojas una esfera de fuego hacia él que explota al impactar. El objetivo y todas las criaturas dentro de distancia Muy Cercana deben hacer una Tirada de Reacción (13). Quienes fallen reciben d20+5 de daño mágico usando tu Competencia. Quienes tengan éxito reciben la mitad del daño."
   },
   {
     "id": "book-of-exota",
-    "name": "BOOK OF EXOTA",
+    "name": "LIBRO DE EXOTA",
     "level": 4,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 3,
-    "text": "Repudiate: You can interrupt a magical effect taking place. Make a reaction roll using your Spellcast trait. Once per rest on a success, the effect stops and any consequences are avoided. Create Construct: Spend a Hope to choose a group of objects around you and create an animated construct from them that obeys basic commands. Make a Spellcast Roll to command them to take action. When necessary, they share your Evasion and traits and their attacks deal 2d10+3 physical damage. You can only maintain one construct at a time, and they fall apart when they take any amount of damage."
+    "text": "Repudiar: Puedes interrumpir un efecto mágico en curso. Haz una tirada de reacción con tu rasgo de Lanzamiento. Una vez por descanso, con éxito, el efecto se detiene y se evitan sus consecuencias. Crear Constructo: Gasta una Esperanza para elegir un grupo de objetos a tu alrededor y crear con ellos un constructo animado que obedece órdenes básicas. Haz una Tirada de Lanzamiento para ordenarle actuar. Cuando sea necesario, comparte tu Evasión y tus rasgos, y sus ataques causan 2d10+3 de daño físico. Solo puedes mantener un constructo a la vez, y se desmoronan al recibir cualquier cantidad de daño."
   },
   {
     "id": "book-of-grynn",
-    "name": "BOOK OF GRYNN",
+    "name": "LIBRO DE GRYNN",
     "level": 4,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Arcane Deflection: Once per long rest, spend a Hope to negate the damage of an attack targeting you or an ally within Very Close range. Time Lock: Target an object within Far range. That object stops in time and space exactly where it is until your next rest. If a creature tries to move it, make a Spellcast Roll against them to maintain this spell. Wall of Flame: Make a Spellcast Roll (15). On a success, create a temporary wall of magical flame between two points within Far range. All creatures in its path must choose a side to be on, and anything that subsequently passes through the wall takes 4d10+3 magic damage."
+    "text": "Desviación Arcana: Una vez por descanso largo, gasta una Esperanza para anular el daño de un ataque dirigido a ti o a un aliado dentro de distancia Muy Cercana. Bloqueo Temporal: Elige un objeto dentro de distancia Lejana. Ese objeto se detiene en el tiempo y el espacio exactamente donde está hasta tu próximo descanso. Si una criatura intenta moverlo, haz una Tirada de Lanzamiento contra ella para mantener el hechizo. Muro de Llamas: Haz una Tirada de Lanzamiento (15). Con éxito, crea un muro temporal de llamas mágicas entre dos puntos dentro de distancia Lejana. Todas las criaturas en su trayectoria deben elegir un lado en el que estar, y cualquiera que después pase a través del muro recibe 4d10+3 de daño mágico."
   },
   {
     "id": "manifest-wall",
-    "name": "MANIFEST WALL",
+    "name": "MURO MANIFIESTO",
     "level": 5,
     "domain": "codex",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (15). Once per rest on a success, spend a Hope to create a temporary magical wall between two points within Far range. It can be up to 50 feet high and form at any angle. Creatures or objects in its path are shunted to a side of your choice. The wall stays up until your next rest or you cast Manifest Wall again."
+    "text": "Haz una Tirada de Lanzamiento (15). Una vez por descanso, con éxito, gasta una Esperanza para crear un muro mágico temporal entre dos puntos dentro de distancia Lejana. Puede tener hasta 15 metros de altura y formarse en cualquier ángulo. Las criaturas u objetos en su trayectoria son desplazados al lado que elijas. El muro permanece en pie hasta tu próximo descanso o hasta que vuelvas a lanzar Muro Manifiesto."
   },
   {
     "id": "teleport",
-    "name": "TELEPORT",
+    "name": "TELETRANSPORTE",
     "level": 5,
     "domain": "codex",
     "type": "spell",
     "recallCost": 2,
-    "text": "Once per long rest, you can instantly teleport yourself and any number of willing targets within Close range to a place you’ve been before. Choose one of the following options, then make a Spellcast Roll (16):\n• If you know the place very well, gain a +3 bonus.\n• If you’ve visited the place frequently, gain a +1 bonus.\n• If you’ve visited the place infrequently, gain no modifier.\n• If you’ve only been there once, gain a −2 penalty.\nOn a success, you appear where you were intending to go. On a failure, you appear off course, with the range of failure determining how far off course."
+    "text": "Una vez por descanso largo, puedes teletransportarte instantáneamente a ti mismo y a cualquier cantidad de objetivos dispuestos dentro de distancia Cercana hacia un lugar en el que hayas estado antes. Elige una de las siguientes opciones y luego haz una Tirada de Lanzamiento (16):\n• Si conoces muy bien el lugar, obtienes un +3.\n• Si has visitado el lugar con frecuencia, obtienes un +1.\n• Si lo has visitado con poca frecuencia, no obtienes modificador.\n• Si solo has estado allí una vez, obtienes un −2.\nCon éxito, apareces donde pretendías llegar. Con un fallo, apareces desviado de tu curso, y el margen del fallo determina cuánto te desviaste."
   },
   {
     "id": "banish",
-    "name": "BANISH",
+    "name": "DESTERRAR",
     "level": 6,
     "domain": "codex",
     "type": "spell",
     "recallCost": 0,
-    "text": "Make a Spellcast Roll against a target within Close range. On a success, roll a number of d20s equal to your Spellcast trait. The target must make a reaction roll with a Difficulty equal to your highest result. On a success, the target must mark a Stress but isn’t banished. Once per rest on a failure, they are banished from this realm. When the PCs roll with Fear, the Difficulty gains a −1 penalty and the target makes another reaction roll. On a success, they return from banishment."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Cercana. Con éxito, tira una cantidad de d20 igual a tu rasgo de Lanzamiento. El objetivo debe hacer una tirada de reacción con Dificultad igual a tu resultado más alto. Con éxito, el objetivo debe marcar Estrés, pero no es desterrado. Una vez por descanso, con un fallo, es desterrado de este reino. Cuando los PJ tiren con Miedo, la Dificultad recibe un −1 y el objetivo hace otra tirada de reacción. Con éxito, regresa del destierro."
   },
   {
     "id": "sigil-of-retribution",
-    "name": "SIGIL OF RETRIBUTION",
+    "name": "SÍMBOLO DE RETRIBUCIÓN",
     "level": 6,
     "domain": "codex",
     "type": "spell",
     "recallCost": 2,
-    "text": "Mark an adversary within Close range with a sigil of retribution. The GM gains a Fear. When the marked adversary deals damage to you or your allies, place a d8 on this card. You can hold a number of d8s equal to your level. When you successfully attack the marked adversary, roll the dice on this card and add the total to your damage roll, then clear the dice. This effect ends when the marked adversary is defeated or you cast Sigil of Retribution again."
+    "text": "Marca a un adversario dentro de distancia Cercana con un símbolo de retribución. El GM gana un punto de Miedo. Cuando el adversario marcado cause daño a ti o a tus aliados, coloca un d8 en esta carta. Puedes retener una cantidad de d8 igual a tu nivel. Cuando ataques con éxito al adversario marcado, tira los dados de esta carta y suma el total a tu tirada de daño, luego despéjalos. Este efecto termina cuando el adversario marcado sea derrotado o vuelvas a lanzar Símbolo de Retribución."
   },
   {
     "id": "book-of-homet",
-    "name": "BOOK OF HOMET",
+    "name": "LIBRO DE HOMET",
     "level": 7,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 0,
-    "text": "Pass Through: Make a Spellcast Roll (13). Once per rest on a success, you and all creatures touching you can pass through a wall or door within Close range. The effect ends once everyone is on the other side. Plane Gate: Make a Spellcast Roll (14). Once per long rest on a success, open a gateway to a location in another dimension or plane of existence you’ve been to before. This gateway lasts until your next rest."
+    "text": "Traspasar: Haz una Tirada de Lanzamiento (13). Una vez por descanso, con éxito, tú y todas las criaturas que te toquen podéis atravesar un muro o puerta dentro de distancia Cercana. El efecto termina cuando todos estén al otro lado. Portal Dimensional: Haz una Tirada de Lanzamiento (14). Una vez por descanso largo, con éxito, abre un portal hacia un lugar en otra dimensión o plano de existencia en el que hayas estado antes. Este portal dura hasta tu próximo descanso."
   },
   {
     "id": "codex-touched",
-    "name": "CODEX-TOUCHED",
+    "name": "TOCADO POR EL CÓDEX",
     "level": 7,
     "domain": "codex",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Codex domain, gain the following benefits:\n• You can mark a Stress to add your Proficiency to a Spellcast Roll.\n• Once per rest, replace this card with any card from your vault without paying its Recall Cost."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Códex, obtienes los siguientes beneficios:\n• Puedes marcar Estrés para añadir tu Competencia a una Tirada de Lanzamiento.\n• Una vez por descanso, reemplaza esta carta por cualquier carta de tu bóveda sin pagar su Costo de Recuerdo."
   },
   {
     "id": "book-of-vyola",
-    "name": "BOOK OF VYOLA",
+    "name": "LIBRO DE VYOLA",
     "level": 8,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Memory Delve: Make a Spellcast Roll against a target within Far range. On a success, peer into the target’s mind and ask the GM a question. The GM describes any memories the target has pertaining to the answer. Shared Clarity: Once per long rest, spend a Hope to choose two willing creatures. When one of them would mark Stress, they can choose between the two of them who marks it. This spell lasts until their next rest."
+    "text": "Sondeo de Memoria: Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, penetras en la mente del objetivo y haces una pregunta al GM. El GM describe cualquier recuerdo que el objetivo tenga relacionado con la respuesta. Claridad Compartida: Una vez por descanso largo, gasta una Esperanza para elegir a dos criaturas dispuestas. Cuando una de ellas vaya a marcar Estrés, pueden elegir entre las dos quién lo marca. Este hechizo dura hasta su próximo descanso."
   },
   {
     "id": "safe-haven",
-    "name": "SAFE HAVEN",
+    "name": "REFUGIO SEGURO",
     "level": 8,
     "domain": "codex",
     "type": "spell",
     "recallCost": 3,
-    "text": "When you have a few minutes of calm to focus, you can spend 2 Hope to summon your Safe Haven, a large interdimensional home where you and your allies can take shelter. When you do, a magical door appears somewhere within Close range. Only creatures of your choice can enter. Once inside, you can make the entrance invisible. You and anyone else inside can always exit. Once you leave, the doorway must be summoned again. When you take a rest within your own Safe Haven, you can choose an additional downtime move."
+    "text": "Cuando tengas unos minutos de calma para concentrarte, puedes gastar 2 de Esperanza para invocar tu Refugio Seguro, un gran hogar interdimensional donde tú y tus aliados podéis resguardaros. Al hacerlo, aparece una puerta mágica en algún punto dentro de distancia Cercana. Solo pueden entrar las criaturas que elijas. Una vez dentro, puedes hacer que la entrada sea invisible. Tú y cualquiera dentro siempre podéis salir. Una vez que te vayas, la puerta debe invocarse de nuevo. Cuando descanses en tu propio Refugio Seguro, puedes elegir una jugada de tiempo libre adicional."
   },
   {
     "id": "book-of-ronin",
-    "name": "BOOK OF RONIN",
+    "name": "LIBRO DE RONIN",
     "level": 9,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 4,
-    "text": "Transform: Make a Spellcast Roll (15). On a success, transform into an inanimate object no larger than twice your normal size. You can remain in this shape until you take damage. Eternal Enervation: Once per long rest, make a Spellcast Roll against a target within Close range. On a success, they become permanently Vulnerable. They can’t clear this condition by any means."
+    "text": "Transformar: Haz una Tirada de Lanzamiento (15). Con éxito, te transformas en un objeto inanimado no más grande que el doble de tu tamaño normal. Puedes permanecer en esta forma hasta recibir daño. Enervación Eterna: Una vez por descanso largo, haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Cercana. Con éxito, queda Vulnerable de forma permanente. No puede despejar esta condición por ningún medio."
   },
   {
     "id": "disintegration-wave",
-    "name": "DISINTEGRATION WAVE",
+    "name": "ONDA DE DESINTEGRACIÓN",
     "level": 9,
     "domain": "codex",
     "type": "spell",
     "recallCost": 4,
-    "text": "Make a Spellcast Roll (18). Once per long rest on a success, the GM tells you which adversaries within Far range have a Difficulty of 18 or lower. Mark a Stress for each one you wish to hit with this spell. They are killed and can’t come back to life by any means."
+    "text": "Haz una Tirada de Lanzamiento (18). Una vez por descanso largo, con éxito, el GM te dice qué adversarios dentro de distancia Lejana tienen una Dificultad de 18 o menos. Marca Estrés por cada uno al que quieras golpear con este hechizo. Mueren y no pueden volver a la vida por ningún medio."
   },
   {
     "id": "deft-deceiver",
-    "name": "DEFT DECEIVER",
+    "name": "EMBAUCADOR HÁBIL",
     "level": 1,
     "domain": "grace",
     "type": "ability",
     "recallCost": 0,
-    "text": "Spend a Hope to gain advantage on a roll to deceive or trick someone into believing a lie you tell them."
+    "text": "Gasta una Esperanza para obtener ventaja en una tirada para engañar o hacer creer a alguien una mentira que le dices."
   },
   {
     "id": "enrapture",
-    "name": "ENRAPTURE",
+    "name": "EMBELESAR",
     "level": 1,
     "domain": "grace",
     "type": "spell",
     "recallCost": 0,
-    "text": "Make a Spellcast Roll against a target within Close range. On a success, they become temporarily Enraptured. While Enraptured, a target’s attention is fixed on you, narrowing their field of view and drowning out any sound but your voice. Once per rest on a success, you can mark a Stress to force the Enraptured target to mark a Stress as well."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Cercana. Con éxito, queda temporalmente Embelesado. Mientras esté Embelesado, la atención del objetivo se fija en ti, estrechando su campo de visión y ahogando cualquier sonido salvo tu voz. Una vez por descanso, con éxito, puedes marcar Estrés para forzar al objetivo Embelesado a marcar Estrés también."
   },
   {
     "id": "inspirational-words",
-    "name": "INSPIRATIONAL WORDS",
+    "name": "PALABRAS INSPIRADORAS",
     "level": 1,
     "domain": "grace",
     "type": "ability",
     "recallCost": 1,
-    "text": "Your speech is imbued with power. After a long rest, place a number of tokens on this card equal to your Presence. When you speak with an ally, you can spend a token from this card to give them one benefit from the following options:\n• Your ally clears a Stress.\n• Your ally clears a Hit Point.\n• Your ally gains a Hope.\nWhen you take a long rest, clear all unspent tokens."
+    "text": "Tu discurso está imbuido de poder. Después de un descanso largo, coloca en esta carta una cantidad de fichas igual a tu Presencia. Cuando hables con un aliado, puedes gastar una ficha de esta carta para darle uno de los siguientes beneficios:\n• Tu aliado despeja un punto de Estrés.\n• Tu aliado despeja un Punto de Vida.\n• Tu aliado gana una Esperanza.\nAl tomar un descanso largo, elimina las fichas no gastadas."
   },
   {
     "id": "tell-no-lies",
-    "name": "TELL NO LIES",
+    "name": "SIN MENTIRAS",
     "level": 2,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Very Close range. On a success, they can’t lie to you while they remain within Close range, but they are not compelled to speak. If you ask them a question and they refuse to answer, they must mark a Stress and the effect ends. The target is typically unaware this spell has been cast on them until it causes them to utter the truth."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Cercana. Con éxito, no podrá mentirte mientras permanezca dentro de distancia Cercana, aunque no está obligado a hablar. Si le haces una pregunta y se niega a responder, debe marcar Estrés y el efecto termina. El objetivo normalmente no es consciente de que este hechizo se lanzó sobre él hasta que lo obliga a decir la verdad."
   },
   {
     "id": "book-of-yarrow",
-    "name": "BOOK OF YARROW",
+    "name": "LIBRO DE YARROW",
     "level": 10,
     "domain": "codex",
     "type": "grimoire",
     "recallCost": 2,
-    "text": "Timejammer: Make a Spellcast Roll (18). On a success, time temporarily slows to a halt for everyone within Far range except for you. It resumes the next time you make an action roll that targets another creature. Magic Immunity: Spend 5 Hope to become immune to magic damage until your next rest."
+    "text": "Detenedor del Tiempo: Haz una Tirada de Lanzamiento (18). Con éxito, el tiempo se detiene temporalmente por completo para todos dentro de distancia Lejana excepto para ti. Se reanuda la próxima vez que hagas una tirada de acción dirigida a otra criatura. Inmunidad Mágica: Gasta 5 de Esperanza para volverte inmune al daño mágico hasta tu próximo descanso."
   },
   {
     "id": "transcendent-union",
-    "name": "TRANSCENDENT UNION",
+    "name": "UNIÓN TRASCENDENTE",
     "level": 10,
     "domain": "codex",
     "type": "spell",
     "recallCost": 1,
-    "text": "Once per long rest, spend 5 Hope to cast this spell on two or more willing creatures. Until your next rest, when a creature connected by this union would mark Stress or Hit Points, the connected creatures can choose who marks it."
+    "text": "Una vez por descanso largo, gasta 5 de Esperanza para lanzar este hechizo sobre dos o más criaturas dispuestas. Hasta tu próximo descanso, cuando una criatura conectada por esta unión vaya a marcar Estrés o Puntos de Vida, las criaturas conectadas pueden elegir quién lo marca."
   },
   {
     "id": "troublemaker",
-    "name": "TROUBLEMAKER",
+    "name": "ALBOROTADOR",
     "level": 2,
     "domain": "grace",
     "type": "ability",
     "recallCost": 2,
-    "text": "When you taunt or provoke a target within Far range, make a Presence Roll against them. Once per rest on a success, roll a number of d4s equal to your Proficiency. The target must mark Stress equal to the highest result rolled."
+    "text": "Cuando provoques o insultes a un objetivo dentro de distancia Lejana, haz una Tirada de Presencia contra él. Una vez por descanso, con éxito, tira una cantidad de d4 igual a tu Competencia. El objetivo debe marcar Estrés igual al resultado más alto obtenido."
   },
   {
     "id": "hypnotic-shimmer",
-    "name": "HYPNOTIC SHIMMER",
+    "name": "DESTELLO HIPNÓTICO",
     "level": 3,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against all adversaries in front of you within Close range. Once per rest on a success, create an illusion of flashing colors and lights that temporarily Stuns targets you succeed against and forces them to mark a Stress. While Stunned, they can’t use reactions and can’t take any other actions until they clear this condition."
+    "text": "Haz una Tirada de Lanzamiento contra todos los adversarios frente a ti dentro de distancia Cercana. Una vez por descanso, con éxito, crea una ilusión de colores y luces parpadeantes que Aturde temporalmente a los objetivos contra los que tuviste éxito y los fuerza a marcar Estrés. Mientras estén Aturdidos, no pueden usar reacciones ni realizar ninguna otra acción hasta que despejen esta condición."
   },
   {
     "id": "invisibility",
-    "name": "INVISIBILITY",
+    "name": "INVISIBILIDAD",
     "level": 3,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (10). On a success, mark a Stress and choose yourself or an ally within Melee range to become Invisible. An Invisible creature can’t be seen except through magical means and attack rolls against them are made with disadvantage. Place a number of tokens on this card equal to your Spellcast trait. When the Invisible creature takes an action, spend a token from this card. After the action that spends the last token is resolved, the effect ends. You can only hold Invisibility on one creature at a time."
+    "text": "Haz una Tirada de Lanzamiento (10). Con éxito, marca Estrés y elige convertirte a ti mismo o a un aliado dentro de distancia de Cuerpo a Cuerpo en Invisible. Una criatura Invisible no puede verse salvo por medios mágicos, y las tiradas de ataque contra ella se hacen con desventaja. Coloca en esta carta una cantidad de fichas igual a tu rasgo de Lanzamiento. Cuando la criatura Invisible realice una acción, gasta una ficha de esta carta. Después de resolver la acción que gasta la última ficha, el efecto termina. Solo puedes mantener Invisibilidad sobre una criatura a la vez."
   },
   {
     "id": "soothing-speech",
-    "name": "SOOTHING SPEECH",
+    "name": "PALABRAS RECONFORTANTES",
     "level": 4,
     "domain": "grace",
     "type": "ability",
     "recallCost": 1,
-    "text": "During a short rest, when you take the time to comfort another character while using the Tend to Wounds downtime move on them, clear an additional Hit Point on that character. When you do, you also clear 2 Hit Points."
+    "text": "Durante un descanso corto, cuando te tomas el tiempo de consolar a otro personaje mientras usas en él la jugada de tiempo libre Atender Heridas, despeja un Punto de Vida adicional en ese personaje. Al hacerlo, también despejas 2 Puntos de Vida."
   },
   {
     "id": "through-your-eyes",
-    "name": "THROUGH YOUR EYES",
+    "name": "A TRAVÉS DE TUS OJOS",
     "level": 4,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "Choose a target within Very Far range. You can see through their eyes and hear through their ears. You can transition between using your own senses or the target’s freely until you cast another spell or until your next rest."
+    "text": "Elige un objetivo dentro de distancia Muy Lejana. Puedes ver a través de sus ojos y oír a través de sus oídos. Puedes alternar libremente entre usar tus propios sentidos o los del objetivo hasta que lances otro hechizo o hasta tu próximo descanso."
   },
   {
     "id": "thought-delver",
-    "name": "THOUGHT DELVER",
+    "name": "SONDEADOR DE PENSAMIENTOS",
     "level": 5,
     "domain": "grace",
     "type": "spell",
     "recallCost": 2,
-    "text": "You can peek into the minds of others. Spend a Hope to read the vague surface thoughts of a target within Far range. Make a Spellcast Roll against the target to delve for deeper, more hidden thoughts. On a roll with Fear, the target might, at the GM’s discretion, become aware that you’re reading their thoughts."
+    "text": "Puedes asomarte a la mente de los demás. Gasta una Esperanza para leer los pensamientos superficiales de un objetivo dentro de distancia Lejana. Haz una Tirada de Lanzamiento contra el objetivo para sondear pensamientos más profundos y ocultos. En una tirada con Miedo, el objetivo podría, a discreción del GM, darse cuenta de que estás leyendo sus pensamientos."
   },
   {
     "id": "words-of-discord",
-    "name": "WORDS OF DISCORD",
+    "name": "PALABRAS DE DISCORDIA",
     "level": 5,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "Whisper words of discord to an adversary within Melee range and make a Spellcast Roll (13). On a success, the target must mark a Stress and make an attack against another adversary instead of against you or your allies. Once this attack is over, the target realizes what happened. The next time you cast Words of Discord on them, gain a −5 penalty to the Spellcast Roll."
+    "text": "Susurra palabras de discordia a un adversario dentro de distancia de Cuerpo a Cuerpo y haz una Tirada de Lanzamiento (13). Con éxito, el objetivo debe marcar Estrés y atacar a otro adversario en lugar de a ti o a tus aliados. Una vez terminado ese ataque, el objetivo se da cuenta de lo ocurrido. La próxima vez que lances Palabras de Discordia sobre él, obtienes un −5 a la Tirada de Lanzamiento."
   },
   {
     "id": "never-upstaged",
-    "name": "NEVER UPSTAGED",
+    "name": "NUNCA ECLIPSADO",
     "level": 6,
     "domain": "grace",
     "type": "ability",
     "recallCost": 2,
-    "text": "When you mark 1 or more Hit Points from an attack, you can mark a Stress to place a number of tokens equal to the number of Hit Points you marked on this card. On your next successful attack, gain a +5 bonus to your damage roll for each token on this card, then clear all tokens."
+    "text": "Cuando marques uno o más Puntos de Vida por un ataque, puedes marcar Estrés para colocar en esta carta una cantidad de fichas igual a los Puntos de Vida marcados. En tu próximo ataque exitoso, obtienes un +5 a tu tirada de daño por cada ficha en esta carta, y luego las eliminas todas."
   },
   {
     "id": "share-the-burden",
-    "name": "SHARE THE BURDEN",
+    "name": "COMPARTIR LA CARGA",
     "level": 6,
     "domain": "grace",
     "type": "spell",
     "recallCost": 0,
-    "text": "Once per rest, take on the Stress from a willing creature within Melee range. The target describes what intimate knowledge or emotions telepathically leak from their mind in this moment between you. Transfer any number of their marked Stress to you, then gain a Hope for each Stress transferred."
+    "text": "Una vez por descanso, asume el Estrés de una criatura dispuesta dentro de distancia de Cuerpo a Cuerpo. El objetivo describe qué conocimiento íntimo o emociones se filtran telepáticamente de su mente en ese momento entre ambos. Transfiere a ti cualquier cantidad de su Estrés marcado, y luego gana una Esperanza por cada punto de Estrés transferido."
   },
   {
     "id": "endless-charisma",
-    "name": "ENDLESS CHARISMA",
+    "name": "CARISMA SIN LÍMITES",
     "level": 7,
     "domain": "grace",
     "type": "ability",
     "recallCost": 1,
-    "text": "After you make an action roll to persuade, lie, or garner favor, you can spend a Hope to reroll the Hope or Fear Die."
+    "text": "Después de hacer una tirada de acción para persuadir, mentir o granjearte un favor, puedes gastar una Esperanza para volver a tirar el Dado de Esperanza o de Miedo."
   },
   {
     "id": "grace-touched",
-    "name": "GRACE-TOUCHED",
+    "name": "TOCADO POR LA GRACIA",
     "level": 7,
     "domain": "grace",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Grace domain, gain the following benefits:\n• You can mark an Armor Slot instead of marking a Stress.\n• When you would force a target to mark a number of Hit Points, you can choose instead to force them to mark that number of Stress."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Gracia, obtienes los siguientes beneficios:\n• Puedes marcar una Ranura de Armadura en lugar de marcar Estrés.\n• Cuando vayas a forzar a un objetivo a marcar cierta cantidad de Puntos de Vida, puedes en su lugar forzarlo a marcar esa misma cantidad de Estrés."
   },
   {
     "id": "astral-projection",
-    "name": "ASTRAL PROJECTION",
+    "name": "PROYECCIÓN ASTRAL",
     "level": 8,
     "domain": "grace",
     "type": "spell",
     "recallCost": 0,
-    "text": "Once per long rest, mark a Stress to create a projected copy of yourself that can appear anywhere you’ve been before. You can see and hear through the projection as though it were you and affect the world as though you were there. A creature investigating the projection can tell it’s of magical origin. This effect lasts until your next rest or your projection takes any damage."
+    "text": "Una vez por descanso largo, marca Estrés para crear una copia proyectada de ti mismo que puede aparecer en cualquier lugar en el que hayas estado antes. Puedes ver y oír a través de la proyección como si fueras tú mismo, y afectar el mundo como si estuvieras allí. Una criatura que investigue la proyección puede notar que es de origen mágico. Este efecto dura hasta tu próximo descanso o hasta que tu proyección reciba cualquier daño."
   },
   {
     "id": "mass-enrapture",
-    "name": "MASS ENRAPTURE",
+    "name": "EMBELESO MASIVO",
     "level": 8,
     "domain": "grace",
     "type": "spell",
     "recallCost": 3,
-    "text": "Make a Spellcast Roll against all targets within Far range. Targets you succeed against become temporarily Enraptured. While Enraptured, a target’s attention is fixed on you, narrowing their field of view and drowning out any sound but your voice. Mark a Stress to force all Enraptured targets to mark a Stress, ending this spell."
+    "text": "Haz una Tirada de Lanzamiento contra todos los objetivos dentro de distancia Lejana. Los objetivos contra los que tengas éxito quedan temporalmente Embelesados. Mientras estén Embelesados, su atención se fija en ti, estrechando su campo de visión y ahogando cualquier sonido salvo tu voz. Marca Estrés para forzar a todos los objetivos Embelesados a marcar Estrés, terminando este hechizo."
   },
   {
     "id": "copycat",
-    "name": "COPYCAT",
+    "name": "IMITADOR",
     "level": 9,
     "domain": "grace",
     "type": "spell",
     "recallCost": 3,
-    "text": "Once per long rest, this card can mimic the features of another domain card of level 8 or lower in another player’s loadout. Spend Hope equal to half the card’s level to gain access to the feature. It lasts until your next rest or they place the card in their vault."
+    "text": "Una vez por descanso largo, esta carta puede imitar los rasgos de otra carta de dominio de nivel 8 o menos en el equipo de otro jugador. Gasta Esperanza igual a la mitad del nivel de la carta para acceder al rasgo. Dura hasta tu próximo descanso o hasta que ese jugador coloque la carta en su bóveda."
   },
   {
     "id": "master-of-the-craft",
-    "name": "MASTER OF THE CRAFT",
+    "name": "MAESTRO DEL OFICIO",
     "level": 9,
     "domain": "grace",
     "type": "ability",
     "recallCost": 0,
-    "text": "Gain a permanent +2 bonus to two of your Experiences or a permanent +3 bonus to one of your Experiences. Then place this card in your vault permanently."
+    "text": "Obtén un +2 permanente a dos de tus Experiencias o un +3 permanente a una de tus Experiencias. Luego coloca esta carta en tu bóveda de forma permanente."
   },
   {
     "id": "encore",
-    "name": "ENCORE",
+    "name": "BIS",
     "level": 10,
     "domain": "grace",
     "type": "spell",
     "recallCost": 1,
-    "text": "When an ally within Close range deals damage to an adversary, you can make a Spellcast Roll against that same target. On a success, you deal the same damage to the target that your ally dealt. If your Spellcast Roll succeeds with Fear, place this card in your vault."
+    "text": "Cuando un aliado dentro de distancia Cercana cause daño a un adversario, puedes hacer una Tirada de Lanzamiento contra ese mismo objetivo. Con éxito, causas al objetivo el mismo daño que causó tu aliado. Si tu Tirada de Lanzamiento tiene éxito con Miedo, coloca esta carta en tu bóveda."
   },
   {
     "id": "notorious",
-    "name": "NOTORIOUS",
+    "name": "NOTORIO",
     "level": 10,
     "domain": "grace",
     "type": "ability",
     "recallCost": 0,
-    "text": "People know who you are and what you’ve done, and they treat you differently because of it. When you leverage your notoriety to get what you want, you can mark a Stress before you roll to gain a +10 bonus to the result. Your food and drinks are always free wherever you go, and everything else you buy is reduced in price by one bag of gold (to a minimum of one handful). This card doesn’t count against your loadout’s domain card maximum of 5 and can’t be placed in your vault."
+    "text": "La gente sabe quién eres y lo que has hecho, y te tratan de forma diferente por ello. Cuando aproveches tu notoriedad para conseguir lo que quieres, puedes marcar Estrés antes de tirar para obtener un +10 al resultado. Tu comida y bebida son siempre gratis a donde vayas, y todo lo demás que compres se reduce en precio en una bolsa de oro (hasta un mínimo de un puñado). Esta carta no cuenta contra el máximo de cartas de dominio de tu equipo (5) y no puede colocarse en tu bóveda."
   },
   {
     "id": "pick-and-pull",
-    "name": "PICK AND PULL",
+    "name": "GANZÚA Y SUSTRACCIÓN",
     "level": 1,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 0,
-    "text": "You have advantage on action rolls to pick nonmagical locks, disarm nonmagical traps, or steal items from a target (either through stealth or by force)."
+    "text": "Tienes ventaja en tiradas de acción para forzar cerraduras no mágicas, desactivar trampas no mágicas o robar objetos de un objetivo (ya sea con sigilo o por la fuerza)."
   },
   {
     "id": "rain-of-blades",
-    "name": "RAIN OF BLADES",
+    "name": "LLUVIA DE CUCHILLAS",
     "level": 1,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend a Hope to make a Spellcast Roll and conjure throwing blades that strike out at all targets within Very Close range. Targets you succeed against take d8+2 magic damage using your Proficiency. If a target you hit is Vulnerable, they take an extra 1d8 damage."
+    "text": "Gasta una Esperanza para hacer una Tirada de Lanzamiento e invocar cuchillas arrojadizas que golpean a todos los objetivos dentro de distancia Muy Cercana. Los objetivos contra los que tengas éxito reciben d8+2 de daño mágico usando tu Competencia. Si un objetivo golpeado es Vulnerable, recibe 1d8 de daño extra."
   },
   {
     "id": "uncanny-disguise",
-    "name": "UNCANNY DISGUISE",
+    "name": "DISFRAZ INQUIETANTE",
     "level": 1,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 0,
-    "text": "When you have a few minutes to prepare, you can mark a Stress to don the facade of any humanoid you can picture clearly in your mind. While disguised, you have advantage on Presence Rolls to avoid scrutiny. Place a number of tokens equal to your Spellcast trait on this card. When you take an action while disguised, spend a token from this card. After the action that spends the last token is resolved, the disguise drops."
+    "text": "Cuando tengas unos minutos para prepararte, puedes marcar Estrés para adoptar el aspecto de cualquier humanoide que puedas imaginar con claridad. Mientras estés disfrazado, tienes ventaja en Tiradas de Presencia para evitar el escrutinio. Coloca en esta carta una cantidad de fichas igual a tu rasgo de Lanzamiento. Cuando realices una acción disfrazado, gasta una ficha de esta carta. Después de resolver la acción que gasta la última ficha, el disfraz se cae."
   },
   {
     "id": "midnight-spirit",
-    "name": "MIDNIGHT SPIRIT",
+    "name": "ESPÍRITU DE MEDIANOCHE",
     "level": 2,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend a Hope to summon a humanoid-sized spirit that can move or carry things for you until your next rest. You can also send it to attack an adversary. When you do, make a Spellcast Roll against a target within Very Far range. On a success, the spirit moves into Melee range with that target. Roll a number of d6s equal to your Spellcast trait and deal that much magic damage to the target. The spirit then dissipates. You can only have one spirit at a time."
+    "text": "Gasta una Esperanza para invocar un espíritu del tamaño de un humanoide que puede moverse o cargar cosas por ti hasta tu próximo descanso. También puedes enviarlo a atacar a un adversario. Al hacerlo, haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Lejana. Con éxito, el espíritu se mueve a distancia de Cuerpo a Cuerpo de ese objetivo. Tira una cantidad de d6 igual a tu rasgo de Lanzamiento y causa esa cantidad de daño mágico al objetivo. El espíritu luego se disipa. Solo puedes tener un espíritu a la vez."
   },
   {
     "id": "shadowbind",
-    "name": "SHADOWBIND",
+    "name": "ATADURA DE SOMBRAS",
     "level": 2,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 0,
-    "text": "Make a Spellcast Roll against all adversaries within Very Close range. Targets you succeed against are temporarily Restrained as their shadow binds them in place."
+    "text": "Haz una Tirada de Lanzamiento contra todos los adversarios dentro de distancia Muy Cercana. Los objetivos contra los que tengas éxito quedan temporalmente Restringidos mientras su propia sombra los inmoviliza."
   },
   {
     "id": "chokehold",
-    "name": "CHOKEHOLD",
+    "name": "ESTRANGULAMIENTO",
     "level": 3,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you position yourself behind a creature who’s about your size, you can mark a Stress to pull them into a chokehold, making them temporarily Vulnerable. When a creature attacks a target who is Vulnerable in this way, they deal an extra 2d6 damage."
+    "text": "Cuando te coloques detrás de una criatura de tamaño similar al tuyo, puedes marcar Estrés para inmovilizarla en un estrangulamiento, dejándola temporalmente Vulnerable. Cuando una criatura ataque a un objetivo Vulnerable de esta manera, causa 2d6 de daño extra."
   },
   {
     "id": "veil-of-night",
-    "name": "VEIL OF NIGHT",
+    "name": "VELO NOCTURNO",
     "level": 3,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (13). On a success, you can create a temporary curtain of darkness between two points within Far range. Only you can see through this darkness. You’re considered Hidden to adversaries on the other side of the veil, and you have advantage on attacks you make through the darkness. The veil remains until you cast another spell."
+    "text": "Haz una Tirada de Lanzamiento (13). Con éxito, puedes crear una cortina temporal de oscuridad entre dos puntos dentro de distancia Lejana. Solo tú puedes ver a través de esta oscuridad. Se te considera Oculto para los adversarios del otro lado del velo, y tienes ventaja en los ataques que hagas a través de la oscuridad. El velo permanece hasta que lances otro hechizo."
   },
   {
     "id": "stealth-expertise",
-    "name": "STEALTH EXPERTISE",
+    "name": "PERICIA EN SIGILO",
     "level": 4,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you roll with Fear while attempting to move unnoticed through a dangerous area, you can mark a Stress to roll with Hope instead. If an ally within Close range is also attempting to move unnoticed and rolls with Fear, you can mark a Stress to change their result to a roll with Hope."
+    "text": "Cuando tires con Miedo al intentar moverte sin ser detectado en una zona peligrosa, puedes marcar Estrés para tirar con Esperanza en su lugar. Si un aliado dentro de distancia Cercana también intenta moverse sin ser detectado y tira con Miedo, puedes marcar Estrés para cambiar su resultado a una tirada con Esperanza."
   },
   {
     "id": "glyph-of-nightfall",
-    "name": "GLYPH OF NIGHTFALL",
+    "name": "GLIFO DEL ANOCHECER",
     "level": 4,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Very Close range. On a success, spend a Hope to conjure a dark glyph upon their body that exposes their weak points, temporarily reducing the target’s Difficulty by a value equal to your Knowledge (minimum 1)."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Cercana. Con éxito, gasta una Esperanza para conjurar un glifo oscuro sobre su cuerpo que expone sus puntos débiles, reduciendo temporalmente la Dificultad del objetivo en un valor igual a tu Conocimiento (mínimo 1)."
   },
   {
     "id": "hush",
-    "name": "HUSH",
+    "name": "SILENCIO",
     "level": 5,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Close range. On a success, spend a Hope to conjure suppressive magic around the target that encompasses everything within Very Close range of them and follows them as they move. The target and anything within the area is Silenced until the GM spends a Fear on their turn to clear this condition, you cast Hush again, or you take Major damage. While Silenced, they can’t make noise and can’t cast spells."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Cercana. Con éxito, gasta una Esperanza para conjurar magia represora alrededor del objetivo que abarca todo dentro de distancia Muy Cercana de él y lo sigue mientras se mueve. El objetivo y todo dentro del área quedan Silenciados hasta que el GM gaste un punto de Miedo en su turno para despejar esta condición, vuelvas a lanzar Silencio, o recibas daño Mayor. Mientras estén Silenciados, no pueden hacer ruido ni lanzar hechizos."
   },
   {
     "id": "phantom-retreat",
-    "name": "PHANTOM RETREAT",
+    "name": "RETIRADA FANTASMA",
     "level": 5,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 2,
-    "text": "Spend a Hope to activate Phantom Retreat where you’re currently standing. Spend another Hope at any time before your next rest to disappear from where you are and reappear where you were standing when you activated Phantom Retreat. This spell ends after you reappear."
+    "text": "Gasta una Esperanza para activar Retirada Fantasma en el lugar donde te encuentras. Gasta otra Esperanza en cualquier momento antes de tu próximo descanso para desaparecer de donde estás y reaparecer donde te encontrabas cuando activaste Retirada Fantasma. Este hechizo termina después de que reapareces."
   },
   {
     "id": "dark-whispers",
-    "name": "DARK WHISPERS",
+    "name": "SUSURROS OSCUROS",
     "level": 6,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 0,
-    "text": "You can speak into the mind of any person with whom you’ve made physical contact. Once you’ve opened a channel with them, they can speak back into your mind. Additionally, you can mark a Stress to make a Spellcast Roll against them. On a success, you can ask the GM one of the following questions and receive an answer:\n• Where are they?\n• What are they doing?\n• What are they afraid of?\n• What do they cherish most in the world?"
+    "text": "Puedes hablar en la mente de cualquier persona con la que hayas tenido contacto físico. Una vez que abras un canal con ella, podrá hablarte de vuelta en tu mente. Además, puedes marcar Estrés para hacer una Tirada de Lanzamiento contra ella. Con éxito, puedes hacerle al GM una de las siguientes preguntas y recibir una respuesta:\n• ¿Dónde está?\n• ¿Qué está haciendo?\n• ¿A qué le teme?\n• ¿Qué es lo que más aprecia en el mundo?"
   },
   {
     "id": "mass-disguise",
-    "name": "MASS DISGUISE",
+    "name": "DISFRAZ MASIVO",
     "level": 6,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 0,
-    "text": "When you have a few minutes of silence to focus, you can mark a Stress to change the appearance of all willing creatures within Close range. Their new forms must share a general body structure and size, and can be somebody or something you’ve seen before or entirely fabricated. A disguised creature has advantage on Presence Rolls to avoid scrutiny. Activate a Countdown (8). It ticks down as a consequence the GM chooses. When it triggers, the disguise drops."
+    "text": "Cuando tengas unos minutos de silencio para concentrarte, puedes marcar Estrés para cambiar la apariencia de todas las criaturas dispuestas dentro de distancia Cercana. Sus nuevas formas deben compartir una estructura corporal y tamaño generales, y pueden ser alguien o algo que hayas visto antes, o totalmente inventado. Una criatura disfrazada tiene ventaja en Tiradas de Presencia para evitar el escrutinio. Activa una Cuenta Atrás (8). Avanza como consecuencia elegida por el GM. Cuando se dispare, el disfraz se cae."
   },
   {
     "id": "midnight-touched",
-    "name": "MIDNIGHT-TOUCHED",
+    "name": "TOCADO POR LA MEDIANOCHE",
     "level": 7,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Midnight domain, gain the following benefits:\n• Once per rest, when you have 0 Hope and the GM would gain a Fear, you can gain a Hope instead.\n• When you make a successful attack, you can mark a Stress to add the result of your Fear Die to your damage roll."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Medianoche, obtienes los siguientes beneficios:\n• Una vez por descanso, cuando tengas 0 de Esperanza y el GM vaya a ganar un punto de Miedo, puedes ganar una Esperanza en su lugar.\n• Cuando hagas un ataque exitoso, puedes marcar Estrés para añadir el resultado de tu Dado de Miedo a tu tirada de daño."
   },
   {
     "id": "vanishing-dodge",
-    "name": "VANISHING DODGE",
+    "name": "ESQUIVA EVANESCENTE",
     "level": 7,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "When an attack made against you that would deal physical damage fails, you can spend a Hope to envelop yourself in shadow, becoming Hidden and teleporting to a point within Close range of the attacker. You remain Hidden until the next time you make an action roll."
+    "text": "Cuando un ataque hecho contra ti que causaría daño físico falle, puedes gastar una Esperanza para envolverte en sombras, volviéndote Oculto y teletransportándote a un punto dentro de distancia Cercana del atacante. Permaneces Oculto hasta la próxima vez que hagas una tirada de acción."
   },
   {
     "id": "shadowhunter",
-    "name": "SHADOWHUNTER",
+    "name": "CAZADOR DE SOMBRAS",
     "level": 8,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 2,
-    "text": "Your prowess is enhanced under the cover of shadow. While you’re shrouded in low light or darkness, you gain a +1 bonus to your Evasion and make attack rolls with advantage."
+    "text": "Tu destreza se potencia bajo el manto de las sombras. Mientras estés envuelto en poca luz u oscuridad, obtienes un +1 a tu Evasión y haces tiradas de ataque con ventaja."
   },
   {
     "id": "spellcharge",
-    "name": "SPELLCHARGE",
+    "name": "CARGA DE HECHIZO",
     "level": 8,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "When you take magic damage, place tokens equal to the number of Hit Points you marked on this card. You can store a number of tokens equal to your Spellcast trait. When you make a successful attack against a target, you can spend any number of tokens to add a d6 for each token spent to your damage roll."
+    "text": "Cuando recibas daño mágico, coloca en esta carta fichas iguales a la cantidad de Puntos de Vida que marcaste. Puedes almacenar una cantidad de fichas igual a tu rasgo de Lanzamiento. Cuando ataques con éxito a un objetivo, puedes gastar cualquier cantidad de fichas para añadir un d6 por cada ficha gastada a tu tirada de daño."
   },
   {
     "id": "night-terror",
-    "name": "NIGHT TERROR",
+    "name": "TERROR NOCTURNO",
     "level": 9,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 2,
-    "text": "Once per long rest, choose any targets within Very Close range to perceive you as a nightmarish horror. The targets must succeed on a Reaction Roll (16) or become temporarily Horrified. While Horrified, they’re Vulnerable. Steal a number of Fear from the GM equal to the number of targets that are Horrified (up to the number of Fear in the GM’s pool). Roll a number of d6s equal to the number of stolen Fear and deal the total damage to each Horrified target. Discard the stolen Fear."
+    "text": "Una vez por descanso largo, elige objetivos dentro de distancia Muy Cercana para que te perciban como un horror de pesadilla. Los objetivos deben tener éxito en una Tirada de Reacción (16) o quedar temporalmente Horrorizados. Mientras estén Horrorizados, son Vulnerables. Roba al GM una cantidad de puntos de Miedo igual a la cantidad de objetivos Horrorizados (hasta el total en la reserva del GM). Tira una cantidad de d6 igual al Miedo robado y causa ese daño total a cada objetivo Horrorizado. Descarta el Miedo robado."
   },
   {
     "id": "twilight-toll",
-    "name": "TWILIGHT TOLL",
+    "name": "TAÑIDO DEL OCASO",
     "level": 9,
     "domain": "midnight",
     "type": "ability",
     "recallCost": 1,
-    "text": "Choose a target within Far range. When you succeed on an action roll against them that doesn’t result in making a damage roll, place a token on this card. When you deal damage to this target, spend any number of tokens to add a d12 for each token spent to your damage roll. You can only hold Twilight Toll on one creature at a time. When you choose a new target or take a rest, clear all unspent tokens."
+    "text": "Elige un objetivo dentro de distancia Lejana. Cuando tengas éxito en una tirada de acción contra él que no resulte en una tirada de daño, coloca una ficha en esta carta. Cuando le causes daño, gasta cualquier cantidad de fichas para añadir un d12 por cada ficha gastada a tu tirada de daño. Solo puedes mantener Tañido del Ocaso sobre una criatura a la vez. Cuando elijas un nuevo objetivo o descanses, elimina las fichas no gastadas."
   },
   {
     "id": "eclipse",
@@ -1122,493 +1122,493 @@
     "domain": "midnight",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (16). Once per long rest on a success, plunge the entire area within Far range into complete darkness only you and your allies can see through. Attack rolls have disadvantage when targeting you or an ally within this shadow. Additionally, when you or an ally succeeds with Hope against an adversary within this shadow, the target must mark a Stress. This spell lasts until the GM spends a Fear on their turn to clear this effect or you take Severe damage."
+    "text": "Haz una Tirada de Lanzamiento (16). Una vez por descanso largo, con éxito, sumerge toda el área dentro de distancia Lejana en una oscuridad total a través de la cual solo tú y tus aliados podéis ver. Las tiradas de ataque tienen desventaja al dirigirse contra ti o un aliado dentro de esta sombra. Además, cuando tú o un aliado tengáis éxito con Esperanza contra un adversario dentro de esta sombra, el objetivo debe marcar Estrés. Este hechizo dura hasta que el GM gaste un punto de Miedo en su turno para despejar este efecto o recibas daño Severo."
   },
   {
     "id": "specter-of-the-dark",
-    "name": "SPECTER OF THE DARK",
+    "name": "ESPECTRO DE LA OSCURIDAD",
     "level": 10,
     "domain": "midnight",
     "type": "spell",
     "recallCost": 1,
-    "text": "Mark a Stress to become Spectral until you make an action roll targeting another creature. While Spectral, you’re immune to physical damage and can float and pass through solid objects. Other creatures can still see you while you’re in this form."
+    "text": "Marca Estrés para volverte Espectral hasta que hagas una tirada de acción dirigida a otra criatura. Mientras estés Espectral, eres inmune al daño físico y puedes flotar y atravesar objetos sólidos. Otras criaturas aún pueden verte en esta forma."
   },
   {
     "id": "gifted-tracker",
-    "name": "GIFTED TRACKER",
+    "name": "RASTREADOR TALENTOSO",
     "level": 1,
     "domain": "sage",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you’re tracking a specific creature or group of creatures based on signs of their passage, you can spend any number of Hope and ask the GM that many questions from the following list.\n• What direction did they go?\n• How long ago did they pass through?\n• What were they doing in this location?\n• How many of them were here?\nWhen you encounter creatures you’ve tracked in this way, gain a +1 bonus to your Evasion against them."
+    "text": "Cuando rastrees a una criatura específica o a un grupo de criaturas basándote en señales de su paso, puedes gastar cualquier cantidad de Esperanza y hacer al GM esa cantidad de preguntas de la siguiente lista:\n• ¿En qué dirección se fueron?\n• ¿Cuánto tiempo hace que pasaron por aquí?\n• ¿Qué estaban haciendo en este lugar?\n• ¿Cuántos eran?\nCuando encuentres criaturas que hayas rastreado de esta manera, obtienes un +1 a tu Evasión contra ellas."
   },
   {
     "id": "natures-tongue",
-    "name": "NATURE’S TONGUE",
+    "name": "LENGUA DE LA NATURALEZA",
     "level": 1,
     "domain": "sage",
     "type": "ability",
     "recallCost": 0,
-    "text": "You can speak the language of the natural world. When you want to speak to the plants and animals around you, make an Instinct Roll (12). On a success, they’ll give you the information they know. On a roll with Fear, their knowledge might be limited or come at a cost. Additionally, before you make a Spellcast Roll while within a natural environment, you can spend a Hope to gain a +2 bonus to the roll."
+    "text": "Puedes hablar el lenguaje del mundo natural. Cuando quieras hablar con las plantas y animales a tu alrededor, haz una Tirada de Instinto (12). Con éxito, te darán la información que sepan. En una tirada con Miedo, su conocimiento puede ser limitado o tener un costo. Además, antes de hacer una Tirada de Lanzamiento en un entorno natural, puedes gastar una Esperanza para obtener un +2 a la tirada."
   },
   {
     "id": "vicious-entangle",
-    "name": "VICIOUS ENTANGLE",
+    "name": "ENREDO VICIOSO",
     "level": 1,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Far range. On a success, roots and vines reach out from the ground, dealing 1d8+1 physical damage and temporarily Restraining the target. Additionally on a success, you can spend a Hope to temporarily Restrain another adversary within Very Close range of your target."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, raíces y enredaderas brotan del suelo, causando 1d8+1 de daño físico y Restringiendo temporalmente al objetivo. Además, con éxito, puedes gastar una Esperanza para Restringir temporalmente a otro adversario dentro de distancia Muy Cercana de tu objetivo."
   },
   {
     "id": "conjure-swarm",
-    "name": "CONJURE SWARM",
+    "name": "CONJURAR ENJAMBRE",
     "level": 2,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Tekaira Armored Beetles: Mark a Stress to conjure armored beetles that encircle you. When you next take damage, reduce the severity by one threshold. You can spend a Hope to keep the beetles conjured after taking damage. Fire Flies: Make a Spellcast Roll against all adversaries within Close range. Spend a Hope to deal 2d8+3 magic damage to targets you succeeded against."
+    "text": "Escarabajos Blindados de Tekaira: Marca Estrés para conjurar escarabajos blindados que te rodean. La próxima vez que recibas daño, reduce la severidad en un umbral. Puedes gastar una Esperanza para mantener a los escarabajos conjurados después de recibir daño. Luciérnagas de Fuego: Haz una Tirada de Lanzamiento contra todos los adversarios dentro de distancia Cercana. Gasta una Esperanza para causar 2d8+3 de daño mágico a los objetivos contra los que tuviste éxito."
   },
   {
     "id": "natural-familiar",
-    "name": "NATURAL FAMILIAR",
+    "name": "FAMILIAR NATURAL",
     "level": 2,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend a Hope to summon a small nature spirit or forest critter to your side until your next rest, you cast Natural Familiar again, or the familiar is targeted by an attack. If you spend an additional Hope, you can summon a familiar that flies. You can communicate with them, make a Spellcast Roll to command them to perform simple tasks, and mark a Stress to see through their eyes. When you deal damage to an adversary within Melee range of your familiar, you add a d6 to your damage roll."
+    "text": "Gasta una Esperanza para invocar a tu lado un pequeño espíritu de la naturaleza o criatura del bosque hasta tu próximo descanso, hasta que vuelvas a lanzar Familiar Natural, o hasta que el familiar sea blanco de un ataque. Si gastas una Esperanza adicional, puedes invocar un familiar volador. Puedes comunicarte con él, hacer una Tirada de Lanzamiento para ordenarle realizar tareas simples, y marcar Estrés para ver a través de sus ojos. Cuando causes daño a un adversario dentro de distancia de Cuerpo a Cuerpo de tu familiar, añades un d6 a tu tirada de daño."
   },
   {
     "id": "corrosive-projectile",
-    "name": "CORROSIVE PROJECTILE",
+    "name": "PROYECTIL CORROSIVO",
     "level": 3,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Far range. On a success, deal d6+4 magic damage using your Proficiency. Additionally, mark 2 or more Stress to make them permanently Corroded. While a target is Corroded, they gain a −1 penalty to their Difficulty for every 2 Stress you spent. This condition can stack."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, causa d6+4 de daño mágico usando tu Competencia. Además, marca 2 o más de Estrés para volverlo permanentemente Corroído. Mientras un objetivo esté Corroído, obtiene un −1 a su Dificultad por cada 2 de Estrés que gastaste. Esta condición puede acumularse."
   },
   {
     "id": "towering-stalk",
-    "name": "TOWERING STALK",
+    "name": "TALLO ELEVADO",
     "level": 3,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Once per rest, you can conjure a thick, twisting stalk within Close range that can be easily climbed. Its height can grow up to Far range. Mark a Stress to use this spell as an attack. Make a Spellcast Roll against an adversary or group of adversaries within Close range. The erupting stalk lifts targets you succeed against into the air and drops them, dealing d8 physical damage using your Proficiency."
+    "text": "Una vez por descanso, puedes conjurar un tallo grueso y retorcido dentro de distancia Cercana que se puede escalar con facilidad. Su altura puede crecer hasta distancia Lejana. Marca Estrés para usar este hechizo como ataque. Haz una Tirada de Lanzamiento contra un adversario o grupo de adversarios dentro de distancia Cercana. El tallo, al brotar, eleva por el aire a los objetivos contra los que tuviste éxito y los deja caer, causando d8 de daño físico usando tu Competencia."
   },
   {
     "id": "death-grip",
-    "name": "DEATH GRIP",
+    "name": "AGARRE MORTAL",
     "level": 4,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Close range and choose one of the following options:\n• You pull the target into Melee range or pull yourself into Melee range of them.\n• You constrict the target and force them to mark 2 Stress.\n• All adversaries between you and the target must succeed on a Reaction Roll (13) or be hit by vines, taking 3d6+2 physical damage.\nOn a success, vines reach out from your hands, causing the chosen effect and temporarily Restraining the target."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Cercana y elige una de las siguientes opciones:\n• Atraes al objetivo a distancia de Cuerpo a Cuerpo o te atraes a ti mismo a distancia de Cuerpo a Cuerpo de él.\n• Constriñes al objetivo y lo fuerzas a marcar 2 de Estrés.\n• Todos los adversarios entre tú y el objetivo deben tener éxito en una Tirada de Reacción (13) o ser golpeados por enredaderas, recibiendo 3d6+2 de daño físico.\nCon éxito, enredaderas brotan de tus manos, provocando el efecto elegido y Restringiendo temporalmente al objetivo."
   },
   {
     "id": "healing-field",
-    "name": "HEALING FIELD",
+    "name": "CAMPO SANADOR",
     "level": 4,
     "domain": "sage",
     "type": "spell",
     "recallCost": 2,
-    "text": "Once per long rest, you can conjure a field of healing plants around you. Everywhere within Close range of you bursts to life with vibrant nature, allowing you and all allies in the area to clear a Hit Point. Spend 2 Hope to allow you and all allies to clear 2 Hit Points instead."
+    "text": "Una vez por descanso largo, puedes conjurar un campo de plantas curativas a tu alrededor. Todo dentro de distancia Cercana estalla en vida con vegetación vibrante, permitiendo que tú y todos los aliados en el área despejéis un Punto de Vida. Gasta 2 de Esperanza para que tú y todos los aliados despejéis 2 Puntos de Vida en su lugar."
   },
   {
     "id": "thorn-skin",
-    "name": "THORN SKIN",
+    "name": "PIEL DE ESPINAS",
     "level": 5,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Once per rest, spend a Hope to sprout thorns all over your body. When you do, place a number of tokens equal to your Spellcast trait on this card. When you take damage, you can spend any number of tokens to roll that number of d6s. Add the results together and reduce the incoming damage by that amount. If you’re within Melee range of the attacker, deal that amount of damage back to them. When you take a rest, clear all unspent tokens."
+    "text": "Una vez por descanso, gasta una Esperanza para brotar espinas por todo tu cuerpo. Al hacerlo, coloca en esta carta una cantidad de fichas igual a tu rasgo de Lanzamiento. Cuando recibas daño, puedes gastar cualquier cantidad de fichas para tirar esa cantidad de d6. Suma los resultados y reduce el daño entrante en esa cantidad. Si estás dentro de distancia de Cuerpo a Cuerpo del atacante, causa esa cantidad de daño de vuelta a él. Al descansar, elimina las fichas no gastadas."
   },
   {
     "id": "wild-fortress",
-    "name": "WILD FORTRESS",
+    "name": "FORTALEZA SALVAJE",
     "level": 5,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (13). On a success, spend 2 Hope to grow a natural barricade in the shape of a dome that you and one ally can take cover within. While inside the dome, a creature can’t be targeted by attacks and can’t make attacks. Attacks made against the dome automatically succeed. The dome has the following damage thresholds and lasts until it marks 3 Hit Points. Place tokens on this card to represent marking Hit Points. Thresholds: 15/30"
+    "text": "Haz una Tirada de Lanzamiento (13). Con éxito, gasta 2 de Esperanza para hacer crecer una barricada natural en forma de cúpula donde tú y un aliado podéis resguardaros. Mientras estén dentro de la cúpula, una criatura no puede ser blanco de ataques ni puede atacar. Los ataques dirigidos contra la cúpula siempre tienen éxito. La cúpula tiene los siguientes umbrales de daño y dura hasta que marque 3 Puntos de Vida. Coloca fichas en esta carta para representar los Puntos de Vida marcados. Umbrales: 15/30"
   },
   {
     "id": "conjured-steeds",
-    "name": "CONJURED STEEDS",
+    "name": "MONTURAS CONJURADAS",
     "level": 6,
     "domain": "sage",
     "type": "spell",
     "recallCost": 0,
-    "text": "Spend any number of Hope to conjure that many magical steeds (such as horses, camels, or elephants) that you and your allies can ride until your next long rest or the steeds take any damage. The steeds double your land speed while traveling and, when in danger, allow you to move within Far range without having to roll. Creatures riding a steed gain a −2 penalty to attack rolls and a +2 bonus to damage rolls."
+    "text": "Gasta cualquier cantidad de Esperanza para conjurar esa cantidad de monturas mágicas (como caballos, camellos o elefantes) que tú y tus aliados podéis cabalgar hasta vuestro próximo descanso largo o hasta que las monturas reciban cualquier daño. Las monturas duplican vuestra velocidad terrestre al viajar y, en caso de peligro, os permiten moveros hasta distancia Lejana sin necesidad de tirar. Las criaturas que cabalgan una montura obtienen un −2 a las tiradas de ataque y un +2 a las tiradas de daño."
   },
   {
     "id": "forager",
-    "name": "FORAGER",
+    "name": "FORRAJERO",
     "level": 6,
     "domain": "sage",
     "type": "ability",
     "recallCost": 1,
-    "text": "As an additional downtime move you can choose, roll a d6 to see what you forage. Work with the GM to describe it and add it to your inventory as a consumable. Your party can carry up to five foraged consumables at a time. 1. A unique food (Clear 2 Stress) 2. A beautiful relic (Gain 2 Hope) 3. An arcane rune (+2 to a Spellcast Roll) 4. A healing vial (Clear 2 Hit Points) 5. A luck charm (Reroll any die) 6. Choose one of the options above."
+    "text": "Como jugada de tiempo libre adicional que puedes elegir, tira un d6 para ver qué forrajeas. Trabaja con el GM para describirlo y añádelo a tu inventario como un consumible. Tu grupo puede llevar hasta cinco consumibles forrajeados a la vez. 1. Un alimento singular (Despeja 2 de Estrés) 2. Una hermosa reliquia (Gana 2 de Esperanza) 3. Una runa arcana (+2 a una Tirada de Lanzamiento) 4. Un vial curativo (Despeja 2 Puntos de Vida) 5. Un amuleto de la suerte (Vuelve a tirar cualquier dado) 6. Elige una de las opciones anteriores."
   },
   {
     "id": "sage-touched",
-    "name": "SAGE-TOUCHED",
+    "name": "TOCADO POR EL SABIO",
     "level": 7,
     "domain": "sage",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Sage domain, gain the following benefits:\n• While you’re in a natural environment, you gain a +2 bonus to your Spellcast Rolls.\n• Once per rest, you can double your Agility or Instinct when making a roll that uses that trait. You must choose to do this before you roll."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Sabio, obtienes los siguientes beneficios:\n• Mientras estés en un entorno natural, obtienes un +2 a tus Tiradas de Lanzamiento.\n• Una vez por descanso, puedes duplicar tu Agilidad o Instinto al hacer una tirada que use ese rasgo. Debes elegir hacerlo antes de tirar."
   },
   {
     "id": "wild-surge",
-    "name": "WILD SURGE",
+    "name": "OLEADA SALVAJE",
     "level": 7,
     "domain": "sage",
     "type": "spell",
     "recallCost": 2,
-    "text": "Once per long rest, mark a Stress to channel the natural world around you and enhance yourself. Describe how your appearance changes, then place a d6 on this card with the 1 value facing up. While the Wild Surge Die is active, you add its value to every action roll you make. After you add its value to a roll, increase the Wild Surge Die’s value by one. When the die’s value would exceed 6 or you take a rest, this form drops and you must mark an additional Stress."
+    "text": "Una vez por descanso largo, marca Estrés para canalizar el mundo natural a tu alrededor y potenciarte. Describe cómo cambia tu apariencia, luego coloca un d6 en esta carta con la cara 1 hacia arriba. Mientras el Dado de Oleada Salvaje esté activo, añades su valor a cada tirada de acción que hagas. Después de sumar su valor a una tirada, aumenta el valor del Dado de Oleada Salvaje en uno. Cuando el valor del dado supere el 6 o descanses, esta forma se cae y debes marcar Estrés adicional."
   },
   {
     "id": "forest-sprites",
-    "name": "FOREST SPRITES",
+    "name": "DUENDECILLOS DEL BOSQUE",
     "level": 8,
     "domain": "sage",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (13). On a success, spend any number of Hope to create an equal number of small forest sprites who appear at points you choose within Far range, providing the following benefits:\n• Your allies gain a +3 bonus to attack rolls against adversaries within Melee range of a sprite.\n• An ally who marks an Armor Slot while within Melee range of a sprite can mark an additional Armor Slot.\nA sprite vanishes after granting a benefit or taking any damage."
+    "text": "Haz una Tirada de Lanzamiento (13). Con éxito, gasta cualquier cantidad de Esperanza para crear esa misma cantidad de pequeños duendecillos del bosque que aparecen en puntos que elijas dentro de distancia Lejana, otorgando los siguientes beneficios:\n• Tus aliados obtienen un +3 a las tiradas de ataque contra adversarios dentro de distancia de Cuerpo a Cuerpo de un duendecillo.\n• Un aliado que marque una Ranura de Armadura mientras esté dentro de distancia de Cuerpo a Cuerpo de un duendecillo puede marcar una Ranura de Armadura adicional.\nUn duendecillo se desvanece tras otorgar un beneficio o recibir cualquier daño."
   },
   {
     "id": "rejuvenation-barrier",
-    "name": "REJUVENATION BARRIER",
+    "name": "BARRERA DE REJUVENECIMIENTO",
     "level": 8,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (15). Once per rest on a success, create a temporary barrier of protective energy around you at Very Close range. You and all allies within the barrier when this spell is cast clear 1d4 Hit Points. While the barrier is up, you and all allies within have resistance to physical damage from outside the barrier. When you move, the barrier follows you."
+    "text": "Haz una Tirada de Lanzamiento (15). Una vez por descanso, con éxito, crea una barrera temporal de energía protectora a tu alrededor, a distancia Muy Cercana. Tú y todos los aliados dentro de la barrera cuando se lance este hechizo despejáis 1d4 Puntos de Vida. Mientras la barrera esté en pie, tú y todos los aliados dentro tenéis resistencia al daño físico proveniente del exterior de la barrera. Cuando te muevas, la barrera te sigue."
   },
   {
     "id": "fane-of-the-wilds",
-    "name": "FANE OF THE WILDS",
+    "name": "SANTUARIO DE LO SALVAJE",
     "level": 9,
     "domain": "sage",
     "type": "ability",
     "recallCost": 2,
-    "text": "After a long rest, place a number of tokens equal to the number of Sage domain cards in your loadout and vault on this card. When you would make a Spellcast Roll, you can spend any number of tokens after the roll to gain a +1 bonus for each token spent. When you critically succeed on a Spellcast Roll for a Sage domain spell, gain a token. When you take a long rest, clear all unspent tokens."
+    "text": "Después de un descanso largo, coloca en esta carta una cantidad de fichas igual al número de cartas del dominio Sabio en tu equipo y bóveda. Cuando vayas a hacer una Tirada de Lanzamiento, puedes gastar cualquier cantidad de fichas después de la tirada para obtener un +1 por cada ficha gastada. Cuando obtengas un éxito crítico en una Tirada de Lanzamiento para un hechizo del dominio Sabio, gana una ficha. Al tomar un descanso largo, elimina las fichas no gastadas."
   },
   {
     "id": "plant-dominion",
-    "name": "PLANT DOMINION",
+    "name": "DOMINIO VEGETAL",
     "level": 9,
     "domain": "sage",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (18). Once per long rest on a success, you reshape the natural world, changing the surrounding plant life anywhere within Far range of you. For example, you can grow trees instantly, clear a path through dense vines, or create a wall of roots."
+    "text": "Haz una Tirada de Lanzamiento (18). Una vez por descanso largo, con éxito, remodelas el mundo natural, cambiando la vegetación circundante en cualquier punto dentro de distancia Lejana de ti. Por ejemplo, puedes hacer crecer árboles al instante, abrir un camino entre enredaderas densas o crear un muro de raíces."
   },
   {
     "id": "force-of-nature",
-    "name": "FORCE OF NATURE",
+    "name": "FUERZA DE LA NATURALEZA",
     "level": 10,
     "domain": "sage",
     "type": "spell",
     "recallCost": 2,
-    "text": "Mark a Stress to transform into a hulking nature spirit, gaining the following benefits:\n• When you succeed on an attack or Spellcast Roll, gain a +10 bonus to the damage roll.\n• When you deal enough damage to defeat a creature within Close range, you absorb them and clear an Armor Slot.\n• You can’t be Restrained.\nBefore you make an action roll, you must spend a Hope. If you can’t, you revert to your normal form."
+    "text": "Marca Estrés para transformarte en un imponente espíritu de la naturaleza, obteniendo los siguientes beneficios:\n• Cuando tengas éxito en un ataque o Tirada de Lanzamiento, obtienes un +10 a la tirada de daño.\n• Cuando causes suficiente daño para derrotar a una criatura dentro de distancia Cercana, la absorbes y despejas una Ranura de Armadura.\n• No puedes ser Restringido.\nAntes de hacer una tirada de acción, debes gastar una Esperanza. Si no puedes, vuelves a tu forma normal."
   },
   {
     "id": "tempest",
-    "name": "TEMPEST",
+    "name": "TEMPESTAD",
     "level": 10,
     "domain": "sage",
     "type": "spell",
     "recallCost": 2,
-    "text": "Choose one of the following tempests and make a Spellcast Roll against all targets within Far range. Targets you succeed against experience its effects until the GM spends a Fear on their turn to end this spell.\n• Blizzard: Deal 2d20+8 magic damage and targets are temporararily Vulnerable.\n• Hurricane: Deal 3d10+10 magic damage and choose a direction the wind is blowing. Targets can’t move against the wind.\n• Sandstorm: Deal 5d6+9 magic damage. Attacks made from beyond Melee range have disadvantage."
+    "text": "Elige una de las siguientes tempestades y haz una Tirada de Lanzamiento contra todos los objetivos dentro de distancia Lejana. Los objetivos contra los que tengas éxito sufren sus efectos hasta que el GM gaste un punto de Miedo en su turno para terminar este hechizo.\n• Ventisca: Causa 2d20+8 de daño mágico y los objetivos quedan temporalmente Vulnerables.\n• Huracán: Causa 3d10+10 de daño mágico y elige una dirección hacia la que sopla el viento. Los objetivos no pueden moverse contra el viento.\n• Tormenta de Arena: Causa 5d6+9 de daño mágico. Los ataques hechos desde más allá de distancia de Cuerpo a Cuerpo tienen desventaja."
   },
   {
     "id": "bolt-beacon",
-    "name": "BOLT BEACON",
+    "name": "FARO DE RAYOS",
     "level": 1,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll against a target within Far range. On a success, spend a Hope to send a bolt of shimmering light toward them, dealing d8+2 magic damage using your Proficiency. The target becomes temporarily Vulnerable and glows brightly until this condition is cleared."
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Lejana. Con éxito, gasta una Esperanza para enviar un rayo de luz resplandeciente hacia él, causando d8+2 de daño mágico usando tu Competencia. El objetivo queda temporalmente Vulnerable y brilla intensamente hasta que se despeje esta condición."
   },
   {
     "id": "mending-touch",
-    "name": "MENDING TOUCH",
+    "name": "TOQUE SANADOR",
     "level": 1,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "You lay your hands upon a creature and channel healing magic to close their wounds. When you can take a few minutes to focus on the target you’re helping, you can spend 2 Hope to clear a Hit Point or a Stress on them. Once per long rest, when you spend this healing time learning something new about them or revealing something about yourself, you can clear 2 Hit Points or 2 Stress on them instead."
+    "text": "Pones tus manos sobre una criatura y canalizas magia curativa para cerrar sus heridas. Cuando puedas dedicar unos minutos a concentrarte en el objetivo que estás ayudando, puedes gastar 2 de Esperanza para despejarle un Punto de Vida o un punto de Estrés. Una vez por descanso largo, cuando dediques ese tiempo curativo a aprender algo nuevo sobre él o a revelar algo sobre ti mismo, puedes despejarle 2 Puntos de Vida o 2 de Estrés en su lugar."
   },
   {
     "id": "reassurance",
-    "name": "REASSURANCE",
+    "name": "PALABRAS DE ALIENTO",
     "level": 1,
     "domain": "splendor",
     "type": "ability",
     "recallCost": 0,
-    "text": "Once per rest, after an ally attempts an action roll but before the consequences take place, you can offer assistance or words of support. When you do, your ally can reroll their dice."
+    "text": "Una vez por descanso, después de que un aliado intente una tirada de acción pero antes de que se revelen las consecuencias, puedes ofrecerle ayuda o palabras de apoyo. Al hacerlo, tu aliado puede volver a tirar sus dados."
   },
   {
     "id": "final-words",
-    "name": "FINAL WORDS",
+    "name": "ÚLTIMAS PALABRAS",
     "level": 2,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "You can infuse a corpse with a moment of life to speak with it. Make a Spellcast Roll (13). On a success with Hope, the corpse answers up to three questions. On a success with Fear, the corpse answers one question. The corpse answers truthfully, but it can’t impart information it didn’t know in life. On a failure, or once the corpse has finished answering your questions, the body turns to dust."
+    "text": "Puedes infundir un cadáver con un momento de vida para hablar con él. Haz una Tirada de Lanzamiento (13). Con éxito con Esperanza, el cadáver responde hasta tres preguntas. Con éxito con Miedo, el cadáver responde una pregunta. El cadáver responde con sinceridad, pero no puede revelar información que no sabía en vida. Con un fallo, o una vez que el cadáver termine de responder tus preguntas, el cuerpo se convierte en polvo."
   },
   {
     "id": "healing-hands",
-    "name": "HEALING HANDS",
+    "name": "MANOS SANADORAS",
     "level": 2,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "Make a Spellcast Roll (13) and target a creature other than yourself within Melee range. On a success, mark a Stress to clear 2 Hit Points or 2 Stress on the target. On a failure, mark a Stress to clear a Hit Point or a Stress on the target. You can’t heal the same target again until your next long rest."
+    "text": "Haz una Tirada de Lanzamiento (13) y elige como objetivo a una criatura distinta de ti mismo dentro de distancia de Cuerpo a Cuerpo. Con éxito, marca Estrés para despejar 2 Puntos de Vida o 2 de Estrés en el objetivo. Con un fallo, marca Estrés para despejar un Punto de Vida o un punto de Estrés en el objetivo. No puedes curar al mismo objetivo de nuevo hasta tu próximo descanso largo."
   },
   {
     "id": "second-wind",
-    "name": "SECOND WIND",
+    "name": "SEGUNDO ALIENTO",
     "level": 3,
     "domain": "splendor",
     "type": "ability",
     "recallCost": 2,
-    "text": "Once per rest, when you succeed on an attack against an adversary, you can clear 3 Stress or a Hit Point. On a success with Hope, you also clear 3 Stress or a Hit Point on an ally within Close range of you."
+    "text": "Una vez por descanso, cuando tengas éxito en un ataque contra un adversario, puedes despejar 3 de Estrés o un Punto de Vida. Con éxito con Esperanza, también despejas 3 de Estrés o un Punto de Vida a un aliado dentro de distancia Cercana."
   },
   {
     "id": "voice-of-reason",
-    "name": "VOICE OF REASON",
+    "name": "VOZ DE LA RAZÓN",
     "level": 3,
     "domain": "splendor",
     "type": "ability",
     "recallCost": 1,
-    "text": "You speak with an unmatched power and authority. You have advantage on action rolls to de-escalate violent situations or convince someone to follow your lead. Additionally, you’re emboldened in moments of duress. When all of your Stress slots are marked, you gain a +1 bonus to your Proficiency for damage rolls."
+    "text": "Hablas con un poder y autoridad incomparables. Tienes ventaja en tiradas de acción para desescalar situaciones violentas o convencer a alguien de seguir tu liderazgo. Además, te envalentonas en momentos de apuro. Cuando todas tus ranuras de Estrés estén marcadas, obtienes un +1 a tu Competencia para las tiradas de daño."
   },
   {
     "id": "divination",
-    "name": "DIVINATION",
+    "name": "DIVINACIÓN",
     "level": 4,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "Once per long rest, spend 3 Hope to reach out to the forces beyond and ask one “yes or no” question about an event, person, place, or situation in the near future. For a moment, the present falls away and you see the answer before you."
+    "text": "Una vez por descanso largo, gasta 3 de Esperanza para contactar con las fuerzas del más allá y hacer una pregunta de «sí o no» sobre un evento, persona, lugar o situación en el futuro cercano. Por un momento, el presente se desvanece y ves la respuesta ante ti."
   },
   {
     "id": "life-ward",
-    "name": "LIFE WARD",
+    "name": "GUARDIÁN DE VIDA",
     "level": 4,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend 3 Hope and choose an ally within Close range. They are marked with a glowing sigil of protection. When this ally would make a death move, they clear a Hit Point instead. This effect ends when it saves the target from a death move, you cast Life Ward on another target, or you take a long rest."
+    "text": "Gasta 3 de Esperanza y elige a un aliado dentro de distancia Cercana. Queda marcado con un símbolo resplandeciente de protección. Cuando este aliado deba hacer una Jugada de Muerte, despeja un Punto de Vida en su lugar. Este efecto termina cuando salva al objetivo de una Jugada de Muerte, cuando lanzas Guardián de Vida sobre otro objetivo, o cuando tomas un descanso largo."
   },
   {
     "id": "shape-material",
-    "name": "SHAPE MATERIAL",
+    "name": "MOLDEAR MATERIAL",
     "level": 5,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "Spend a Hope to shape a section of natural material you’re touching (such as stone, ice, or wood) to suit your purpose. The area of the material can be no larger than you. For example, you can form a rudimentary tool or create a door. You can only affect the material within Close range of where you’re touching it."
+    "text": "Gasta una Esperanza para moldear una sección de material natural que estés tocando (como piedra, hielo o madera) según tu propósito. El área del material no puede ser más grande que tú. Por ejemplo, puedes formar una herramienta rudimentaria o crear una puerta. Solo puedes afectar el material dentro de distancia Cercana de donde lo estás tocando."
   },
   {
     "id": "smite",
-    "name": "SMITE",
+    "name": "CASTIGO DIVINO",
     "level": 5,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Once per rest, spend 3 Hope to charge your powerful smite. When you next successfully attack with a weapon, double the result of your damage roll. This attack deals magic damage regardless of the weapon’s damage type."
+    "text": "Una vez por descanso, gasta 3 de Esperanza para cargar tu poderoso castigo. La próxima vez que ataques con éxito con un arma, duplica el resultado de tu tirada de daño. Este ataque causa daño mágico sin importar el tipo de daño del arma."
   },
   {
     "id": "restoration",
-    "name": "RESTORATION",
+    "name": "RESTAURACIÓN",
     "level": 6,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "After a long rest, place a number of tokens equal to your Spellcast trait on this card. Touch a creature and spend any number of tokens to clear 2 Hit Points or 2 Stress for each token spent. You can also spend a token from this card when touching a creature to clear the Vulnerable condition or heal a physical or magical ailment (the GM might require additional tokens depending on the strength of the ailment). When you take a long rest, clear all unspent tokens."
+    "text": "Después de un descanso largo, coloca en esta carta una cantidad de fichas igual a tu rasgo de Lanzamiento. Toca a una criatura y gasta cualquier cantidad de fichas para despejar 2 Puntos de Vida o 2 de Estrés por cada ficha gastada. También puedes gastar una ficha de esta carta al tocar a una criatura para despejar la condición Vulnerable o curar una dolencia física o mágica (el GM puede requerir fichas adicionales según la gravedad de la dolencia). Al tomar un descanso largo, elimina las fichas no gastadas."
   },
   {
     "id": "zone-of-protection",
-    "name": "ZONE OF PROTECTION",
+    "name": "ZONA DE PROTECCIÓN",
     "level": 6,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (16). Once per long rest on a success, choose a point within Far range and create a visible zone of protection there for all allies within Very Close range of that point. When you do, place a d6 on this card with the 1 value facing up. When an ally in this zone takes damage, they reduce it by the die’s value. You then increase the die’s value by one. When the die’s value would exceed 6, this effect ends."
+    "text": "Haz una Tirada de Lanzamiento (16). Una vez por descanso largo, con éxito, elige un punto dentro de distancia Lejana y crea allí una zona visible de protección para todos los aliados dentro de distancia Muy Cercana de ese punto. Al hacerlo, coloca un d6 en esta carta con la cara 1 hacia arriba. Cuando un aliado en esta zona reciba daño, lo reduce según el valor del dado. Luego aumenta el valor del dado en uno. Cuando el valor del dado supere el 6, este efecto termina."
   },
   {
     "id": "healing-strike",
-    "name": "HEALING STRIKE",
+    "name": "GOLPE SANADOR",
     "level": 7,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 1,
-    "text": "When you deal damage to an adversary, you can spend 2 Hope to clear a Hit Point on an ally within Close range."
+    "text": "Cuando causes daño a un adversario, puedes gastar 2 de Esperanza para despejar un Punto de Vida a un aliado dentro de distancia Cercana."
   },
   {
     "id": "splendor-touched",
-    "name": "SPLENDOR-TOUCHED",
+    "name": "TOCADO POR EL ESPLENDOR",
     "level": 7,
     "domain": "splendor",
     "type": "ability",
     "recallCost": 2,
-    "text": "When 4 or more of the domain cards in your loadout are from the Splendor domain, gain the following benefits:\n• +3 bonus to your Severe damage threshold\n• Once per long rest, when incoming damage would require you to mark a number of Hit Points, you can choose to mark that much Stress or spend that much Hope instead."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Esplendor, obtienes los siguientes beneficios:\n• +3 a tu umbral de daño Severo\n• Una vez por descanso largo, cuando el daño entrante te obligue a marcar cierta cantidad de Puntos de Vida, puedes elegir marcar esa misma cantidad de Estrés o gastar esa misma cantidad de Esperanza en su lugar."
   },
   {
     "id": "shield-aura",
-    "name": "SHIELD AURA",
+    "name": "AURA DE ESCUDO",
     "level": 8,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Mark a Stress to cast a protective aura on a target within Very Close range. When the target marks an Armor Slot, they reduce the severity of the attack by an additional threshold. If this spell causes a creature who would be damaged to instead mark no Hit Points, the effect ends. You can only hold Shield Aura on one creature at a time."
+    "text": "Marca Estrés para lanzar un aura protectora sobre un objetivo dentro de distancia Muy Cercana. Cuando el objetivo marque una Ranura de Armadura, reduce la severidad del ataque en un umbral adicional. Si este hechizo hace que una criatura que iba a recibir daño no marque ningún Punto de Vida, el efecto termina. Solo puedes mantener Aura de Escudo sobre una criatura a la vez."
   },
   {
     "id": "stunning-sunlight",
-    "name": "STUNNING SUNLIGHT",
+    "name": "LUZ SOLAR ATURDIDORA",
     "level": 8,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll to unleash powerful rays of burning sunlight against all adversaries in front of you within Far range. On a success, spend any number of Hope and force that many targets you succeeded against to make a Reaction Roll (14). Targets who succeed take 3d20+3 magic damage. Targets who fail take 4d20+5 magic damage and are temporarily Stunned. While Stunned, they can’t use reactions and can’t take any other actions until they clear this condition."
+    "text": "Haz una Tirada de Lanzamiento para desatar poderosos rayos de luz solar ardiente contra todos los adversarios frente a ti dentro de distancia Lejana. Con éxito, gasta cualquier cantidad de Esperanza y fuerza a esa misma cantidad de objetivos contra los que tuviste éxito a hacer una Tirada de Reacción (14). Los objetivos que tengan éxito reciben 3d20+3 de daño mágico. Los que fallen reciben 4d20+5 de daño mágico y quedan temporalmente Aturdidos. Mientras estén Aturdidos, no pueden usar reacciones ni realizar ninguna otra acción hasta que despejen esta condición."
   },
   {
     "id": "overwhelming-aura",
-    "name": "OVERWHELMING AURA",
+    "name": "AURA ABRUMADORA",
     "level": 9,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (15) to magically empower your aura. On a success, spend 2 Hope to make your Presence equal to your Spellcast trait until your next long rest. While this spell is active, an adversary must mark a Stress when they target you with an attack."
+    "text": "Haz una Tirada de Lanzamiento (15) para potenciar mágicamente tu aura. Con éxito, gasta 2 de Esperanza para igualar tu Presencia a tu rasgo de Lanzamiento hasta tu próximo descanso largo. Mientras este hechizo esté activo, un adversario debe marcar Estrés cuando te ataque."
   },
   {
     "id": "salvation-beam",
-    "name": "SALVATION BEAM",
+    "name": "RAYO DE SALVACIÓN",
     "level": 9,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (16). On a success, mark any number of Stress to target a line of allies within Far range. You can clear Hit Points on the targets equal to the number of Stress marked, divided among them however you’d like."
+    "text": "Haz una Tirada de Lanzamiento (16). Con éxito, marca cualquier cantidad de Estrés para elegir como objetivo una línea de aliados dentro de distancia Lejana. Puedes despejar Puntos de Vida en los objetivos igual a la cantidad de Estrés marcado, distribuidos entre ellos como prefieras."
   },
   {
     "id": "invigoration",
-    "name": "INVIGORATION",
+    "name": "VIGORIZACIÓN",
     "level": 10,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 3,
-    "text": "When you or an ally within Close range has used a feature that has an exhaustion limit (such as once per rest or once per session), you can spend any number of Hope and roll that many d6s. If any roll a 6, the feature can be used again."
+    "text": "Cuando tú o un aliado dentro de distancia Cercana hayáis usado un rasgo con un límite de uso (como una vez por descanso o una vez por sesión), puedes gastar cualquier cantidad de Esperanza y tirar esa cantidad de d6. Si alguno muestra un 6, el rasgo puede usarse de nuevo."
   },
   {
     "id": "resurrection",
-    "name": "RESURRECTION",
+    "name": "RESURRECCIÓN",
     "level": 10,
     "domain": "splendor",
     "type": "spell",
     "recallCost": 2,
-    "text": "Make a Spellcast Roll (20). On a success, restore one creature who has been dead no longer than 100 years to full strength. Then roll a d6. On a result of 5 or lower, place this card in your vault permanently. On a failure, you can’t cast Resurrection again for a week."
+    "text": "Haz una Tirada de Lanzamiento (20). Con éxito, restauras a plena fuerza a una criatura que haya muerto hace no más de 100 años. Luego tira un d6. Con un resultado de 5 o menos, coloca esta carta en tu bóveda de forma permanente. Con un fallo, no puedes volver a lanzar Resurrección durante una semana."
   },
   {
     "id": "bare-bones",
-    "name": "BARE BONES",
+    "name": "SIN PROTECCIÓN",
     "level": 1,
     "domain": "valor",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you choose not to equip armor, you have a base Armor Score of 3 + your Strength and use the following as your base damage thresholds:\n• Tier 1: 9/19\n• Tier 2: 11/24\n• Tier 3: 13/31\n• Tier 4: 15/38"
+    "text": "Cuando elijas no equipar armadura, tienes una Puntuación de Armadura base de 3 + tu Fuerza y usas los siguientes umbrales de daño base:\n• Nivel 1: 9/19\n• Nivel 2: 11/24\n• Nivel 3: 13/31\n• Nivel 4: 15/38"
   },
   {
     "id": "forceful-push",
-    "name": "FORCEFUL PUSH",
+    "name": "EMPUJE CONTUNDENTE",
     "level": 1,
     "domain": "valor",
     "type": "ability",
     "recallCost": 0,
-    "text": "Make an attack with your primary weapon against a target within Melee range. On a success, you deal damage and knock them back to Close range. On a success with Hope, add a d6 to your damage roll. Additionally, you can spend a Hope to make them temporarily Vulnerable."
+    "text": "Haz un ataque con tu arma principal contra un objetivo dentro de distancia de Cuerpo a Cuerpo. Con éxito, causas daño y lo empujas hasta distancia Cercana. Con éxito con Esperanza, añade un d6 a tu tirada de daño. Además, puedes gastar una Esperanza para dejarlo temporalmente Vulnerable."
   },
   {
     "id": "i-am-your-shield",
-    "name": "I AM YOUR SHIELD",
+    "name": "SOY TU ESCUDO",
     "level": 1,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "When an ally within Very Close range would take damage, you can mark a Stress to stand in the way and make yourself the target of the attack instead. When you take damage from this attack, you can mark any number of Armor Slots."
+    "text": "Cuando un aliado dentro de distancia Muy Cercana vaya a recibir daño, puedes marcar Estrés para interponerte y convertirte en el objetivo del ataque en su lugar. Cuando recibas daño por este ataque, puedes marcar cualquier cantidad de Ranuras de Armadura."
   },
   {
     "id": "body-basher",
-    "name": "BODY BASHER",
+    "name": "GOLPEADOR CORPORAL",
     "level": 2,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "You use the full force of your body in a fight. On a successful attack using a weapon with a Melee range, gain a bonus to your damage roll equal to your Strength."
+    "text": "Usas toda la fuerza de tu cuerpo en una pelea. En un ataque exitoso con un arma de distancia de Cuerpo a Cuerpo, obtienes un bono a tu tirada de daño igual a tu Fuerza."
   },
   {
     "id": "bold-presence",
-    "name": "BOLD PRESENCE",
+    "name": "PRESENCIA AUDAZ",
     "level": 2,
     "domain": "valor",
     "type": "ability",
     "recallCost": 0,
-    "text": "When you make a Presence Roll, you can spend a Hope to add your Strength to the roll. Additionally, once per rest when you would gain a condition, you can describe how your bold presence aids you in the situation and avoid gaining the condition."
+    "text": "Cuando hagas una Tirada de Presencia, puedes gastar una Esperanza para añadir tu Fuerza a la tirada. Además, una vez por descanso, cuando vayas a obtener una condición, puedes describir cómo tu presencia audaz te ayuda en la situación y evitar obtener la condición."
   },
   {
     "id": "critical-inspiration",
-    "name": "CRITICAL INSPIRATION",
+    "name": "INSPIRACIÓN CRÍTICA",
     "level": 3,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per rest, when you critically succeed on an attack, all allies within Very Close range can clear a Stress or gain a Hope."
+    "text": "Una vez por descanso, cuando obtengas un éxito crítico en un ataque, todos los aliados dentro de distancia Muy Cercana pueden despejar un punto de Estrés o ganar una Esperanza."
   },
   {
     "id": "lean-on-me",
-    "name": "LEAN ON ME",
+    "name": "APÓYATE EN MÍ",
     "level": 3,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per long rest, when you console or inspire an ally who failed an action roll, you can both clear 2 Stress."
+    "text": "Una vez por descanso largo, cuando consueles o inspires a un aliado que falló una tirada de acción, ambos podéis despejar 2 de Estrés."
   },
   {
     "id": "goad-them-on",
-    "name": "GOAD THEM ON",
+    "name": "PROVOCARLOS",
     "level": 4,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Describe how you taunt a target within Close range, then make a Presence Roll against them. On a success, the target must mark a Stress, and the next time the GM spotlights them, they must target you with an attack, which they make with disadvantage."
+    "text": "Describe cómo provocas a un objetivo dentro de distancia Cercana, luego haz una Tirada de Presencia contra él. Con éxito, el objetivo debe marcar Estrés, y la próxima vez que el GM lo destaque, debe atacarte a ti, y lo hará con desventaja."
   },
   {
     "id": "support-tank",
-    "name": "SUPPORT TANK",
+    "name": "TANQUE DE APOYO",
     "level": 4,
     "domain": "valor",
     "type": "ability",
     "recallCost": 2,
-    "text": "When an ally within Close range fails a roll, you can spend 2 Hope to allow them to reroll either their Hope or Fear Die."
+    "text": "Cuando un aliado dentro de distancia Cercana falle una tirada, puedes gastar 2 de Esperanza para permitirle volver a tirar su Dado de Esperanza o de Miedo."
   },
   {
     "id": "armorer",
-    "name": "ARMORER",
+    "name": "ARMERO",
     "level": 5,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "While you’re wearing armor, gain a +1 bonus to your Armor Score. During a rest, when you choose to repair your armor as a downtime move, your allies also clear an Armor Slot."
+    "text": "Mientras lleves armadura puesta, obtienes un +1 a tu Puntuación de Armadura. Durante un descanso, cuando elijas reparar tu armadura como jugada de tiempo libre, tus aliados también despejan una Ranura de Armadura."
   },
   {
     "id": "rousing-strike",
-    "name": "ROUSING STRIKE",
+    "name": "GOLPE ENARDECEDOR",
     "level": 5,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per rest, when you critically succeed on an attack, you and all allies who can see or hear you can clear a Hit Point or 1d4 Stress."
+    "text": "Una vez por descanso, cuando obtengas un éxito crítico en un ataque, tú y todos los aliados que puedan verte u oírte podéis despejar un Punto de Vida o 1d4 de Estrés."
   },
   {
     "id": "inevitable",
@@ -1617,87 +1617,87 @@
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you fail an action roll, your next action roll has advantage."
+    "text": "Cuando falles una tirada de acción, tu próxima tirada de acción tiene ventaja."
   },
   {
     "id": "rise-up",
-    "name": "RISE UP",
+    "name": "LEVANTARSE",
     "level": 6,
     "domain": "valor",
     "type": "ability",
     "recallCost": 2,
-    "text": "Gain a bonus to your Severe threshold equal to your Proficiency. When you mark 1 or more Hit Points from an attack, clear a Stress."
+    "text": "Obtienes un bono a tu umbral Severo igual a tu Competencia. Cuando marques uno o más Puntos de Vida por un ataque, despeja un punto de Estrés."
   },
   {
     "id": "shrug-it-off",
-    "name": "SHRUG IT OFF",
+    "name": "SACUDÍRSELO",
     "level": 7,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you would take damage, you can mark a Stress to reduce the severity of the damage by one threshold. When you do, roll a d6. On a result of 3 or lower, place this card in your vault."
+    "text": "Cuando vayas a recibir daño, puedes marcar Estrés para reducir la severidad del daño en un umbral. Al hacerlo, tira un d6. Con un resultado de 3 o menos, coloca esta carta en tu bóveda."
   },
   {
     "id": "valor-touched",
-    "name": "VALOR-TOUCHED",
+    "name": "TOCADO POR EL VALOR",
     "level": 7,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "When 4 or more of the domain cards in your loadout are from the Valor domain, gain the following benefits:\n• +1 bonus to your Armor Score\n• When you mark 1 or more Hit Points without marking an Armor Slot, clear an Armor Slot."
+    "text": "Cuando 4 o más de las cartas de dominio en tu equipo sean del dominio Valor, obtienes los siguientes beneficios:\n• +1 a tu Puntuación de Armadura\n• Cuando marques uno o más Puntos de Vida sin marcar una Ranura de Armadura, despeja una Ranura de Armadura."
   },
   {
     "id": "full-surge",
-    "name": "FULL SURGE",
+    "name": "OLEADA TOTAL",
     "level": 8,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Once per long rest, mark 3 Stress to push your body to its limits. Gain a +2 bonus to all of your character traits until your next rest."
+    "text": "Una vez por descanso largo, marca 3 de Estrés para llevar tu cuerpo al límite. Obtienes un +2 a todos tus rasgos de personaje hasta tu próximo descanso."
   },
   {
     "id": "ground-pound",
-    "name": "GROUND POUND",
+    "name": "GOLPE SÍSMICO",
     "level": 8,
     "domain": "valor",
     "type": "ability",
     "recallCost": 2,
-    "text": "Spend 2 Hope to strike the ground where you stand and make a Strength Roll against all targets within Very Close range. Targets you succeed against are thrown back to Far range and must make a Reaction Roll (17). Targets who fail take 4d10+8 damage. Targets who succeed take half damage."
+    "text": "Gasta 2 de Esperanza para golpear el suelo donde estás y haz una Tirada de Fuerza contra todos los objetivos dentro de distancia Muy Cercana. Los objetivos contra los que tengas éxito son lanzados hasta distancia Lejana y deben hacer una Tirada de Reacción (17). Quienes fallen reciben 4d10+8 de daño. Quienes tengan éxito reciben la mitad del daño."
   },
   {
     "id": "hold-the-line",
-    "name": "HOLD THE LINE",
+    "name": "MANTENER LA LÍNEA",
     "level": 9,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Describe the defensive stance you take and spend a Hope. If an adversary moves within Very Close range, they’re pulled into Melee range and Restrained. This condition lasts until you move or fail a roll with Fear, or the GM spends 2 Fear on their turn to clear it."
+    "text": "Describe la postura defensiva que adoptas y gasta una Esperanza. Si un adversario se acerca a distancia Muy Cercana, es arrastrado a distancia de Cuerpo a Cuerpo y queda Restringido. Esta condición dura hasta que te muevas o falles una tirada con Miedo, o hasta que el GM gaste 2 de Miedo en su turno para despejarla."
   },
   {
     "id": "lead-by-example",
-    "name": "LEAD BY EXAMPLE",
+    "name": "LIDERAR CON EL EJEMPLO",
     "level": 9,
     "domain": "valor",
     "type": "ability",
     "recallCost": 3,
-    "text": "When you deal damage to an adversary, you can mark a Stress and describe how you encourage your allies. The next PC to make an attack against that adversary can clear a Stress or gain a Hope."
+    "text": "Cuando causes daño a un adversario, puedes marcar Estrés y describir cómo animas a tus aliados. El siguiente PJ que ataque a ese adversario puede despejar un punto de Estrés o ganar una Esperanza."
   },
   {
     "id": "unbreakable",
-    "name": "UNBREAKABLE",
+    "name": "INQUEBRANTABLE",
     "level": 10,
     "domain": "valor",
     "type": "ability",
     "recallCost": 4,
-    "text": "When you mark your last Hit Point, instead of making a death move, you can roll a d6 and clear a number of Hit Points equal to the result. Then place this card in your vault."
+    "text": "Cuando marques tu último Punto de Vida, en lugar de hacer una Jugada de Muerte, puedes tirar un d6 y despejar una cantidad de Puntos de Vida igual al resultado. Luego coloca esta carta en tu bóveda."
   },
   {
     "id": "unyielding-armor",
-    "name": "UNYIELDING ARMOR",
+    "name": "ARMADURA IMPLACABLE",
     "level": 10,
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "When you would mark an Armor Slot, roll a number of d6s equal to your Proficiency. If any roll a 6, reduce the severity by one threshold without marking an Armor Slot."
+    "text": "Cuando vayas a marcar una Ranura de Armadura, tira una cantidad de d6 igual a tu Competencia. Si alguno muestra un 6, reduce la severidad en un umbral sin marcar una Ranura de Armadura."
   }
 ]

@@ -41,6 +41,16 @@ export interface SheetView {
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
+/** Trait names, spelled out in Spanish rather than title-cased from the English id. */
+const TRAIT_LABELS: Record<Trait, string> = {
+  agility: 'Agilidad',
+  strength: 'Fuerza',
+  finesse: 'Destreza',
+  instinct: 'Instinto',
+  presence: 'Presencia',
+  knowledge: 'Conocimiento',
+};
+
 /** Assembles the display model for a sheet. Pure; no component does its own lookups. */
 export function selectSheetView(sheet: SheetState): SheetView {
   const character = sheet.character;
@@ -96,7 +106,7 @@ export function selectSheetView(sheet: SheetState): SheetView {
     vault: byId(sheet.vault),
     traits: TRAITS.map((trait) => ({
       trait,
-      label: titleCase(trait),
+      label: TRAIT_LABELS[trait],
       modifier: character.traits[trait],
     })),
   };
@@ -132,16 +142,17 @@ export const formatSigned = formatModifier;
 
 /** Range and burden read better spaced out than camel-cased. */
 const SPACED: Record<string, string> = {
-  melee: 'Melee',
-  veryClose: 'Very Close',
-  close: 'Close',
-  far: 'Far',
-  veryFar: 'Very Far',
-  oneHanded: 'One-Handed',
-  twoHanded: 'Two-Handed',
-  physical: 'Physical',
-  magic: 'Magic',
-  physicalOrMagic: 'Physical or Magic',
+  melee: 'Cuerpo a cuerpo',
+  veryClose: 'Muy cerca',
+  close: 'Cerca',
+  far: 'Lejos',
+  veryFar: 'Muy lejos',
+  oneHanded: 'Una mano',
+  twoHanded: 'Dos manos',
+  physical: 'Físico',
+  magic: 'Mágico',
+  physicalOrMagic: 'Físico o mágico',
 };
 
-export const label = (value: string): string => SPACED[value] ?? titleCase(value);
+export const label = (value: string): string =>
+  TRAIT_LABELS[value as Trait] ?? SPACED[value] ?? titleCase(value);

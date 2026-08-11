@@ -17,7 +17,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
       <div className="row spread">
         <span>{message}</span>
         <button type="button" onClick={onDismiss}>
-          Dismiss
+          Descartar
         </button>
       </div>
     </div>

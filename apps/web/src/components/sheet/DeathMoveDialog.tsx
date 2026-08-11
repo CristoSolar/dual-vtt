@@ -10,16 +10,16 @@ interface DeathMoveDialogProps {
  */
 export function DeathMoveDialog({ onClose }: DeathMoveDialogProps) {
   return (
-    <Dialog title="Death move required" onClose={onClose}>
-      <p>You marked your last Hit Point. Choose a death move:</p>
+    <Dialog title="Movimiento de Muerte requerido" onClose={onClose}>
+      <p>Marcaste tu último Punto de Vida. Elige un Movimiento de Muerte:</p>
       <ul>
-        <li>Blaze of Glory</li>
-        <li>Avoid Death</li>
-        <li>Risk It All</li>
+        <li>Última Gloria</li>
+        <li>Evitar la Muerte</li>
+        <li>Arriesgarlo Todo</li>
       </ul>
-      <p className="muted">Resolve it at the table.</p>
+      <p className="muted">Resuélvelo en la mesa.</p>
       <button type="button" onClick={onClose}>
-        Close
+        Cerrar
       </button>
     </Dialog>
   );

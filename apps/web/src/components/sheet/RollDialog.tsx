@@ -56,7 +56,7 @@ export function RollDialog({
 
           <div className="grid cols-3">
             <div>
-              <label htmlFor="difficulty">Difficulty</label>
+              <label htmlFor="difficulty">Dificultad</label>
               <input
                 id="difficulty"
                 type="number"
@@ -66,7 +66,7 @@ export function RollDialog({
               />
             </div>
             <div>
-              <label htmlFor="advantage">Advantage dice</label>
+              <label htmlFor="advantage">Dados de Ventaja</label>
               <input
                 id="advantage"
                 type="number"
@@ -76,7 +76,7 @@ export function RollDialog({
               />
             </div>
             <div>
-              <label htmlFor="disadvantage">Disadvantage dice</label>
+              <label htmlFor="disadvantage">Dados de Desventaja</label>
               <input
                 id="disadvantage"
                 type="number"
@@ -89,7 +89,7 @@ export function RollDialog({
 
           {experiences.length > 0 ? (
             <fieldset>
-              <legend>Utilize an Experience (1 Hope each)</legend>
+              <legend>Usar una Experiencia (1 Esperanza cada una)</legend>
               <div className="row">
                 {experiences.map((experience) => (
                   <button
@@ -104,8 +104,8 @@ export function RollDialog({
                 ))}
               </div>
               <p className="muted">
-                Spending {hopeCost} Hope of {hope}.
-                {canAfford ? '' : ' Not enough Hope.'}
+                Gastando {hopeCost} de Esperanza de {hope}.
+                {canAfford ? '' : ' No tienes suficiente Esperanza.'}
               </p>
             </fieldset>
           ) : null}
@@ -123,7 +123,7 @@ export function RollDialog({
               })
             }
           >
-            Roll
+            Tirar
           </button>
         </>
       ) : (
@@ -148,22 +148,22 @@ function RollOutcome({
       <div className="roll-result">
         <div className="die hope">
           <span className="die-value">{roll.hope}</span>
-          <span className="die-label">Hope</span>
+          <span className="die-label">Esperanza</span>
         </div>
         <div className="die fear">
           <span className="die-value">{roll.fear}</span>
-          <span className="die-label">Fear</span>
+          <span className="die-label">Miedo</span>
         </div>
         {roll.advantageRoll !== null ? (
           <div className="die">
             <span className="die-value">+{roll.advantageRoll}</span>
-            <span className="die-label">Advantage</span>
+            <span className="die-label">Ventaja</span>
           </div>
         ) : null}
         {roll.disadvantageRoll !== null ? (
           <div className="die">
             <span className="die-value">−{roll.disadvantageRoll}</span>
-            <span className="die-label">Disadvantage</span>
+            <span className="die-label">Desventaja</span>
           </div>
         ) : null}
         <div className="die">
@@ -176,15 +176,15 @@ function RollOutcome({
         {OUTCOME_LABELS[result.outcome]}
       </p>
       <p className="muted">
-        vs Difficulty {difficulty}
-        {result.criticalDamage ? ' · critical damage on this attack' : ''}
-        {result.hopeGained > 0 ? ` · +${result.hopeGained} Hope` : ''}
-        {result.fearGained > 0 ? ` · +${result.fearGained} Fear to the GM` : ''}
-        {result.stressCleared > 0 ? ` · cleared ${result.stressCleared} Stress` : ''}
+        vs Dificultad {difficulty}
+        {result.criticalDamage ? ' · daño crítico en este ataque' : ''}
+        {result.hopeGained > 0 ? ` · +${result.hopeGained} Esperanza` : ''}
+        {result.fearGained > 0 ? ` · +${result.fearGained} Miedo para el DJ` : ''}
+        {result.stressCleared > 0 ? ` · ${result.stressCleared} de Estrés liberado` : ''}
       </p>
 
       <button type="button" onClick={onClose}>
-        Done
+        Listo
       </button>
     </>
   );

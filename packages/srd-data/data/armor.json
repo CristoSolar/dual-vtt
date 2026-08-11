@@ -1,7 +1,7 @@
 [
   {
     "id": "gambeson-armor",
-    "name": "Gambeson Armor",
+    "name": "Armadura de Gambesón",
     "tier": 1,
     "baseThresholds": {
       "major": 5,
@@ -10,12 +10,12 @@
     "baseScore": 3,
     "feature": {
       "name": "Flexible",
-      "text": "+1 to Evasion"
+      "text": "+1 a la Evasión"
     }
   },
   {
     "id": "leather-armor",
-    "name": "Leather Armor",
+    "name": "Armadura de Cuero",
     "tier": 1,
     "baseThresholds": {
       "major": 6,
@@ -26,7 +26,7 @@
   },
   {
     "id": "chainmail-armor",
-    "name": "Chainmail Armor",
+    "name": "Armadura de Cota de Malla",
     "tier": 1,
     "baseThresholds": {
       "major": 7,
@@ -34,13 +34,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "full-plate-armor",
-    "name": "Full Plate Armor",
+    "name": "Armadura de Placas Completa",
     "tier": 1,
     "baseThresholds": {
       "major": 8,
@@ -48,13 +48,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Very Heavy",
-      "text": "−2 to Evasion; −1 to Agility"
+      "name": "Muy Pesada",
+      "text": "−2 a la Evasión; −1 a Agilidad"
     }
   },
   {
     "id": "improved-gambeson-armor",
-    "name": "Improved Gambeson Armor",
+    "name": "Armadura de Gambesón Mejorada",
     "tier": 2,
     "baseThresholds": {
       "major": 7,
@@ -63,12 +63,12 @@
     "baseScore": 4,
     "feature": {
       "name": "Flexible",
-      "text": "+1 to Evasion"
+      "text": "+1 a la Evasión"
     }
   },
   {
     "id": "improved-leather-armor",
-    "name": "Improved Leather Armor",
+    "name": "Armadura de Cuero Mejorada",
     "tier": 2,
     "baseThresholds": {
       "major": 9,
@@ -79,7 +79,7 @@
   },
   {
     "id": "improved-chainmail-armor",
-    "name": "Improved Chainmail Armor",
+    "name": "Armadura de Cota de Malla Mejorada",
     "tier": 2,
     "baseThresholds": {
       "major": 11,
@@ -87,13 +87,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "improved-full-plate-armor",
-    "name": "Improved Full Plate Armor",
+    "name": "Armadura de Placas Completa Mejorada",
     "tier": 2,
     "baseThresholds": {
       "major": 13,
@@ -101,13 +101,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Very Heavy",
-      "text": "−2 to Evasion; −1 to Agility"
+      "name": "Muy Pesada",
+      "text": "−2 a la Evasión; −1 a Agilidad"
     }
   },
   {
     "id": "elundrian-chain-armor",
-    "name": "Elundrian Chain Armor",
+    "name": "Armadura de Cadenas Elundriana",
     "tier": 2,
     "baseThresholds": {
       "major": 9,
@@ -115,13 +115,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Warded",
-      "text": "You reduce incoming magic damage by your Armor Score before applying it to your damage thresholds."
+      "name": "Protegida",
+      "text": "Reduces el daño mágico entrante según tu Puntaje de Armadura antes de aplicarlo a tus umbrales de daño."
     }
   },
   {
     "id": "harrowbone-armor",
-    "name": "Harrowbone Armor",
+    "name": "Armadura Harrowbone",
     "tier": 2,
     "baseThresholds": {
       "major": 9,
@@ -129,13 +129,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Resilient",
-      "text": "Before you mark your last Armor Slot, roll a d6. On a result of 6, reduce the severity by one threshold without marking an Armor Slot."
+      "name": "Resiliente",
+      "text": "Antes de marcar tu última Ranura de Armadura, tira un d6. Con un resultado de 6, reduce la severidad en un umbral sin marcar una Ranura de Armadura."
     }
   },
   {
     "id": "irontree-breastplate-armor",
-    "name": "Irontree Breastplate Armor",
+    "name": "Coraza de Árbol de Hierro",
     "tier": 2,
     "baseThresholds": {
       "major": 9,
@@ -143,13 +143,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Reinforced",
-      "text": "When you mark your last Armor Slot, increase your damage thresholds by +2 until you clear at least 1 Armor Slot."
+      "name": "Reforzada",
+      "text": "Cuando marcas tu última Ranura de Armadura, aumenta tus umbrales de daño en +2 hasta que recuperes al menos 1 Ranura de Armadura."
     }
   },
   {
     "id": "runetan-floating-armor",
-    "name": "Runetan Floating Armor",
+    "name": "Armadura Flotante Runetan",
     "tier": 2,
     "baseThresholds": {
       "major": 9,
@@ -157,13 +157,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Shifting",
-      "text": "When you are targeted for an attack, you can mark an Armor Slot to give the attack roll against you disadvantage."
+      "name": "Cambiante",
+      "text": "Cuando eres el objetivo de un ataque, puedes marcar una Ranura de Armadura para darle desventaja a la tirada de ataque en tu contra."
     }
   },
   {
     "id": "tyris-soft-armor",
-    "name": "Tyris Soft Armor",
+    "name": "Armadura Suave de Tyris",
     "tier": 2,
     "baseThresholds": {
       "major": 8,
@@ -171,13 +171,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Quiet",
-      "text": "You gain a +2 bonus to rolls you make to move silently."
+      "name": "Silenciosa",
+      "text": "Obtienes un bono de +2 a las tiradas que hagas para moverte en silencio."
     }
   },
   {
     "id": "rosewild-armor",
-    "name": "Rosewild Armor",
+    "name": "Armadura Rosewild",
     "tier": 2,
     "baseThresholds": {
       "major": 11,
@@ -185,13 +185,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Hopeful",
-      "text": "When you would spend a Hope, you can mark an Armor Slot instead."
+      "name": "Esperanzadora",
+      "text": "Cuando fueras a gastar una Esperanza, puedes marcar una Ranura de Armadura en su lugar."
     }
   },
   {
     "id": "advanced-gambeson-armor",
-    "name": "Advanced Gambeson Armor",
+    "name": "Armadura de Gambesón Avanzada",
     "tier": 3,
     "baseThresholds": {
       "major": 9,
@@ -200,12 +200,12 @@
     "baseScore": 5,
     "feature": {
       "name": "Flexible",
-      "text": "+1 to Evasion"
+      "text": "+1 a la Evasión"
     }
   },
   {
     "id": "advanced-leather-armor",
-    "name": "Advanced Leather Armor",
+    "name": "Armadura de Cuero Avanzada",
     "tier": 3,
     "baseThresholds": {
       "major": 11,
@@ -216,7 +216,7 @@
   },
   {
     "id": "advanced-chainmail-armor",
-    "name": "Advanced Chainmail Armor",
+    "name": "Armadura de Cota de Malla Avanzada",
     "tier": 3,
     "baseThresholds": {
       "major": 13,
@@ -224,13 +224,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "advanced-full-plate-armor",
-    "name": "Advanced Full Plate Armor",
+    "name": "Armadura de Placas Completa Avanzada",
     "tier": 3,
     "baseThresholds": {
       "major": 15,
@@ -238,13 +238,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Very Heavy",
-      "text": "−2 to Evasion; −1 to Agility"
+      "name": "Muy Pesada",
+      "text": "−2 a la Evasión; −1 a Agilidad"
     }
   },
   {
     "id": "bellamoi-fine-armor",
-    "name": "Bellamoi Fine Armor",
+    "name": "Armadura Fina Bellamoi",
     "tier": 3,
     "baseThresholds": {
       "major": 11,
@@ -252,13 +252,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Gilded",
-      "text": "+1 to Presence"
+      "name": "Dorada",
+      "text": "+1 a Presencia"
     }
   },
   {
     "id": "dragonscale-armor",
-    "name": "Dragonscale Armor",
+    "name": "Armadura de Escamas de Dragón",
     "tier": 3,
     "baseThresholds": {
       "major": 11,
@@ -267,12 +267,12 @@
     "baseScore": 5,
     "feature": {
       "name": "Impenetrable",
-      "text": "Once per short rest, when you would mark your last Hit Point, you can instead mark a Stress."
+      "text": "Una vez por descanso corto, cuando fueras a marcar tu último Punto de Vida, puedes marcar un Estrés en su lugar."
     }
   },
   {
     "id": "spiked-plate-armor",
-    "name": "Spiked Plate Armor",
+    "name": "Armadura de Placas con Púas",
     "tier": 3,
     "baseThresholds": {
       "major": 10,
@@ -280,13 +280,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Sharp",
-      "text": "On a successful attack against a target within Melee range, add a d4 to the damage roll."
+      "name": "Afilada",
+      "text": "En un ataque exitoso contra un objetivo dentro de alcance Cuerpo a Cuerpo, añade un d4 a la tirada de daño."
     }
   },
   {
     "id": "bladefare-armor",
-    "name": "Bladefare Armor",
+    "name": "Armadura Bladefare",
     "tier": 3,
     "baseThresholds": {
       "major": 16,
@@ -294,13 +294,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Physical",
-      "text": "You can't mark an Armor Slot to reduce magic damage."
+      "name": "Física",
+      "text": "No puedes marcar una Ranura de Armadura para reducir daño mágico."
     }
   },
   {
     "id": "monetts-cloak",
-    "name": "Monett's Cloak",
+    "name": "Capa de Monett",
     "tier": 3,
     "baseThresholds": {
       "major": 16,
@@ -308,13 +308,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Magic",
-      "text": "You can't mark an Armor Slot to reduce physical damage."
+      "name": "Mágica",
+      "text": "No puedes marcar una Ranura de Armadura para reducir daño físico."
     }
   },
   {
     "id": "runes-of-fortification",
-    "name": "Runes of Fortification",
+    "name": "Runas de Fortificación",
     "tier": 3,
     "baseThresholds": {
       "major": 17,
@@ -322,13 +322,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Painful",
-      "text": "Each time you mark an Armor Slot, you must mark a Stress."
+      "name": "Dolorosa",
+      "text": "Cada vez que marcas una Ranura de Armadura, debes marcar un Estrés."
     }
   },
   {
     "id": "legendary-gambeson-armor",
-    "name": "Legendary Gambeson Armor",
+    "name": "Armadura de Gambesón Legendaria",
     "tier": 4,
     "baseThresholds": {
       "major": 11,
@@ -337,12 +337,12 @@
     "baseScore": 6,
     "feature": {
       "name": "Flexible",
-      "text": "+1 to Evasion"
+      "text": "+1 a la Evasión"
     }
   },
   {
     "id": "legendary-leather-armor",
-    "name": "Legendary Leather Armor",
+    "name": "Armadura de Cuero Legendaria",
     "tier": 4,
     "baseThresholds": {
       "major": 13,
@@ -353,7 +353,7 @@
   },
   {
     "id": "legendary-chainmail-armor",
-    "name": "Legendary Chainmail Armor",
+    "name": "Armadura de Cota de Malla Legendaria",
     "tier": 4,
     "baseThresholds": {
       "major": 15,
@@ -361,13 +361,13 @@
     },
     "baseScore": 7,
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "legendary-full-plate-armor",
-    "name": "Legendary Full Plate Armor",
+    "name": "Armadura de Placas Completa Legendaria",
     "tier": 4,
     "baseThresholds": {
       "major": 17,
@@ -375,13 +375,13 @@
     },
     "baseScore": 7,
     "feature": {
-      "name": "Very Heavy",
-      "text": "−2 to Evasion; −1 to Agility"
+      "name": "Muy Pesada",
+      "text": "−2 a la Evasión; −1 a Agilidad"
     }
   },
   {
     "id": "dunamis-silkchain",
-    "name": "Dunamis Silkchain",
+    "name": "Cadena de Seda Dunamis",
     "tier": 4,
     "baseThresholds": {
       "major": 13,
@@ -389,13 +389,13 @@
     },
     "baseScore": 7,
     "feature": {
-      "name": "Timeslowing",
-      "text": "Mark an Armor Slot to roll a d4 and add its result as a bonus to your Evasion against an incoming attack."
+      "name": "Ralentitemporal",
+      "text": "Marca una Ranura de Armadura para tirar un d4 y sumar su resultado como bono a tu Evasión contra un ataque entrante."
     }
   },
   {
     "id": "channeling-armor",
-    "name": "Channeling Armor",
+    "name": "Armadura Canalizadora",
     "tier": 4,
     "baseThresholds": {
       "major": 13,
@@ -403,13 +403,13 @@
     },
     "baseScore": 5,
     "feature": {
-      "name": "Channeling",
-      "text": "+1 to Spellcast Rolls"
+      "name": "Canalizadora",
+      "text": "+1 a las tiradas de Lanzamiento de Hechizos"
     }
   },
   {
     "id": "emberwoven-armor",
-    "name": "Emberwoven Armor",
+    "name": "Armadura Entretejida de Ascuas",
     "tier": 4,
     "baseThresholds": {
       "major": 13,
@@ -417,13 +417,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Burning",
-      "text": "When an adversary attacks you within Melee range, they mark a Stress."
+      "name": "Ardiente",
+      "text": "Cuando un adversario te ataca dentro de alcance Cuerpo a Cuerpo, marca un Estrés."
     }
   },
   {
     "id": "full-fortified-armor",
-    "name": "Full Fortified Armor",
+    "name": "Armadura Totalmente Fortificada",
     "tier": 4,
     "baseThresholds": {
       "major": 15,
@@ -431,13 +431,13 @@
     },
     "baseScore": 4,
     "feature": {
-      "name": "Fortified",
-      "text": "When you mark an Armor Slot, you reduce the severity of an attack by two thresholds instead of one."
+      "name": "Fortificada",
+      "text": "Cuando marcas una Ranura de Armadura, reduces la severidad de un ataque en dos umbrales en lugar de uno."
     }
   },
   {
     "id": "veritas-opal-armor",
-    "name": "Veritas Opal Armor",
+    "name": "Armadura de Ópalo Veritas",
     "tier": 4,
     "baseThresholds": {
       "major": 13,
@@ -445,13 +445,13 @@
     },
     "baseScore": 6,
     "feature": {
-      "name": "Truthseeking",
-      "text": "This armor glows when another creature within Close range tells a lie."
+      "name": "Buscaverdad",
+      "text": "Esta armadura brilla cuando otra criatura dentro de alcance Cercano dice una mentira."
     }
   },
   {
     "id": "savior-chainmail",
-    "name": "Savior Chainmail",
+    "name": "Cota de Malla Salvadora",
     "tier": 4,
     "baseThresholds": {
       "major": 18,
@@ -459,8 +459,8 @@
     },
     "baseScore": 8,
     "feature": {
-      "name": "Difficult",
-      "text": "−1 to all character traits and Evasion"
+      "name": "Dificultosa",
+      "text": "−1 a todos los rasgos de personaje y a la Evasión"
     }
   }
 ]

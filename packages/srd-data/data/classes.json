@@ -1,195 +1,195 @@
 [
   {
     "id": "bard",
-    "name": "Bard",
+    "name": "Bardo",
     "domains": ["grace", "codex"],
     "startingEvasion": 10,
     "startingHP": 5,
-    "classItems": "A romance novel or a letter never opened",
+    "classItems": "Una novela romántica o una carta que nunca abriste",
     "hopeFeature": {
-      "name": "Make a Scene",
-      "text": "Spend 3 Hope to temporarily Distract a target within Close range, giving them a -2 penalty to their Difficulty."
+      "name": "Dar el Espectáculo",
+      "text": "Gasta 3 de Esperanza para Distraer temporalmente a un objetivo a distancia Cercana, dándole una penalización de -2 a su Dificultad."
     },
     "features": [
       {
-        "name": "Rally",
-        "text": "Once per session, describe how you rally the party and give yourself and each of your allies a Rally Die. At level 1, your Rally Die is a d6. A PC can spend their Rally Die to roll it, adding the result to their action roll, reaction roll, damage roll, or to clear a number of Stress equal to the result. At the end of each session, clear all unspent Rally Dice. At level 5, your Rally Die increases to a d8."
+        "name": "Arengar",
+        "text": "Una vez por sesión, describe cómo arengas al grupo y otórgate a ti mismo y a cada uno de tus aliados un Dado de Arenga. En nivel 1, tu Dado de Arenga es un d6. Un PJ puede gastar su Dado de Arenga para tirarlo, sumando el resultado a su tirada de acción, de reacción, de daño, o para despejar una cantidad de Estrés igual al resultado. Al final de cada sesión, despeja todos los Dados de Arenga no gastados. En nivel 5, tu Dado de Arenga aumenta a un d8."
       }
     ],
     "subclasses": ["troubadour", "wordsmith"]
   },
   {
     "id": "druid",
-    "name": "Druid",
+    "name": "Druida",
     "domains": ["sage", "arcana"],
     "startingEvasion": 10,
     "startingHP": 6,
-    "classItems": "A small bag of rocks and bones or a strange pendant found in the dirt",
+    "classItems": "Una pequeña bolsa de piedras y huesos o un extraño colgante hallado en la tierra",
     "hopeFeature": {
-      "name": "Evolution",
-      "text": "Spend 3 Hope to transform into a Beastform without marking a Stress. When you do, choose one trait to raise by +1 until you drop out of that Beastform."
+      "name": "Evolución",
+      "text": "Gasta 3 de Esperanza para transformarte en una Forma Bestial sin marcar Estrés. Al hacerlo, elige un rasgo para aumentarlo en +1 hasta que salgas de esa Forma Bestial."
     },
     "features": [
       {
-        "name": "Beastform",
-        "text": "Mark a Stress to magically transform into a creature of your tier or lower from the Beastform list. You can drop out of this form at any time. While transformed, you can't use weapons or cast spells from domain cards, but you can still use other features or abilities you have access to. Spells you cast before you transform stay active and last for their normal duration, and you can talk and communicate as normal. Additionally, you gain the Beastform's features, add their Evasion bonus to your Evasion, and use the trait specified in their statistics for your attack. While you're in a Beastform, your armor becomes part of your body and you mark Armor Slots as usual; when you drop out of a Beastform, those marked Armor Slots remain marked. If you mark your last Hit Point, you automatically drop out of this form."
+        "name": "Forma Bestial",
+        "text": "Marca un Estrés para transformarte mágicamente en una criatura de tu nivel o inferior de la lista de Formas Bestiales. Puedes salir de esta forma en cualquier momento. Mientras estés transformado, no puedes usar armas ni lanzar hechizos de cartas de dominio, pero sí puedes seguir usando otras habilidades o capacidades a las que tengas acceso. Los hechizos que lances antes de transformarte permanecen activos y duran su tiempo normal, y puedes hablar y comunicarte con normalidad. Además, obtienes las características de la Forma Bestial, sumas su bonificación de Evasión a tu Evasión, y usas el rasgo especificado en sus estadísticas para tu ataque. Mientras estés en una Forma Bestial, tu armadura se vuelve parte de tu cuerpo y marcas Espacios de Armadura como de costumbre; cuando salgas de una Forma Bestial, esos Espacios de Armadura marcados permanecen marcados. Si marcas tu último Punto de Vida, sales automáticamente de esta forma."
       },
       {
-        "name": "Wildtouch",
-        "text": "You can perform harmless, subtle effects that involve nature—such as causing a flower to rapidly grow, summoning a slight gust of wind, or starting a campfire—at will."
+        "name": "Toque Salvaje",
+        "text": "Puedes realizar a voluntad efectos inofensivos y sutiles relacionados con la naturaleza, como hacer que una flor crezca rápidamente, invocar una ligera ráfaga de viento o encender una fogata."
       }
     ],
     "subclasses": ["warden-of-the-elements", "warden-of-renewal"]
   },
   {
     "id": "guardian",
-    "name": "Guardian",
+    "name": "Guardián",
     "domains": ["valor", "blade"],
     "startingEvasion": 9,
     "startingHP": 7,
-    "classItems": "A totem from your mentor or a secret key",
+    "classItems": "Un tótem de tu mentor o una llave secreta",
     "hopeFeature": {
-      "name": "Frontline Tank",
-      "text": "Spend 3 Hope to clear 2 Armor Slots."
+      "name": "Tanque de Primera Línea",
+      "text": "Gasta 3 de Esperanza para despejar 2 Espacios de Armadura."
     },
     "features": [
       {
-        "name": "Unstoppable",
-        "text": "Once per long rest, you can become Unstoppable. You gain an Unstoppable Die. At level 1, your Unstoppable Die is a d4. Place it on your character sheet in the space provided, starting with the 1 value facing up. After you make a damage roll that deals 1 or more Hit Points to a target, increase the Unstoppable Die value by one. When the die's value would exceed its maximum value or when the scene ends, remove the die and drop out of Unstoppable. At level 5, your Unstoppable Die increases to a d6.\nWhile Unstoppable, you gain the following benefits:\n• You reduce the severity of physical damage by one threshold (Severe to Major, Major to Minor, Minor to None).\n• You add the current value of the Unstoppable Die to your damage roll.\n• You can't be Restrained or Vulnerable."
+        "name": "Imparable",
+        "text": "Una vez por descanso largo, puedes volverte Imparable. Obtienes un Dado de Imparable. En nivel 1, tu Dado de Imparable es un d4. Colócalo en tu hoja de personaje en el espacio indicado, empezando con el valor 1 hacia arriba. Después de hacer una tirada de daño que infrinja 1 o más Puntos de Vida a un objetivo, aumenta el valor del Dado de Imparable en uno. Cuando el valor del dado supere su valor máximo o cuando termine la escena, retira el dado y deja de estar Imparable. En nivel 5, tu Dado de Imparable aumenta a un d6.\nMientras estés Imparable, obtienes los siguientes beneficios:\n• Reduces la gravedad del daño físico en un umbral (de Grave a Mayor, de Mayor a Menor, de Menor a Ninguno).\n• Sumas el valor actual del Dado de Imparable a tu tirada de daño.\n• No puedes estar Inmovilizado ni Vulnerable."
       }
     ],
     "subclasses": ["stalwart", "vengeance"]
   },
   {
     "id": "ranger",
-    "name": "Ranger",
+    "name": "Explorador",
     "domains": ["bone", "sage"],
     "startingEvasion": 12,
     "startingHP": 6,
-    "classItems": "A trophy from your first kill or a seemingly broken compass",
+    "classItems": "Un trofeo de tu primera cacería o una brújula que parece estar rota",
     "hopeFeature": {
-      "name": "Hold Them Off",
-      "text": "Spend 3 Hope when you succeed on an attack with a weapon to use that same roll against two additional adversaries within range of the attack."
+      "name": "Contenerlos",
+      "text": "Gasta 3 de Esperanza cuando tengas éxito en un ataque con un arma para usar esa misma tirada contra dos adversarios adicionales dentro del alcance del ataque."
     },
     "features": [
       {
-        "name": "Ranger's Focus",
-        "text": "Spend a Hope and make an attack against a target. On a success, deal your attack's normal damage and temporarily make the attack's target your Focus. Until this feature ends or you make a different creature your Focus, you gain the following benefits against your Focus:\n• You know precisely what direction they are in.\n• When you deal damage to them, they must mark a Stress.\n• When you fail an attack against them, you can end your Ranger's Focus feature to reroll your Duality Dice."
+        "name": "Foco del Explorador",
+        "text": "Gasta una Esperanza y realiza un ataque contra un objetivo. Con éxito, inflige el daño normal de tu ataque y convierte temporalmente al objetivo del ataque en tu Foco. Hasta que esta habilidad termine o hagas de otra criatura tu Foco, obtienes los siguientes beneficios contra tu Foco:\n• Sabes con precisión en qué dirección se encuentra.\n• Cuando le infliges daño, debe marcar un Estrés.\n• Cuando fallas un ataque contra él, puedes terminar tu habilidad de Foco del Explorador para volver a tirar tus Dados de Dualidad."
       }
     ],
     "subclasses": ["beastbound", "wayfinder"]
   },
   {
     "id": "rogue",
-    "name": "Rogue",
+    "name": "Pícaro",
     "domains": ["midnight", "grace"],
     "startingEvasion": 12,
     "startingHP": 6,
-    "classItems": "A set of forgery tools or a grappling hook",
+    "classItems": "Un juego de herramientas de falsificación o un gancho de escalada",
     "hopeFeature": {
-      "name": "Rogue's Dodge",
-      "text": "Spend 3 Hope to gain a +2 bonus to your Evasion until the next time an attack succeeds against you. Otherwise, this bonus lasts until your next rest."
+      "name": "Esquive del Pícaro",
+      "text": "Gasta 3 de Esperanza para obtener un bono de +2 a tu Evasión hasta la próxima vez que un ataque tenga éxito contra ti. En caso contrario, este bono dura hasta tu próximo descanso."
     },
     "features": [
       {
-        "name": "Cloaked",
-        "text": "Any time you would be Hidden, you are instead Cloaked. In addition to the benefits of the Hidden condition, while Cloaked you remain unseen if you are stationary when an adversary moves to where they would normally see you. After you make an attack or end a move within line of sight of an adversary, you are no longer Cloaked."
+        "name": "Encubierto",
+        "text": "Cada vez que estarías Oculto, en su lugar estás Encubierto. Además de los beneficios de la condición Oculto, mientras estés Encubierto permaneces sin ser visto si estás inmóvil cuando un adversario se mueve a un lugar desde el cual normalmente te vería. Después de realizar un ataque o terminar un movimiento dentro de la línea de visión de un adversario, dejas de estar Encubierto."
       },
       {
-        "name": "Sneak Attack",
-        "text": "When you succeed on an attack while Cloaked or while an ally is within Melee range of your target, add a number of d6s equal to your tier to your damage roll."
+        "name": "Ataque Furtivo",
+        "text": "Cuando tengas éxito en un ataque mientras estás Encubierto o mientras un aliado esté a distancia de Combate Cuerpo a Cuerpo de tu objetivo, suma a tu tirada de daño una cantidad de d6 igual a tu nivel."
       }
     ],
     "subclasses": ["nightwalker", "syndicate"]
   },
   {
     "id": "seraph",
-    "name": "Seraph",
+    "name": "Serafín",
     "domains": ["splendor", "valor"],
     "startingEvasion": 9,
     "startingHP": 7,
-    "classItems": "A bundle of offerings or a sigil of your god",
+    "classItems": "Un fardo de ofrendas o un sigilo de tu dios",
     "hopeFeature": {
-      "name": "Life Support",
-      "text": "Spend 3 Hope to clear a Hit Point on an ally within Close range."
+      "name": "Soporte Vital",
+      "text": "Gasta 3 de Esperanza para despejar un Punto de Vida a un aliado a distancia Cercana."
     },
     "features": [
       {
-        "name": "Prayer Dice",
-        "text": "At the beginning of each session, roll a number of d4s equal to your subclass's Spellcast trait and place them on your character sheet in the space provided. These are your Prayer Dice. You can spend any number of Prayer Dice to aid yourself or an ally within Far range. You can use a spent die's value to reduce incoming damage, add to a roll's result after the roll is made, or gain Hope equal to the result. At the end of each session, clear all unspent Prayer Dice."
+        "name": "Dados de Oración",
+        "text": "Al comienzo de cada sesión, tira una cantidad de d4 igual al rasgo de Lanzamiento de tu subclase y colócalos en tu hoja de personaje en el espacio indicado. Estos son tus Dados de Oración. Puedes gastar cualquier cantidad de Dados de Oración para ayudarte a ti mismo o a un aliado a distancia Lejana. Puedes usar el valor de un dado gastado para reducir daño entrante, sumarlo al resultado de una tirada después de realizarla, u obtener Esperanza igual al resultado. Al final de cada sesión, despeja todos los Dados de Oración no gastados."
       }
     ],
     "subclasses": ["divine-wielder", "winged-sentinel"]
   },
   {
     "id": "sorcerer",
-    "name": "Sorcerer",
+    "name": "Hechicero",
     "domains": ["arcana", "midnight"],
     "startingEvasion": 10,
     "startingHP": 6,
-    "classItems": "A whispering orb or a family heirloom",
+    "classItems": "Un orbe susurrante o una reliquia familiar",
     "hopeFeature": {
-      "name": "Volatile Magic",
-      "text": "Spend 3 Hope to reroll any number of your damage dice on an attack that deals magic damage."
+      "name": "Magia Volátil",
+      "text": "Gasta 3 de Esperanza para volver a tirar cualquier cantidad de tus dados de daño en un ataque que infrinja daño mágico."
     },
     "features": [
       {
-        "name": "Arcane Sense",
-        "text": "You can sense the presence of magical people and objects within Close range."
+        "name": "Sentido Arcano",
+        "text": "Puedes sentir la presencia de personas y objetos mágicos a distancia Cercana."
       },
       {
-        "name": "Minor Illusion",
-        "text": "Make a Spellcast Roll (10). On a success, you create a minor visual illusion no larger than yourself within Close range. This illusion is convincing to anyone at Close range or farther."
+        "name": "Ilusión Menor",
+        "text": "Realiza una Tirada de Lanzamiento (10). Con éxito, creas una ilusión visual menor no más grande que tú mismo a distancia Cercana. Esta ilusión resulta convincente para cualquiera a distancia Cercana o mayor."
       },
       {
-        "name": "Channel Raw Power",
-        "text": "Once per long rest, you can place a domain card from your loadout into your vault and choose to either:\n• Gain Hope equal to the level of the card.\n• Enhance a spell that deals damage, gaining a bonus to your damage roll equal to twice the level of the card."
+        "name": "Canalizar Poder Bruto",
+        "text": "Una vez por descanso largo, puedes colocar una carta de dominio de tus cartas activas en tu bóveda y elegir entre:\n• Obtener Esperanza igual al nivel de la carta.\n• Potenciar un hechizo que infrinja daño, obteniendo un bono a tu tirada de daño igual al doble del nivel de la carta."
       }
     ],
     "subclasses": ["elemental-origin", "primal-origin"]
   },
   {
     "id": "warrior",
-    "name": "Warrior",
+    "name": "Guerrero",
     "domains": ["blade", "bone"],
     "startingEvasion": 11,
     "startingHP": 6,
-    "classItems": "The drawing of a lover or a sharpening stone",
+    "classItems": "El retrato de un amante o una piedra de afilar",
     "hopeFeature": {
-      "name": "No Mercy",
-      "text": "Spend 3 Hope to gain a +1 bonus to your attack rolls until your next rest."
+      "name": "Sin Piedad",
+      "text": "Gasta 3 de Esperanza para obtener un bono de +1 a tus tiradas de ataque hasta tu próximo descanso."
     },
     "features": [
       {
-        "name": "Attack of Opportunity",
-        "text": "If an adversary within Melee range attempts to leave that range, make a reaction roll using a trait of your choice against their Difficulty. Choose one effect on a success, or two if you critically succeed:\n• They can't move from where they are.\n• You deal damage to them equal to your primary weapon's damage.\n• You move with them."
+        "name": "Ataque de Oportunidad",
+        "text": "Si un adversario a distancia de Combate Cuerpo a Cuerpo intenta salir de ese alcance, realiza una tirada de reacción usando un rasgo de tu elección contra su Dificultad. Elige un efecto si tienes éxito, o dos si tienes un éxito crítico:\n• No puede moverse de donde está.\n• Le infliges daño igual al daño de tu arma principal.\n• Te mueves junto con él."
       },
       {
-        "name": "Combat Training",
-        "text": "You ignore burden when equipping weapons. When you deal physical damage, you gain a bonus to your damage roll equal to your level."
+        "name": "Entrenamiento de Combate",
+        "text": "Ignoras el lastre al equipar armas. Cuando infliges daño físico, obtienes un bono a tu tirada de daño igual a tu nivel."
       }
     ],
     "subclasses": ["call-of-the-brave", "call-of-the-slayer"]
   },
   {
     "id": "wizard",
-    "name": "Wizard",
+    "name": "Mago",
     "domains": ["codex", "splendor"],
     "startingEvasion": 11,
     "startingHP": 5,
-    "classItems": "A book you're trying to translate or a tiny, harmless elemental pet",
+    "classItems": "Un libro que estás tratando de traducir o una diminuta e inofensiva mascota elemental",
     "hopeFeature": {
-      "name": "Not This Time",
-      "text": "Spend 3 Hope to force an adversary within Far range to reroll an attack or damage roll."
+      "name": "No Esta Vez",
+      "text": "Gasta 3 de Esperanza para forzar a un adversario a distancia Lejana a volver a tirar un ataque o una tirada de daño."
     },
     "features": [
       {
-        "name": "Prestidigitation",
-        "text": "You can perform harmless, subtle magical effects at will. For example, you can change an object's color, create a smell, light a candle, cause a tiny object to float, illuminate a room, or repair a small object."
+        "name": "Prestidigitación",
+        "text": "Puedes realizar a voluntad efectos mágicos inofensivos y sutiles. Por ejemplo, puedes cambiar el color de un objeto, crear un olor, encender una vela, hacer que un objeto pequeño flote, iluminar una habitación o reparar un objeto pequeño."
       },
       {
-        "name": "Strange Patterns",
-        "text": "Choose a number between 1 and 12. When you roll that number on a Duality Die, gain a Hope or clear a Stress.\nYou can change this number when you take a long rest."
+        "name": "Patrones Extraños",
+        "text": "Elige un número entre 1 y 12. Cuando saques ese número en un Dado de Dualidad, obtén una Esperanza o despeja un Estrés.\nPuedes cambiar este número cuando realices un descanso largo."
       }
     ],
     "subclasses": ["school-of-knowledge", "school-of-war"]

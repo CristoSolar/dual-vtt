@@ -2,6 +2,8 @@ interface Option {
   id: string;
   name: string;
   meta?: string | undefined;
+  /** Portrait path, e.g. `/images/classes/wizard.png`. Omit for options with no art. */
+  image?: string | undefined;
 }
 
 interface OptionListProps {
@@ -21,7 +23,7 @@ export function OptionList({
   options,
   selectedId,
   onSelect,
-  emptyMessage = 'No options available yet.',
+  emptyMessage = 'Todavía no hay opciones disponibles.',
 }: OptionListProps) {
   if (options.length === 0) {
     return (
@@ -44,6 +46,9 @@ export function OptionList({
               aria-pressed={option.id === selectedId}
               onClick={() => onSelect(option.id)}
             >
+              {option.image ? (
+                <img className="option-portrait" src={option.image} alt="" />
+              ) : null}
               <span className="option-name">{option.name}</span>
               {option.meta ? <span className="option-meta">{option.meta}</span> : null}
             </button>

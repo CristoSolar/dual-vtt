@@ -1,74 +1,74 @@
 [
   {
     "id": "highborne",
-    "name": "Highborne",
+    "name": "Alta Cuna",
     "feature": {
-      "name": "Privilege",
-      "text": "You have advantage on rolls to consort with nobles, negotiate prices, or leverage your reputation to get what you want."
+      "name": "Privilegio",
+      "text": "Tienes ventaja en tiradas para relacionarte con nobles, negociar precios o aprovechar tu reputación para conseguir lo que quieres."
     }
   },
   {
     "id": "loreborne",
-    "name": "Loreborne",
+    "name": "Cuna Erudita",
     "feature": {
-      "name": "Well-Read",
-      "text": "You have advantage on rolls that involve the history, culture, or politics of a prominent person or place."
+      "name": "Instruido",
+      "text": "Tienes ventaja en tiradas relacionadas con la historia, la cultura o la política de una persona o lugar prominente."
     }
   },
   {
     "id": "orderborne",
-    "name": "Orderborne",
+    "name": "Cuna del Orden",
     "feature": {
-      "name": "Dedicated",
-      "text": "Record three sayings or values your upbringing instilled in you. Once per rest, when you describe how you're embodying one of these principles through your current action, you can roll a d20 as your Hope Die."
+      "name": "Devoto",
+      "text": "Anota tres dichos o valores que tu crianza te inculcó. Una vez por descanso, cuando describas cómo estás encarnando uno de estos principios a través de tu acción actual, puedes tirar un d20 como tu Dado de Esperanza."
     }
   },
   {
     "id": "ridgeborne",
-    "name": "Ridgeborne",
+    "name": "Cuna de la Cordillera",
     "feature": {
-      "name": "Steady",
-      "text": "You have advantage on rolls to traverse dangerous cliffs and ledges, navigate harsh environments, and use your survival knowledge."
+      "name": "Firme",
+      "text": "Tienes ventaja en tiradas para atravesar acantilados y salientes peligrosos, desenvolverte en entornos hostiles y usar tus conocimientos de supervivencia."
     }
   },
   {
     "id": "seaborne",
-    "name": "Seaborne",
+    "name": "Cuna del Mar",
     "feature": {
-      "name": "Know the Tide",
-      "text": "You can sense the ebb and flow of life. When you roll with Fear, place a token on your community card. You can hold a number of tokens equal to your level. Before you make an action roll, you can spend any number of these tokens to gain a +1 bonus to the roll for each token spent. At the end of each session, clear all unspent tokens."
+      "name": "Conocer la Marea",
+      "text": "Puedes percibir el flujo y reflujo de la vida. Cuando tires con Miedo, coloca una ficha en tu carta de comunidad. Puedes tener tantas fichas como tu nivel. Antes de hacer una tirada de acción, puedes gastar cualquier cantidad de estas fichas para obtener un bonificador de +1 a la tirada por cada ficha gastada. Al final de cada sesión, elimina todas las fichas sin gastar."
     }
   },
   {
     "id": "slyborne",
-    "name": "Slyborne",
+    "name": "Cuna Astuta",
     "feature": {
-      "name": "Scoundrel",
-      "text": "You have advantage on rolls to negotiate with criminals, detect lies, or find a safe place to hide."
+      "name": "Bribón",
+      "text": "Tienes ventaja en tiradas para negociar con criminales, detectar mentiras o encontrar un lugar seguro donde esconderte."
     }
   },
   {
     "id": "underborne",
-    "name": "Underborne",
+    "name": "Cuna Subterránea",
     "feature": {
-      "name": "Low-Light Living",
-      "text": "When you're in an area with low light or heavy shadow, you have advantage on rolls to hide, investigate, or perceive details within that area."
+      "name": "Vida en Penumbra",
+      "text": "Cuando estés en una zona con poca luz o sombras densas, tienes ventaja en tiradas para esconderte, investigar o percibir detalles dentro de esa zona."
     }
   },
   {
     "id": "wanderborne",
-    "name": "Wanderborne",
+    "name": "Cuna Errante",
     "feature": {
-      "name": "Nomadic Pack",
-      "text": "Add a Nomadic Pack to your inventory. Once per session, you can spend a Hope to reach into this pack and pull out a mundane item that's useful to your situation. Work with the GM to figure out what item you take out."
+      "name": "Fardo Nómada",
+      "text": "Añade un Fardo Nómada a tu inventario. Una vez por sesión, puedes gastar una Esperanza para rebuscar en este fardo y sacar un objeto mundano útil para tu situación. Trabaja con el DJ para determinar qué objeto sacas."
     }
   },
   {
     "id": "wildborne",
-    "name": "Wildborne",
+    "name": "Cuna Salvaje",
     "feature": {
-      "name": "Lightfoot",
-      "text": "Your movement is naturally silent. You have advantage on rolls to move without being heard."
+      "name": "Paso Ligero",
+      "text": "Tu movimiento es naturalmente silencioso. Tienes ventaja en tiradas para moverte sin ser oído."
     }
   }
 ]

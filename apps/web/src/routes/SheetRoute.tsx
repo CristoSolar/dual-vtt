@@ -116,7 +116,7 @@ export function SheetRoute({
 
   // Whose name a roll is logged under. In a live room the server stamps this from
   // the session; offline it is simply this character.
-  const rollerName = character.name ?? 'You';
+  const rollerName = character.name ?? 'Tú';
 
   const experiences = useMemo(
     () => Object.entries(character.experiences).map(([name, modifier]) => ({ name, modifier })),
@@ -134,7 +134,7 @@ export function SheetRoute({
         send(
           forMe({
             type: 'rollDamage',
-            label: `${pending.title} — damage`,
+            label: `${pending.title} — daño`,
             dice: pending.damage.dice,
             proficiency: pending.damage.proficiency,
             modifier: pending.damage.modifier,
@@ -182,7 +182,7 @@ export function SheetRoute({
           id: nextEntryId(),
           at: Date.now(),
           by: rollerName,
-          label: `${pending.title} — damage`,
+          label: `${pending.title} — daño`,
           roll: damage,
           critical: result.result.criticalDamage,
         }),
@@ -197,15 +197,15 @@ export function SheetRoute({
 
   const openTraitRoll = (traitLabel: string, modifier: number) => {
     setOutcome(null);
-    setPending({ title: `${traitLabel} Roll`, modifiers: modifier, modifierLabel: traitLabel, damage: null });
+    setPending({ title: `Tirada de ${traitLabel}`, modifiers: modifier, modifierLabel: traitLabel, damage: null });
   };
 
   const openAttackRoll = (weaponName: string, trait: string, modifier: number, damage: PendingRoll['damage']) => {
     setOutcome(null);
     setPending({
-      title: `Attack — ${weaponName}`,
+      title: `Ataque — ${weaponName}`,
       modifiers: modifier,
-      modifierLabel: `${prettify(trait)} attack`,
+      modifierLabel: `Ataque de ${prettify(trait)}`,
       damage,
     });
   };
@@ -215,7 +215,7 @@ export function SheetRoute({
       send(
         forMe({
           type: 'rollDamage',
-          label: `${weaponName} — damage`,
+          label: `${weaponName} — daño`,
           dice: damage.dice,
           proficiency: damage.proficiency,
           modifier: damage.modifier,
@@ -232,12 +232,12 @@ export function SheetRoute({
         id: nextEntryId(),
         at: Date.now(),
         by: rollerName,
-        label: `${weaponName} — damage`,
+        label: `${weaponName} — daño`,
         roll: result,
         critical: false,
       }),
     );
-    setToast(`${weaponName}: ${result.total} damage.`);
+    setToast(`${weaponName}: ${result.total} de daño.`);
   };
 
   const applyDamageEntry = (options: TakeDamageOptions) => {
@@ -248,25 +248,25 @@ export function SheetRoute({
   const vulnerable = isVulnerable(sheet);
 
   return (
-    <section>
+    <section className="sheet-backdrop">
       <div className="card-head">
         <div>
-          <h1>{character.name ?? 'Unnamed character'}</h1>
+          <h1>{character.name ?? 'Personaje sin nombre'}</h1>
           <p className="muted">
-            Level {character.level} {view.className} · {view.subclassName} ·{' '}
+            Nivel {character.level} {view.className} · {view.subclassName} ·{' '}
             {view.heritageLabel} · {view.communityName}
             {vulnerable ? <span className="badge warn"> Vulnerable</span> : null}
           </p>
         </div>
         <div className="row">
           <button type="button" onClick={() => setShowDamage(true)}>
-            Take damage
+            Recibir daño
           </button>
           <button type="button" onClick={() => setShowLevelUp(true)}>
-            Level up
+            Subir de nivel
           </button>
           <Link to="/">
-            <button type="button">Characters</button>
+            <button type="button">Personajes</button>
           </Link>
         </div>
       </div>
@@ -274,8 +274,8 @@ export function SheetRoute({
       <div className="sheet-layout">
         <div>
           <div className="panel">
-            <SectionHead>Traits</SectionHead>
-            <p className="muted">Click a trait to make an action roll with it.</p>
+            <SectionHead>Rasgos</SectionHead>
+            <p className="muted">Haz clic en un rasgo para hacer una tirada de acción con él.</p>
             <div className="stat-grid">
               {view.traits.map((trait) => (
                 <button
@@ -299,94 +299,94 @@ export function SheetRoute({
                   onClick={() => {
                     const trait = view.spellcastTrait;
                     if (trait === null) return;
-                    openTraitRoll(`Spellcast (${prettify(trait)})`, character.traits[trait]);
+                    openTraitRoll(`Conjuro (${prettify(trait)})`, character.traits[trait]);
                   }}
                 >
-                  Spellcast Roll
+                  Tirada de Conjuro
                 </button>
               </div>
             ) : null}
           </div>
 
           <div className="panel">
-            <SectionHead>Defenses</SectionHead>
+            <SectionHead>Defensas</SectionHead>
             <div className="stat-grid">
               <div className="stat">
                 <span className="stat-value">{character.evasion}</span>
-                <span className="stat-label">Evasion</span>
+                <span className="stat-label">Evasión</span>
               </div>
               <div className="stat">
                 <span className="stat-value">{character.armorScore}</span>
-                <span className="stat-label">Armor Score</span>
+                <span className="stat-label">Puntuación de Armadura</span>
               </div>
               <div className="stat">
                 <span className="stat-value">{character.major}</span>
-                <span className="stat-label">Major</span>
+                <span className="stat-label">Daño Mayor</span>
               </div>
               <div className="stat">
                 <span className="stat-value">{character.severe}</span>
-                <span className="stat-label">Severe</span>
+                <span className="stat-label">Daño Grave</span>
               </div>
               <div className="stat">
                 <span className="stat-value">{character.proficiency}</span>
-                <span className="stat-label">Proficiency</span>
+                <span className="stat-label">Competencia</span>
               </div>
             </div>
           </div>
 
           <div className="panel">
             <Tracker
-              label="Hit Points"
+              label="Puntos de Vida"
               marked={sheet.hpMarked}
               total={character.hpSlots}
-              fillLabel="marked"
+              fillLabel="marcados"
               onMark={() => run((s) => markSheetHP(s), forMe({ type: 'markHP', amount: 1 }))}
               onClear={() => run((s) => clearSheetHP(s), forMe({ type: 'clearHP', amount: 1 }))}
             />
             <Tracker
-              label="Stress"
+              label="Estrés"
               marked={sheet.stressMarked}
               total={character.stressSlots}
-              fillLabel="marked"
+              fillLabel="marcados"
               note={vulnerable ? 'Vulnerable' : undefined}
               onMark={() => run((s) => markSheetStress(s), forMe({ type: 'markStress', amount: 1 }))}
               onClear={() => run((s) => clearSheetStress(s), forMe({ type: 'clearStress', amount: 1 }))}
             />
             <Tracker
-              label="Hope"
+              label="Esperanza"
               marked={sheet.hope}
               total={MAX_HOPE}
               tone="hope"
-              fillLabel="held"
+              fillLabel="en reserva"
               onMark={() => run((s) => gainSheetHope(s), forMe({ type: 'gainHope', amount: 1 }))}
               onClear={() => run((s) => spendSheetHope(s), forMe({ type: 'spendHope', amount: 1 }))}
             />
             <Tracker
-              label="Armor Slots"
+              label="Ranuras de Armadura"
               marked={sheet.armorSlotsMarked}
               total={character.armorScore}
               tone="armor"
-              fillLabel="marked"
+              fillLabel="marcadas"
               onMark={() => run((s) => markSheetArmorSlot(s), forMe({ type: 'markArmorSlot', amount: 1 }))}
               onClear={() => run((s) => clearSheetArmorSlot(s), forMe({ type: 'clearArmorSlot', amount: 1 }))}
             />
 
             <div className="tracker">
               <div className="tracker-head">
-                <h3>Gold</h3>
+                <h3>Oro</h3>
                 <span className="muted">
-                  {sheet.gold.chests} chests · {sheet.gold.bags} bags · {sheet.gold.handfuls}{' '}
-                  handfuls
+                  {sheet.gold.chests} cofres · {sheet.gold.bags} bolsas · {sheet.gold.handfuls}{' '}
+                  puñados
                 </span>
               </div>
               <div className="row">
                 {(['handfuls', 'bags', 'chests'] as const).map((unit) => (
                   <span key={unit} className="row">
                     <button type="button" onClick={() => run((s) => spendSheetGold(s, 1, unit), forMe({ type: 'spendGold', amount: 1, unit }))}>
-                      − {unit}
+                      − {unit === 'handfuls' ? 'puñado' : unit === 'bags' ? 'bolsa' : 'cofre'}
                     </button>
                     <button type="button" onClick={() => run((s) => gainSheetGold(s, 1, unit), forMe({ type: 'gainGold', amount: 1, unit }))}>
-                      + {unit}
+                      + {unit === 'handfuls' ? 'puñado' : unit === 'bags' ? 'bolsa' : 'cofre'}
                     </button>
                   </span>
                 ))}
@@ -395,14 +395,14 @@ export function SheetRoute({
           </div>
 
           <div className="panel">
-            <SectionHead>Active weapons &amp; armor</SectionHead>
+            <SectionHead>Armas y armadura activas</SectionHead>
             {[view.primaryWeapon, view.secondaryWeapon].map((weapon, index) =>
               weapon === null ? null : (
                 <div className="card" key={weapon.id}>
                   <div className="card-head">
                     <strong>
                       {weapon.name}{' '}
-                      <span className="muted">{index === 0 ? '(primary)' : '(secondary)'}</span>
+                      <span className="muted">{index === 0 ? '(primaria)' : '(secundaria)'}</span>
                     </strong>
                     <div className="row">
                       <button
@@ -420,13 +420,13 @@ export function SheetRoute({
                           )
                         }
                       >
-                        Attack
+                        Atacar
                       </button>
                       <button
                         type="button"
                         onClick={() => rollLooseDamage(weapon.name, weaponDamage(weapon, character))}
                       >
-                        Damage
+                        Daño
                       </button>
                     </div>
                   </div>
@@ -449,8 +449,8 @@ export function SheetRoute({
                 <strong>{view.armor.name}</strong>
                 <span className="option-meta">
                   {' '}
-                  Base thresholds {view.armor.baseThresholds.major}/
-                  {view.armor.baseThresholds.severe} · Base score {view.armor.baseScore}
+                  Umbrales base {view.armor.baseThresholds.major}/
+                  {view.armor.baseThresholds.severe} · Puntuación base {view.armor.baseScore}
                 </span>
                 {view.armor.feature ? (
                   <p className="card-text">
@@ -462,7 +462,7 @@ export function SheetRoute({
           </div>
 
           <div className="panel">
-            <SectionHead>Experiences</SectionHead>
+            <SectionHead>Experiencias</SectionHead>
             <div className="row">
               {experiences.map((experience) => (
                 <span key={experience.name} className="badge">
@@ -474,9 +474,9 @@ export function SheetRoute({
           </div>
 
           <div className="panel">
-            <SectionHead>Features</SectionHead>
+            <SectionHead>Rasgos de clase</SectionHead>
             {[
-              { heading: `${view.className} — Hope Feature`, features: [view.hopeFeature] },
+              { heading: `${view.className} — Rasgo de Esperanza`, features: [view.hopeFeature] },
               { heading: `${view.className}`, features: view.classFeatures },
               { heading: view.subclassName, features: view.subclassFeatures },
               { heading: view.heritageLabel, features: view.ancestryFeatures },
@@ -497,7 +497,7 @@ export function SheetRoute({
           </div>
 
           <div className="panel">
-            <SectionHead>Inventory</SectionHead>
+            <SectionHead>Inventario</SectionHead>
             <ul>
               {character.inventory.map((item) => (
                 <li key={item}>{item}</li>

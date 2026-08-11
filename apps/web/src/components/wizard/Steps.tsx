@@ -6,6 +6,7 @@ import {
   type Trait,
   type ValidationError,
 } from '@daggerheart/character';
+import { subclasses } from '@daggerheart/srd-data';
 import { useState } from 'react';
 
 import { fieldErrors } from '../../state/useCreation.js';
@@ -25,11 +26,12 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
   return (
     <>
       <OptionList
-        legend="Class"
+        legend="Clase"
         options={options.classes.map((c) => ({
           id: c.id,
           name: c.name,
-          meta: `Evasion ${c.startingEvasion} · HP ${c.startingHP} · ${c.domains.join(' & ')}`,
+          meta: `Evasión ${c.startingEvasion} · PV ${c.startingHP} · ${c.domains.join(' y ')}`,
+          image: `/images/classes/${c.id}.png`,
         }))}
         selectedId={state.classId}
         onSelect={(classId) => dispatch({ type: 'chooseClass', classId })}
@@ -37,18 +39,18 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
       <FieldErrors errors={fieldErrors(errors, 'classId')} />
 
       <OptionList
-        legend="Subclass"
+        legend="Subclase"
         options={options.subclasses.map((s) => ({
           id: s.id,
           name: s.name,
           meta:
             s.spellcastTrait === null
-              ? 'No Spellcast trait'
-              : `Spellcast: ${prettify(s.spellcastTrait)}`,
+              ? 'Sin Rasgo de Conjuro'
+              : `Conjuro: ${prettify(s.spellcastTrait)}`,
         }))}
         selectedId={state.subclassId}
         onSelect={(subclassId) => dispatch({ type: 'chooseSubclass', subclassId })}
-        emptyMessage="Choose a class first."
+        emptyMessage="Elige primero una clase."
       />
       <FieldErrors errors={fieldErrors(errors, 'subclassId')} />
     </>
@@ -88,35 +90,37 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
     <>
       <div className="row mb-4">
         <button type="button" aria-pressed={!mixed} onClick={() => setMixed(false)}>
-          Single ancestry
+          Ascendencia única
         </button>
         <button type="button" aria-pressed={mixed} onClick={() => setMixed(true)}>
-          Mixed ancestry
+          Ascendencia mixta
         </button>
       </div>
 
       {mixed ? (
         <>
           <p className="muted">
-            A mixed ancestry takes the first-listed feature from one ancestry and the
-            second-listed feature from another.
+            Una ascendencia mixta toma el primer rasgo listado de una ascendencia y el
+            segundo rasgo listado de otra.
           </p>
           <OptionList
-            legend="First-listed feature from"
+            legend="Primer rasgo listado de"
             options={options.mixedFirstSlot.map((a) => ({
               id: a.id,
               name: a.name,
               meta: a.features.find((f) => f.slot === 'first')?.name,
+              image: `/images/ancestries/${a.id}.png`,
             }))}
             selectedId={pendingFirst}
             onSelect={(id) => selectMixed('first', id)}
           />
           <OptionList
-            legend="Second-listed feature from"
+            legend="Segundo rasgo listado de"
             options={options.mixedSecondSlot.map((a) => ({
               id: a.id,
               name: a.name,
               meta: a.features.find((f) => f.slot === 'second')?.name,
+              image: `/images/ancestries/${a.id}.png`,
             }))}
             selectedId={pendingSecond}
             onSelect={(id) => selectMixed('second', id)}
@@ -124,11 +128,12 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
         </>
       ) : (
         <OptionList
-          legend="Ancestry"
+          legend="Ascendencia"
           options={options.ancestries.map((a) => ({
             id: a.id,
             name: a.name,
             meta: a.features.map((f) => f.name).join(' · '),
+            image: `/images/ancestries/${a.id}.png`,
           }))}
           selectedId={heritage?.kind === 'single' ? heritage.ancestryId : null}
           onSelect={(ancestryId) => dispatch({ type: 'chooseAncestry', ancestryId })}
@@ -137,11 +142,12 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
       <FieldErrors errors={fieldErrors(errors, 'heritage')} />
 
       <OptionList
-        legend="Community"
+        legend="Comunidad"
         options={options.communities.map((c) => ({
           id: c.id,
           name: c.name,
           meta: c.feature.name,
+          image: `/images/communities/${c.id}.png`,
         }))}
         selectedId={state.communityId}
         onSelect={(communityId) => dispatch({ type: 'chooseCommunity', communityId })}
@@ -149,6 +155,40 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
       <FieldErrors errors={fieldErrors(errors, 'communityId')} />
     </>
   );
+}
+
+// Only Guardian and Warrior run both subclasses with no Spellcast trait — for
+// those, Strength carries their weapons and armor, so it's the sane default.
+// ponytail: a fixed fallback map, not a rules lookup — nothing in the SRD data
+// names a "primary trait" for a class, so this is just a sensible starting point
+// the player can override.
+const NO_SPELLCAST_PRIMARY: Partial<Record<string, Trait>> = {
+  guardian: 'strength',
+  warrior: 'strength',
+};
+
+/** The trait a class leans on hardest, used only to pre-fill a suggestion. */
+function primaryTraitFor(classId: string | null, subclassId: string | null): Trait | null {
+  const subclass = subclasses.find((s) => s.id === subclassId);
+  if (subclass?.spellcastTrait != null) return subclass.spellcastTrait;
+  if (classId !== null) return NO_SPELLCAST_PRIMARY[classId] ?? null;
+  return null;
+}
+
+/**
+ * Fills every trait from the modifier array, favouring the primary trait for
+ * the biggest bonus and otherwise keeping a stable, predictable order — this
+ * is a starting point to edit, not a build guide.
+ */
+function recommendedSpread(traits: readonly Trait[], modifiers: readonly number[], primary: Trait | null): Record<Trait, number> {
+  const sorted = [...modifiers].sort((a, b) => b - a);
+  const order =
+    primary === null ? traits : [primary, ...traits.filter((t) => t !== primary)];
+  const spread = {} as Record<Trait, number>;
+  order.forEach((trait, index) => {
+    spread[trait] = sorted[index] ?? 0;
+  });
+  return spread;
 }
 
 /** Step 3 — assign the trait array. */
@@ -170,31 +210,64 @@ export function StepTraits({ state, dispatch, errors }: StepProps) {
     if (index !== -1) remaining.splice(index, 1);
   }
 
+  const primary = primaryTraitFor(state.classId, state.subclassId);
+  const uniqueValues = [...new Set(options.modifiers)].sort((a, b) => b - a);
+
   return (
     <>
-      <p className="muted">
-        Assign {options.modifiers.map(formatSigned).join(', ')} across the six traits.
-        {remaining.length > 0 ? ` Still to place: ${remaining.map(formatSigned).join(', ')}.` : ''}
+      <div className="row spread trait-points-bar">
+        <p className="muted mb-0">
+          Asigna {options.modifiers.map(formatSigned).join(', ')} entre los seis Rasgos.
+        </p>
+        <button
+          type="button"
+          onClick={() =>
+            dispatch({
+              type: 'assignTraits',
+              traits: recommendedSpread(options.traits, options.modifiers, primary),
+            })
+          }
+        >
+          Reparto recomendado
+        </button>
+      </div>
+      <p className={remaining.length > 0 ? 'trait-points-remaining' : 'trait-points-remaining trait-points-done'}>
+        {remaining.length > 0
+          ? `Falta por colocar: ${remaining.map(formatSigned).join(', ')}`
+          : 'Todos los modificadores están colocados.'}
       </p>
       <div className="grid cols-3">
-        {options.traits.map((trait) => (
-          <div key={trait}>
-            <label htmlFor={`trait-${trait}`}>{prettify(trait)}</label>
-            <select
-              id={`trait-${trait}`}
-              value={String(current[trait])}
-              onChange={(event) => setTrait(trait, Number(event.target.value))}
-            >
-              {[...new Set(options.modifiers)]
-                .sort((a, b) => b - a)
-                .map((value) => (
-                  <option key={value} value={value}>
-                    {formatSigned(value)}
-                  </option>
-                ))}
-            </select>
-          </div>
-        ))}
+        {options.traits.map((trait) => {
+          // A value is unavailable for this trait once every copy of it lives on
+          // another trait — except the one this select already holds, so picking
+          // the same value back is always allowed.
+          const othersUsed = options.traits.filter((t) => t !== trait).map((t) => current[t]);
+          return (
+            <div key={trait}>
+              <label htmlFor={`trait-${trait}`}>
+                {prettify(trait)}
+                {trait === primary ? <span className="badge trait-primary-badge">Principal</span> : null}
+              </label>
+              <select
+                id={`trait-${trait}`}
+                value={String(current[trait])}
+                onChange={(event) => setTrait(trait, Number(event.target.value))}
+              >
+                {uniqueValues.map((value) => {
+                  const totalOfValue = options.modifiers.filter((m) => m === value).length;
+                  const takenByOthers = othersUsed.filter((v) => v === value).length;
+                  const left = totalOfValue - takenByOthers;
+                  const disabled = left <= 0 && current[trait] !== value;
+                  return (
+                    <option key={value} value={value} disabled={disabled}>
+                      {formatSigned(value)} (quedan {Math.max(left, 0)})
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          );
+        })}
       </div>
       <FieldErrors errors={fieldErrors(errors, 'traits')} />
     </>
@@ -204,21 +277,21 @@ export function StepTraits({ state, dispatch, errors }: StepProps) {
 /** Step 4 — derived values, recorded rather than chosen. */
 export function StepDerived({ state }: StepProps) {
   const { derived } = availableOptions(state, 4);
-  if (derived === null) return <p className="muted">Choose a class first.</p>;
+  if (derived === null) return <p className="muted">Elige primero una clase.</p>;
 
   const stats: [string, number][] = [
-    ['Level', derived.level],
-    ['Evasion', derived.evasion],
-    ['Hit Points', derived.hpSlots],
-    ['Stress', derived.stressSlots],
-    ['Hope', derived.hope],
-    ['Proficiency', derived.proficiency],
+    ['Nivel', derived.level],
+    ['Evasión', derived.evasion],
+    ['Puntos de Vida', derived.hpSlots],
+    ['Estrés', derived.stressSlots],
+    ['Esperanza', derived.hope],
+    ['Competencia', derived.proficiency],
   ];
 
   return (
     <>
       <p className="muted">
-        These come from your class. Damage thresholds are set once you equip armor.
+        Esto viene de tu clase. Los umbrales de daño se fijan al equipar armadura.
       </p>
       <div className="stat-grid">
         {stats.map(([name, value]) => (
@@ -252,7 +325,7 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
   return (
     <>
       <OptionList
-        legend="Primary weapon"
+        legend="Arma principal"
         options={options.primaryWeapons.map((w) => ({
           id: w.id,
           name: w.name,
@@ -266,7 +339,7 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
       <FieldErrors errors={fieldErrors(errors, 'equipment.primaryWeaponId')} />
 
       <OptionList
-        legend="Secondary weapon (optional)"
+        legend="Arma secundaria (opcional)"
         options={options.secondaryWeapons.map((w) => ({
           id: w.id,
           name: w.name,
@@ -276,16 +349,16 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
         onSelect={(id) =>
           update({ secondaryWeaponId: equipment?.secondaryWeaponId === id ? null : id })
         }
-        emptyMessage="A two-handed primary weapon leaves no hand for a secondary."
+        emptyMessage="Un arma principal a dos manos no deja mano libre para una secundaria."
       />
       <FieldErrors errors={fieldErrors(errors, 'equipment.secondaryWeaponId')} />
 
       <OptionList
-        legend="Armor"
+        legend="Armadura"
         options={options.armor.map((a) => ({
           id: a.id,
           name: a.name,
-          meta: `Thresholds ${a.baseThresholds.major}/${a.baseThresholds.severe} · Score ${a.baseScore}${
+          meta: `Umbrales ${a.baseThresholds.major}/${a.baseThresholds.severe} · Puntuación ${a.baseScore}${
             a.feature ? ` · ${a.feature.name}` : ''
           }`,
         }))}
@@ -295,18 +368,18 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
       <FieldErrors errors={fieldErrors(errors, 'equipment.armorId')} />
 
       <OptionList
-        legend="Potion"
+        legend="Poción"
         options={options.potions.map((p) => ({
           id: p,
-          name: p === 'health' ? 'Minor Health Potion' : 'Minor Stamina Potion',
-          meta: p === 'health' ? 'Clear 1d4 Hit Points' : 'Clear 1d4 Stress',
+          name: p === 'health' ? 'Poción Menor de Vida' : 'Poción Menor de Vigor',
+          meta: p === 'health' ? 'Cura 1d4 Puntos de Vida' : 'Libera 1d4 de Estrés',
         }))}
         selectedId={equipment?.potion ?? null}
         onSelect={(id) => update({ potion: id === 'stamina' ? 'stamina' : 'health' })}
       />
 
       <OptionList
-        legend="Class item"
+        legend="Objeto de clase"
         options={options.classItems.map((item) => ({ id: item, name: item }))}
         selectedId={equipment?.classItem ?? null}
         onSelect={(classItem) => update({ classItem })}
@@ -316,9 +389,9 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
       {options.needsSpellCarrier ? (
         <TextField
           id="spell-carrier"
-          label="Item you carry your spells in"
+          label="Objeto en el que llevas tus conjuros"
           value={equipment?.spellCarrier ?? ''}
-          placeholder="A worn leather spellbook"
+          placeholder="Un grimorio de cuero desgastado"
           onChange={(spellCarrier) => update({ spellCarrier: spellCarrier === '' ? null : spellCarrier })}
           errors={fieldErrors(errors, 'equipment.spellCarrier')}
         />
@@ -332,10 +405,10 @@ export function StepBackground({ state, dispatch, errors }: StepProps) {
   return (
     <TextField
       id="background"
-      label="Background"
+      label="Trasfondo"
       multiline
       value={state.background ?? ''}
-      placeholder="Where they come from, what they left behind, what they want."
+      placeholder="De dónde viene, qué dejó atrás, qué quiere."
       onChange={(background) => dispatch({ type: 'setBackground', background })}
       errors={fieldErrors(errors, 'background')}
     />
@@ -361,16 +434,16 @@ export function StepExperiences({ state, dispatch, errors }: StepProps) {
   return (
     <>
       <p className="muted">
-        Two Experiences, each at {formatSigned(options.modifier)}. A word or phrase — not
-        a spell or a special ability.
+        Dos Experiencias, cada una a {formatSigned(options.modifier)}. Una palabra o frase — no
+        un conjuro ni una habilidad especial.
       </p>
       {values.map((value, index) => (
         <TextField
           key={index}
           id={`experience-${index}`}
-          label={`Experience ${index + 1}`}
+          label={`Experiencia ${index + 1}`}
           value={value}
-          placeholder={index === 0 ? 'Bounty Hunter' : 'Silver Tongue'}
+          placeholder={index === 0 ? 'Cazarrecompensas' : 'Lengua de Plata'}
           onChange={(name) => setAt(index, name)}
         />
       ))}
@@ -397,7 +470,7 @@ export function StepDomainCards({ state, dispatch, errors }: StepProps) {
   return (
     <>
       <p className="muted">
-        Choose {options.count} — one from each of your domains, or both from one.
+        Elige {options.count} — una de cada uno de tus Dominios, o ambas del mismo.
       </p>
       <ul className="options">
         {options.cards.map((card) => (
@@ -410,7 +483,7 @@ export function StepDomainCards({ state, dispatch, errors }: StepProps) {
             >
               <span className="option-name">{card.name}</span>
               <span className="option-meta">
-                {prettify(card.domain)} · {prettify(card.type)} · Recall {card.recallCost}
+                {prettify(card.domain)} · {prettify(card.type)} · Recuperación {card.recallCost}
               </span>
               <p className="card-text">{card.text}</p>
             </button>
@@ -441,7 +514,7 @@ export function StepConnections({ state, dispatch, errors }: StepProps) {
   return (
     <>
       <p className="muted">
-        Optional — it’s fine if there isn’t a connection between every pair of PCs.
+        Opcional — no pasa nada si no hay una conexión entre cada par de PJ.
       </p>
       <ul className="options cols-1">
         {connections.map((connection, index) => (
@@ -457,7 +530,7 @@ export function StepConnections({ state, dispatch, errors }: StepProps) {
                   })
                 }
               >
-                Remove
+                Eliminar
               </button>
             </div>
             <p className="card-text">{connection.description}</p>
@@ -466,11 +539,11 @@ export function StepConnections({ state, dispatch, errors }: StepProps) {
       </ul>
 
       <div className="grid cols-2">
-        <TextField id="connection-who" label="With" value={who} onChange={setWho} />
-        <TextField id="connection-what" label="Connection" value={what} onChange={setWhat} />
+        <TextField id="connection-who" label="Con" value={who} onChange={setWho} />
+        <TextField id="connection-what" label="Conexión" value={what} onChange={setWhat} />
       </div>
       <button type="button" onClick={add}>
-        Add connection
+        Añadir conexión
       </button>
       <FieldErrors errors={fieldErrors(errors, 'connections')} />
     </>

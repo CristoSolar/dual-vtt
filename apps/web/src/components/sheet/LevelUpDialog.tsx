@@ -23,15 +23,15 @@ interface LevelUpDialogProps {
 }
 
 const ADVANCEMENT_LABELS: Record<Advancement, string> = {
-  traits: 'Increase two traits',
-  hitPoint: 'Add a Hit Point slot',
-  stress: 'Add a Stress slot',
-  experience: 'Increase two Experiences',
-  domainCard: 'Take an extra domain card',
-  evasion: 'Increase Evasion',
-  subclass: 'Upgrade subclass',
-  proficiency: 'Increase Proficiency',
-  multiclass: 'Multiclass',
+  traits: 'Aumenta dos Rasgos',
+  hitPoint: 'Añade una ranura de Punto de Vida',
+  stress: 'Añade una ranura de Estrés',
+  experience: 'Aumenta dos Experiencias',
+  domainCard: 'Toma una carta de Dominio extra',
+  evasion: 'Aumenta Evasión',
+  subclass: 'Mejora la Subclase',
+  proficiency: 'Aumenta Competencia',
+  multiclass: 'Multiclase',
 };
 
 /** Collects the two advancement slots and passes them to the rules engine. */
@@ -68,13 +68,13 @@ export function LevelUpDialog({
   );
 
   return (
-    <Dialog title={`Level up to ${level + 1}`} onClose={onClose}>
+    <Dialog title={`Subir al nivel ${level + 1}`} onClose={onClose}>
       <p className="muted">
-        Spend exactly {SLOTS_PER_LEVEL} advancement slots — {spent} chosen.
+        Gasta exactamente {SLOTS_PER_LEVEL} ranuras de mejora — llevas {spent} elegidas.
       </p>
 
       <fieldset>
-        <legend>Advancements</legend>
+        <legend>Mejoras</legend>
         <div className="grid cols-2">
           {offered.map((advancement) => (
             <button
@@ -86,7 +86,7 @@ export function LevelUpDialog({
             >
               <span className="option-name">{ADVANCEMENT_LABELS[advancement]}</span>
               <span className="option-meta">
-                {ADVANCEMENT_SLOT_COST[advancement]} slot
+                {ADVANCEMENT_SLOT_COST[advancement]} ranura
                 {ADVANCEMENT_SLOT_COST[advancement] > 1 ? 's' : ''}
               </span>
             </button>
@@ -96,7 +96,7 @@ export function LevelUpDialog({
 
       {advancements.includes('traits') ? (
         <fieldset>
-          <legend>Traits to increase (choose two)</legend>
+          <legend>Rasgos a aumentar (elige dos)</legend>
           <div className="row">
             {traitNames.map((trait) => (
               <button
@@ -115,7 +115,7 @@ export function LevelUpDialog({
 
       {advancements.includes('experience') ? (
         <fieldset>
-          <legend>Experiences to increase (choose two)</legend>
+          <legend>Experiencias a aumentar (elige dos)</legend>
           <div className="row">
             {experienceNames.map((name) => (
               <button
@@ -134,7 +134,7 @@ export function LevelUpDialog({
 
       <div className="mb-4">
         <label htmlFor="new-experience">
-          New Experience (levels {TIER_ACHIEVEMENT_LEVELS.join(', ')} grant one at +
+          Nueva Experiencia (los niveles {TIER_ACHIEVEMENT_LEVELS.join(', ')} otorgan una a +
           {STARTING_EXPERIENCE_MODIFIER})
         </label>
         <input
@@ -157,7 +157,7 @@ export function LevelUpDialog({
           })
         }
       >
-        Apply level up
+        Confirmar subida de nivel
       </button>
     </Dialog>
   );

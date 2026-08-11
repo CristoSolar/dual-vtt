@@ -149,8 +149,8 @@ describe('step 2 — heritage', () => {
     // both the first features listed on their respective ancestry cards" (SRD p.31).
     const goblinFirst = findAncestry('goblin')?.features.find((f) => f.slot === 'first');
     const orcFirst = findAncestry('orc')?.features.find((f) => f.slot === 'first');
-    expect(goblinFirst?.name).toBe('Surefooted');
-    expect(orcFirst?.name).toBe('Sturdy');
+    expect(goblinFirst?.name).toBe('Pie Firme');
+    expect(orcFirst?.name).toBe('Recio');
 
     let state = createInitialState();
     state = applyChoice(state, {
@@ -230,7 +230,7 @@ describe('step 5 — equipment', () => {
         secondaryWeaponId: null,
         armorId: 'leather-armor',
         potion: 'health',
-        classItem: 'A totem from your mentor',
+        classItem: 'Un tótem de tu mentor',
         spellCarrier: null,
         ...overrides,
       },

@@ -225,8 +225,8 @@ export function MapCanvas({
               y={measureLine.to.y}
               text={
                 measurement.squares === null
-                  ? `${RANGE_LABELS[measurement.band]} · ${Math.round(measurement.feet ?? 0)} ft`
-                  : `${RANGE_LABELS[measurement.band]} · ${measurement.squares} sq`
+                  ? `${RANGE_LABELS[measurement.band]} · ${Math.round(measurement.feet ?? 0)} pies`
+                  : `${RANGE_LABELS[measurement.band]} · ${measurement.squares} casillas`
               }
               fill={canvasPalette.measureText()}
               fontSize={16 / view.scale}
@@ -345,7 +345,7 @@ function TokenShape({
       {token.hidden ? (
         <Text
           y={-14}
-          text="GM only"
+          text="Solo DJ"
           fill={canvasPalette.tokenLabelMuted()}
           fontSize={11}
           listening={false}

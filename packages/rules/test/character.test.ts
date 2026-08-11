@@ -97,9 +97,9 @@ describe('validateMixedAncestry', () => {
     const result = validateMixedAncestry(goblin, orc);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    // The SRD's own goblin-orc example: "Surefooted" and "Tusks".
-    expect(result.features[0]?.name).toBe('Surefooted');
-    expect(result.features[1]?.name).toBe('Tusks');
+    // The SRD's own goblin-orc example: "Surefooted" and "Tusks" ("Pie Firme" / "Colmillos" in the translated data).
+    expect(result.features[0]?.name).toBe('Pie Firme');
+    expect(result.features[1]?.name).toBe('Colmillos');
   });
 
   it('rejects two features from the same ancestry', () => {

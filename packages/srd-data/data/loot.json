@@ -2,361 +2,361 @@
   {
     "roll": 1,
     "id": "premium-bedroll",
-    "name": "Premium Bedroll",
-    "text": "During downtime, you automatically clear a Stress."
+    "name": "Saco de Dormir Premium",
+    "text": "Durante el descanso, eliminas automáticamente un Estrés."
   },
   {
     "roll": 2,
     "id": "piper-whistle",
-    "name": "Piper Whistle",
-    "text": "This handcrafted whistle has a distinctive sound. When you blow this whistle, its piercing tone can be heard within a 1-mile radius."
+    "name": "Silbato del Flautista",
+    "text": "Este silbato artesanal tiene un sonido distintivo. Cuando lo soplas, su tono agudo puede oírse en un radio de 1 milla."
   },
   {
     "roll": 3,
     "id": "charging-quiver",
-    "name": "Charging Quiver",
-    "text": "When you succeed on an attack with an arrow stored in this quiver, gain a bonus to the damage roll equal to your current tier."
+    "name": "Carcaj Cargado",
+    "text": "Cuando tienes éxito en un ataque con una flecha guardada en este carcaj, obtienes un bono a la tirada de daño igual a tu tier actual."
   },
   {
     "roll": 4,
     "id": "alistairs-torch",
-    "name": "Alistair’s Torch",
-    "text": "You can light this magic torch at will. The flame’s light fills a much larger space than it should, enough to illuminate a cave bright as day."
+    "name": "Antorcha de Alistair",
+    "text": "Puedes encender esta antorcha mágica cuando quieras. La luz de su llama ilumina un espacio mucho mayor de lo que debería, lo suficiente para iluminar una cueva como si fuera de día."
   },
   {
     "roll": 5,
     "id": "speaking-orbs",
-    "name": "Speaking Orbs",
-    "text": "This pair of orbs allows any creatures holding them to communicate with each other across any distance."
+    "name": "Orbes Parlantes",
+    "text": "Este par de orbes permite a cualquier criatura que los sostenga comunicarse entre sí sin importar la distancia."
   },
   {
     "roll": 6,
     "id": "manacles",
-    "name": "Manacles",
-    "text": "This pair of locking cuffs comes with a key."
+    "name": "Grilletes",
+    "text": "Este par de esposas con cerradura viene con una llave."
   },
   {
     "roll": 7,
     "id": "arcane-cloak",
-    "name": "Arcane Cloak",
-    "text": "A creature with a Spellcast trait wearing this cloak can adjust its color, texture, and size at will."
+    "name": "Capa Arcana",
+    "text": "Una criatura con el rasgo Lanzamiento de Conjuros que use esta capa puede ajustar su color, textura y tamaño a voluntad."
   },
   {
     "roll": 8,
     "id": "woven-net",
-    "name": "Woven Net",
-    "text": "You can make a Finesse Roll using this net to trap a small creature. A trapped target can break free with a successful Attack Roll (16)."
+    "name": "Red Tejida",
+    "text": "Puedes hacer una Tirada de Destreza usando esta red para atrapar a una criatura pequeña. Un objetivo atrapado puede liberarse con una Tirada de Ataque exitosa (16)."
   },
   {
     "roll": 9,
     "id": "fire-jar",
-    "name": "Fire Jar",
-    "text": "You can pour out the strange liquid contents of this jar to instantly produce fire. The contents regenerate when you take a long rest."
+    "name": "Jarra de Fuego",
+    "text": "Puedes derramar el extraño contenido líquido de esta jarra para producir fuego al instante. El contenido se regenera cuando haces un descanso largo."
   },
   {
     "roll": 10,
     "id": "suspended-rod",
-    "name": "Suspended Rod",
-    "text": "This flat rod is inscribed with runes. When you activate the rod, it is immediately suspended in place. Until the rod is deactivated, it can’t move, doesn’t abide by the rules of gravity, and remains in place."
+    "name": "Vara Suspendida",
+    "text": "Esta vara plana está grabada con runas. Cuando activas la vara, queda suspendida en el aire de inmediato. Hasta que se desactive, no puede moverse, no obedece las leyes de la gravedad y permanece en su lugar."
   },
   {
     "roll": 11,
     "id": "glamour-stone",
-    "name": "Glamour Stone",
-    "text": "Activate this pebble-sized stone to memorize the appearance of someone you can see. Spend a Hope to magically recreate this guise on yourself as an illusion."
+    "name": "Piedra de Glamour",
+    "text": "Activa esta piedra del tamaño de una canica para memorizar la apariencia de alguien que puedas ver. Gasta una Esperanza para recrear mágicamente esa apariencia sobre ti mismo como una ilusión."
   },
   {
     "roll": 12,
     "id": "empty-chest",
-    "name": "Empty Chest",
-    "text": "This magical chest appears empty. When you speak a specific trigger word or action and open the chest, you can see the items stored within it."
+    "name": "Cofre Vacío",
+    "text": "Este cofre mágico parece vacío. Cuando pronuncias una palabra o acción de activación específica y lo abres, puedes ver los objetos guardados en su interior."
   },
   {
     "roll": 13,
     "id": "companion-case",
-    "name": "Companion Case",
-    "text": "This case can fit a small animal companion. While the companion is inside, the animal and case are immune to all damage and harmful effects."
+    "name": "Estuche del Compañero",
+    "text": "Este estuche puede contener a un animal compañero pequeño. Mientras el compañero esté dentro, el animal y el estuche son inmunes a todo daño y efectos dañinos."
   },
   {
     "roll": 14,
     "id": "piercing-arrows",
-    "name": "Piercing Arrows",
-    "text": "Three times per rest when you succeed on an attack with one of these arrows, you can add your Proficiency to the damage roll."
+    "name": "Flechas Perforantes",
+    "text": "Tres veces por descanso, cuando tienes éxito en un ataque con una de estas flechas, puedes sumar tu Competencia a la tirada de daño."
   },
   {
     "roll": 15,
     "id": "valorstone",
-    "name": "Valorstone",
-    "text": "You can attach this stone to armor that doesn’t already have a feature. The armor gains the following feature. Resilient: Before you mark your last Armor Slot, roll a d6. On a result of 6, reduce the severity by one threshold without marking an Armor Slot."
+    "name": "Piedra del Valor",
+    "text": "Puedes fijar esta piedra a una armadura que aún no tenga una característica. La armadura obtiene la siguiente característica. Resistente: Antes de marcar tu última Ranura de Armadura, tira un d6. Con un resultado de 6, reduces la gravedad en un umbral sin marcar una Ranura de Armadura."
   },
   {
     "roll": 16,
     "id": "skeleton-key",
-    "name": "Skeleton Key",
-    "text": "When you use this key to open a locked door, you gain advantage on the Finesse Roll."
+    "name": "Llave Maestra",
+    "text": "Cuando usas esta llave para abrir una puerta cerrada, obtienes ventaja en la Tirada de Destreza."
   },
   {
     "roll": 17,
     "id": "arcane-prism",
-    "name": "Arcane Prism",
-    "text": "Position this prism in a location of your choosing and activate it. All allies within Close range of it gain a +1 bonus to their Spellcast Rolls. While activated, the prism can’t be moved. Once the prism is deactivated, it can’t be activated again until your next long rest."
+    "name": "Prisma Arcano",
+    "text": "Coloca este prisma en un lugar de tu elección y actívalo. Todos los aliados dentro de alcance Cercano obtienen un bono de +1 a sus Tiradas de Lanzamiento de Conjuros. Mientras esté activado, el prisma no puede moverse. Una vez desactivado, no puede volver a activarse hasta tu próximo descanso largo."
   },
   {
     "roll": 18,
     "id": "minor-stamina-potion-recipe",
-    "name": "Minor Stamina Potion Recipe",
-    "text": "As a downtime move, you can use the bone of a creature to craft a Minor Stamina Potion."
+    "name": "Receta de Poción Menor de Vigor",
+    "text": "Como acción de descanso, puedes usar el hueso de una criatura para elaborar una Poción Menor de Vigor."
   },
   {
     "roll": 19,
     "id": "minor-health-potion-recipe",
-    "name": "Minor Health Potion Recipe",
-    "text": "As a downtime move, you can use a vial of blood to craft a Minor Health Potion."
+    "name": "Receta de Poción Menor de Vida",
+    "text": "Como acción de descanso, puedes usar un vial de sangre para elaborar una Poción Menor de Vida."
   },
   {
     "roll": 20,
     "id": "homing-compasses",
-    "name": "Homing Compasses",
-    "text": "These two compasses point toward each other no matter how far apart they are."
+    "name": "Brújulas Buscadoras",
+    "text": "Estas dos brújulas apuntan una hacia la otra sin importar la distancia que las separe."
   },
   {
     "roll": 21,
     "id": "corrector-sprite",
-    "name": "Corrector Sprite",
-    "text": "This tiny sprite sits in the curve of your ear canal and whispers helpful advice during combat. Once per short rest, you can gain advantage on an attack roll."
+    "name": "Duende Corrector",
+    "text": "Este pequeño duende se acomoda en el pliegue de tu oído y te susurra consejos útiles durante el combate. Una vez por descanso corto, puedes obtener ventaja en una tirada de ataque."
   },
   {
     "roll": 22,
     "id": "gecko-gloves",
-    "name": "Gecko Gloves",
-    "text": "You can climb up vertical surfaces and across ceilings."
+    "name": "Guantes de Geco",
+    "text": "Puedes trepar por superficies verticales y caminar por techos."
   },
   {
     "roll": 23,
     "id": "lorekeeper",
-    "name": "Lorekeeper",
-    "text": "You can store the name and details of up to three hostile creatures inside this book. You gain a +1 bonus to action rolls against those creatures."
+    "name": "Guardián de Saberes",
+    "text": "Puedes guardar el nombre y los detalles de hasta tres criaturas hostiles dentro de este libro. Obtienes un bono de +1 a las tiradas de acción contra esas criaturas."
   },
   {
     "roll": 24,
     "id": "vial-of-darksmoke-recipe",
-    "name": "Vial of Darksmoke Recipe",
-    "text": "As a downtime move, you can mark a Stress to craft a Vial of Darksmoke."
+    "name": "Receta de Vial de Humo Oscuro",
+    "text": "Como acción de descanso, puedes marcar un Estrés para elaborar un Vial de Humo Oscuro."
   },
   {
     "roll": 25,
     "id": "bloodstone",
-    "name": "Bloodstone",
-    "text": "You can attach this stone to a weapon that doesn’t already have a feature. The weapon gains the following feature. Brutal: When you roll the maximum value on a damage die, roll an additional damage die."
+    "name": "Piedra de Sangre",
+    "text": "Puedes fijar esta piedra a un arma que aún no tenga una característica. El arma obtiene la siguiente característica. Brutal: Cuando tiras el valor máximo en un dado de daño, tira un dado de daño adicional."
   },
   {
     "roll": 26,
     "id": "greatstone",
-    "name": "Greatstone",
-    "text": "You can attach this stone to a weapon that doesn’t already have a feature. The weapon gains the following feature. Powerful: On a successful attack, roll an additional damage die and discard the lowest result."
+    "name": "Piedra Mayor",
+    "text": "Puedes fijar esta piedra a un arma que aún no tenga una característica. El arma obtiene la siguiente característica. Poderosa: En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
   },
   {
     "roll": 27,
     "id": "glider",
-    "name": "Glider",
-    "text": "While falling, you can mark a Stress to deploy this small parachute and glide safely to the ground."
+    "name": "Planeador",
+    "text": "Mientras caes, puedes marcar un Estrés para desplegar este pequeño paracaídas y planear con seguridad hasta el suelo."
   },
   {
     "roll": 28,
     "id": "ring-of-silence",
-    "name": "Ring of Silence",
-    "text": "Spend a Hope to activate this ring. Your footsteps are silent until your next rest."
+    "name": "Anillo del Silencio",
+    "text": "Gasta una Esperanza para activar este anillo. Tus pasos serán silenciosos hasta tu próximo descanso."
   },
   {
     "roll": 29,
     "id": "calming-pendant",
-    "name": "Calming Pendant",
-    "text": "When you would mark your last Stress, roll a d6. On a result of 5 or higher, don’t mark it."
+    "name": "Colgante de Calma",
+    "text": "Cuando fueras a marcar tu último Estrés, tira un d6. Con un resultado de 5 o más, no lo marcas."
   },
   {
     "roll": 30,
     "id": "dual-flask",
-    "name": "Dual Flask",
-    "text": "This flask can hold two different liquids. You can swap between them by flipping a small switch on the flask’s side."
+    "name": "Frasco Doble",
+    "text": "Este frasco puede contener dos líquidos distintos. Puedes alternar entre ellos accionando una pequeña palanca en su costado."
   },
   {
     "roll": 31,
     "id": "bag-of-ficklesand",
-    "name": "Bag of Ficklesand",
-    "text": "You can convince this small bag of sand to be much heavier or lighter with a successful Presence Roll (10). Additionally, on a successful Finesse Roll (10), you can blow a bit of sand into a target’s face to make them temporarily Vulnerable."
+    "name": "Bolsa de Arena Voluble",
+    "text": "Puedes convencer a esta pequeña bolsa de arena de volverse mucho más pesada o más ligera con una Tirada de Presencia exitosa (10). Además, con una Tirada de Destreza exitosa (10), puedes soplar un poco de arena al rostro de un objetivo para volverlo temporalmente Vulnerable."
   },
   {
     "roll": 32,
     "id": "ring-of-resistance",
-    "name": "Ring of Resistance",
-    "text": "Once per long rest, you can activate this ring after a successful attack against you to halve the damage."
+    "name": "Anillo de Resistencia",
+    "text": "Una vez por descanso largo, puedes activar este anillo tras un ataque exitoso en tu contra para reducir el daño a la mitad."
   },
   {
     "roll": 33,
     "id": "phoenix-feather",
-    "name": "Phoenix Feather",
-    "text": "If you have at least one Phoenix Feather on you when you fall unconscious, you gain a +1 bonus to the roll you make to determine whether you gain a scar."
+    "name": "Pluma de Fénix",
+    "text": "Si llevas al menos una Pluma de Fénix contigo cuando caes inconsciente, obtienes un bono de +1 a la tirada que determinas para saber si ganas una cicatriz."
   },
   {
     "roll": 34,
     "id": "box-of-many-goods",
-    "name": "Box of Many Goods",
-    "text": "Once per long rest, you can open this small box and roll a d12. On a result of 1–6, it’s empty. On a result of 7–10, it contains one random common consumable. On a result of 11–12, it contains two random common consumables."
+    "name": "Caja de las Mil Riquezas",
+    "text": "Una vez por descanso largo, puedes abrir esta pequeña caja y tirar un d12. Con un resultado de 1 a 6, está vacía. Con un resultado de 7 a 10, contiene un consumible común aleatorio. Con un resultado de 11 o 12, contiene dos consumibles comunes aleatorios."
   },
   {
     "roll": 35,
     "id": "airblade-charm",
-    "name": "Airblade Charm",
-    "text": "You can attach this charm to a weapon with a Melee range. Three times per rest, you can activate the charm and attack a target within Close range."
+    "name": "Amuleto de Filo del Viento",
+    "text": "Puedes fijar este amuleto a un arma con alcance Cuerpo a Cuerpo. Tres veces por descanso, puedes activar el amuleto y atacar a un objetivo dentro de alcance Cercano."
   },
   {
     "roll": 36,
     "id": "portal-seed",
-    "name": "Portal Seed",
-    "text": "You can plant this seed in the ground to grow a portal in that spot. The portal is ready to use in 24 hours. You can use this portal to travel to any other location where you planted a portal seed. A portal can be destroyed by dealing any amount of magic damage to it."
+    "name": "Semilla de Portal",
+    "text": "Puedes plantar esta semilla en el suelo para hacer crecer un portal en ese lugar. El portal estará listo para usarse en 24 horas. Puedes usar este portal para viajar a cualquier otro lugar donde hayas plantado una semilla de portal. Un portal puede destruirse infligiéndole cualquier cantidad de daño mágico."
   },
   {
     "roll": 37,
     "id": "paragons-chain",
-    "name": "Paragon’s Chain",
-    "text": "As a downtime move, you can meditate on an ideal or principle you hold dear and focus your will into this chain. Once per long rest, you can spend a Hope to roll a d20 as your Hope Die for rolls that directly align with that principle."
+    "name": "Cadena del Paradigma",
+    "text": "Como acción de descanso, puedes meditar sobre un ideal o principio que valoras profundamente y enfocar tu voluntad en esta cadena. Una vez por descanso largo, puedes gastar una Esperanza para tirar un d20 como tu Dado de Esperanza en tiradas directamente relacionadas con ese principio."
   },
   {
     "roll": 38,
     "id": "elusive-amulet",
-    "name": "Elusive Amulet",
-    "text": "Once per long rest, you can activate this amulet to become Hidden until you move. While Hidden in this way, you remain unseen even if an adversary moves to where they would normally see you."
+    "name": "Amuleto Escurridizo",
+    "text": "Una vez por descanso largo, puedes activar este amuleto para volverte Oculto hasta que te muevas. Mientras estés Oculto de esta manera, permaneces sin ser visto incluso si un adversario se mueve a un lugar donde normalmente te vería."
   },
   {
     "roll": 39,
     "id": "hopekeeper-locket",
-    "name": "Hopekeeper Locket",
-    "text": "During a long rest, if you have 6 Hope, you can spend a Hope to imbue this locket with your bountiful resolve. When you have 0 Hope, you can use the locket to immediately gain a Hope. The locket must be re-imbued before it can be used this way again."
+    "name": "Relicario Guardián de la Esperanza",
+    "text": "Durante un descanso largo, si tienes 6 de Esperanza, puedes gastar una Esperanza para imbuir este relicario con tu abundante resolución. Cuando tengas 0 de Esperanza, puedes usar el relicario para obtener una Esperanza al instante. El relicario debe volver a imbuirse antes de poder usarse de esta forma otra vez."
   },
   {
     "roll": 40,
     "id": "infinite-bag",
-    "name": "Infinite Bag",
-    "text": "When you store items in this bag, they are kept in a pocket dimension that never runs out of space. You can retrieve an item at any time."
+    "name": "Bolsa Infinita",
+    "text": "Cuando guardas objetos en esta bolsa, quedan almacenados en una dimensión de bolsillo que nunca se queda sin espacio. Puedes recuperar un objeto en cualquier momento."
   },
   {
     "roll": 41,
     "id": "stride-relic",
-    "name": "Stride Relic",
-    "text": "You gain a +1 bonus to your Agility. You can only carry one relic."
+    "name": "Reliquia del Ímpetu",
+    "text": "Obtienes un bono de +1 a tu Agilidad. Solo puedes llevar una reliquia."
   },
   {
     "roll": 42,
     "id": "bolster-relic",
-    "name": "Bolster Relic",
-    "text": "You gain a +1 bonus to your Strength. You can only carry one relic."
+    "name": "Reliquia del Vigor",
+    "text": "Obtienes un bono de +1 a tu Fuerza. Solo puedes llevar una reliquia."
   },
   {
     "roll": 43,
     "id": "control-relic",
-    "name": "Control Relic",
-    "text": "You gain a +1 bonus to your Finesse. You can only carry one relic."
+    "name": "Reliquia del Dominio",
+    "text": "Obtienes un bono de +1 a tu Destreza. Solo puedes llevar una reliquia."
   },
   {
     "roll": 44,
     "id": "attune-relic",
-    "name": "Attune Relic",
-    "text": "You gain a +1 bonus to your Instinct. You can only carry one relic."
+    "name": "Reliquia de la Sintonía",
+    "text": "Obtienes un bono de +1 a tu Instinto. Solo puedes llevar una reliquia."
   },
   {
     "roll": 45,
     "id": "charm-relic",
-    "name": "Charm Relic",
-    "text": "You gain a +1 bonus to your Presence. You can only carry one relic."
+    "name": "Reliquia del Carisma",
+    "text": "Obtienes un bono de +1 a tu Presencia. Solo puedes llevar una reliquia."
   },
   {
     "roll": 46,
     "id": "enlighten-relic",
-    "name": "Enlighten Relic",
-    "text": "You gain a +1 bonus to your Knowledge. You can only carry one relic."
+    "name": "Reliquia de la Iluminación",
+    "text": "Obtienes un bono de +1 a tu Conocimiento. Solo puedes llevar una reliquia."
   },
   {
     "roll": 47,
     "id": "honing-relic",
-    "name": "Honing Relic",
-    "text": "You gain a +1 bonus to an Experience of your choice. You can only carry one relic."
+    "name": "Reliquia del Perfeccionamiento",
+    "text": "Obtienes un bono de +1 a una Experiencia de tu elección. Solo puedes llevar una reliquia."
   },
   {
     "roll": 48,
     "id": "flickerfly-pendant",
-    "name": "Flickerfly Pendant",
-    "text": "While you carry this pendant, your weapons with a Melee range that deal physical damage have a gossamer sheen and can attack targets within Very Close range."
+    "name": "Colgante Luciérnaga",
+    "text": "Mientras portes este colgante, tus armas con alcance Cuerpo a Cuerpo que infligen daño físico adquieren un brillo etéreo y pueden atacar objetivos dentro de alcance Muy Cercano."
   },
   {
     "roll": 49,
     "id": "lakestrider-boots",
-    "name": "Lakestrider Boots",
-    "text": "You can walk on the surface of water as if it were soft ground."
+    "name": "Botas Caminantes del Lago",
+    "text": "Puedes caminar sobre la superficie del agua como si fuera tierra firme."
   },
   {
     "roll": 50,
     "id": "clay-companion",
-    "name": "Clay Companion",
-    "text": "When you sculpt this ball of clay into a clay animal companion, it behaves as that animal. For example, a clay spider can spin clay webs, while a clay bird can fly. The clay companion retains memory and identity across different shapes, but they can adopt new mannerisms with each form."
+    "name": "Compañero de Arcilla",
+    "text": "Cuando esculpes esta bola de arcilla en un animal compañero de arcilla, este se comporta como ese animal. Por ejemplo, una araña de arcilla puede tejer telarañas de arcilla, mientras que un ave de arcilla puede volar. El compañero de arcilla conserva la memoria y la identidad a través de sus distintas formas, pero puede adoptar nuevos gestos con cada nueva forma."
   },
   {
     "roll": 51,
     "id": "mythic-dust-recipe",
-    "name": "Mythic Dust Recipe",
-    "text": "As a downtime move, you can use a handful of fine gold dust to craft Mythic Dust."
+    "name": "Receta de Polvo Mítico",
+    "text": "Como acción de descanso, puedes usar un puñado de fino polvo dorado para elaborar Polvo Mítico."
   },
   {
     "roll": 52,
     "id": "shard-of-memory",
-    "name": "Shard of Memory",
-    "text": "Once per long rest, you can spend 2 Hope to recall a domain card from your vault instead of paying its Recall Cost."
+    "name": "Fragmento de Memoria",
+    "text": "Una vez por descanso largo, puedes gastar 2 de Esperanza para recuperar una carta de dominio de tu bóveda sin pagar su Costo de Recuperación."
   },
   {
     "roll": 53,
     "id": "gem-of-alacrity",
-    "name": "Gem of Alacrity",
-    "text": "You can attach this gem to a weapon, allowing you to use your Agility when making an attack with that weapon."
+    "name": "Gema de la Prontitud",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Agilidad al hacer un ataque con ella."
   },
   {
     "roll": 54,
     "id": "gem-of-might",
-    "name": "Gem of Might",
-    "text": "You can attach this gem to a weapon, allowing you to use your Strength when making an attack with that weapon."
+    "name": "Gema del Poderío",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Fuerza al hacer un ataque con ella."
   },
   {
     "roll": 55,
     "id": "gem-of-precision",
-    "name": "Gem of Precision",
-    "text": "You can attach this gem to a weapon, allowing you to use your Finesse when making an attack with that weapon."
+    "name": "Gema de la Precisión",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Destreza al hacer un ataque con ella."
   },
   {
     "roll": 56,
     "id": "gem-of-insight",
-    "name": "Gem of Insight",
-    "text": "You can attach this gem to a weapon, allowing you to use your Instinct when making an attack with that weapon."
+    "name": "Gema de la Perspicacia",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Instinto al hacer un ataque con ella."
   },
   {
     "roll": 57,
     "id": "gem-of-audacity",
-    "name": "Gem of Audacity",
-    "text": "You can attach this gem to a weapon, allowing you to use your Presence when making an attack with that weapon."
+    "name": "Gema de la Audacia",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Presencia al hacer un ataque con ella."
   },
   {
     "roll": 58,
     "id": "gem-of-sagacity",
-    "name": "Gem of Sagacity",
-    "text": "You can attach this gem to a weapon, allowing you to use your Knowledge when making an attack with that weapon."
+    "name": "Gema de la Sagacidad",
+    "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Conocimiento al hacer un ataque con ella."
   },
   {
     "roll": 59,
     "id": "ring-of-unbreakable-resolve",
-    "name": "Ring of Unbreakable Resolve",
-    "text": "Once per session, when the GM spends a Fear, you can spend 4 Hope to cancel the effects of that spent Fear."
+    "name": "Anillo de Resolución Inquebrantable",
+    "text": "Una vez por sesión, cuando el GM gasta un Miedo, puedes gastar 4 de Esperanza para anular los efectos de ese Miedo gastado."
   },
   {
     "roll": 60,
     "id": "belt-of-unity",
-    "name": "Belt of Unity",
-    "text": "Once per session, you can spend 5 Hope to lead a Tag Team Roll with three PCs instead of two."
+    "name": "Cinturón de la Unidad",
+    "text": "Una vez por sesión, puedes gastar 5 de Esperanza para liderar una Tirada en Equipo con tres PJ en lugar de dos."
   }
 ]

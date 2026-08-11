@@ -27,14 +27,14 @@ export function DamageDialog({
   const maxSlots = direct ? 0 : armorSlotsAvailable;
 
   return (
-    <Dialog title="Take damage" onClose={onClose}>
+    <Dialog title="Recibir daño" onClose={onClose}>
       <p className="muted">
-        Major {thresholds.major} · Severe {thresholds.severe}
+        Daño Mayor {thresholds.major} · Daño Grave {thresholds.severe}
       </p>
 
       <div className="grid cols-2">
         <div>
-          <label htmlFor="incoming">Incoming damage</label>
+          <label htmlFor="incoming">Daño recibido</label>
           <input
             id="incoming"
             type="number"
@@ -44,21 +44,21 @@ export function DamageDialog({
           />
         </div>
         <div>
-          <label htmlFor="damage-type">Damage type</label>
+          <label htmlFor="damage-type">Tipo de daño</label>
           <select
             id="damage-type"
             value={damageType}
             onChange={(event) => setDamageType(event.target.value as IncomingDamageType)}
           >
-            <option value="physical">Physical</option>
-            <option value="magic">Magic</option>
-            <option value="both">Physical and magic</option>
+            <option value="physical">Físico</option>
+            <option value="magic">Mágico</option>
+            <option value="both">Físico y mágico</option>
           </select>
         </div>
       </div>
 
       <fieldset>
-        <legend>Reduction</legend>
+        <legend>Reducción</legend>
         <div className="row">
           <button
             type="button"
@@ -69,13 +69,13 @@ export function DamageDialog({
               if (next) setArmorSlots(0);
             }}
           >
-            {direct ? 'Direct damage (ignores armor)' : 'Normal damage'}
+            {direct ? 'Daño directo (ignora la armadura)' : 'Daño normal'}
           </button>
         </div>
 
         <div className="mt-3">
           <label htmlFor="armor-slots">
-            Armor Slots to mark ({armorSlotsAvailable} available)
+            Ranuras de Armadura a marcar ({armorSlotsAvailable} disponibles)
           </label>
           <input
             id="armor-slots"
@@ -89,7 +89,9 @@ export function DamageDialog({
             }
           />
           {direct ? (
-            <p className="field-error">Direct damage can’t be reduced by marking Armor Slots.</p>
+            <p className="field-error">
+              El daño directo no se puede reducir marcando Ranuras de Armadura.
+            </p>
           ) : null}
         </div>
       </fieldset>
@@ -98,7 +100,7 @@ export function DamageDialog({
         type="button"
         onClick={() => onApply({ incoming, damageType, direct, armorSlotsToMark })}
       >
-        Apply damage
+        Aplicar daño
       </button>
     </Dialog>
   );

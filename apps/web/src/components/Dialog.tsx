@@ -32,7 +32,7 @@ export function Dialog({ title, onClose, children }: DialogProps) {
       >
         <div className="card-head">
           <h2>{title}</h2>
-          <button type="button" onClick={onClose} aria-label="Close">
+          <button type="button" onClick={onClose} aria-label="Cerrar">
             ✕
           </button>
         </div>

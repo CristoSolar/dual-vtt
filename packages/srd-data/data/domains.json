@@ -2,55 +2,55 @@
   {
     "id": "arcana",
     "name": "Arcana",
-    "text": "Arcana is the domain of innate and instinctual magic. Those who choose this path tap into the raw, enigmatic forces of the realms to manipulate both their own energy and the elements. Arcana offers wielders a volatile power, but it is incredibly potent when correctly channeled.",
+    "text": "Arcana es el dominio de la magia innata e instintiva. Quienes eligen este camino se conectan con las fuerzas crudas y enigmáticas de los reinos para manipular tanto su propia energía como los elementos. Arcana ofrece a sus portadores un poder volátil, pero increíblemente potente cuando se canaliza correctamente.",
     "classes": ["druid", "sorcerer"]
   },
   {
     "id": "blade",
-    "name": "Blade",
-    "text": "Blade is the domain of weapon mastery. Whether by steel, bow, or perhaps a more specialized arm, those who follow this path have the skill to cut short the lives of others. Wielders of Blade dedicate themselves to achieving inexorable power over death.",
+    "name": "Filo",
+    "text": "Filo es el dominio de la maestría con las armas. Ya sea con acero, con arco o con un arma más especializada, quienes siguen este camino tienen la habilidad de acortar la vida de otros. Los portadores de Filo se dedican a alcanzar un poder inexorable sobre la muerte.",
     "classes": ["guardian", "warrior"]
   },
   {
     "id": "bone",
-    "name": "Bone",
-    "text": "Bone is the domain of tactics and the body. Practitioners of this domain have an uncanny control over their own physical abilities and an eye for predicting the behaviors of others in combat. Adherents to Bone gain an unparalleled understanding of bodies and their movements.",
+    "name": "Hueso",
+    "text": "Hueso es el dominio de la táctica y el cuerpo. Sus practicantes tienen un control asombroso sobre sus propias capacidades físicas y un ojo certero para predecir el comportamiento de otros en combate. Los seguidores de Hueso adquieren una comprensión sin igual de los cuerpos y sus movimientos.",
     "classes": ["ranger", "warrior"]
   },
   {
     "id": "codex",
-    "name": "Codex",
-    "text": "Codex is the domain of intensive magical study. Those who seek magical knowledge turn to the equations of power recorded in books, written on scrolls, etched into walls, or tattooed on bodies. Codex offers a commanding and versatile understanding of magic to devotees who pursue knowledge beyond the boundaries of common wisdom.",
+    "name": "Códice",
+    "text": "Códice es el dominio del estudio intensivo de la magia. Quienes buscan conocimiento mágico recurren a las ecuaciones de poder registradas en libros, escritas en pergaminos, grabadas en muros o tatuadas en cuerpos. Códice ofrece a sus devotos una comprensión dominante y versátil de la magia, más allá de los límites del saber común.",
     "classes": ["bard", "wizard"]
   },
   {
     "id": "grace",
-    "name": "Grace",
-    "text": "Grace is the domain of charisma. Through rapturous storytelling, charming spells, or a shroud of lies, those who channel this power define the realities of their adversaries, bending perception to their will. Grace offers its wielders raw magnetism and mastery over language.",
+    "name": "Gracia",
+    "text": "Gracia es el dominio del carisma. A través de relatos arrebatadores, hechizos encantadores o un velo de mentiras, quienes canalizan este poder definen la realidad de sus adversarios, doblegando su percepción a voluntad. Gracia ofrece a sus portadores un magnetismo natural y el dominio del lenguaje.",
     "classes": ["bard", "rogue"]
   },
   {
     "id": "midnight",
-    "name": "Midnight",
-    "text": "Midnight is the domain of shadows and secrecy. Whether by clever tricks, deft magic, or the cloak of night, those who channel these forces practice the art of obscurity and can uncover sequestered treasures. Midnight offers practitioners the power to control and create enigmas.",
+    "name": "Medianoche",
+    "text": "Medianoche es el dominio de las sombras y el secretismo. Ya sea mediante trucos ingeniosos, magia sutil o el manto de la noche, quienes canalizan estas fuerzas practican el arte del ocultamiento y pueden desvelar tesoros escondidos. Medianoche otorga a sus practicantes el poder de controlar y crear enigmas.",
     "classes": ["rogue", "sorcerer"]
   },
   {
     "id": "sage",
-    "name": "Sage",
-    "text": "Sage is the domain of the natural world. Those who walk this path tap into the unfettered power of the earth and its creatures to unleash raw magic. Sage grants its adherents the vitality of a blooming flower and the ferocity of a ravenous predator.",
+    "name": "Sabio",
+    "text": "Sabio es el dominio del mundo natural. Quienes recorren este camino se conectan con el poder desatado de la tierra y sus criaturas para desplegar magia pura. Sabio otorga a sus seguidores la vitalidad de una flor en pleno florecimiento y la ferocidad de un depredador voraz.",
     "classes": ["druid", "ranger"]
   },
   {
     "id": "splendor",
-    "name": "Splendor",
-    "text": "Splendor is the domain of life. Through this magic, followers gain the ability to heal and, to an extent, control death. Splendor offers its disciples the magnificent ability to both give and end life.",
+    "name": "Esplendor",
+    "text": "Esplendor es el dominio de la vida. A través de esta magia, sus seguidores obtienen la capacidad de curar y, en cierta medida, controlar la muerte. Esplendor otorga a sus discípulos la magnífica capacidad de dar y de arrebatar la vida.",
     "classes": ["seraph", "wizard"]
   },
   {
     "id": "valor",
     "name": "Valor",
-    "text": "Valor is the domain of protection. Whether through attack or defense, those who choose this discipline channel formidable strength to protect their allies in battle. Valor offers great power to those who raise their shields in defense of others.",
+    "text": "Valor es el dominio de la protección. Ya sea mediante el ataque o la defensa, quienes eligen esta disciplina canalizan una fuerza formidable para proteger a sus aliados en batalla. Valor otorga un gran poder a quienes alzan su escudo en defensa de otros.",
     "classes": ["guardian", "seraph"]
   }
 ]

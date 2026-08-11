@@ -59,11 +59,14 @@ export function requiresSpellcast(weapon: Weapon): boolean {
 }
 
 /**
- * The two options in a class's `classItems`, which the SRD prints as "X or Y".
- * Falls back to the whole string if it isn't a two-way choice.
+ * The two options in a class's `classItems`, which the SRD prints as "X or Y"
+ * (" o " in the Spanish data). Falls back to the whole string if it isn't a
+ * two-way choice.
  */
 export function classItemOptions(characterClass: CharacterClass): readonly string[] {
-  const parts = characterClass.classItems.split(' or ');
+  const parts = characterClass.classItems.includes(' or ')
+    ? characterClass.classItems.split(' or ')
+    : characterClass.classItems.split(' o ');
   if (parts.length !== 2) return [characterClass.classItems];
   const [first, second] = parts;
   if (first === undefined || second === undefined) return [characterClass.classItems];

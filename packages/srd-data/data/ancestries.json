@@ -5,13 +5,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Purposeful Design",
-        "text": "Decide who made you and for what purpose. At character creation, choose one of your Experiences that best aligns with this purpose and gain a permanent +1 bonus to it."
+        "name": "Diseño con Propósito",
+        "text": "Decide quién te construyó y con qué propósito. Durante la creación de personaje, elige una de tus Experiencias que mejor se alinee con ese propósito y obtén un bonificador permanente de +1 a ella."
       },
       {
         "slot": "second",
-        "name": "Efficient",
-        "text": "When you take a short rest, you can choose a long rest move instead of a short rest move."
+        "name": "Eficiente",
+        "text": "Cuando tomes un descanso corto, puedes elegir una acción de descanso largo en lugar de una de descanso corto."
       }
     ]
   },
@@ -21,77 +21,77 @@
     "features": [
       {
         "slot": "first",
-        "name": "Scales",
-        "text": "Your scales act as natural protection. When you would take Severe damage, you can mark a Stress to mark 1 fewer Hit Points."
+        "name": "Escamas",
+        "text": "Tus escamas actúan como protección natural. Cuando vayas a recibir daño Severo, puedes marcar un Estrés para marcar 1 Punto de Vida menos."
       },
       {
         "slot": "second",
-        "name": "Elemental Breath",
-        "text": "Choose an element for your breath (such as electricity, fire, or ice). You can use this breath against a target or group of targets within Very Close range, treating it as an Instinct weapon that deals d8 magic damage using your Proficiency."
+        "name": "Aliento Elemental",
+        "text": "Elige un elemento para tu aliento (como electricidad, fuego o hielo). Puedes usar este aliento contra un objetivo o grupo de objetivos a alcance Muy Cercano, tratándolo como un arma de Instinto que inflige d8 de daño mágico usando tu Competencia."
       }
     ]
   },
   {
     "id": "dwarf",
-    "name": "Dwarf",
+    "name": "Enano",
     "features": [
       {
         "slot": "first",
-        "name": "Thick Skin",
-        "text": "When you take Minor damage, you can mark 2 Stress instead of marking a Hit Point."
+        "name": "Piel Gruesa",
+        "text": "Cuando recibas daño Menor, puedes marcar 2 de Estrés en lugar de marcar un Punto de Vida."
       },
       {
         "slot": "second",
-        "name": "Increased Fortitude",
-        "text": "Spend 3 Hope to halve incoming physical damage."
+        "name": "Fortaleza Aumentada",
+        "text": "Gasta 3 de Esperanza para reducir a la mitad el daño físico entrante."
       }
     ]
   },
   {
     "id": "elf",
-    "name": "Elf",
+    "name": "Elfo",
     "features": [
       {
         "slot": "first",
-        "name": "Quick Reactions",
-        "text": "Mark a Stress to gain advantage on a reaction roll."
+        "name": "Reflejos Rápidos",
+        "text": "Marca un Estrés para obtener ventaja en una tirada de reacción."
       },
       {
         "slot": "second",
-        "name": "Celestial Trance",
-        "text": "During a rest, you can drop into a trance to choose an additional downtime move."
+        "name": "Trance Celestial",
+        "text": "Durante un descanso, puedes entrar en trance para elegir una acción de tiempo libre adicional."
       }
     ]
   },
   {
     "id": "faerie",
-    "name": "Faerie",
+    "name": "Feérico",
     "features": [
       {
         "slot": "first",
-        "name": "Luckbender",
-        "text": "Once per session, after you or a willing ally within Close range makes an action roll, you can spend 3 Hope to reroll the Duality Dice."
+        "name": "Tejedor de Suerte",
+        "text": "Una vez por sesión, después de que tú o un aliado dispuesto a alcance Cercano hagas una tirada de acción, puedes gastar 3 de Esperanza para volver a tirar los Dados de Dualidad."
       },
       {
         "slot": "second",
-        "name": "Wings",
-        "text": "You can fly. While flying, you can mark a Stress after an adversary makes an attack against you to gain a +2 bonus to your Evasion against that attack."
+        "name": "Alas",
+        "text": "Puedes volar. Mientras vuelas, puedes marcar un Estrés después de que un adversario te ataque para obtener un bonificador de +2 a tu Evasión contra ese ataque."
       }
     ]
   },
   {
     "id": "faun",
-    "name": "Faun",
+    "name": "Fauno",
     "features": [
       {
         "slot": "first",
-        "name": "Caprine Leap",
-        "text": "You can leap anywhere within Close range as though you were using normal movement, allowing you to vault obstacles, jump across gaps, or scale barriers with ease."
+        "name": "Salto Caprino",
+        "text": "Puedes saltar a cualquier lugar a alcance Cercano como si usaras movimiento normal, lo que te permite saltar obstáculos, cruzar huecos o escalar barreras con facilidad."
       },
       {
         "slot": "second",
-        "name": "Kick",
-        "text": "When you succeed on an attack against a target within Melee range, you can mark a Stress to kick yourself off them, dealing an extra 2d6 damage and knocking back either yourself or the target to Very Close range."
+        "name": "Patada",
+        "text": "Cuando tengas éxito en un ataque contra un objetivo a alcance Cuerpo a Cuerpo, puedes marcar un Estrés para impulsarte con una patada, infligiendo 2d6 de daño adicional y empujando a ti mismo o al objetivo hasta alcance Muy Cercano."
       }
     ]
   },
@@ -101,13 +101,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Charge",
-        "text": "When you succeed on an Agility Roll to move from Far or Very Far range into Melee range with one or more targets, you can mark a Stress to deal 1d12 physical damage to all targets within Melee range."
+        "name": "Embestida",
+        "text": "Cuando tengas éxito en una Tirada de Agilidad para moverte desde alcance Lejano o Muy Lejano hasta alcance Cuerpo a Cuerpo con uno o más objetivos, puedes marcar un Estrés para infligir 1d12 de daño físico a todos los objetivos a alcance Cuerpo a Cuerpo."
       },
       {
         "slot": "second",
-        "name": "Unshakable",
-        "text": "When you would mark a Stress, roll a d6. On a result of 6, don't mark it."
+        "name": "Inquebrantable",
+        "text": "Cuando vayas a marcar un Estrés, tira un d6. Si el resultado es 6, no lo marques."
       }
     ]
   },
@@ -117,13 +117,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Fungril Network",
-        "text": "Make an Instinct Roll (12) to use your mycelial array to speak with others of your ancestry. On a success, you can communicate across any distance."
+        "name": "Red Fungril",
+        "text": "Haz una Tirada de Instinto (12) para usar tu red micelial y comunicarte con otros de tu ascendencia. Con éxito, puedes comunicarte a cualquier distancia."
       },
       {
         "slot": "second",
-        "name": "Death Connection",
-        "text": "While touching a corpse that died recently, you can mark a Stress to extract one memory from the corpse related to a specific emotion or sensation of your choice."
+        "name": "Conexión con la Muerte",
+        "text": "Mientras tocas un cadáver que murió recientemente, puedes marcar un Estrés para extraer un recuerdo del cadáver relacionado con una emoción o sensación específica de tu elección."
       }
     ]
   },
@@ -133,29 +133,29 @@
     "features": [
       {
         "slot": "first",
-        "name": "Shell",
-        "text": "Gain a bonus to your damage thresholds equal to your Proficiency."
+        "name": "Caparazón",
+        "text": "Obtén un bonificador a tus umbrales de daño igual a tu Competencia."
       },
       {
         "slot": "second",
-        "name": "Retract",
-        "text": "Mark a Stress to retract into your shell. While in your shell, you have resistance to physical damage, you have disadvantage on action rolls, and you can't move."
+        "name": "Retraerse",
+        "text": "Marca un Estrés para retraerte dentro de tu caparazón. Mientras estés en tu caparazón, tienes resistencia al daño físico, tienes desventaja en tiradas de acción y no puedes moverte."
       }
     ]
   },
   {
     "id": "giant",
-    "name": "Giant",
+    "name": "Gigante",
     "features": [
       {
         "slot": "first",
-        "name": "Endurance",
-        "text": "Gain an additional Hit Point slot at character creation."
+        "name": "Resistencia",
+        "text": "Obtén una casilla de Puntos de Vida adicional durante la creación de personaje."
       },
       {
         "slot": "second",
-        "name": "Reach",
-        "text": "Treat any weapon, ability, spell, or other feature that has a Melee range as though it has a Very Close range instead."
+        "name": "Alcance",
+        "text": "Trata cualquier arma, habilidad, hechizo u otra característica que tenga alcance Cuerpo a Cuerpo como si tuviera alcance Muy Cercano en su lugar."
       }
     ]
   },
@@ -165,45 +165,45 @@
     "features": [
       {
         "slot": "first",
-        "name": "Surefooted",
-        "text": "You ignore disadvantage on Agility Rolls."
+        "name": "Pie Firme",
+        "text": "Ignoras la desventaja en Tiradas de Agilidad."
       },
       {
         "slot": "second",
-        "name": "Danger Sense",
-        "text": "Once per rest, mark a Stress to force an adversary to reroll an attack against you or an ally within Very Close range."
+        "name": "Sentido del Peligro",
+        "text": "Una vez por descanso, marca un Estrés para forzar a un adversario a repetir un ataque contra ti o un aliado a alcance Muy Cercano."
       }
     ]
   },
   {
     "id": "halfling",
-    "name": "Halfling",
+    "name": "Mediano",
     "features": [
       {
         "slot": "first",
-        "name": "Luckbringer",
-        "text": "At the start of each session, everyone in your party gains a Hope."
+        "name": "Portador de Suerte",
+        "text": "Al comienzo de cada sesión, todos en tu grupo obtienen una Esperanza."
       },
       {
         "slot": "second",
-        "name": "Internal Compass",
-        "text": "When you roll a 1 on your Hope Die, you can reroll it."
+        "name": "Brújula Interior",
+        "text": "Cuando saques un 1 en tu Dado de Esperanza, puedes volver a tirarlo."
       }
     ]
   },
   {
     "id": "human",
-    "name": "Human",
+    "name": "Humano",
     "features": [
       {
         "slot": "first",
-        "name": "High Stamina",
-        "text": "Gain an additional Stress slot at character creation."
+        "name": "Alta Resistencia",
+        "text": "Obtén una casilla de Estrés adicional durante la creación de personaje."
       },
       {
         "slot": "second",
-        "name": "Adaptability",
-        "text": "When you fail a roll that utilized one of your Experiences, you can mark a Stress to reroll."
+        "name": "Adaptabilidad",
+        "text": "Cuando falles una tirada en la que usaste una de tus Experiencias, puedes marcar un Estrés para repetirla."
       }
     ]
   },
@@ -213,13 +213,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Fearless",
-        "text": "When you roll with Fear, you can mark 2 Stress to change it into a roll with Hope instead."
+        "name": "Intrépido",
+        "text": "Cuando tires con Miedo, puedes marcar 2 de Estrés para convertirla en una tirada con Esperanza en su lugar."
       },
       {
         "slot": "second",
-        "name": "Dread Visage",
-        "text": "You have advantage on rolls to intimidate hostile creatures."
+        "name": "Semblante Temible",
+        "text": "Tienes ventaja en tiradas para intimidar a criaturas hostiles."
       }
     ]
   },
@@ -229,29 +229,29 @@
     "features": [
       {
         "slot": "first",
-        "name": "Feline Instincts",
-        "text": "When you make an Agility Roll, you can spend 2 Hope to reroll your Hope Die."
+        "name": "Instintos Felinos",
+        "text": "Cuando hagas una Tirada de Agilidad, puedes gastar 2 de Esperanza para volver a tirar tu Dado de Esperanza."
       },
       {
         "slot": "second",
-        "name": "Retracting Claws",
-        "text": "Make an Agility Roll to scratch a target within Melee range. On a success, they become temporarily Vulnerable."
+        "name": "Garras Retráctiles",
+        "text": "Haz una Tirada de Agilidad para arañar a un objetivo a alcance Cuerpo a Cuerpo. Con éxito, quedan temporalmente Vulnerables."
       }
     ]
   },
   {
     "id": "orc",
-    "name": "Orc",
+    "name": "Orco",
     "features": [
       {
         "slot": "first",
-        "name": "Sturdy",
-        "text": "When you have 1 Hit Point remaining, attacks against you have disadvantage."
+        "name": "Recio",
+        "text": "Cuando te quede 1 Punto de Vida, los ataques contra ti tienen desventaja."
       },
       {
         "slot": "second",
-        "name": "Tusks",
-        "text": "When you succeed on an attack against a target within Melee range, you can spend a Hope to gore the target with your tusks, dealing an extra 1d6 damage."
+        "name": "Colmillos",
+        "text": "Cuando tengas éxito en un ataque contra un objetivo a alcance Cuerpo a Cuerpo, puedes gastar una Esperanza para embestir al objetivo con tus colmillos, infligiendo 1d6 de daño adicional."
       }
     ]
   },
@@ -261,13 +261,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Amphibious",
-        "text": "You can breathe and move naturally underwater."
+        "name": "Anfibio",
+        "text": "Puedes respirar y moverte con naturalidad bajo el agua."
       },
       {
         "slot": "second",
-        "name": "Long Tongue",
-        "text": "You can use your long tongue to grab onto things within Close range. Mark a Stress to use your tongue as a Finesse Close weapon that deals d12 physical damage using your Proficiency."
+        "name": "Lengua Larga",
+        "text": "Puedes usar tu lengua larga para agarrarte a cosas a alcance Cercano. Marca un Estrés para usar tu lengua como un arma de Destreza a alcance Cercano que inflige d12 de daño físico usando tu Competencia."
       }
     ]
   },
@@ -277,13 +277,13 @@
     "features": [
       {
         "slot": "first",
-        "name": "Natural Climber",
-        "text": "You have advantage on Agility Rolls that involve balancing and climbing."
+        "name": "Trepador Natural",
+        "text": "Tienes ventaja en Tiradas de Agilidad que implican mantener el equilibrio y trepar."
       },
       {
         "slot": "second",
-        "name": "Nimble",
-        "text": "Gain a permanent +1 bonus to your Evasion at character creation."
+        "name": "Ágil",
+        "text": "Obtén un bonificador permanente de +1 a tu Evasión durante la creación de personaje."
       }
     ]
   }

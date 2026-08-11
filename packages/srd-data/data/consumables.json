@@ -2,361 +2,361 @@
   {
     "roll": 1,
     "id": "stride-potion",
-    "name": "Stride Potion",
-    "text": "You gain a +1 bonus to your next Agility Roll."
+    "name": "Poción de Zancada",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Agilidad."
   },
   {
     "roll": 2,
     "id": "bolster-potion",
-    "name": "Bolster Potion",
-    "text": "You gain a +1 bonus to your next Strength Roll."
+    "name": "Poción de Vigor",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Fuerza."
   },
   {
     "roll": 3,
     "id": "control-potion",
-    "name": "Control Potion",
-    "text": "You gain a +1 bonus to your next Finesse Roll."
+    "name": "Poción de Control",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Destreza."
   },
   {
     "roll": 4,
     "id": "attune-potion",
-    "name": "Attune Potion",
-    "text": "You gain a +1 bonus to your next Instinct Roll."
+    "name": "Poción de Sintonía",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Instinto."
   },
   {
     "roll": 5,
     "id": "charm-potion",
-    "name": "Charm Potion",
-    "text": "You gain a +1 bonus to your next Presence Roll."
+    "name": "Poción de Encanto",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Presencia."
   },
   {
     "roll": 6,
     "id": "enlighten-potion",
-    "name": "Enlighten Potion",
-    "text": "You gain a +1 bonus to your next Knowledge Roll."
+    "name": "Poción de Iluminación",
+    "text": "Ganas un bonificador de +1 a tu próxima Tirada de Conocimiento."
   },
   {
     "roll": 7,
     "id": "minor-health-potion",
-    "name": "Minor Health Potion",
-    "text": "Clear 1d4 HP."
+    "name": "Poción de Vida Menor",
+    "text": "Recupera 1d4 PV."
   },
   {
     "roll": 8,
     "id": "minor-stamina-potion",
-    "name": "Minor Stamina Potion",
-    "text": "Clear 1d4 Stress."
+    "name": "Poción de Vigor Menor",
+    "text": "Elimina 1d4 de Estrés."
   },
   {
     "roll": 9,
     "id": "grindletooth-venom",
-    "name": "Grindletooth Venom",
-    "text": "You can apply this venom to a weapon that deals physical damage to add a d6 to your next damage roll with that weapon."
+    "name": "Veneno de Diente de Grindle",
+    "text": "Puedes aplicar este veneno a un arma que infrinja daño físico para añadir un d6 a tu próxima tirada de daño con esa arma."
   },
   {
     "roll": 10,
     "id": "varik-leaves",
-    "name": "Varik Leaves",
-    "text": "You can eat these paired leaves to immediately gain 2 Hope."
+    "name": "Hojas de Varik",
+    "text": "Puedes comer este par de hojas para ganar de inmediato 2 de Esperanza."
   },
   {
     "roll": 11,
     "id": "vial-of-moondrip",
-    "name": "Vial of Moondrip",
-    "text": "When you drink the contents of this vial, you can see in total darkness until your next rest."
+    "name": "Frasco de Rocío Lunar",
+    "text": "Cuando bebes el contenido de este frasco, puedes ver en total oscuridad hasta tu próximo descanso."
   },
   {
     "roll": 12,
     "id": "unstable-arcane-shard",
-    "name": "Unstable Arcane Shard",
-    "text": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 1d20 magic damage."
+    "name": "Esquirla Arcana Inestable",
+    "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 1d20 de daño mágico."
   },
   {
     "roll": 13,
     "id": "potion-of-stability",
-    "name": "Potion of Stability",
-    "text": "You can drink this potion to choose one additional downtime move."
+    "name": "Poción de Estabilidad",
+    "text": "Puedes beber esta poción para elegir una maniobra de descanso adicional."
   },
   {
     "roll": 14,
     "id": "improved-grindletooth-venom",
-    "name": "Improved Grindletooth Venom",
-    "text": "You can apply this venom to a weapon that deals physical damage to add a d8 to your next damage roll with that weapon."
+    "name": "Veneno de Diente de Grindle Mejorado",
+    "text": "Puedes aplicar este veneno a un arma que infrinja daño físico para añadir un d8 a tu próxima tirada de daño con esa arma."
   },
   {
     "roll": 15,
     "id": "morphing-clay",
-    "name": "Morphing Clay",
-    "text": "You can spend a Hope to use this clay, altering your face enough to make you unrecognizable until your next rest."
+    "name": "Arcilla Transmutadora",
+    "text": "Puedes gastar una Esperanza para usar esta arcilla, alterando tu rostro lo suficiente para volverte irreconocible hasta tu próximo descanso."
   },
   {
     "roll": 16,
     "id": "vial-of-darksmoke",
-    "name": "Vial of Darksmoke",
-    "text": "When an adversary attacks you, use this vial and roll a number of d6s equal to your Agility. Add the highest result to your Evasion against the attack."
+    "name": "Frasco de Humo Oscuro",
+    "text": "Cuando un adversario te ataca, usa este frasco y tira una cantidad de d6 igual a tu Agilidad. Suma el resultado más alto a tu Evasión contra ese ataque."
   },
   {
     "roll": 17,
     "id": "jumping-root",
-    "name": "Jumping Root",
-    "text": "Eat this root to leap up to Far range once without needing to roll."
+    "name": "Raíz Saltarina",
+    "text": "Come esta raíz para saltar hasta el alcance Lejano una vez sin necesidad de tirar dados."
   },
   {
     "roll": 18,
     "id": "snap-powder",
-    "name": "Snap Powder",
-    "text": "Mark a Stress and clear a HP."
+    "name": "Polvo Restallante",
+    "text": "Marca un Estrés y recupera un PV."
   },
   {
     "roll": 19,
     "id": "health-potion",
-    "name": "Health Potion",
-    "text": "Clear 1d4+1 HP."
+    "name": "Poción de Vida",
+    "text": "Recupera 1d4+1 PV."
   },
   {
     "roll": 20,
     "id": "stamina-potion",
-    "name": "Stamina Potion",
-    "text": "Clear 1d4+1 Stress."
+    "name": "Poción de Vigor",
+    "text": "Elimina 1d4+1 de Estrés."
   },
   {
     "roll": 21,
     "id": "armor-stitcher",
-    "name": "Armor Stitcher",
-    "text": "You can use this stitcher to spend any number of Hope and clear that many Armor Slots."
+    "name": "Restauradora de Armadura",
+    "text": "Puedes usar esta herramienta para gastar cualquier cantidad de Esperanza y eliminar esa misma cantidad de Ranuras de Armadura."
   },
   {
     "roll": 22,
     "id": "gill-salve",
-    "name": "Gill Salve",
-    "text": "You can apply this salve to your neck to breathe underwater for a number of minutes equal to your level."
+    "name": "Ungüento de Branquias",
+    "text": "Puedes aplicar este ungüento en tu cuello para respirar bajo el agua durante una cantidad de minutos igual a tu nivel."
   },
   {
     "roll": 23,
     "id": "replication-parchment",
-    "name": "Replication Parchment",
-    "text": "By touching this piece of parchment to another, you can perfectly copy the second parchment’s contents. Once used, this parchment becomes mundane paper."
+    "name": "Pergamino de Réplica",
+    "text": "Al tocar este trozo de pergamino con otro, puedes copiar a la perfección el contenido del segundo pergamino. Una vez usado, este pergamino se convierte en papel corriente."
   },
   {
     "roll": 24,
     "id": "improved-arcane-shard",
-    "name": "Improved Arcane Shard",
-    "text": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 2d20 magic damage."
+    "name": "Esquirla Arcana Mejorada",
+    "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 2d20 de daño mágico."
   },
   {
     "roll": 25,
     "id": "major-stride-potion",
-    "name": "Major Stride Potion",
-    "text": "You gain a +1 bonus to your Agility until your next rest."
+    "name": "Poción de Zancada Mayor",
+    "text": "Ganas un bonificador de +1 a tu Agilidad hasta tu próximo descanso."
   },
   {
     "roll": 26,
     "id": "major-bolster-potion",
-    "name": "Major Bolster Potion",
-    "text": "You gain a +1 bonus to your Strength until your next rest."
+    "name": "Poción de Vigor Mayor",
+    "text": "Ganas un bonificador de +1 a tu Fuerza hasta tu próximo descanso."
   },
   {
     "roll": 27,
     "id": "major-control-potion",
-    "name": "Major Control Potion",
-    "text": "You gain a +1 bonus to your Finesse until your next rest."
+    "name": "Poción de Control Mayor",
+    "text": "Ganas un bonificador de +1 a tu Destreza hasta tu próximo descanso."
   },
   {
     "roll": 28,
     "id": "major-attune-potion",
-    "name": "Major Attune Potion",
-    "text": "You gain a +1 bonus to your Instinct until your next rest."
+    "name": "Poción de Sintonía Mayor",
+    "text": "Ganas un bonificador de +1 a tu Instinto hasta tu próximo descanso."
   },
   {
     "roll": 29,
     "id": "major-charm-potion",
-    "name": "Major Charm Potion",
-    "text": "You gain a +1 bonus to your Presence until your next rest."
+    "name": "Poción de Encanto Mayor",
+    "text": "Ganas un bonificador de +1 a tu Presencia hasta tu próximo descanso."
   },
   {
     "roll": 30,
     "id": "major-enlighten-potion",
-    "name": "Major Enlighten Potion",
-    "text": "You gain a +1 bonus to your Knowledge until your next rest."
+    "name": "Poción de Iluminación Mayor",
+    "text": "Ganas un bonificador de +1 a tu Conocimiento hasta tu próximo descanso."
   },
   {
     "roll": 31,
     "id": "blood-of-the-yorgi",
-    "name": "Blood of the Yorgi",
-    "text": "You can drink this blood to disappear from where you are and immediately reappear at a point you can see within Very Far range."
+    "name": "Sangre del Yorgi",
+    "text": "Puedes beber esta sangre para desaparecer de donde estás y reaparecer al instante en un punto que puedas ver dentro del alcance Muy Lejano."
   },
   {
     "roll": 32,
     "id": "homets-secret-potion",
-    "name": "Homet’s Secret Potion",
-    "text": "After drinking this potion, the next successful attack you make critically succeeds."
+    "name": "Poción Secreta de Homet",
+    "text": "Después de beber esta poción, tu próximo ataque exitoso se convierte automáticamente en éxito crítico."
   },
   {
     "roll": 33,
     "id": "redthorn-saliva",
-    "name": "Redthorn Saliva",
-    "text": "You can apply this saliva to a weapon that deals physical damage to add a d12 to your next damage roll with that weapon."
+    "name": "Saliva de Espina Roja",
+    "text": "Puedes aplicar esta saliva a un arma que infrinja daño físico para añadir un d12 a tu próxima tirada de daño con esa arma."
   },
   {
     "roll": 34,
     "id": "channelstone",
-    "name": "Channelstone",
-    "text": "You can use this stone to take a spell or grimoire from your vault, use it once, and return it to your vault."
+    "name": "Piedra Canalizadora",
+    "text": "Puedes usar esta piedra para sacar un hechizo o grimorio de tu bóveda, usarlo una vez y devolverlo a tu bóveda."
   },
   {
     "roll": 35,
     "id": "mythic-dust",
-    "name": "Mythic Dust",
-    "text": "You can apply this dust to a weapon that deals magic damage to add a d12 to your next damage roll with that weapon."
+    "name": "Polvo Mítico",
+    "text": "Puedes aplicar este polvo a un arma que infrinja daño mágico para añadir un d12 a tu próxima tirada de daño con esa arma."
   },
   {
     "roll": 36,
     "id": "acidpaste",
-    "name": "Acidpaste",
-    "text": "This paste eats away walls and other surfaces in bright flashes."
+    "name": "Pasta Ácida",
+    "text": "Esta pasta corroe muros y otras superficies entre destellos brillantes."
   },
   {
     "roll": 37,
     "id": "hopehold-flare",
-    "name": "Hopehold Flare",
-    "text": "When you use this flare, allies within Close range roll a d6 when they spend a Hope. On a result of 6, they gain the effect of that Hope without spending it. The flare lasts until the end of the scene."
+    "name": "Bengala del Refugio de Esperanza",
+    "text": "Cuando usas esta bengala, tus aliados dentro del alcance Cercano tiran un d6 cuando gastan una Esperanza. Con un resultado de 6, obtienen el efecto de esa Esperanza sin gastarla. La bengala dura hasta el final de la escena."
   },
   {
     "roll": 38,
     "id": "major-arcane-shard",
-    "name": "Major Arcane Shard",
-    "text": "You can make a Finesse Roll to throw this shard at a group of adversaries within Far range. Targets you succeed against take 4d20 magic damage."
+    "name": "Esquirla Arcana Mayor",
+    "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 4d20 de daño mágico."
   },
   {
     "roll": 39,
     "id": "featherbone",
-    "name": "Featherbone",
-    "text": "You can use this bone to control your falling speed for a number of minutes equal to your level."
+    "name": "Hueso de Pluma",
+    "text": "Puedes usar este hueso para controlar tu velocidad de caída durante una cantidad de minutos igual a tu nivel."
   },
   {
     "roll": 40,
     "id": "circle-of-the-void",
-    "name": "Circle of the Void",
-    "text": "Mark a Stress to create a void that extends up to Far range. No magic can be cast inside the void, and creatures within the void are immune to magic damage."
+    "name": "Círculo del Vacío",
+    "text": "Marca un Estrés para crear un vacío que se extiende hasta el alcance Lejano. Ninguna magia puede lanzarse dentro del vacío, y las criaturas dentro de él son inmunes al daño mágico."
   },
   {
     "roll": 41,
     "id": "sun-tree-sap",
-    "name": "Sun Tree Sap",
-    "text": "Consume this sap to roll a d6. On a result of 5–6, clear 2 HP. On a result of 2–4, clear 3 Stress. On a result of 1, see through the veil of death and return changed, gaining one scar."
+    "name": "Savia del Árbol Solar",
+    "text": "Consume esta savia para tirar un d6. Con un resultado de 5–6, recupera 2 PV. Con un resultado de 2–4, elimina 3 de Estrés. Con un resultado de 1, atraviesas el velo de la muerte y regresas transformado, ganando una cicatriz."
   },
   {
     "roll": 42,
     "id": "dripfang-poison",
-    "name": "Dripfang Poison",
-    "text": "A creature who consumes this poison takes 8d10 direct magic damage."
+    "name": "Veneno de Colmillo Goteante",
+    "text": "Una criatura que consuma este veneno recibe 8d10 de daño mágico directo."
   },
   {
     "roll": 43,
     "id": "major-health-potion",
-    "name": "Major Health Potion",
-    "text": "Clear 1d4+2 HP."
+    "name": "Poción de Vida Mayor",
+    "text": "Recupera 1d4+2 PV."
   },
   {
     "roll": 44,
     "id": "major-stamina-potion",
-    "name": "Major Stamina Potion",
-    "text": "Clear 1d4+2 Stress."
+    "name": "Poción de Vigor Mayor",
+    "text": "Elimina 1d4+2 de Estrés."
   },
   {
     "roll": 45,
     "id": "ogre-musk",
-    "name": "Ogre Musk",
-    "text": "You can use this musk to prevent anyone from tracking you by mundane or magical means until your next rest."
+    "name": "Almizcle de Ogro",
+    "text": "Puedes usar este almizcle para impedir que cualquiera te rastree por medios mundanos o mágicos hasta tu próximo descanso."
   },
   {
     "roll": 46,
     "id": "wingsprout",
-    "name": "Wingsprout",
-    "text": "You gain magic wings that allow you to fly for a number of minutes equal to your level."
+    "name": "Brote de Alas",
+    "text": "Ganas alas mágicas que te permiten volar durante una cantidad de minutos igual a tu nivel."
   },
   {
     "roll": 47,
     "id": "jar-of-lost-voices",
-    "name": "Jar of Lost Voices",
-    "text": "You can open this jar to release a deafening echo of voices for a number of minutes equal to your Instinct. Creatures within Far range unprepared for the sound take 6d8 magic damage."
+    "name": "Frasco de Voces Perdidas",
+    "text": "Puedes abrir este frasco para liberar un eco ensordecedor de voces durante una cantidad de minutos igual a tu Instinto. Las criaturas dentro del alcance Lejano que no estén preparadas para el sonido reciben 6d8 de daño mágico."
   },
   {
     "roll": 48,
     "id": "dragonbloom-tea",
-    "name": "Dragonbloom Tea",
-    "text": "You can drink this tea to unleash a fiery breath attack. Make an Instinct Roll against all adversaries in front of you within Close range. Targets you succeed against take d20 physical damage using your Proficiency."
+    "name": "Té de Flor de Dragón",
+    "text": "Puedes beber este té para desatar un ataque de aliento de fuego. Haz una Tirada de Instinto contra todos los adversarios frente a ti dentro del alcance Cercano. Los objetivos contra los que tengas éxito reciben d20 de daño físico usando tu Competencia."
   },
   {
     "roll": 49,
     "id": "bridge-seed",
-    "name": "Bridge Seed",
-    "text": "Thick vines grow from your location to a point of your choice within Far range, allowing you to climb up or across them. The vines dissipate on your next short rest."
+    "name": "Semilla del Puente",
+    "text": "Gruesas enredaderas crecen desde tu ubicación hasta un punto que elijas dentro del alcance Lejano, permitiéndote trepar por ellas o cruzarlas. Las enredaderas se disipan en tu próximo descanso corto."
   },
   {
     "roll": 50,
     "id": "sleeping-sap",
-    "name": "Sleeping Sap",
-    "text": "You can drink this potion to fall asleep for a full night’s rest. You clear all Stress upon waking."
+    "name": "Savia del Sueño",
+    "text": "Puedes beber esta poción para caer en un sueño equivalente a un descanso largo completo. Al despertar, eliminas todo el Estrés."
   },
   {
     "roll": 51,
     "id": "feast-of-xuria",
-    "name": "Feast of Xuria",
-    "text": "You can eat this meal to clear all HP and Stress and gain 1d4 Hope."
+    "name": "Banquete de Xuria",
+    "text": "Puedes comer esta comida para recuperar todos tus PV, eliminar todo el Estrés y ganar 1d4 de Esperanza."
   },
   {
     "roll": 52,
     "id": "bonding-honey",
-    "name": "Bonding Honey",
-    "text": "This honey can be used to glue two objects together permanently."
+    "name": "Miel Aglutinante",
+    "text": "Esta miel puede usarse para pegar dos objetos entre sí de forma permanente."
   },
   {
     "roll": 53,
     "id": "shrinking-potion",
-    "name": "Shrinking Potion",
-    "text": "You can drink this potion to halve your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Agility and a −1 penalty to your Proficiency."
+    "name": "Poción Reductora",
+    "text": "Puedes beber esta poción para reducir tu tamaño a la mitad hasta que decidas abandonar esta forma o llegue tu próximo descanso. Mientras estés en esta forma, tienes un bonificador de +2 a Agilidad y una penalización de −1 a tu Competencia."
   },
   {
     "roll": 54,
     "id": "growing-potion",
-    "name": "Growing Potion",
-    "text": "You can drink this potion to double your size until you choose to drop this form or your next rest. While in this form, you have a +2 bonus to Strength and a +1 bonus to your Proficiency."
+    "name": "Poción de Crecimiento",
+    "text": "Puedes beber esta poción para duplicar tu tamaño hasta que decidas abandonar esta forma o llegue tu próximo descanso. Mientras estés en esta forma, tienes un bonificador de +2 a Fuerza y un bonificador de +1 a tu Competencia."
   },
   {
     "roll": 55,
     "id": "knowledge-stone",
-    "name": "Knowledge Stone",
-    "text": "If you die while holding this stone, an ally can take a card from your loadout to place in their loadout or vault. After they take this knowledge, the stone crumbles."
+    "name": "Piedra del Conocimiento",
+    "text": "Si mueres mientras sostienes esta piedra, un aliado puede tomar una carta de tu equipo activo y colocarla en su equipo activo o en su bóveda. Después de que tomen ese conocimiento, la piedra se desmorona."
   },
   {
     "roll": 56,
     "id": "sweet-moss",
-    "name": "Sweet Moss",
-    "text": "You can consume this moss during a rest to clear 1d10 HP or 1d10 Stress."
+    "name": "Musgo Dulce",
+    "text": "Puedes consumir este musgo durante un descanso para recuperar 1d10 PV o eliminar 1d10 de Estrés."
   },
   {
     "roll": 57,
     "id": "blinding-orb",
-    "name": "Blinding Orb",
-    "text": "You can activate this orb to create a flash of bright light. All targets within Close range become Vulnerable until they mark HP."
+    "name": "Orbe Cegador",
+    "text": "Puedes activar este orbe para crear un destello de luz brillante. Todos los objetivos dentro del alcance Cercano quedan Vulnerables hasta que marquen un PV."
   },
   {
     "roll": 58,
     "id": "death-tea",
-    "name": "Death Tea",
-    "text": "After you drink this tea, you instantly kill your target when you critically succeed on an attack. If you don’t critically succeed on an attack before your next long rest, you die."
+    "name": "Té de la Muerte",
+    "text": "Después de beber este té, matas al instante a tu objetivo cuando logras un éxito crítico en un ataque. Si no logras un éxito crítico en un ataque antes de tu próximo descanso largo, mueres."
   },
   {
     "roll": 59,
     "id": "mirror-of-marigold",
-    "name": "Mirror of Marigold",
-    "text": "When you take damage, you can spend a Hope to negate that damage, after which the mirror shatters."
+    "name": "Espejo de Marigold",
+    "text": "Cuando recibes daño, puedes gastar una Esperanza para anular ese daño, tras lo cual el espejo se hace pedazos."
   },
   {
     "roll": 60,
     "id": "stardrop",
-    "name": "Stardrop",
-    "text": "You can use this stardrop to summon a hailstorm of comets that deals 8d20 physical damage to all targets within Very Far range."
+    "name": "Lágrima de Estrella",
+    "text": "Puedes usar esta lágrima de estrella para invocar una tormenta de cometas que infrinja 8d20 de daño físico a todos los objetivos dentro del alcance Muy Lejano."
   }
 ]

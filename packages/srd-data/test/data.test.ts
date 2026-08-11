@@ -157,9 +157,9 @@ describe('equipment shape', () => {
   });
 
   it('includes the combat wheelchair in all three frames and all four tiers', () => {
-    const chairs = weapons.filter((w) => w.name.includes('Wheelchair'));
+    const chairs = weapons.filter((w) => w.name.includes('Silla de Ruedas'));
     expect(chairs).toHaveLength(12);
-    for (const frame of ['Light-Frame', 'Heavy-Frame', 'Arcane-Frame']) {
+    for (const frame of ['Armazón Liviano', 'Armazón Pesado', 'Armazón Arcano']) {
       const models = chairs.filter((c) => c.name.includes(frame));
       expect(models.map((m) => m.tier).sort(), frame).toEqual([1, 2, 3, 4]);
     }
@@ -205,7 +205,7 @@ describe('stat blocks', () => {
     const fearFeatures = adversaries.flatMap((a) => a.features).filter((f) => f.costsFear);
     expect(fearFeatures.length).toBeGreaterThan(0);
     for (const feature of fearFeatures) {
-      expect(feature.text).toMatch(/Fear/);
+      expect(feature.text).toMatch(/Miedo/);
     }
   });
 

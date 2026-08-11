@@ -34,20 +34,20 @@ export function LoadoutPanel({
   return (
     <div className="panel">
       <SectionHead>
-        Loadout {loadout.length}/{MAX_LOADOUT}
+        Cartas activas {loadout.length}/{MAX_LOADOUT}
       </SectionHead>
       <div className="card-head">
         <button type="button" aria-pressed={duringRest} onClick={onToggleRest}>
-          {duringRest ? 'Resting — swaps are free' : 'Not resting'}
+          {duringRest ? 'Descansando — los cambios son gratis' : 'Sin descansar'}
         </button>
       </div>
 
       {loadout.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level" title="Card level">
+          <span className="domain-corner level" title="Nivel de la carta">
             {card.level}
           </span>
-          <span className="domain-corner recall" title="Recall Cost">
+          <span className="domain-corner recall" title="Coste de Recuperación">
             ⚡{card.recallCost}
           </span>
           <div className="card-head">
@@ -59,25 +59,25 @@ export function LoadoutPanel({
               <span className="domain-title">{card.name}</span>
             </span>
             <button type="button" onClick={() => onVault(card.id)}>
-              Vault
+              Enviar a la Bóveda
             </button>
           </div>
           <p className="card-text">{card.text}</p>
         </div>
       ))}
 
-      <SectionHead>Vault</SectionHead>
-      {vault.length === 0 ? <p className="muted">Nothing vaulted.</p> : null}
+      <SectionHead>Bóveda</SectionHead>
+      {vault.length === 0 ? <p className="muted">No hay nada en la Bóveda.</p> : null}
 
       {full && vault.length > 0 ? (
         <div className="mb-3">
-          <label htmlFor="vaulting">Loadout is full — card to move out</label>
+          <label htmlFor="vaulting">Cartas activas al máximo — elige carta a retirar</label>
           <select
             id="vaulting"
             value={vaulting}
             onChange={(event) => setVaulting(event.target.value)}
           >
-            <option value="">Choose a card…</option>
+            <option value="">Elige una carta…</option>
             {loadout.map((card) => (
               <option key={card.id} value={card.id}>
                 {card.name}
@@ -89,10 +89,10 @@ export function LoadoutPanel({
 
       {vault.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level" title="Card level">
+          <span className="domain-corner level" title="Nivel de la carta">
             {card.level}
           </span>
-          <span className="domain-corner recall" title="Recall Cost">
+          <span className="domain-corner recall" title="Coste de Recuperación">
             ⚡{card.recallCost}
           </span>
           <div className="card-head">
@@ -102,7 +102,7 @@ export function LoadoutPanel({
               disabled={full && vaulting === ''}
               onClick={() => onRecall(card.id, vaulting === '' ? undefined : vaulting)}
             >
-              Recall{duringRest ? '' : ` (${card.recallCost} Stress)`}
+              Recuperar{duringRest ? '' : ` (${card.recallCost} de Estrés)`}
             </button>
           </div>
           <span className="domain-type">{prettify(card.domain)}</span>

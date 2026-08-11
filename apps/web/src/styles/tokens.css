@@ -152,6 +152,7 @@
   --size-bevel-sm: 6px;
   --size-content: 1180px;
   --size-sidebar: 340px;
+  --size-map-topbar: 3.5rem;
 
   /* --- radii ------------------------------------------------------------- */
   --radius-sm: 3px;

@@ -1,7 +1,7 @@
 [
   {
     "id": "broadsword",
-    "name": "Broadsword",
+    "name": "Espada Ancha",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -14,13 +14,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "longsword",
-    "name": "Longsword",
+    "name": "Espada Larga",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -36,7 +36,7 @@
   },
   {
     "id": "battleaxe",
-    "name": "Battleaxe",
+    "name": "Hacha de Batalla",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -52,7 +52,7 @@
   },
   {
     "id": "greatsword",
-    "name": "Greatsword",
+    "name": "Espadón",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -65,13 +65,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Massive",
-      "text": "−1 to Evasion; on a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Masiva",
+      "text": "−1 a la Evasión; en un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "mace",
-    "name": "Mace",
+    "name": "Maza",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -87,7 +87,7 @@
   },
   {
     "id": "warhammer",
-    "name": "Warhammer",
+    "name": "Martillo de Guerra",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -100,13 +100,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "dagger",
-    "name": "Dagger",
+    "name": "Daga",
     "tier": 1,
     "category": "primary",
     "trait": "finesse",
@@ -122,7 +122,7 @@
   },
   {
     "id": "quarterstaff",
-    "name": "Quarterstaff",
+    "name": "Bastón",
     "tier": 1,
     "category": "primary",
     "trait": "instinct",
@@ -138,7 +138,7 @@
   },
   {
     "id": "cutlass",
-    "name": "Cutlass",
+    "name": "Alfanje",
     "tier": 1,
     "category": "primary",
     "trait": "presence",
@@ -154,7 +154,7 @@
   },
   {
     "id": "rapier",
-    "name": "Rapier",
+    "name": "Estoque",
     "tier": 1,
     "category": "primary",
     "trait": "presence",
@@ -167,13 +167,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "halberd",
-    "name": "Halberd",
+    "name": "Alabarda",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -186,13 +186,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "spear",
-    "name": "Spear",
+    "name": "Lanza",
     "tier": 1,
     "category": "primary",
     "trait": "finesse",
@@ -208,7 +208,7 @@
   },
   {
     "id": "shortbow",
-    "name": "Shortbow",
+    "name": "Arco Corto",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -224,7 +224,7 @@
   },
   {
     "id": "crossbow",
-    "name": "Crossbow",
+    "name": "Ballesta",
     "tier": 1,
     "category": "primary",
     "trait": "finesse",
@@ -240,7 +240,7 @@
   },
   {
     "id": "longbow",
-    "name": "Longbow",
+    "name": "Arco Largo",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -253,13 +253,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "arcane-gauntlets",
-    "name": "Arcane Gauntlets",
+    "name": "Guanteletes Arcanos",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -275,7 +275,7 @@
   },
   {
     "id": "hallowed-axe",
-    "name": "Hallowed Axe",
+    "name": "Hacha Consagrada",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -291,7 +291,7 @@
   },
   {
     "id": "glowing-rings",
-    "name": "Glowing Rings",
+    "name": "Anillos Brillantes",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -307,7 +307,7 @@
   },
   {
     "id": "hand-runes",
-    "name": "Hand Runes",
+    "name": "Runas de Mano",
     "tier": 1,
     "category": "primary",
     "trait": "instinct",
@@ -323,7 +323,7 @@
   },
   {
     "id": "returning-blade",
-    "name": "Returning Blade",
+    "name": "Espada Retornable",
     "tier": 1,
     "category": "primary",
     "trait": "finesse",
@@ -336,13 +336,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Returning",
-      "text": "When this weapon is thrown within its range, it appears in your hand immediately after the attack."
+      "name": "Retornable",
+      "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
     }
   },
   {
     "id": "shortstaff",
-    "name": "Shortstaff",
+    "name": "Bastón Corto",
     "tier": 1,
     "category": "primary",
     "trait": "instinct",
@@ -358,7 +358,7 @@
   },
   {
     "id": "dualstaff",
-    "name": "Dualstaff",
+    "name": "Bastón Dual",
     "tier": 1,
     "category": "primary",
     "trait": "instinct",
@@ -374,7 +374,7 @@
   },
   {
     "id": "scepter",
-    "name": "Scepter",
+    "name": "Cetro",
     "tier": 1,
     "category": "primary",
     "trait": "presence",
@@ -387,13 +387,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Presence, Melee, d8."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8."
     }
   },
   {
     "id": "wand",
-    "name": "Wand",
+    "name": "Varita",
     "tier": 1,
     "category": "primary",
     "trait": "knowledge",
@@ -409,7 +409,7 @@
   },
   {
     "id": "greatstaff",
-    "name": "Greatstaff",
+    "name": "Bastón Mayor",
     "tier": 1,
     "category": "primary",
     "trait": "knowledge",
@@ -422,13 +422,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "improved-broadsword",
-    "name": "Improved Broadsword",
+    "name": "Espada Ancha Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -441,13 +441,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "improved-longsword",
-    "name": "Improved Longsword",
+    "name": "Espada Larga Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -463,7 +463,7 @@
   },
   {
     "id": "improved-battleaxe",
-    "name": "Improved Battleaxe",
+    "name": "Hacha de Batalla Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -479,7 +479,7 @@
   },
   {
     "id": "improved-greatsword",
-    "name": "Improved Greatsword",
+    "name": "Espadón Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -492,13 +492,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Massive",
-      "text": "−1 to Evasion; on a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Masiva",
+      "text": "−1 a la Evasión; en un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "improved-mace",
-    "name": "Improved Mace",
+    "name": "Maza Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -514,7 +514,7 @@
   },
   {
     "id": "improved-warhammer",
-    "name": "Improved Warhammer",
+    "name": "Martillo de Guerra Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -527,13 +527,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "improved-dagger",
-    "name": "Improved Dagger",
+    "name": "Daga Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -549,7 +549,7 @@
   },
   {
     "id": "improved-quarterstaff",
-    "name": "Improved Quarterstaff",
+    "name": "Bastón Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -565,7 +565,7 @@
   },
   {
     "id": "improved-cutlass",
-    "name": "Improved Cutlass",
+    "name": "Alfanje Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "presence",
@@ -581,7 +581,7 @@
   },
   {
     "id": "improved-rapier",
-    "name": "Improved Rapier",
+    "name": "Estoque Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "presence",
@@ -594,13 +594,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "improved-halberd",
-    "name": "Improved Halberd",
+    "name": "Alabarda Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -613,13 +613,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "improved-spear",
-    "name": "Improved Spear",
+    "name": "Lanza Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -635,7 +635,7 @@
   },
   {
     "id": "improved-shortbow",
-    "name": "Improved Shortbow",
+    "name": "Arco Corto Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -651,7 +651,7 @@
   },
   {
     "id": "improved-crossbow",
-    "name": "Improved Crossbow",
+    "name": "Ballesta Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -667,7 +667,7 @@
   },
   {
     "id": "improved-longbow",
-    "name": "Improved Longbow",
+    "name": "Arco Largo Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -680,13 +680,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "gilded-falchion",
-    "name": "Gilded Falchion",
+    "name": "Alfanje Dorado",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -699,13 +699,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "knuckle-blades",
-    "name": "Knuckle Blades",
+    "name": "Cuchillas de Puño",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -719,12 +719,12 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Brutal",
-      "text": "When you roll the maximum value on a damage die, roll an additional damage die."
+      "text": "Cuando obtienes el valor máximo en un dado de daño, tira un dado de daño adicional."
     }
   },
   {
     "id": "urok-broadsword",
-    "name": "Urok Broadsword",
+    "name": "Espada Ancha de Urok",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -737,13 +737,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Deadly",
-      "text": "When you deal Severe damage, the target must mark an additional HP."
+      "name": "Letal",
+      "text": "Cuando infliges Daño Grave, el objetivo debe marcar un PV adicional."
     }
   },
   {
     "id": "bladed-whip",
-    "name": "Bladed Whip",
+    "name": "Látigo con Filo",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -756,13 +756,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "steelforged-halberd",
-    "name": "Steelforged Halberd",
+    "name": "Alabarda Forjada en Acero",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -775,13 +775,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Scary",
-      "text": "On a successful attack, the target must mark a Stress."
+      "name": "Aterradora",
+      "text": "En un ataque exitoso, el objetivo debe marcar un Estrés."
     }
   },
   {
     "id": "war-scythe",
-    "name": "War Scythe",
+    "name": "Guadaña de Guerra",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -794,13 +794,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "blunderbuss",
-    "name": "Blunderbuss",
+    "name": "Trabuco",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -813,13 +813,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reloading",
-      "text": "After you make an attack, roll a d6. On a result of 1, you must mark a Stress to reload this weapon before you can fire it again."
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "greatbow",
-    "name": "Greatbow",
+    "name": "Arco Mayor",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -832,13 +832,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "finehair-bow",
-    "name": "Finehair Bow",
+    "name": "Arco de Cabello Fino",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -851,13 +851,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "improved-arcane-gauntlets",
-    "name": "Improved Arcane Gauntlets",
+    "name": "Guanteletes Arcanos Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -873,7 +873,7 @@
   },
   {
     "id": "improved-hallowed-axe",
-    "name": "Improved Hallowed Axe",
+    "name": "Hacha Consagrada Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -889,7 +889,7 @@
   },
   {
     "id": "improved-glowing-rings",
-    "name": "Improved Glowing Rings",
+    "name": "Anillos Brillantes Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -905,7 +905,7 @@
   },
   {
     "id": "improved-hand-runes",
-    "name": "Improved Hand Runes",
+    "name": "Runas de Mano Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -921,7 +921,7 @@
   },
   {
     "id": "improved-returning-blade",
-    "name": "Improved Returning Blade",
+    "name": "Espada Retornable Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -934,13 +934,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Returning",
-      "text": "When this weapon is thrown within its range, it appears in your hand immediately after the attack."
+      "name": "Retornable",
+      "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
     }
   },
   {
     "id": "improved-shortstaff",
-    "name": "Improved Shortstaff",
+    "name": "Bastón Corto Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -956,7 +956,7 @@
   },
   {
     "id": "improved-dualstaff",
-    "name": "Improved Dualstaff",
+    "name": "Bastón Dual Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -972,7 +972,7 @@
   },
   {
     "id": "improved-scepter",
-    "name": "Improved Scepter",
+    "name": "Cetro Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "presence",
@@ -985,13 +985,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Presence, Melee, d8+3."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+3."
     }
   },
   {
     "id": "improved-wand",
-    "name": "Improved Wand",
+    "name": "Varita Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "knowledge",
@@ -1007,7 +1007,7 @@
   },
   {
     "id": "improved-greatstaff",
-    "name": "Improved Greatstaff",
+    "name": "Bastón Mayor Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "knowledge",
@@ -1020,13 +1020,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "ego-blade",
-    "name": "Ego Blade",
+    "name": "Espada del Ego",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -1039,13 +1039,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Pompous",
-      "text": "You must have a Presence of 0 or lower to use this weapon."
+      "name": "Pomposa",
+      "text": "Debes tener una Presencia de 0 o menos para usar esta arma."
     }
   },
   {
     "id": "casting-sword",
-    "name": "Casting Sword",
+    "name": "Espada de Conjuro",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -1058,13 +1058,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Knowledge, Far, d6+3."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Conocimiento, Lejano, d6+3."
     }
   },
   {
     "id": "devouring-dagger",
-    "name": "Devouring Dagger",
+    "name": "Daga Devoradora",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -1077,13 +1077,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Scary",
-      "text": "On a successful attack, the target must mark a Stress."
+      "name": "Aterradora",
+      "text": "En un ataque exitoso, el objetivo debe marcar un Estrés."
     }
   },
   {
     "id": "hammer-of-exota",
-    "name": "Hammer of Exota",
+    "name": "Martillo de Exota",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -1096,13 +1096,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Eruptive",
-      "text": "On a successful attack against a target within Melee range, all other adversaries within Very Close range must succeed on a reaction roll (14) or take half damage."
+      "name": "Eruptiva",
+      "text": "En un ataque exitoso contra un objetivo dentro de alcance Cuerpo a Cuerpo, todos los demás adversarios dentro de alcance Muy Cercano deben tener éxito en una tirada de reacción (14) o recibir la mitad del daño."
     }
   },
   {
     "id": "yutari-bloodbow",
-    "name": "Yutari Bloodbow",
+    "name": "Arco de Sangre Yutari",
     "tier": 2,
     "category": "primary",
     "trait": "finesse",
@@ -1116,12 +1116,12 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Brutal",
-      "text": "When you roll the maximum value on a damage die, roll an additional damage die."
+      "text": "Cuando obtienes el valor máximo en un dado de daño, tira un dado de daño adicional."
     }
   },
   {
     "id": "elder-bow",
-    "name": "Elder Bow",
+    "name": "Arco Ancestral",
     "tier": 2,
     "category": "primary",
     "trait": "instinct",
@@ -1134,13 +1134,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "scepter-of-elias",
-    "name": "Scepter of Elias",
+    "name": "Cetro de Elías",
     "tier": 2,
     "category": "primary",
     "trait": "presence",
@@ -1153,13 +1153,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Invigorating",
-      "text": "On a successful attack, roll a d4. On a result of 4, clear a Stress."
+      "name": "Vigorizante",
+      "text": "En un ataque exitoso, tira un d4. Con un resultado de 4, recupera un Estrés."
     }
   },
   {
     "id": "wand-of-enthrallment",
-    "name": "Wand of Enthrallment",
+    "name": "Varita de Cautiverio",
     "tier": 2,
     "category": "primary",
     "trait": "presence",
@@ -1172,13 +1172,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Persuasive",
-      "text": "Before you make a Presence Roll, you can mark a Stress to gain a +2 bonus to the result."
+      "name": "Persuasiva",
+      "text": "Antes de hacer una tirada de Presencia, puedes marcar un Estrés para obtener un bono de +2 al resultado."
     }
   },
   {
     "id": "keepers-staff",
-    "name": "Keeper's Staff",
+    "name": "Bastón del Guardián",
     "tier": 2,
     "category": "primary",
     "trait": "knowledge",
@@ -1191,13 +1191,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "advanced-broadsword",
-    "name": "Advanced Broadsword",
+    "name": "Espada Ancha Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1210,13 +1210,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "advanced-longsword",
-    "name": "Advanced Longsword",
+    "name": "Espada Larga Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1232,7 +1232,7 @@
   },
   {
     "id": "advanced-battleaxe",
-    "name": "Advanced Battleaxe",
+    "name": "Hacha de Batalla Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1248,7 +1248,7 @@
   },
   {
     "id": "advanced-greatsword",
-    "name": "Advanced Greatsword",
+    "name": "Espadón Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1261,13 +1261,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Massive",
-      "text": "−1 to Evasion; on a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Masiva",
+      "text": "−1 a la Evasión; en un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "advanced-mace",
-    "name": "Advanced Mace",
+    "name": "Maza Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1283,7 +1283,7 @@
   },
   {
     "id": "advanced-warhammer",
-    "name": "Advanced Warhammer",
+    "name": "Martillo de Guerra Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1296,13 +1296,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "advanced-dagger",
-    "name": "Advanced Dagger",
+    "name": "Daga Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1318,7 +1318,7 @@
   },
   {
     "id": "advanced-quarterstaff",
-    "name": "Advanced Quarterstaff",
+    "name": "Bastón Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1334,7 +1334,7 @@
   },
   {
     "id": "advanced-cutlass",
-    "name": "Advanced Cutlass",
+    "name": "Alfanje Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1350,7 +1350,7 @@
   },
   {
     "id": "advanced-rapier",
-    "name": "Advanced Rapier",
+    "name": "Estoque Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1363,13 +1363,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "advanced-halberd",
-    "name": "Advanced Halberd",
+    "name": "Alabarda Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1382,13 +1382,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "advanced-spear",
-    "name": "Advanced Spear",
+    "name": "Lanza Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1404,7 +1404,7 @@
   },
   {
     "id": "advanced-shortbow",
-    "name": "Advanced Shortbow",
+    "name": "Arco Corto Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1420,7 +1420,7 @@
   },
   {
     "id": "advanced-crossbow",
-    "name": "Advanced Crossbow",
+    "name": "Ballesta Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1436,7 +1436,7 @@
   },
   {
     "id": "advanced-longbow",
-    "name": "Advanced Longbow",
+    "name": "Arco Largo Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1449,13 +1449,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "flickerfly-blade",
-    "name": "Flickerfly Blade",
+    "name": "Espada Libélula",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1468,13 +1468,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Sharpwing",
-      "text": "Gain a bonus to your damage rolls equal to your Agility."
+      "name": "Alafilada",
+      "text": "Obtienes un bono a tus tiradas de daño igual a tu Agilidad."
     }
   },
   {
     "id": "bravesword",
-    "name": "Bravesword",
+    "name": "Espada Valiente",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1487,13 +1487,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Brave",
-      "text": "−1 to Evasion; +3 to Severe damage threshold"
+      "name": "Valiente",
+      "text": "−1 a la Evasión; +3 al umbral de Daño Grave"
     }
   },
   {
     "id": "hammer-of-wrath",
-    "name": "Hammer of Wrath",
+    "name": "Martillo de la Ira",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1506,13 +1506,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Devastating",
-      "text": "Before you make an attack roll, you can mark a Stress to use a d20 as your damage die."
+      "name": "Devastadora",
+      "text": "Antes de hacer una tirada de ataque, puedes marcar un Estrés para usar un d20 como tu dado de daño."
     }
   },
   {
     "id": "labrys-axe",
-    "name": "Labrys Axe",
+    "name": "Hacha Labrys",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1525,13 +1525,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Protective",
-      "text": "+1 to Armor Score"
+      "name": "Protectora",
+      "text": "+1 al Puntaje de Armadura"
     }
   },
   {
     "id": "meridian-cutlass",
-    "name": "Meridian Cutlass",
+    "name": "Alfanje Meridiano",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1544,13 +1544,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Dueling",
-      "text": "When there are no other creatures within Close range of the target, gain advantage on your attack roll against them."
+      "name": "De Duelo",
+      "text": "Cuando no hay otras criaturas dentro de alcance Cercano del objetivo, obtienes ventaja en tu tirada de ataque contra él."
     }
   },
   {
     "id": "retractable-saber",
-    "name": "Retractable Saber",
+    "name": "Sable Retráctil",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1563,13 +1563,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Retractable",
-      "text": "The blade can be hidden in the hilt to avoid detection."
+      "name": "Retráctil",
+      "text": "La hoja puede ocultarse en la empuñadura para evitar ser detectada."
     }
   },
   {
     "id": "double-flail",
-    "name": "Double Flail",
+    "name": "Mangual Doble",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1582,13 +1582,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "talon-blades",
-    "name": "Talon Blades",
+    "name": "Cuchillas de Garra",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1602,12 +1602,12 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Brutal",
-      "text": "When you roll the maximum value on a damage die, roll an additional damage die."
+      "text": "Cuando obtienes el valor máximo en un dado de daño, tira un dado de daño adicional."
     }
   },
   {
     "id": "black-powder-revolver",
-    "name": "Black Powder Revolver",
+    "name": "Revólver de Pólvora Negra",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1620,13 +1620,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reloading",
-      "text": "After you make an attack, roll a d6. On a result of 1, you must mark a Stress to reload this weapon before you can fire it again."
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "spiked-bow",
-    "name": "Spiked Bow",
+    "name": "Arco con Púas",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1639,13 +1639,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Agility, Melee, d10+5."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Agilidad, Cuerpo a Cuerpo, d10+5."
     }
   },
   {
     "id": "advanced-arcane-gauntlets",
-    "name": "Advanced Arcane Gauntlets",
+    "name": "Guanteletes Arcanos Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1661,7 +1661,7 @@
   },
   {
     "id": "advanced-hallowed-axe",
-    "name": "Advanced Hallowed Axe",
+    "name": "Hacha Consagrada Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1677,7 +1677,7 @@
   },
   {
     "id": "advanced-glowing-rings",
-    "name": "Advanced Glowing Rings",
+    "name": "Anillos Brillantes Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -1693,7 +1693,7 @@
   },
   {
     "id": "advanced-hand-runes",
-    "name": "Advanced Hand Runes",
+    "name": "Runas de Mano Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1709,7 +1709,7 @@
   },
   {
     "id": "advanced-returning-blade",
-    "name": "Advanced Returning Blade",
+    "name": "Espada Retornable Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1722,13 +1722,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Returning",
-      "text": "When this weapon is thrown within its range, it appears in your hand immediately after the attack."
+      "name": "Retornable",
+      "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
     }
   },
   {
     "id": "advanced-shortstaff",
-    "name": "Advanced Shortstaff",
+    "name": "Bastón Corto Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1744,7 +1744,7 @@
   },
   {
     "id": "advanced-dualstaff",
-    "name": "Advanced Dualstaff",
+    "name": "Bastón Dual Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1760,7 +1760,7 @@
   },
   {
     "id": "advanced-scepter",
-    "name": "Advanced Scepter",
+    "name": "Cetro Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1773,13 +1773,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Presence, Melee, d8+4."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+4."
     }
   },
   {
     "id": "advanced-wand",
-    "name": "Advanced Wand",
+    "name": "Varita Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
@@ -1795,7 +1795,7 @@
   },
   {
     "id": "advanced-greatstaff",
-    "name": "Advanced Greatstaff",
+    "name": "Bastón Mayor Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
@@ -1808,13 +1808,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "axe-of-fortunis",
-    "name": "Axe of Fortunis",
+    "name": "Hacha de Fortunis",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1827,13 +1827,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Lucky",
-      "text": "On a failed attack, you can mark a Stress to reroll your attack."
+      "name": "Afortunada",
+      "text": "En un ataque fallido, puedes marcar un Estrés para volver a tirar tu ataque."
     }
   },
   {
     "id": "blessed-anlace",
-    "name": "Blessed Anlace",
+    "name": "Anlace Bendito",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1846,13 +1846,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Healing",
-      "text": "During downtime, automatically clear a Hit Point."
+      "name": "Curativa",
+      "text": "Durante el descanso, recupera automáticamente un Punto de Vida."
     }
   },
   {
     "id": "ghostblade",
-    "name": "Ghostblade",
+    "name": "Espada Fantasma",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
@@ -1865,13 +1865,13 @@
     "damageType": "physicalOrMagic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Otherworldly",
-      "text": "On a successful attack, you can deal physical or magic damage."
+      "name": "De Otro Mundo",
+      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
     }
   },
   {
     "id": "runes-of-ruination",
-    "name": "Runes of Ruination",
+    "name": "Runas de Ruina",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
@@ -1884,13 +1884,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Painful",
-      "text": "Each time you make a successful attack, you must mark a Stress."
+      "name": "Dolorosa",
+      "text": "Cada vez que hagas un ataque exitoso, debes marcar un Estrés."
     }
   },
   {
     "id": "widogast-pendant",
-    "name": "Widogast Pendant",
+    "name": "Colgante de Widogast",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
@@ -1903,13 +1903,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Timebending",
-      "text": "You choose the target of your attack after making your attack roll."
+      "name": "Curvatemporal",
+      "text": "Eliges el objetivo de tu ataque después de hacer tu tirada de ataque."
     }
   },
   {
     "id": "gilded-bow",
-    "name": "Gilded Bow",
+    "name": "Arco Dorado",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1922,13 +1922,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Self-Correcting",
-      "text": "When you roll a 1 on a damage die, it deals 6 damage instead."
+      "name": "Autocorrectiva",
+      "text": "Cuando obtienes un 1 en un dado de daño, este infligirá 6 de daño en su lugar."
     }
   },
   {
     "id": "firestaff",
-    "name": "Firestaff",
+    "name": "Bastón de Fuego",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1941,13 +1941,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Burning",
-      "text": "When you roll a 6 on a damage die, the target must mark a Stress."
+      "name": "Ardiente",
+      "text": "Cuando obtienes un 6 en un dado de daño, el objetivo debe marcar un Estrés."
     }
   },
   {
     "id": "mage-orb",
-    "name": "Mage Orb",
+    "name": "Orbe de Mago",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
@@ -1960,13 +1960,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "ilmaris-rifle",
-    "name": "Ilmari's Rifle",
+    "name": "Rifle de Ilmari",
     "tier": 3,
     "category": "primary",
     "trait": "finesse",
@@ -1979,13 +1979,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reloading",
-      "text": "After you make an attack, roll a d6. On a result of 1, you must mark a Stress to reload this weapon before you can fire it again."
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "legendary-broadsword",
-    "name": "Legendary Broadsword",
+    "name": "Espada Ancha Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -1998,13 +1998,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "legendary-longsword",
-    "name": "Legendary Longsword",
+    "name": "Espada Larga Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2020,7 +2020,7 @@
   },
   {
     "id": "legendary-battleaxe",
-    "name": "Legendary Battleaxe",
+    "name": "Hacha de Batalla Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2036,7 +2036,7 @@
   },
   {
     "id": "legendary-greatsword",
-    "name": "Legendary Greatsword",
+    "name": "Espadón Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2049,13 +2049,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Massive",
-      "text": "−1 to Evasion; on a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Masiva",
+      "text": "−1 a la Evasión; en un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "legendary-mace",
-    "name": "Legendary Mace",
+    "name": "Maza Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2071,7 +2071,7 @@
   },
   {
     "id": "legendary-warhammer",
-    "name": "Legendary Warhammer",
+    "name": "Martillo de Guerra Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2084,13 +2084,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "legendary-dagger",
-    "name": "Legendary Dagger",
+    "name": "Daga Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2106,7 +2106,7 @@
   },
   {
     "id": "legendary-quarterstaff",
-    "name": "Legendary Quarterstaff",
+    "name": "Bastón Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2122,7 +2122,7 @@
   },
   {
     "id": "legendary-cutlass",
-    "name": "Legendary Cutlass",
+    "name": "Alfanje Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "presence",
@@ -2138,7 +2138,7 @@
   },
   {
     "id": "legendary-rapier",
-    "name": "Legendary Rapier",
+    "name": "Estoque Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "presence",
@@ -2151,13 +2151,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "legendary-halberd",
-    "name": "Legendary Halberd",
+    "name": "Alabarda Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2170,13 +2170,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "legendary-spear",
-    "name": "Legendary Spear",
+    "name": "Lanza Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2192,7 +2192,7 @@
   },
   {
     "id": "legendary-shortbow",
-    "name": "Legendary Shortbow",
+    "name": "Arco Corto Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2208,7 +2208,7 @@
   },
   {
     "id": "legendary-crossbow",
-    "name": "Legendary Crossbow",
+    "name": "Ballesta Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2224,7 +2224,7 @@
   },
   {
     "id": "legendary-longbow",
-    "name": "Legendary Longbow",
+    "name": "Arco Largo Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2237,13 +2237,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Cumbersome",
-      "text": "−1 to Finesse"
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
     "id": "dual-ended-sword",
-    "name": "Dual-Ended Sword",
+    "name": "Espada de Doble Filo",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2256,13 +2256,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "impact-gauntlet",
-    "name": "Impact Gauntlet",
+    "name": "Guantelete de Impacto",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2275,13 +2275,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Concussive",
-      "text": "On a successful attack, you can spend a Hope to knock the target back to Far range."
+      "name": "Contundente",
+      "text": "En un ataque exitoso, puedes gastar una Esperanza para empujar al objetivo hasta alcance Lejano."
     }
   },
   {
     "id": "sledge-axe",
-    "name": "Sledge Axe",
+    "name": "Hacha Mazo",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2294,13 +2294,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Destructive",
-      "text": "−1 to Agility; on a successful attack, all adversaries within Very Close range must mark a Stress."
+      "name": "Destructiva",
+      "text": "−1 a Agilidad; en un ataque exitoso, todos los adversarios dentro de alcance Muy Cercano deben marcar un Estrés."
     }
   },
   {
     "id": "curved-dagger",
-    "name": "Curved Dagger",
+    "name": "Daga Curva",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2313,13 +2313,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Serrated",
-      "text": "When you roll a 1 on a damage die, it deals 8 damage instead."
+      "name": "Serrada",
+      "text": "Cuando obtienes un 1 en un dado de daño, este infligirá 8 de daño en su lugar."
     }
   },
   {
     "id": "extended-polearm",
-    "name": "Extended Polearm",
+    "name": "Arma de Asta Extendida",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2332,13 +2332,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Long",
-      "text": "This weapon's attack targets all adversaries in a line within range."
+      "name": "Larga",
+      "text": "El ataque de esta arma afecta a todos los adversarios en línea dentro del alcance."
     }
   },
   {
     "id": "swinging-ropeblade",
-    "name": "Swinging Ropeblade",
+    "name": "Espada de Cuerda Oscilante",
     "tier": 4,
     "category": "primary",
     "trait": "presence",
@@ -2351,13 +2351,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Grappling",
-      "text": "On a successful attack, you can spend a Hope to Restrain the target or pull them into Melee range with you."
+      "name": "De Agarre",
+      "text": "En un ataque exitoso, puedes gastar una Esperanza para Inmovilizar al objetivo o arrastrarlo a alcance Cuerpo a Cuerpo contigo."
     }
   },
   {
     "id": "ricochet-axes",
-    "name": "Ricochet Axes",
+    "name": "Hachas de Rebote",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2370,13 +2370,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Bouncing",
-      "text": "Mark 1 or more Stress to hit that many targets in range of the attack."
+      "name": "Rebotante",
+      "text": "Marca 1 o más de Estrés para golpear a esa cantidad de objetivos dentro del alcance del ataque."
     }
   },
   {
     "id": "aantari-bow",
-    "name": "Aantari Bow",
+    "name": "Arco Aantari",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2389,13 +2389,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "hand-cannon",
-    "name": "Hand Cannon",
+    "name": "Cañón de Mano",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2408,13 +2408,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reloading",
-      "text": "After you make an attack, roll a d6. On a 1, you must mark a Stress to reload this weapon before you can fire it again."
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "legendary-arcane-gauntlets",
-    "name": "Legendary Arcane Gauntlets",
+    "name": "Guanteletes Arcanos Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2430,7 +2430,7 @@
   },
   {
     "id": "legendary-hallowed-axe",
-    "name": "Legendary Hallowed Axe",
+    "name": "Hacha Consagrada Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2446,7 +2446,7 @@
   },
   {
     "id": "legendary-glowing-rings",
-    "name": "Legendary Glowing Rings",
+    "name": "Anillos Brillantes Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -2462,7 +2462,7 @@
   },
   {
     "id": "legendary-hand-runes",
-    "name": "Legendary Hand Runes",
+    "name": "Runas de Mano Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2478,7 +2478,7 @@
   },
   {
     "id": "legendary-returning-blade",
-    "name": "Legendary Returning Blade",
+    "name": "Espada Retornable Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2491,13 +2491,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Returning",
-      "text": "When this weapon is thrown within its range, it appears in your hand immediately after the attack."
+      "name": "Retornable",
+      "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
     }
   },
   {
     "id": "legendary-shortstaff",
-    "name": "Legendary Shortstaff",
+    "name": "Bastón Corto Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2513,7 +2513,7 @@
   },
   {
     "id": "legendary-dualstaff",
-    "name": "Legendary Dualstaff",
+    "name": "Bastón Dual Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2529,7 +2529,7 @@
   },
   {
     "id": "legendary-scepter",
-    "name": "Legendary Scepter",
+    "name": "Cetro Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "presence",
@@ -2542,13 +2542,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Presence, Melee, d8+6."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+6."
     }
   },
   {
     "id": "legendary-wand",
-    "name": "Legendary Wand",
+    "name": "Varita Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "knowledge",
@@ -2564,7 +2564,7 @@
   },
   {
     "id": "legendary-greatstaff",
-    "name": "Legendary Greatstaff",
+    "name": "Bastón Mayor Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "knowledge",
@@ -2577,13 +2577,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "sword-of-light-and-flame",
-    "name": "Sword of Light & Flame",
+    "name": "Espada de Luz y Llama",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2596,13 +2596,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Hot",
-      "text": "This weapon cuts through solid material."
+      "name": "Ardiente al Rojo",
+      "text": "Esta arma corta a través de material sólido."
     }
   },
   {
     "id": "siphoning-gauntlets",
-    "name": "Siphoning Gauntlets",
+    "name": "Guanteletes Absorbentes",
     "tier": 4,
     "category": "primary",
     "trait": "presence",
@@ -2615,13 +2615,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Lifestealing",
-      "text": "On a successful attack, roll a d6. On a result of 6, clear a Hit Point or clear a Stress."
+      "name": "Robavidas",
+      "text": "En un ataque exitoso, tira un d6. Con un resultado de 6, recupera un Punto de Vida o recupera un Estrés."
     }
   },
   {
     "id": "midas-scythe",
-    "name": "Midas Scythe",
+    "name": "Guadaña de Midas",
     "tier": 4,
     "category": "primary",
     "trait": "knowledge",
@@ -2634,13 +2634,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Greedy",
-      "text": "Spend a handful of gold to gain a +1 bonus to your Proficiency on a damage roll."
+      "name": "Codiciosa",
+      "text": "Gasta un puñado de oro para obtener un bono de +1 a tu Competencia en una tirada de daño."
     }
   },
   {
     "id": "floating-bladeshards",
-    "name": "Floating Bladeshards",
+    "name": "Fragmentos de Espada Flotantes",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2653,13 +2653,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Powerful",
-      "text": "On a successful attack, roll an additional damage die and discard the lowest result."
+      "name": "Poderosa",
+      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
     }
   },
   {
     "id": "bloodstaff",
-    "name": "Bloodstaff",
+    "name": "Bastón de Sangre",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2672,13 +2672,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Painful",
-      "text": "Each time you make a successful attack, you must mark a Stress."
+      "name": "Dolorosa",
+      "text": "Cada vez que hagas un ataque exitoso, debes marcar un Estrés."
     }
   },
   {
     "id": "thistlebow",
-    "name": "Thistlebow",
+    "name": "Arco Cardo",
     "tier": 4,
     "category": "primary",
     "trait": "instinct",
@@ -2691,13 +2691,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "wand-of-essek",
-    "name": "Wand of Essek",
+    "name": "Varita de Essek",
     "tier": 4,
     "category": "primary",
     "trait": "knowledge",
@@ -2710,13 +2710,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Timebending",
-      "text": "You can choose the target of your attack after making your attack roll."
+      "name": "Curvatemporal",
+      "text": "Puedes elegir el objetivo de tu ataque después de hacer tu tirada de ataque."
     }
   },
   {
     "id": "magus-revolver",
-    "name": "Magus Revolver",
+    "name": "Revólver de Magus",
     "tier": 4,
     "category": "primary",
     "trait": "finesse",
@@ -2729,13 +2729,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reloading",
-      "text": "After you make an attack, roll a d6. On a result of 1, you must mark a Stress to reload this weapon before you can fire it again."
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "fusion-gloves",
-    "name": "Fusion Gloves",
+    "name": "Guantes de Fusión",
     "tier": 4,
     "category": "primary",
     "trait": "knowledge",
@@ -2748,13 +2748,13 @@
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Bonded",
-      "text": "Gain a bonus to your damage rolls equal to your level."
+      "name": "Vinculada",
+      "text": "Obtienes un bono a tus tiradas de daño igual a tu nivel."
     }
   },
   {
     "id": "shortsword",
-    "name": "Shortsword",
+    "name": "Espada Corta",
     "tier": 1,
     "category": "secondary",
     "trait": "agility",
@@ -2767,13 +2767,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+2 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+2 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "round-shield",
-    "name": "Round Shield",
+    "name": "Escudo Redondo",
     "tier": 1,
     "category": "secondary",
     "trait": "strength",
@@ -2786,13 +2786,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Protective",
-      "text": "+1 to Armor Score"
+      "name": "Protectora",
+      "text": "+1 al Puntaje de Armadura"
     }
   },
   {
     "id": "tower-shield",
-    "name": "Tower Shield",
+    "name": "Escudo Torre",
     "tier": 1,
     "category": "secondary",
     "trait": "strength",
@@ -2805,13 +2805,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Barrier",
-      "text": "+2 to Armor Score; −1 to Evasion"
+      "name": "Barrera",
+      "text": "+2 al Puntaje de Armadura; −1 a la Evasión"
     }
   },
   {
     "id": "small-dagger",
-    "name": "Small Dagger",
+    "name": "Daga Pequeña",
     "tier": 1,
     "category": "secondary",
     "trait": "finesse",
@@ -2824,13 +2824,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+2 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+2 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "whip",
-    "name": "Whip",
+    "name": "Látigo",
     "tier": 1,
     "category": "secondary",
     "trait": "presence",
@@ -2843,13 +2843,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Startling",
-      "text": "Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range."
+      "name": "Sobresaltante",
+      "text": "Marca un Estrés para hacer restallar el látigo y forzar a todos los adversarios dentro de alcance Cuerpo a Cuerpo a retroceder a alcance Cercano."
     }
   },
   {
     "id": "grappler",
-    "name": "Grappler",
+    "name": "Garfio",
     "tier": 1,
     "category": "secondary",
     "trait": "finesse",
@@ -2862,13 +2862,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Hooked",
-      "text": "On a successful attack, you can pull the target into Melee range."
+      "name": "Ganchuda",
+      "text": "En un ataque exitoso, puedes arrastrar al objetivo a alcance Cuerpo a Cuerpo."
     }
   },
   {
     "id": "hand-crossbow",
-    "name": "Hand Crossbow",
+    "name": "Ballesta de Mano",
     "tier": 1,
     "category": "secondary",
     "trait": "finesse",
@@ -2884,7 +2884,7 @@
   },
   {
     "id": "improved-shortsword",
-    "name": "Improved Shortsword",
+    "name": "Espada Corta Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "agility",
@@ -2897,13 +2897,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+3 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+3 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "improved-round-shield",
-    "name": "Improved Round Shield",
+    "name": "Escudo Redondo Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "strength",
@@ -2916,13 +2916,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Protective",
-      "text": "+2 to Armor Score"
+      "name": "Protectora",
+      "text": "+2 al Puntaje de Armadura"
     }
   },
   {
     "id": "improved-tower-shield",
-    "name": "Improved Tower Shield",
+    "name": "Escudo Torre Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "strength",
@@ -2935,13 +2935,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Barrier",
-      "text": "+3 to Armor Score; −1 to Evasion"
+      "name": "Barrera",
+      "text": "+3 al Puntaje de Armadura; −1 a la Evasión"
     }
   },
   {
     "id": "improved-small-dagger",
-    "name": "Improved Small Dagger",
+    "name": "Daga Pequeña Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "finesse",
@@ -2954,13 +2954,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+3 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+3 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "improved-whip",
-    "name": "Improved Whip",
+    "name": "Látigo Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "presence",
@@ -2973,13 +2973,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Startling",
-      "text": "Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range."
+      "name": "Sobresaltante",
+      "text": "Marca un Estrés para hacer restallar el látigo y forzar a todos los adversarios dentro de alcance Cuerpo a Cuerpo a retroceder a alcance Cercano."
     }
   },
   {
     "id": "improved-grappler",
-    "name": "Improved Grappler",
+    "name": "Garfio Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "finesse",
@@ -2992,13 +2992,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Hooked",
-      "text": "On a successful attack, you can pull the target into Melee range."
+      "name": "Ganchuda",
+      "text": "En un ataque exitoso, puedes arrastrar al objetivo a alcance Cuerpo a Cuerpo."
     }
   },
   {
     "id": "improved-hand-crossbow",
-    "name": "Improved Hand Crossbow",
+    "name": "Ballesta de Mano Mejorada",
     "tier": 2,
     "category": "secondary",
     "trait": "finesse",
@@ -3014,7 +3014,7 @@
   },
   {
     "id": "spiked-shield",
-    "name": "Spiked Shield",
+    "name": "Escudo con Púas",
     "tier": 2,
     "category": "secondary",
     "trait": "strength",
@@ -3027,13 +3027,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Double Duty",
-      "text": "+1 to Armor Score; +1 to primary weapon damage within Melee range"
+      "name": "Doble Función",
+      "text": "+1 al Puntaje de Armadura; +1 al daño del arma primaria dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "parrying-dagger",
-    "name": "Parrying Dagger",
+    "name": "Daga de Parada",
     "tier": 2,
     "category": "secondary",
     "trait": "finesse",
@@ -3046,13 +3046,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Parry",
-      "text": "When you are attacked, roll this weapon's damage dice. If any of the attacker's damage dice rolled the same value as your dice, the matching results are discarded from the attacker's damage dice before the damage you take is totaled."
+      "name": "Parada",
+      "text": "Cuando eres atacado, tira los dados de daño de esta arma. Si alguno de los dados de daño del atacante coincide en valor con los tuyos, esos resultados coincidentes se descartan de los dados de daño del atacante antes de totalizar el daño que recibes."
     }
   },
   {
     "id": "returning-axe",
-    "name": "Returning Axe",
+    "name": "Hacha Retornable",
     "tier": 2,
     "category": "secondary",
     "trait": "agility",
@@ -3065,13 +3065,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Returning",
-      "text": "When this weapon is thrown within its range, it appears in your hand immediately after the attack."
+      "name": "Retornable",
+      "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
     }
   },
   {
     "id": "primer-shard",
-    "name": "Primer Shard",
+    "name": "Fragmento Primigenio",
     "tier": 2,
     "category": "secondary",
     "trait": "instinct",
@@ -3084,13 +3084,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Locked On",
-      "text": "On a successful attack, your next attack against the same target with your primary weapon automatically succeeds."
+      "name": "Bloqueo de Objetivo",
+      "text": "En un ataque exitoso, tu siguiente ataque contra el mismo objetivo con tu arma primaria tiene éxito automáticamente."
     }
   },
   {
     "id": "advanced-shortsword",
-    "name": "Advanced Shortsword",
+    "name": "Espada Corta Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "agility",
@@ -3103,13 +3103,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+4 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+4 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "advanced-round-shield",
-    "name": "Advanced Round Shield",
+    "name": "Escudo Redondo Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "strength",
@@ -3122,13 +3122,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Protective",
-      "text": "+3 to Armor Score"
+      "name": "Protectora",
+      "text": "+3 al Puntaje de Armadura"
     }
   },
   {
     "id": "advanced-tower-shield",
-    "name": "Advanced Tower Shield",
+    "name": "Escudo Torre Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "strength",
@@ -3141,13 +3141,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Barrier",
-      "text": "+4 to Armor Score; −1 to Evasion"
+      "name": "Barrera",
+      "text": "+4 al Puntaje de Armadura; −1 a la Evasión"
     }
   },
   {
     "id": "advanced-small-dagger",
-    "name": "Advanced Small Dagger",
+    "name": "Daga Pequeña Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "finesse",
@@ -3160,13 +3160,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+4 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+4 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "advanced-whip",
-    "name": "Advanced Whip",
+    "name": "Látigo Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "presence",
@@ -3179,13 +3179,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Startling",
-      "text": "Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range."
+      "name": "Sobresaltante",
+      "text": "Marca un Estrés para hacer restallar el látigo y forzar a todos los adversarios dentro de alcance Cuerpo a Cuerpo a retroceder a alcance Cercano."
     }
   },
   {
     "id": "advanced-grappler",
-    "name": "Advanced Grappler",
+    "name": "Garfio Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "finesse",
@@ -3198,13 +3198,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Hooked",
-      "text": "On a successful attack, you can pull the target into Melee range."
+      "name": "Ganchuda",
+      "text": "En un ataque exitoso, puedes arrastrar al objetivo a alcance Cuerpo a Cuerpo."
     }
   },
   {
     "id": "advanced-hand-crossbow",
-    "name": "Advanced Hand Crossbow",
+    "name": "Ballesta de Mano Avanzada",
     "tier": 3,
     "category": "secondary",
     "trait": "finesse",
@@ -3220,7 +3220,7 @@
   },
   {
     "id": "buckler",
-    "name": "Buckler",
+    "name": "Broquel",
     "tier": 3,
     "category": "secondary",
     "trait": "agility",
@@ -3233,13 +3233,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Deflecting",
-      "text": "When you are attacked, you can mark an Armor Slot to gain a bonus to your Evasion equal to your available Armor Score against the attack."
+      "name": "Desviadora",
+      "text": "Cuando eres atacado, puedes marcar una Ranura de Armadura para obtener un bono a tu Evasión igual a tu Puntaje de Armadura disponible contra ese ataque."
     }
   },
   {
     "id": "powered-gauntlet",
-    "name": "Powered Gauntlet",
+    "name": "Guantelete Motorizado",
     "tier": 3,
     "category": "secondary",
     "trait": "knowledge",
@@ -3252,13 +3252,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Charged",
-      "text": "Mark a Stress to gain a +1 bonus to your Proficiency on a primary weapon attack."
+      "name": "Cargada",
+      "text": "Marca un Estrés para obtener un bono de +1 a tu Competencia en un ataque con arma primaria."
     }
   },
   {
     "id": "hand-sling",
-    "name": "Hand Sling",
+    "name": "Honda de Mano",
     "tier": 3,
     "category": "secondary",
     "trait": "finesse",
@@ -3271,13 +3271,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Versatile",
-      "text": "This weapon can also be used with these statistics—Finesse, Close, d8+4."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
     "id": "legendary-shortsword",
-    "name": "Legendary Shortsword",
+    "name": "Espada Corta Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "agility",
@@ -3290,13 +3290,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+5 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "legendary-round-shield",
-    "name": "Legendary Round Shield",
+    "name": "Escudo Redondo Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "strength",
@@ -3309,13 +3309,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Protective",
-      "text": "+4 to Armor Score"
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
     }
   },
   {
     "id": "legendary-tower-shield",
-    "name": "Legendary Tower Shield",
+    "name": "Escudo Torre Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "strength",
@@ -3328,13 +3328,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Barrier",
-      "text": "+5 to Armor Score; −1 to Evasion."
+      "name": "Barrera",
+      "text": "+5 al Puntaje de Armadura; −1 a la Evasión."
     }
   },
   {
     "id": "legendary-small-dagger",
-    "name": "Legendary Small Dagger",
+    "name": "Daga Pequeña Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "finesse",
@@ -3347,13 +3347,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Paired",
-      "text": "+5 to primary weapon damage to targets within Melee range"
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
     "id": "legendary-whip",
-    "name": "Legendary Whip",
+    "name": "Látigo Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "presence",
@@ -3366,13 +3366,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Startling",
-      "text": "Mark a Stress to crack the whip and force all adversaries within Melee range back to Close range."
+      "name": "Sobresaltante",
+      "text": "Marca un Estrés para hacer restallar el látigo y forzar a todos los adversarios dentro de alcance Cuerpo a Cuerpo a retroceder a alcance Cercano."
     }
   },
   {
     "id": "legendary-grappler",
-    "name": "Legendary Grappler",
+    "name": "Garfio Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "finesse",
@@ -3385,13 +3385,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Hooked",
-      "text": "On a successful attack, you can pull the target into Melee range."
+      "name": "Ganchuda",
+      "text": "En un ataque exitoso, puedes arrastrar al objetivo a alcance Cuerpo a Cuerpo."
     }
   },
   {
     "id": "legendary-hand-crossbow",
-    "name": "Legendary Hand Crossbow",
+    "name": "Ballesta de Mano Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "finesse",
@@ -3407,7 +3407,7 @@
   },
   {
     "id": "braveshield",
-    "name": "Braveshield",
+    "name": "Escudo Valiente",
     "tier": 4,
     "category": "secondary",
     "trait": "agility",
@@ -3420,13 +3420,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Sheltering",
-      "text": "When you mark an Armor Slot, it reduces damage for you and all allies within Melee range of you who took the same damage."
+      "name": "Protectora",
+      "text": "Cuando marcas una Ranura de Armadura, reduce el daño para ti y para todos los aliados dentro de alcance Cuerpo a Cuerpo que hayan recibido el mismo daño."
     }
   },
   {
     "id": "knuckle-claws",
-    "name": "Knuckle Claws",
+    "name": "Garras de Puño",
     "tier": 4,
     "category": "secondary",
     "trait": "strength",
@@ -3439,13 +3439,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Doubled Up",
-      "text": "When you make an attack with your primary weapon, you can deal damage to another target within Melee range."
+      "name": "Duplicada",
+      "text": "Cuando haces un ataque con tu arma primaria, puedes infligir daño a otro objetivo dentro de alcance Cuerpo a Cuerpo."
     }
   },
   {
     "id": "light-frame-wheelchair",
-    "name": "Light-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Liviano",
     "tier": 1,
     "category": "primary",
     "trait": "agility",
@@ -3458,13 +3458,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "improved-light-frame-wheelchair",
-    "name": "Improved Light-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Liviano Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "agility",
@@ -3477,13 +3477,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "advanced-light-frame-wheelchair",
-    "name": "Advanced Light-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Liviano Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "agility",
@@ -3496,13 +3496,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "legendary-light-frame-wheelchair",
-    "name": "Legendary Light-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Liviano Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "agility",
@@ -3515,13 +3515,13 @@
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Quick",
-      "text": "When you make an attack, you can mark a Stress to target another creature within range."
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
     "id": "heavy-frame-wheelchair",
-    "name": "Heavy-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Pesado",
     "tier": 1,
     "category": "primary",
     "trait": "strength",
@@ -3534,13 +3534,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "improved-heavy-frame-wheelchair",
-    "name": "Improved Heavy-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Pesado Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "strength",
@@ -3553,13 +3553,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "advanced-heavy-frame-wheelchair",
-    "name": "Advanced Heavy-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Pesado Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -3572,13 +3572,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "legendary-heavy-frame-wheelchair",
-    "name": "Legendary Heavy-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Pesado Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -3591,13 +3591,13 @@
     "damageType": "physical",
     "burden": "twoHanded",
     "feature": {
-      "name": "Heavy",
-      "text": "−1 to Evasion"
+      "name": "Pesada",
+      "text": "−1 a la Evasión"
     }
   },
   {
     "id": "arcane-frame-wheelchair",
-    "name": "Arcane-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Arcano",
     "tier": 1,
     "category": "primary",
     "trait": "spellcast",
@@ -3610,13 +3610,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "improved-arcane-frame-wheelchair",
-    "name": "Improved Arcane-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Arcano Mejorada",
     "tier": 2,
     "category": "primary",
     "trait": "spellcast",
@@ -3629,13 +3629,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "advanced-arcane-frame-wheelchair",
-    "name": "Advanced Arcane-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Arcano Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "spellcast",
@@ -3648,13 +3648,13 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   },
   {
     "id": "legendary-arcane-frame-wheelchair",
-    "name": "Legendary Arcane-Frame Wheelchair",
+    "name": "Silla de Ruedas de Armazón Arcano Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "spellcast",
@@ -3667,8 +3667,8 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Reliable",
-      "text": "+1 to attack rolls"
+      "name": "Confiable",
+      "text": "+1 a las tiradas de ataque"
     }
   }
 ]

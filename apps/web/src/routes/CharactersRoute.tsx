@@ -22,10 +22,10 @@ export function CharactersRoute({
   return (
     <section>
       <div className="card-head">
-        <h1>Characters</h1>
+        <h1>Personajes</h1>
         <Link to="/create/1">
           <button type="button">
-            {hasCreationInProgress ? 'Resume creation' : 'New character'}
+            {hasCreationInProgress ? 'Continuar creación' : 'Nuevo personaje'}
           </button>
         </Link>
       </div>
@@ -33,7 +33,7 @@ export function CharactersRoute({
       {characters.length === 0 ? (
         <div className="panel">
           <p className="muted">
-            No characters yet. Create one to get a sheet you can use at the table.
+            Todavía no hay personajes. Crea uno para tener una hoja que puedas usar en la mesa.
           </p>
         </div>
       ) : (
@@ -44,20 +44,20 @@ export function CharactersRoute({
             return (
               <div className="panel" key={entry.id}>
                 <div className="card-head">
-                  <h2>{character.name ?? 'Unnamed character'}</h2>
-                  {entry.id === activeId ? <span className="badge">Active</span> : null}
+                  <h2>{character.name ?? 'Personaje sin nombre'}</h2>
+                  {entry.id === activeId ? <span className="badge">Activo</span> : null}
                 </div>
                 <p className="muted">
-                  Level {character.level} {view.className} · {view.subclassName}
+                  Nivel {character.level} {view.className} · {view.subclassName}
                   <br />
                   {view.heritageLabel} · {view.communityName}
                 </p>
                 <div className="row">
                   <Link to="/sheet" onClick={() => onSelect(entry.id)}>
-                    <button type="button">Open sheet</button>
+                    <button type="button">Abrir hoja</button>
                   </Link>
                   <button type="button" onClick={() => onDelete(entry.id)}>
-                    Delete
+                    Eliminar
                   </button>
                 </div>
               </div>

@@ -42,20 +42,20 @@ describe('sheet renders', () => {
     expect(html).toContain('Bard');
     // Core sheet regions are all present.
     for (const heading of [
-      'Traits',
-      'Defenses',
-      'Hit Points',
-      'Stress',
-      'Hope',
-      'Armor Slots',
-      'Gold',
-      'Active weapons',
-      'Experiences',
-      'Features',
-      'Inventory',
-      'Loadout',
-      'Vault',
-      'Roll log',
+      'Rasgos',
+      'Defensas',
+      'Puntos de Vida',
+      'Estrés',
+      'Esperanza',
+      'Ranuras de Armadura',
+      'Oro',
+      'Armas y armadura activas',
+      'Experiencias',
+      'Rasgos de clase',
+      'Inventario',
+      'Cartas activas',
+      'Bóveda',
+      'Registro de tiradas',
     ]) {
       expect(html, heading).toContain(heading);
     }
@@ -91,11 +91,11 @@ describe('sheet renders', () => {
     const nonCaster = createSheet(buildCharacter('guardian'));
 
     expect(render(<SheetRoute sheet={caster} update={noopUpdate} rng={() => 0.5} />)).toContain(
-      'Spellcast Roll',
+      'Tirada de Conjuro',
     );
     expect(
       render(<SheetRoute sheet={nonCaster} update={noopUpdate} rng={() => 0.5} />),
-    ).not.toContain('Spellcast Roll');
+    ).not.toContain('Tirada de Conjuro');
   });
 
   it('marks a Vulnerable character on the sheet', () => {
@@ -118,8 +118,8 @@ describe('characters list renders', () => {
         hasCreationInProgress={false}
       />,
     );
-    expect(html).toContain('No characters yet');
-    expect(html).toContain('New character');
+    expect(html).toContain('Todavía no hay personajes');
+    expect(html).toContain('Nuevo personaje');
   });
 
   it('lists a saved character and offers to resume a creation', () => {
@@ -134,9 +134,9 @@ describe('characters list renders', () => {
       />,
     );
     expect(html).toContain('Test Character');
-    expect(html).toContain('Rogue');
-    expect(html).toContain('Active');
-    expect(html).toContain('Resume creation');
+    expect(html).toContain('Pícaro');
+    expect(html).toContain('Activo');
+    expect(html).toContain('Continuar creación');
   });
 });
 
@@ -173,14 +173,14 @@ describe('wizard renders', () => {
     for (const characterClass of classes) {
       expect(html, characterClass.name).toContain(characterClass.name);
     }
-    expect(html).toContain('Step 1');
-    expect(html).toContain('Class &amp; Subclass');
+    expect(html).toContain('Paso 1');
+    expect(html).toContain('Clase y Subclase');
   });
 
   it('disables Next until the step validates', () => {
     const html = wizardAt('/create/1');
     // The Next button renders disabled while nothing has been chosen.
-    expect(html).toMatch(/<button[^>]*disabled[^>]*>Next/);
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>Siguiente/);
   });
 
   it('resumes a saved creation at its step with choices intact', () => {
@@ -188,7 +188,7 @@ describe('wizard renders', () => {
     saveCreation(store, buildCreationState('sorcerer'));
     const html = wizardAt('/create/8', store);
 
-    expect(html).toContain('Step 8');
+    expect(html).toContain('Paso 8');
     // A Sorcerer's domains are Arcana and Midnight, so only those cards are offered.
     expect(html).toContain('Arcana');
     expect(html).toContain('Midnight');
@@ -239,10 +239,10 @@ describe('offline mode', () => {
         onLeave={() => {}}
       />,
     );
-    expect(html).toContain('Create a campaign');
-    expect(html).toContain('Join a campaign');
+    expect(html).toContain('Crear una campaña');
+    expect(html).toContain('Unirse a una campaña');
     // Offline play is explicitly still supported.
-    expect(html).toContain('Playing offline');
+    expect(html).toContain('Jugando sin conexión');
   });
 });
 
@@ -297,15 +297,15 @@ describe('GM panel renders', () => {
 
     const html = render(<GMPanel room={room} send={() => {}} />);
 
-    expect(html).toContain('GM Panel');
+    expect(html).toContain('Panel del DJ');
     expect(html).toContain('ABC234');
-    expect(html).toContain('Fear');
+    expect(html).toContain('Miedo');
     expect(html).toContain('The Siege');
     expect(html).toContain('Courtier');
-    expect(html).toContain('Environment');
-    expect(html).toContain('At the table');
+    expect(html).toContain('Entorno');
+    expect(html).toContain('En la mesa');
     // Presence shows a disconnected player, and the shared log names the roller.
-    expect(html).toContain('offline');
+    expect(html).toContain('desconectado');
     expect(html).toContain('Alice');
     expect(html).toContain('Success with Hope');
   });

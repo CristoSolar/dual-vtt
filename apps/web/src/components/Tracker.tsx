@@ -43,7 +43,7 @@ export function Tracker({
               className={`pip ${tone === 'default' ? '' : tone}`}
               data-filled={filled}
               aria-pressed={filled}
-              aria-label={`${label} ${index + 1} of ${total}${filled ? ` (${fillLabel})` : ''}`}
+              aria-label={`${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`}
               onClick={filled ? onClear : onMark}
             >
               {index + 1}
@@ -51,7 +51,7 @@ export function Tracker({
           </li>
         ))}
       </ul>
-      {total === 0 ? <p className="muted">None available.</p> : null}
+      {total === 0 ? <p className="muted">No hay disponibles.</p> : null}
     </div>
   );
 }

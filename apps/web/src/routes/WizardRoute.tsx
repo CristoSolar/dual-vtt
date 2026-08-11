@@ -17,15 +17,15 @@ import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
 import { useCreation } from '../state/useCreation.js';
 
 const STEP_TITLES: Record<Step, string> = {
-  1: 'Class & Subclass',
-  2: 'Heritage',
-  3: 'Traits',
-  4: 'Derived Stats',
-  5: 'Equipment',
-  6: 'Background',
-  7: 'Experiences',
-  8: 'Domain Cards',
-  9: 'Connections',
+  1: 'Clase y Subclase',
+  2: 'Herencia',
+  3: 'Rasgos',
+  4: 'Estadísticas derivadas',
+  5: 'Equipo',
+  6: 'Trasfondo',
+  7: 'Experiencias',
+  8: 'Cartas de Dominio',
+  9: 'Conexiones',
 };
 
 const STEP_COMPONENTS: Record<Step, (props: StepProps) => JSX.Element> = {
@@ -78,7 +78,7 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
     <section>
       <div className="card-head">
         <h1>
-          Step {step} — {STEP_TITLES[step]}
+          Paso {step} — {STEP_TITLES[step]}
         </h1>
         <button
           type="button"
@@ -87,11 +87,11 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
             navigate('/create/1');
           }}
         >
-          Start over
+          Empezar de nuevo
         </button>
       </div>
 
-      <ol className="steps" aria-label="Creation progress">
+      <ol className="steps" aria-label="Progreso de la creación">
         {STEPS.map((s) => {
           const done = validateStep(state, s).ok;
           return (
@@ -101,7 +101,7 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
                 className="step-pip"
                 data-state={s === step ? 'current' : done ? 'done' : 'todo'}
                 aria-current={s === step ? 'step' : undefined}
-                aria-label={`Step ${s}: ${STEP_TITLES[s]}${done ? ' (complete)' : ''}`}
+                aria-label={`Paso ${s}: ${STEP_TITLES[s]}${done ? ' (completo)' : ''}`}
                 onClick={() => goTo(s)}
               >
                 {s}
@@ -115,7 +115,7 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
         {step === 1 ? (
           <TextField
             id="character-name"
-            label="Name (you can fill this in at any point)"
+            label="Nombre (puedes completarlo en cualquier momento)"
             value={state.name ?? ''}
             onChange={(name) => dispatch({ type: 'setName', name })}
           />
@@ -128,12 +128,12 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
 
       <div className="row spread">
         <button type="button" disabled={step === 1} onClick={() => goTo((step - 1) as Step)}>
-          ← Back
+          ← Atrás
         </button>
 
         {isLast ? (
           <button type="button" disabled={!allValid} onClick={finish}>
-            Finish & open sheet
+            Terminar y abrir hoja
           </button>
         ) : (
           <button
@@ -141,14 +141,14 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
             disabled={!validation.ok}
             onClick={() => goTo((step + 1) as Step)}
           >
-            Next →
+            Siguiente →
           </button>
         )}
       </div>
 
       {isLast && !allValid ? (
         <p className="muted mt-3">
-          Some earlier steps are still incomplete — the numbered buttons above show which.
+          Todavía hay pasos anteriores incompletos — los botones numerados de arriba indican cuáles.
         </p>
       ) : null}
     </section>

@@ -25,7 +25,7 @@ export function ErrorSummary({ errors }: ErrorSummaryProps) {
   if (errors.length === 0) return null;
   return (
     <div className="errors" role="alert">
-      <strong>Not finished yet</strong>
+      <strong>Todavía falta terminar</strong>
       <ul>
         {errors.map((error) => (
           <li key={`${error.code}-${error.field ?? ''}`}>{error.message}</li>

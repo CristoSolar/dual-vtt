@@ -4,33 +4,33 @@
     "name": "Abandoned Grove",
     "tier": 1,
     "type": "exploration",
-    "description": "A former druidic grove lying fallow and fully reclaimed by nature.",
-    "impulses": "Draw in the curious, echo the past",
+    "description": "Una antigua arboleda druídica en desuso, completamente reclamada por la naturaleza.",
+    "impulses": "Atraer a los curiosos, hacer eco del pasado",
     "difficulty": 11,
     "potentialAdversaries": "Beasts (Bear, Dire Wolf, Glass Snake), Grove Guardians (Minor Treant, Sylvan Soldier, Young Dryad)",
     "features": [
       {
         "name": "Overgrown Battlefield",
         "type": "passive",
-        "text": "There has been a battle here. A PC can make an Instinct Roll to identify evidence of that fight. On a success with Hope, learn all three pieces of information below. On a success with Fear, learn two. On a failure, a PC can mark a Stress to learn one and gain advantage on the next action roll to investigate this environment. A PC with an appropriate background or Experience can learn an additional detail and ask a follow-up question about the scene and get a truthful (if not always complete) answer. • Traces of a battle (broken weapons and branches, gouges in the ground) litter the ground. • A moss-covered tree trunk is actually the corpse of a treant. • Still-standing trees are twisted in strange ways, as if by powerful magic. Why did these groups come to blows? Why is the grove unused now?",
+        "text": "Aquí hubo una batalla. Un PJ puede hacer una Tirada de Instinto para identificar evidencia de ese combate. Con un éxito con Esperanza, descubre los tres datos siguientes. Con un éxito con Miedo, descubre dos. Con un fallo, un PJ puede marcar Estrés para descubrir uno y obtener ventaja en la próxima tirada de acción para investigar este entorno. Un PJ con un trasfondo o Experiencia apropiados puede descubrir un detalle adicional y hacer una pregunta de seguimiento sobre la escena, obteniendo una respuesta veraz (aunque no siempre completa). • Restos de la batalla (armas rotas y ramas partidas, surcos en el suelo) cubren el terreno. • Un tronco cubierto de musgo resulta ser en realidad el cadáver de un treant. • Los árboles que aún se mantienen en pie están retorcidos de forma extraña, como por magia poderosa. ¿Por qué llegaron a las manos estos grupos? ¿Por qué está abandonada la arboleda ahora?",
         "costsFear": false
       },
       {
         "name": "Barbed Vines",
         "type": "action",
-        "text": "Pick a point within the grove. All targets within Very Close range of that point must succeed on an Agility Reaction Roll or take 1d8+3 physical damage and become Restrained by barbed vines. Restrained lasts until they’re freed with a successful Finesse or Strength roll or by dealing at least 6 damage to the vines. How many vines are there? Where do they grab you? Do they pull you down or lift you off the ground?",
+        "text": "Elige un punto dentro de la arboleda. Todos los objetivos a distancia Muy Cercana de ese punto deben superar una Tirada de Reacción de Agilidad o sufrir 1d8+3 de daño físico y quedar Apresados por enredaderas espinosas. El estado de Apresado dura hasta que se liberen con una tirada exitosa de Destreza o Fuerza, o infligiendo al menos 6 de daño a las enredaderas. ¿Cuántas enredaderas hay? ¿Dónde te atrapan? ¿Te arrastran hacia abajo o te elevan del suelo?",
         "costsFear": false
       },
       {
         "name": "You Are Not Welcome Here",
         "type": "action",
-        "text": "A Young Dryad, two Sylvan Soldiers, and a number of Minor Treants equal to the number of PCs appear to confront the party for their intrusion. What are the grove guardians concealing? What threat to the forest could the PCs confront to appease the Dryad?",
+        "text": "Una Joven Dríade, dos Soldados Silvanos y un número de Treants Menores igual al número de PJs aparecen para confrontar al grupo por su intrusión. ¿Qué están ocultando los guardianes de la arboleda? ¿Qué amenaza contra el bosque podrían enfrentar los PJs para apaciguar a la Dríade?",
         "costsFear": false
       },
       {
         "name": "Defiler",
         "type": "action",
-        "text": "Spend a Fear to summon a Minor Chaos Elemental drawn to the echoes of violence and discord. They appear within Far range of a chosen PC and immediately take the spotlight. What color does the grass turn as the elemental appears? How does the chaos warp insects and small wildlife within the grove? TIER 2 (LEVELS 2–4) • Cult Ritual (Event) • Hallowed Temple (Social) • Haunted City (Exploration) • Mountain Pass (Traversal) TIER 3 (LEVELS 5–7) • Burning Heart of the Woods (Exploration) • Castle Siege (Event) • Pitched Battle (Event)",
+        "text": "Gasta un Miedo para convocar a un Elemental Menor del Caos atraído por los ecos de violencia y discordia. Aparece a distancia Lejana de un PJ elegido y toma el protagonismo de inmediato. ¿De qué color se vuelve la hierba cuando aparece el elemental? ¿Cómo distorsiona el caos a los insectos y a la pequeña fauna dentro de la arboleda? NIVEL 2 (NIVELES 2–4) • Ritual de Culto (Evento) • Templo Sagrado (Social) • Ciudad Encantada (Exploración) • Paso de Montaña (Travesía) NIVEL 3 (NIVELES 5–7) • Corazón Ardiente del Bosque (Exploración) • Asedio al Castillo (Evento) • Batalla Campal (Evento)",
         "costsFear": true
       }
     ]
@@ -40,21 +40,21 @@
     "name": "Ambushed",
     "tier": 1,
     "type": "event",
-    "description": "An ambush is set to catch an unsuspecting party off-guard.",
-    "impulses": "Overwhelm, scatter, surround",
+    "description": "Se ha preparado una emboscada para sorprender a un grupo desprevenido.",
+    "impulses": "Abrumar, dispersar, rodear",
     "difficulty": "special",
     "potentialAdversaries": "Any",
     "features": [
       {
         "name": "Relative Strength",
         "type": "passive",
-        "text": "The Difficulty of this environment equals that of the adversary with the highest Difficulty. Who cues the ambush? What makes it clear they’re in charge?",
+        "text": "La Dificultad de este entorno es igual a la del adversario con mayor Dificultad. ¿Quién da la señal de la emboscada? ¿Qué deja claro que está al mando?",
         "costsFear": false
       },
       {
         "name": "Surprise!",
         "type": "action",
-        "text": "The ambushers reveal themselves to the party, you gain 2 Fear, and the spotlight immediately shifts to one of the ambushing adversaries. What do the ambushers want from the party? How do their tactics in the ambush reflect that?",
+        "text": "Los emboscadores se revelan ante el grupo, ganas 2 de Miedo y el protagonismo pasa de inmediato a uno de los adversarios emboscadores. ¿Qué quieren los emboscadores del grupo? ¿Cómo refleja eso su táctica en la emboscada?",
         "costsFear": false
       }
     ]
@@ -64,21 +64,21 @@
     "name": "Ambushers",
     "tier": 1,
     "type": "event",
-    "description": "An ambush is set by the PCs to catch unsuspecting adversaries off-guard.",
-    "impulses": "Escape, group up, protect the most vulnerable",
+    "description": "Los PJs han preparado una emboscada para sorprender a adversarios desprevenidos.",
+    "impulses": "Escapar, agruparse, proteger a los más vulnerables",
     "difficulty": "special",
     "potentialAdversaries": "Any",
     "features": [
       {
         "name": "Relative Strength",
         "type": "passive",
-        "text": "The Difficulty of this environment equals that of the adversary with the highest Difficulty. Which adversary is the least prepared? Which one is the most?",
+        "text": "La Dificultad de este entorno es igual a la del adversario con mayor Dificultad. ¿Qué adversario está menos preparado? ¿Cuál lo está más?",
         "costsFear": false
       },
       {
         "name": "Where Did They Come From?",
         "type": "reaction",
-        "text": "When a PC starts the ambush on unsuspecting adversaries, you lose 2 Fear and the first attack roll a PC makes has advantage. What are the adversaries in the middle of doing when the ambush starts? How does this impact their approach to the fight? TIER 4 (LEVELS 8–10) • Chaos Realm (Traversal) • Divine Usurpation (Event) • Imperial Court (Social) • Necromancer’s Ossuary (Exploration)",
+        "text": "Cuando un PJ inicia la emboscada contra adversarios desprevenidos, pierdes 2 de Miedo y la primera tirada de ataque que haga un PJ tiene ventaja. ¿Qué estaban haciendo los adversarios justo cuando empieza la emboscada? ¿Cómo afecta esto a su forma de encarar el combate? NIVEL 4 (NIVELES 8–10) • Reino del Caos (Travesía) • Usurpación Divina (Evento) • Corte Imperial (Social) • Osario del Nigromante (Exploración)",
         "costsFear": false
       }
     ]
@@ -88,33 +88,33 @@
     "name": "Bustling Marketplace",
     "tier": 1,
     "type": "social",
-    "description": "The economic heart of the settlement, with local artisans, traveling merchants, and patrons across social classes.",
-    "impulses": "Buy low, and sell high, tempt and tantalize with wares from near and far",
+    "description": "El corazón económico del asentamiento, con artesanos locales, mercaderes viajeros y clientes de todas las clases sociales.",
+    "impulses": "Comprar barato y vender caro, tentar y seducir con mercancías de cerca y de lejos",
     "difficulty": 10,
     "potentialAdversaries": "Guards (Bladed Guard, Head Guard), Masked Thief, Merchant",
     "features": [
       {
         "name": "Tip the Scales",
         "type": "passive",
-        "text": "PCs can gain advantage on a Presence Roll by offering a handful of gold as part of the interaction. Will any coin be accepted, or only local currency? How overt are the PCs in offering this bribe?",
+        "text": "Los PJs pueden obtener ventaja en una Tirada de Presencia ofreciendo un puñado de oro como parte de la interacción. ¿Se aceptará cualquier moneda, o solo la divisa local? ¿Qué tan descarados son los PJs al ofrecer este soborno?",
         "costsFear": false
       },
       {
         "name": "Unexpected Find",
         "type": "action",
-        "text": "Reveal to the PCs that one of the merchants has something they want or need, such as food from their home, a rare book, magical components, a dubious treasure map, or a magical key. What cost beyond gold will the merchant ask for in exchange for this rarity?",
+        "text": "Revela a los PJs que uno de los mercaderes tiene algo que quieren o necesitan, como comida de su tierra natal, un libro raro, componentes mágicos, un dudoso mapa de un tesoro o una llave mágica. ¿Qué precio, más allá del oro, pedirá el mercader a cambio de esta rareza?",
         "costsFear": false
       },
       {
         "name": "Sticky Fingers",
         "type": "action",
-        "text": "A thief tries to steal something from a PC. The PC must succeed on an Instinct Roll to notice the thief or lose an item of the GM’s choice as the thief escapes to a Close distance. To retrieve the stolen item, the PCs must complete a Progress Countdown (6) to chase down the thief before the thief completes a Consequence Countdown (4) and escapes to their hideout. What drove this person to pickpocketing? Where is the thief’s hideout and how has it avoided notice?",
+        "text": "Un ladrón intenta robarle algo a un PJ. El PJ debe superar una Tirada de Instinto para notar al ladrón, o perderá un objeto a elección del GM mientras el ladrón escapa a distancia Cercana. Para recuperar el objeto robado, los PJs deben completar una Cuenta de Progreso (6) para atrapar al ladrón antes de que este complete una Cuenta de Consecuencia (4) y escape a su guarida. ¿Qué llevó a esta persona a robar? ¿Dónde está la guarida del ladrón y cómo ha evitado ser descubierta?",
         "costsFear": false
       },
       {
         "name": "Crowd Closes In",
         "type": "reaction",
-        "text": "When one of the PCs splits from the group, the crowds shift and cut them off from the party. Where does the crowd’s movement carry them? How do they feel about being alone but surrounded?",
+        "text": "Cuando uno de los PJs se separa del grupo, la multitud se desplaza y lo aísla del resto. ¿Hacia dónde lo arrastra el movimiento de la multitud? ¿Cómo se siente estando solo pero rodeado de gente?",
         "costsFear": false
       }
     ]
@@ -124,27 +124,27 @@
     "name": "Cliffside Ascent",
     "tier": 1,
     "type": "traversal",
-    "description": "A steep, rocky cliffside tall enough to make traversal dangerous.",
-    "impulses": "Cast the unready down to a rocky doom, draw people in with promise of what lies at the top",
+    "description": "Un acantilado escarpado y rocoso, lo bastante alto como para que cruzarlo sea peligroso.",
+    "impulses": "Arrojar a los incautos hacia una muerte rocosa, atraer a la gente con la promesa de lo que hay en la cima",
     "difficulty": 12,
     "potentialAdversaries": "Construct, Deeproot Defender, Giant Scorpion, Glass Snake",
     "features": [
       {
         "name": "The Climb",
         "type": "passive",
-        "text": "Climbing up the cliffside uses a Progress Countdown (12). It ticks down according to the following criteria when the PCs make an action roll to climb: • Critical Success: Tick down 3 • Success with Hope: Tick down 2 • Success with Fear: Tick down 1 • Failure with Hope: No advancement • Failure with Fear: Tick up 1 When the countdown triggers, the party has made it to the top of the cliff. What strange formations are the stones arranged in? What ominous warnings did previous adventurers leave?",
+        "text": "Escalar el acantilado usa una Cuenta de Progreso (12). Baja según los siguientes criterios cuando los PJs hacen una tirada de acción para escalar: • Éxito Crítico: Baja 3 • Éxito con Esperanza: Baja 2 • Éxito con Miedo: Baja 1 • Fallo con Esperanza: Sin avance • Fallo con Miedo: Sube 1 Cuando se activa la cuenta, el grupo ha llegado a la cima del acantilado. ¿En qué formaciones extrañas están dispuestas las rocas? ¿Qué advertencias ominosas dejaron aventureros anteriores?",
         "costsFear": false
       },
       {
         "name": "Pitons Left Behind",
         "type": "passive",
-        "text": "Previous climbers left behind large metal rods that climbers can use to aid their ascent. If a PC using the pitons fails an action roll to climb, they can mark a Stress instead of ticking the countdown up. What do the shape and material of these pitons tell you about the previous climbers? How far apart are they from one another?",
+        "text": "Escaladores anteriores dejaron atrás grandes clavijas de metal que los escaladores pueden usar para facilitar el ascenso. Si un PJ que usa las clavijas falla una tirada de acción para escalar, puede marcar Estrés en lugar de subir la cuenta. ¿Qué te dicen la forma y el material de estas clavijas sobre los escaladores anteriores? ¿Qué distancia hay entre unas y otras?",
         "costsFear": false
       },
       {
         "name": "Fall",
         "type": "action",
-        "text": "Spend a Fear to have a PC’s handhold fail, plummeting them toward the ground. If they aren’t saved on the next action, they hit the ground and tick up the countdown by 2. The PC takes 1d12 physical damage if the countdown is between 8 and 12, 2d12 between 4 and 7, and 3d12 at 3 or lower. How can you tell many others have fallen here before? What lives in these walls that might try to scare adventurers into falling for an easy meal?",
+        "text": "Gasta un Miedo para que el punto de apoyo de un PJ falle, precipitándolo hacia el suelo. Si no es rescatado en la siguiente acción, cae al suelo y la cuenta sube 2. El PJ sufre 1d12 de daño físico si la cuenta está entre 8 y 12, 2d12 entre 4 y 7, y 3d12 si está en 3 o menos. ¿Cómo se puede notar que muchos otros han caído aquí antes? ¿Qué vive en estas paredes y podría intentar asustar a los aventureros para hacerlos caer y conseguir una comida fácil?",
         "costsFear": true
       }
     ]
@@ -154,39 +154,39 @@
     "name": "Local Tavern",
     "tier": 1,
     "type": "social",
-    "description": "A lively tavern that serves as the social hub for its town.",
-    "impulses": "Provide opportunities for adventurers, nurture community",
+    "description": "Una taberna animada que funciona como el centro social del pueblo.",
+    "impulses": "Ofrecer oportunidades a los aventureros, fomentar la comunidad",
     "difficulty": 10,
     "potentialAdversaries": "Guards (Bladed Guard, Head Guard), Mercenaries (Harrier, Sellsword, Spellblade, Weaponmaster), Merchant",
     "features": [
       {
         "name": "What’s the Talk of the Town?",
         "type": "passive",
-        "text": "A PC can ask the bartender, staff, or patrons about local events, rumors, and potential work with a Presence Roll. On a success, they can pick two of the below details to learn—or three if they critically succeed. On a failure, they can pick one and mark a Stress as the local carries on about something irrelevant. • A fascinating rumor with a connection to a PC’s background • A promising job for the party involving a nearby threat or situation • Local folklore that relates to something they’ve seen • Town gossip that hints at a community problem Who has what kind of information? What gossip do the locals start spreading about the PCs?",
+        "text": "Un PJ puede preguntarle al tabernero, al personal o a los clientes sobre eventos locales, rumores y posibles trabajos con una Tirada de Presencia. Con un éxito, puede elegir dos de los siguientes detalles para descubrir, o tres si obtiene un éxito crítico. Con un fallo, puede elegir uno y marcar Estrés mientras el lugareño sigue hablando de algo irrelevante. • Un rumor fascinante relacionado con el trasfondo de un PJ • Un trabajo prometedor para el grupo relacionado con una amenaza o situación cercana • Folclore local relacionado con algo que han visto • Chismes del pueblo que insinúan un problema en la comunidad ¿Quién tiene qué tipo de información? ¿Qué chismes empiezan a difundir los lugareños sobre los PJs?",
         "costsFear": false
       },
       {
         "name": "Sing For Your Supper",
         "type": "passive",
-        "text": "A PC can perform one time for the guests by making a Presence Roll. On a success, they earn 1d4 handfuls of gold (2d4 if they critically succeed). On a failure, they mark a Stress. What piece do you perform? What does that piece mean to you? When’s the last time you performed it for a crowd?",
+        "text": "Un PJ puede actuar una vez para los presentes haciendo una Tirada de Presencia. Con un éxito, gana 1d4 puñados de oro (2d4 si obtiene un éxito crítico). Con un fallo, marca Estrés. ¿Qué pieza interpretas? ¿Qué significa esa pieza para ti? ¿Cuándo fue la última vez que la interpretaste ante un público?",
         "costsFear": false
       },
       {
         "name": "Mysterious Stranger",
         "type": "action",
-        "text": "Reveal a stranger concealing their identity, lurking in a shaded booth. What do they want? What’s their impression of the PCs? What mannerisms or accessories do they have?",
+        "text": "Revela a un desconocido que oculta su identidad, escondido en un reservado en penumbra. ¿Qué quiere? ¿Qué impresión tiene de los PJs? ¿Qué gestos o accesorios lo caracterizan?",
         "costsFear": false
       },
       {
         "name": "Someone Comes to Town",
         "type": "action",
-        "text": "Introduce a significant NPC who wants to hire the party for something or who relates to a PC’s background. Did they know the PCs were here? What do they want in this town?",
+        "text": "Presenta a un PNJ importante que quiere contratar al grupo para algo o que se relaciona con el trasfondo de un PJ. ¿Sabía que los PJs estaban aquí? ¿Qué quiere en este pueblo?",
         "costsFear": false
       },
       {
         "name": "Bar Fight!",
         "type": "action",
-        "text": "Spend a Fear to have a bar fight erupt in the tavern. When a PC tries to move through the tavern while the fight persists, they must succeed on an Agility or Presence Roll or take 1d6+2 physical damage from a wild swing or thrown object. A PC can try to activate this feature by succeeding on an action roll that would provoke tavern patrons. Who started the fight? What will it take to stop it?",
+        "text": "Gasta un Miedo para que estalle una pelea de bar en la taberna. Cuando un PJ intenta moverse por la taberna mientras dura la pelea, debe superar una Tirada de Agilidad o de Presencia o sufrir 1d6+2 de daño físico por un golpe salvaje o un objeto arrojado. Un PJ puede activar esta característica si tiene éxito en una tirada de acción que provoque a los clientes de la taberna. ¿Quién empezó la pelea? ¿Qué hará falta para detenerla?",
         "costsFear": true
       }
     ]
@@ -196,39 +196,39 @@
     "name": "Outpost Town",
     "tier": 1,
     "type": "social",
-    "description": "A small town on the outskirts of a nation or region, close to a dungeon, tombs, or other adventuring destinations.",
-    "impulses": "Drive the desperate to certain doom, profit off of ragged hope",
+    "description": "Un pequeño pueblo en los confines de una nación o región, cerca de una mazmorra, tumbas u otros destinos de aventura.",
+    "impulses": "Llevar a los desesperados hacia una muerte segura, sacar provecho de la esperanza mendiga",
     "difficulty": 12,
     "potentialAdversaries": "Jagged Knife Bandits (Hexer, Kneebreaker, Lackey, Lieutenant, Shadow, Sniper), Masked Thief, Merchant",
     "features": [
       {
         "name": "Rumors Abound",
         "type": "passive",
-        "text": "Gossip is the fastest-traveling currency in the realm. A PC can inquire about major events by making a Presence Roll. What they learn depends on the outcome of their roll, based on the following criteria: • Critical Success: Learn about two major events. The PC can ask one follow-up question about one of the rumors and get a truthful (if not always complete) answer. • Success with Hope: Learn about two events, at least one of which is relevant to the character’s background. • Success with Fear: Learn an alarming rumor related to the character’s background. • Any Failure: The locals respond poorly to their inquiries. The PC must mark a Stress to learn one relevant rumor. What news do the PCs have that they could pass along to curious travelers? What do the locals think about these events?",
+        "text": "Los chismes son la moneda que viaja más rápido en el reino. Un PJ puede preguntar por eventos importantes haciendo una Tirada de Presencia. Lo que descubra depende del resultado de su tirada, según los siguientes criterios: • Éxito Crítico: Se entera de dos eventos importantes. El PJ puede hacer una pregunta de seguimiento sobre uno de los rumores y obtener una respuesta veraz (aunque no siempre completa). • Éxito con Esperanza: Se entera de dos eventos, al menos uno relevante para el trasfondo del personaje. • Éxito con Miedo: Se entera de un rumor alarmante relacionado con el trasfondo del personaje. • Cualquier Fallo: Los lugareños responden mal a sus preguntas. El PJ debe marcar Estrés para descubrir un rumor relevante. ¿Qué noticias tienen los PJs que podrían compartir con viajeros curiosos? ¿Qué piensan los lugareños de estos eventos?",
         "costsFear": false
       },
       {
         "name": "Society of the Broken Compass",
         "type": "passive",
-        "text": "An adventuring society maintains a chapterhouse here, where heroes trade boasts and rumors, drink to their imagined successes, and scheme to undermine their rivals. What boasts do the adventurers here make, and which do you think are true?",
+        "text": "Una sociedad de aventureros mantiene una sede aquí, donde los héroes intercambian fanfarronadas y rumores, bebe a la salud de sus imaginados éxitos y conspiran para socavar a sus rivales. ¿Qué fanfarronadas hacen los aventureros aquí, y cuáles crees que son ciertas?",
         "costsFear": false
       },
       {
         "name": "Rival Party",
         "type": "passive",
-        "text": "Another adventuring party is here, seeking the same treasure or leads as the PCs. Which PC has a connection to one of the rival party members? Do they approach the PC first or do they wait for the PC to move?",
+        "text": "Otro grupo de aventureros está aquí, buscando el mismo tesoro o las mismas pistas que los PJs. ¿Qué PJ tiene una conexión con algún miembro del grupo rival? ¿Se acercan primero al PJ o esperan a que este dé el primer paso?",
         "costsFear": false
       },
       {
         "name": "It’d Be a Shame If Something Happened to Your Store",
         "type": "action",
-        "text": "The PCs witness as agents of a local crime boss shake down a general goods store. What trouble does it cause if the PCs intervene?",
+        "text": "Los PJs son testigos de cómo los agentes de un jefe criminal local extorsionan a una tienda de artículos generales. ¿Qué problemas causa si los PJs intervienen?",
         "costsFear": false
       },
       {
         "name": "Wrong Place, Wrong Time",
         "type": "reaction",
-        "text": "At night, or when the party is alone in a back alley, you can spend a Fear to introduce a group of thieves who try to rob them. The thieves appear at Close range of a chosen PC and include a Jagged Knife Kneebreaker, as many Lackeys as there are PCs, and a Lieutenant. For a larger party, add a Hexer or Sniper. What details show the party that these people are desperate former adventurers?",
+        "text": "De noche, o cuando el grupo está solo en un callejón trasero, puedes gastar un Miedo para presentar a un grupo de ladrones que intenta robarlos. Los ladrones aparecen a distancia Cercana de un PJ elegido e incluyen a un Rompepiernas del Cuchillo Mellado, tantos Lacayos como PJs haya, y un Teniente. Para un grupo más numeroso, añade un Hechicero o un Francotirador. ¿Qué detalles revelan al grupo que estas personas son antiguos aventureros desesperados?",
         "costsFear": true
       }
     ]
@@ -238,27 +238,27 @@
     "name": "Raging River",
     "tier": 1,
     "type": "traversal",
-    "description": "A swift-moving river without a bridge crossing, deep enough to sweep away most people.",
-    "impulses": "Bar crossing, carry away the unready, divide the land",
+    "description": "Un río de corriente rápida sin puente, lo bastante profundo como para arrastrar a la mayoría de las personas.",
+    "impulses": "Bloquear el paso, arrastrar a los incautos, dividir la tierra",
     "difficulty": 10,
     "potentialAdversaries": "Beasts (Bear, Glass Snake), Jagged Knife Bandits (Hexer, Kneebreaker, Lackey, Lieutenant, Shadow, Sniper)",
     "features": [
       {
         "name": "Dangerous Crossing",
         "type": "passive",
-        "text": "Crossing the river requires the party to complete a Progress Countdown (4). A PC who rolls a failure with Fear is immediately targeted by the “Undertow” action without requiring a Fear to be spent on the feature. Have any of the PCs forded rivers like this before? Are any of them afraid of drowning?",
+        "text": "Cruzar el río requiere que el grupo complete una Cuenta de Progreso (4). Un PJ que obtenga un fallo con Miedo es objetivo inmediato de la acción “Corriente Subterránea” sin necesidad de gastar Miedo en esa característica. ¿Alguno de los PJs ha vadeado ríos como este antes? ¿Alguno de ellos le teme a ahogarse?",
         "costsFear": false
       },
       {
         "name": "Undertow",
         "type": "action",
-        "text": "Spend a Fear to catch a PC in the undertow. They must make an Agility Reaction Roll. On a failure, they take 1d6+1 physical damage and are moved a Close distance down the river, becoming Vulnerable until they get out of the river. On a success, they must mark a Stress. What trinkets and baubles lie along the bottom of the riverbed? Do predators swim these rivers?",
+        "text": "Gasta un Miedo para atrapar a un PJ en la corriente subterránea. Debe hacer una Tirada de Reacción de Agilidad. Con un fallo, sufre 1d6+1 de daño físico y es arrastrado una distancia Cercana río abajo, quedando Vulnerable hasta que salga del río. Con un éxito, debe marcar Estrés. ¿Qué baratijas y objetos yacen en el fondo del lecho del río? ¿Hay depredadores que naden en estos ríos?",
         "costsFear": true
       },
       {
         "name": "Patient Hunter",
         "type": "action",
-        "text": "Spend a Fear to summon a Glass Snake within Close range of a chosen PC. The Snake appears in or near the river and immediately takes the spotlight to use their “Spinning Serpent” action. What treasures does the beast have in their burrow? What travelers have already fallen victim to this predator?",
+        "text": "Gasta un Miedo para convocar a una Serpiente de Cristal a distancia Cercana de un PJ elegido. La Serpiente aparece dentro o cerca del río y toma el protagonismo de inmediato para usar su acción “Serpiente en Espiral”. ¿Qué tesoros tiene la bestia en su guarida? ¿Qué viajeros ya han caído víctimas de este depredador?",
         "costsFear": true
       }
     ]
@@ -268,33 +268,33 @@
     "name": "Cult Ritual",
     "tier": 2,
     "type": "event",
-    "description": "A Fallen cult assembles around a sigil of the defeated gods and a bonfire that burns a sickly shade of green.",
-    "impulses": "Profane the land, unite the Mortal Realm with the Circles Below",
+    "description": "Un culto de los Caídos se reúne alrededor de un sigilo de los dioses derrotados y una hoguera que arde con un tono verde enfermizo.",
+    "impulses": "Profanar la tierra, unir el Reino Mortal con los Círculos de Abajo",
     "difficulty": 14,
     "potentialAdversaries": "Cult of the Fallen (Cult Adept, Cult Fang, Cult Initiate, Secret-Keeper)",
     "features": [
       {
         "name": "Desecrated Ground",
         "type": "passive",
-        "text": "Cultists dedicated this place to the Fallen Gods, and their foul influence seeps into it. Reduce the PCs’ Hope Die to a d10 while in this environment. The desecration can be removed with a Progress Countdown (6). How do the PCs first notice that something is wrong about this place? What fears resurface while hope is kept at bay?",
+        "text": "Los cultistas dedicaron este lugar a los Dioses Caídos, y su influencia impía se filtra en él. Reduce el Dado de Esperanza de los PJs a un d10 mientras estén en este entorno. La profanación puede eliminarse con una Cuenta de Progreso (6). ¿Cómo notan los PJs por primera vez que algo va mal en este lugar? ¿Qué miedos resurgen mientras la esperanza se mantiene a raya?",
         "costsFear": false
       },
       {
         "name": "Blasphemous Might",
         "type": "action",
-        "text": "A portion of the ritual’s power is diverted into a cult member to fight off interlopers. Choose one adversary to become Imbued with terrible magic until the scene ends or they’re defeated. An Imbued adversary immediately takes the spotlight and gains one of the following benefits, or all three if you spend a Fear: • They gain advantage on all attacks. • They deal an extra 1d10 damage on a successful attack. • They gain the following feature: Relentless (2) - Passive. This adversary can be spotlighted up to two times per GM turn. Spend Fear as usual to spotlight them. How does the enemy change in appearance? What fears do their blows bring to the surface?",
+        "text": "Una porción del poder del ritual se desvía hacia un miembro del culto para repeler a los intrusos. Elige un adversario que quede Imbuido con magia terrible hasta que termine la escena o sea derrotado. Un adversario Imbuido toma el protagonismo de inmediato y obtiene uno de los siguientes beneficios, o los tres si gastas un Miedo: • Obtiene ventaja en todos los ataques. • Inflige 1d10 de daño extra en un ataque exitoso. • Obtiene la siguiente característica: Implacable (2) - Pasiva. Este adversario puede recibir el protagonismo hasta dos veces por turno del GM. Gasta Miedo como de costumbre para darle el protagonismo. ¿Cómo cambia el aspecto del enemigo? ¿Qué miedos afloran con sus golpes?",
         "costsFear": true
       },
       {
         "name": "The Summoning",
         "type": "reaction",
-        "text": "Countdown (6). When the PCs enter the scene or the cult begins the ritual to summon a demon, activate the countdown. Designate one adversary to lead the ritual. The countdown ticks down when a PC rolls with Fear. When it triggers, summon a Minor Demon within Very Close range of the ritual’s leader. If the leader is defeated, the countdown ends with no effect as the ritual fails. What will the cult do with this leashed demon if they succeed? What will they try to summon next?",
+        "text": "Cuenta (6). Cuando los PJs entran en la escena o el culto empieza el ritual para convocar a un demonio, activa la cuenta. Designa a un adversario para liderar el ritual. La cuenta baja cuando un PJ tira con Miedo. Cuando se activa, convoca a un Demonio Menor a distancia Muy Cercana del líder del ritual. Si el líder es derrotado, la cuenta termina sin efecto porque el ritual falla. ¿Qué hará el culto con este demonio atado si lo logran? ¿Qué intentarán convocar después?",
         "costsFear": false
       },
       {
         "name": "Complete the Ritual",
         "type": "reaction",
-        "text": "If the ritual’s leader is targeted by an attack or spell, an ally within Very Close range of them can mark a Stress to be targeted by that attack or spell instead. What does it feel like to see such devotion turned to the pursuit of fear and domination?",
+        "text": "Si el líder del ritual es objetivo de un ataque o un hechizo, un aliado a distancia Muy Cercana puede marcar Estrés para convertirse en el objetivo de ese ataque o hechizo en su lugar. ¿Cómo se siente ver tal devoción puesta al servicio del miedo y la dominación?",
         "costsFear": false
       }
     ]
@@ -304,33 +304,33 @@
     "name": "Hallowed Temple",
     "tier": 2,
     "type": "social",
-    "description": "A bustling but well-kept temple that provides healing and hosts regular services, overseen by a priest or seraph.",
-    "impulses": "Connect the Mortal Realm with the Hallows Above, display the power of the divine, provide aid and succor to the faithful",
+    "description": "Un templo concurrido pero bien cuidado que brinda curación y celebra oficios regulares, supervisado por un sacerdote o un serafín.",
+    "impulses": "Conectar el Reino Mortal con las Alturas Sagradas, exhibir el poder de lo divino, brindar ayuda y consuelo a los fieles",
     "difficulty": 13,
     "potentialAdversaries": "Guards (Archer Guard, Bladed Guard, Head Guard)",
     "features": [
       {
         "name": "A Place of Healing",
         "type": "passive",
-        "text": "A PC who takes a rest in the Hallowed Temple automatically clears all HP. What does the incense smell like? What kinds of songs do the acolytes sing?",
+        "text": "Un PJ que descansa en el Templo Sagrado recupera automáticamente todos sus PV. ¿A qué huele el incienso? ¿Qué tipo de cánticos entonan los acólitos?",
         "costsFear": false
       },
       {
         "name": "Divine Guidance",
         "type": "passive",
-        "text": "A PC who prays to a deity while in the Hallowed Temple can make an Instinct Roll to receive answers. If the god they beseech isn’t welcome in this temple, the roll is made with disadvantage. • Critical Success: The PC gains clear information. Additionally, they gain 1d4 Hope, which can be distributed between the party if they share the vision and guidance they received. • Success with Hope: The PC receives clear information. • Success with Fear: The PC receives brief flashes of insight and an emotional impression conveying an answer. • Any Failure: The PC receives only vague flashes. They can mark a Stress to receive one clear image without context. What does it feel like as you are touched by this vision? What feeling lingers after the images have passed?",
+        "text": "Un PJ que rece a una deidad dentro del Templo Sagrado puede hacer una Tirada de Instinto para recibir respuestas. Si el dios al que suplica no es bienvenido en este templo, la tirada se hace con desventaja. • Éxito Crítico: El PJ obtiene información clara. Además, gana 1d4 de Esperanza, que puede distribuir entre el grupo si compartes la visión y la guía que recibiste. • Éxito con Esperanza: El PJ recibe información clara. • Éxito con Miedo: El PJ recibe destellos breves de intuición y una impresión emocional que transmite una respuesta. • Cualquier Fallo: El PJ recibe solo destellos vagos. Puede marcar Estrés para recibir una imagen clara sin contexto. ¿Cómo se siente ser tocado por esta visión? ¿Qué sensación persiste después de que las imágenes desaparecen?",
         "costsFear": false
       },
       {
         "name": "Relentless Hope",
         "type": "reaction",
-        "text": "Once per scene, each PC can mark a Stress to turn a result with Fear into a result with Hope. What emotions or memories do you connect with when fear presses in?",
+        "text": "Una vez por escena, cada PJ puede marcar Estrés para convertir un resultado con Miedo en un resultado con Esperanza. ¿Con qué emociones o recuerdos te conectas cuando el miedo aprieta?",
         "costsFear": false
       },
       {
         "name": "Divine Censure",
         "type": "reaction",
-        "text": "When the PCs have trespassed, blasphemed, or offended the clergy, you can spend a Fear to summon a High Seraph and 1d4 Bladed Guards within Close range of the senior priest to reinforce their will. What symbols or icons do they bear that signal they are anointed agents of the divinity? Who leads the group and what led them to this calling?",
+        "text": "Cuando los PJs han irrumpido, blasfemado u ofendido al clero, puedes gastar un Miedo para convocar a un Alto Serafín y 1d4 Guardias Armados a distancia Cercana del sacerdote más antiguo para reforzar su voluntad. ¿Qué símbolos o iconos llevan que señalen que son agentes ungidos de la divinidad? ¿Quién lidera el grupo y qué lo llevó a este llamado?",
         "costsFear": true
       }
     ]
@@ -340,33 +340,33 @@
     "name": "Haunted City",
     "tier": 2,
     "type": "exploration",
-    "description": "An abandoned city populated by the restless spirits of eras past.",
-    "impulses": "Misdirect and disorient, replay apocalypses both public and personal",
+    "description": "Una ciudad abandonada poblada por los espíritus inquietos de eras pasadas.",
+    "impulses": "Desorientar y confundir, reproducir apocalipsis tanto públicos como personales",
     "difficulty": 14,
     "potentialAdversaries": "Ghosts (Spectral Archer, Spectral Captain, Spectral Guardian), ghostly versions of other adversaries (see “Ghostly Form”)",
     "features": [
       {
         "name": "Buried Knowledge",
         "type": "passive",
-        "text": "The city has countless mysteries to unfold. A PC who seeks knowledge about the fallen city can make an Instinct or Knowledge Roll to learn about this place and discover (potentially haunted) loot. • Critical Success: Gain valuable information and a related useful item. • Success with Hope: Gain valuable information. • Success with Fear: Uncover vague or incomplete information. • Any Failure: Mark a Stress to find a lead after an exhaustive search. What greater secrets does the city contain? Why have so many ghosts lingered here? What doomed adventurers have met a bad fate here already?",
+        "text": "La ciudad guarda innumerables misterios por descubrir. Un PJ que busque conocimiento sobre la ciudad caída puede hacer una Tirada de Instinto o Conocimiento para aprender sobre este lugar y descubrir botín (potencialmente embrujado). • Éxito Crítico: Obtiene información valiosa y un objeto útil relacionado. • Éxito con Esperanza: Obtiene información valiosa. • Éxito con Miedo: Descubre información vaga o incompleta. • Cualquier Fallo: Marca Estrés para encontrar una pista tras una búsqueda exhaustiva. ¿Qué secretos mayores contiene la ciudad? ¿Por qué han permanecido tantos fantasmas aquí? ¿Qué aventureros condenados ya han encontrado un mal destino en este lugar?",
         "costsFear": false
       },
       {
         "name": "Ghostly Form",
         "type": "passive",
-        "text": "Adversaries who appear here are of a ghostly form. They have resistance to physical damage and can mark a Stress to move up to Close range through solid objects. What injuries to their physical form speak to their cause of death? What unfulfilled purpose holds them in the Mortal Plane?",
+        "text": "Los adversarios que aparecen aquí tienen forma fantasmal. Tienen resistencia al daño físico y pueden marcar Estrés para moverse hasta distancia Cercana a través de objetos sólidos. ¿Qué heridas en su forma física revelan su causa de muerte? ¿Qué propósito sin cumplir los retiene en el Plano Mortal?",
         "costsFear": false
       },
       {
         "name": "Dead Ends",
         "type": "action",
-        "text": "The ghosts of an earlier era manifest scenes from their bygone era, such as a street festival, a revolution, or a heist. These hauntings change the layout of the city around the PCs, blocking the way behind them, forcing a detour, or presenting them with a challenge, such as mistaking them for rival thieves during the heist. What do the ghosts want from you? What do you need from them?",
+        "text": "Los fantasmas de una era anterior manifiestan escenas de su época pasada, como un festival callejero, una revolución o un atraco. Estas apariciones cambian la disposición de la ciudad alrededor de los PJs, bloqueando el camino tras ellos, forzando un desvío, o presentándoles un desafío, como confundirlos con ladrones rivales durante el atraco. ¿Qué quieren los fantasmas de ustedes? ¿Qué necesitan ustedes de ellos?",
         "costsFear": false
       },
       {
         "name": "Apocalypse Then",
         "type": "action",
-        "text": "Spend a Fear to manifest the echo of a past disaster that ravaged the city. Activate a Progress Countdown (5) as the disaster replays around the PCs. To complete the countdown and escape the catastrophe, the PCs must overcome threats such as rampaging fires, stampeding civilians, collapsing buildings, or crumbling streets, while recalling history and finding clues to escape the inevitable. Is this the disaster that led the city to be abandoned? What is known about this disaster, and how could that help the PCs escape?",
+        "text": "Gasta un Miedo para manifestar el eco de un desastre pasado que asoló la ciudad. Activa una Cuenta de Progreso (5) mientras el desastre se reproduce alrededor de los PJs. Para completar la cuenta y escapar de la catástrofe, los PJs deben superar amenazas como incendios desbocados, civiles en estampida, edificios que se derrumban o calles que se desmoronan, mientras recuerdan la historia y encuentran pistas para escapar de lo inevitable. ¿Es este el desastre que llevó a abandonar la ciudad? ¿Qué se sabe sobre este desastre, y cómo podría eso ayudar a los PJs a escapar?",
         "costsFear": true
       }
     ]
@@ -376,33 +376,33 @@
     "name": "Mountain Pass",
     "tier": 2,
     "type": "traversal",
-    "description": "Stony peaks that pierce the clouds, with a twisting path winding its way up and over through many switchbacks.",
-    "impulses": "Exact a chilling toll in supplies and stamina, reveal magical tampering, slow down travel",
+    "description": "Picos pedregosos que atraviesan las nubes, con un sendero sinuoso que sube y baja a través de numerosas curvas cerradas.",
+    "impulses": "Exigir un tributo gélido en suministros y resistencia, revelar manipulación mágica, ralentizar el viaje",
     "difficulty": 15,
     "potentialAdversaries": "Beasts (Bear, Giant Eagle, Glass Snake), Chaos Skull, Minotaur Wrecker, Mortal Hunter",
     "features": [
       {
         "name": "Engraved Sigils",
         "type": "passive",
-        "text": "Large markings and engravings have been made in the mountainside. A PC with a relevant background or Experience identifies them as weather magic increasing the power of the icy winds. A PC who succeeds on a Knowledge Roll can recall information about the sigils, potential information about their creators, and the knowledge of how to dispel them. If a PC critically succeeds, they recognize that the sigils are of a style created by ridgeborne enchanters and they gain advantage on a roll to dispel the sigils. Who laid this enchantment? Are they nearby? Why did they want the weather to be more daunting?",
+        "text": "Se han hecho grandes marcas y grabados en la ladera de la montaña. Un PJ con un trasfondo o Experiencia relevante los identifica como magia climática que aumenta el poder de los vientos helados. Un PJ que supere una Tirada de Conocimiento puede recordar información sobre los sigilos, información potencial sobre sus creadores y cómo disiparlos. Si un PJ obtiene un éxito crítico, reconoce que los sigilos tienen un estilo creado por encantadores de las crestas y obtiene ventaja en una tirada para disiparlos. ¿Quién lanzó este encantamiento? ¿Está cerca? ¿Por qué quería que el clima fuera más temible?",
         "costsFear": false
       },
       {
         "name": "Avalanche",
         "type": "action",
-        "text": "Spend a Fear to carve the mountain with an icy torrent, causing an avalanche. All PCs in its path must succeed on an Agility or Strength Reaction Roll or be bowled over and carried down the mountain. A PC using rope, pitons, or other climbing gear gains advantage on this roll. Targets who fail are knocked down the mountain to Far range, take 2d20 physical damage, and must mark a Stress. Targets who succeed must mark a Stress. How do the PCs try to weather the avalanche? What approach do the characters take to find one another when their companions go hurtling down the mountainside?",
+        "text": "Gasta un Miedo para tallar la montaña con un torrente helado, causando una avalancha. Todos los PJs en su camino deben superar una Tirada de Reacción de Agilidad o Fuerza o serán arrollados y arrastrados montaña abajo. Un PJ que use cuerdas, clavijas u otro equipo de escalada obtiene ventaja en esta tirada. Los objetivos que fallen son arrojados montaña abajo hasta distancia Lejana, sufren 2d20 de daño físico y deben marcar Estrés. Los objetivos que tengan éxito deben marcar Estrés. ¿Cómo intentan los PJs resistir la avalancha? ¿Qué enfoque usan los personajes para encontrarse entre ellos cuando sus compañeros salen despedidos montaña abajo?",
         "costsFear": true
       },
       {
         "name": "Raptor Nest",
         "type": "reaction",
-        "text": "When the PCs enter the raptors’ hunting grounds, two Giant Eagles appear at Very Far range of a chosen PC, identifying the PCs as likely prey. How long has it been since the eagles last found prey? Do they have eggs in their nest, or unfledged young?",
+        "text": "Cuando los PJs entran en el territorio de caza de las rapaces, dos Águilas Gigantes aparecen a distancia Muy Lejana de un PJ elegido, identificando a los PJs como posibles presas. ¿Cuánto tiempo ha pasado desde que las águilas encontraron presas por última vez? ¿Tienen huevos en su nido, o crías sin plumas?",
         "costsFear": false
       },
       {
         "name": "Icy Winds",
         "type": "reaction",
-        "text": "Countdown (Loop 4). When the PCs enter the mountain pass, activate the countdown. When it triggers, all characters traveling through the pass must succeed on a Strength Reaction Roll or mark a Stress. A PC wearing clothes appropriate for extreme cold gains advantage on these rolls. What parts of the PC’s bodies go numb first? How do they try to keep warm as they press forward?",
+        "text": "Cuenta (Cíclica 4). Cuando los PJs entran en el paso de montaña, activa la cuenta. Cuando se activa, todos los personajes que viajen por el paso deben superar una Tirada de Reacción de Fuerza o marcar Estrés. Un PJ con ropa adecuada para el frío extremo obtiene ventaja en estas tiradas. ¿Qué partes del cuerpo del PJ se entumecen primero? ¿Cómo intentan mantenerse abrigados mientras avanzan?",
         "costsFear": false
       }
     ]
@@ -412,39 +412,39 @@
     "name": "Burning Heart of the Woods",
     "tier": 3,
     "type": "exploration",
-    "description": "Thick indigo ash fills the air around a towering moss-covered tree that burns eternally with flames a sickly shade of blue.",
-    "impulses": "Beat out an uncanny rhythm for all to follow, corrupt the woods",
+    "description": "Ceniza espesa de color índigo llena el aire alrededor de un árbol imponente cubierto de musgo que arde eternamente con llamas de un tono azul enfermizo.",
+    "impulses": "Marcar un ritmo antinatural que todos deben seguir, corromper el bosque",
     "difficulty": 16,
     "potentialAdversaries": "Beasts (Bear, Glass Snake), Elementals (Elemental Spark), Verdant Defenders (Dryad, Oak Treant, Stag Knight)",
     "features": [
       {
         "name": "Chaos Magic Locus",
         "type": "passive",
-        "text": "When a PC makes a Spellcast Roll, they must roll two Fear Dice and take the higher result. What does it feel like to work magic in this chaos-touched place? What do you fear will happen if you lose control of the spell?",
+        "text": "Cuando un PJ hace una Tirada de Conjuro, debe tirar dos Dados de Miedo y quedarse con el resultado más alto. ¿Cómo se siente lanzar magia en este lugar tocado por el caos? ¿Qué temes que ocurra si pierdes el control del hechizo?",
         "costsFear": false
       },
       {
         "name": "The Indigo Flame",
         "type": "passive",
-        "text": "PCs who approach the central tree can make a Knowledge Roll to try to identify the magic that consumed this environment. • On a success: They learn three of the below details. On a success with Fear, they learn two. • On a failure: They can mark a Stress to learn one and gain advantage on the next action roll to investigate this environment. • Details: This is a result of Fallen magic. The corruption is spread through the ashen moss. It can be cleansed only by a ritual of nature magic with a Progress Countdown (8). What Fallen cult corrupted these woods? What have they already done with the cursed wood and sap from this tree?",
+        "text": "Los PJs que se acerquen al árbol central pueden hacer una Tirada de Conocimiento para intentar identificar la magia que consumió este entorno. • Con un éxito: Descubren tres de los siguientes detalles. Con un éxito con Miedo, descubren dos. • Con un fallo: Pueden marcar Estrés para descubrir uno y obtener ventaja en la próxima tirada de acción para investigar este entorno. • Detalles: Esto es resultado de magia de los Caídos. La corrupción se propaga a través del musgo cenizo. Solo puede purificarse con un ritual de magia de la naturaleza mediante una Cuenta de Progreso (8). ¿Qué culto de los Caídos corrompió este bosque? ¿Qué han hecho ya con la madera y la savia malditas de este árbol?",
         "costsFear": false
       },
       {
         "name": "Grasping Vines",
         "type": "action",
-        "text": "Animate vines bristling with thorns whip out from the underbrush to ensnare the PCs. A target must succeed on an Agility Reaction Roll or become Restrained and Vulnerable until they break free, clearing both conditions, with a successful Finesse or Strength Roll or by dealing 10 damage to the vines. When the target makes a roll to escape, they take 1d8+4 physical damage and lose a Hope. What painful memories do the vines bring to the surface as they pierce flesh?",
+        "text": "Enredaderas animadas cubiertas de espinas salen disparadas de la maleza para apresar a los PJs. Un objetivo debe superar una Tirada de Reacción de Agilidad o quedar Apresado y Vulnerable hasta que se libere, eliminando ambas condiciones, con una tirada exitosa de Destreza o Fuerza o infligiendo 10 de daño a las enredaderas. Cuando el objetivo hace una tirada para escapar, sufre 1d8+4 de daño físico y pierde una Esperanza. ¿Qué recuerdos dolorosos hacen aflorar las enredaderas al atravesar la carne?",
         "costsFear": false
       },
       {
         "name": "Charcoal Constructs",
         "type": "action",
-        "text": "Warped animals wreathed in indigo flame trample through a point of your choice. All targets within Close range of that point must make an Agility Reaction Roll. Targets who fail take 3d12+3 physical damage. Targets who succeed take half damage instead. Are these real animals consumed by the flame or merely constructs of the corrupting magic?",
+        "text": "Animales deformados envueltos en llamas índigo arrasan un punto de tu elección. Todos los objetivos a distancia Cercana de ese punto deben hacer una Tirada de Reacción de Agilidad. Los objetivos que fallen sufren 3d12+3 de daño físico. Los objetivos que tengan éxito sufren la mitad del daño. ¿Son estos animales reales consumidos por las llamas o simples constructos de la magia corruptora?",
         "costsFear": false
       },
       {
         "name": "Choking Ash",
         "type": "reaction",
-        "text": "Countdown (Loop 6). When the PCs enter the Burning Heart of the Woods, activate the countdown. When it triggers, all characters must make a Strength or Instinct Reaction Roll. Targets who fail take 4d6+5 direct physical damage. Targets who succeed take half damage. Protective masks or clothes give advantage on the reaction roll. What hallucinations does the ash induce? What incongruous taste does it possess?",
+        "text": "Cuenta (Cíclica 6). Cuando los PJs entran al Corazón Ardiente del Bosque, activa la cuenta. Cuando se activa, todos los personajes deben hacer una Tirada de Reacción de Fuerza o Instinto. Los objetivos que fallen sufren 4d6+5 de daño físico directo. Los objetivos que tengan éxito sufren la mitad del daño. Máscaras o ropa protectoras dan ventaja en la tirada de reacción. ¿Qué alucinaciones provoca la ceniza? ¿Qué sabor incongruente tiene?",
         "costsFear": false
       }
     ]
@@ -454,33 +454,33 @@
     "name": "Castle Siege",
     "tier": 3,
     "type": "event",
-    "description": "An active siege with an attacking force fighting to gain entry to a fortified castle.",
-    "impulses": "Bleed out the will to fight, breach the walls, build tension",
+    "description": "Un asedio activo con una fuerza atacante luchando por entrar en un castillo fortificado.",
+    "impulses": "Desangrar la voluntad de luchar, romper las murallas, generar tensión",
     "difficulty": 17,
     "potentialAdversaries": "Mercenaries (Harrier, Sellsword, Spellblade, Weaponmaster), Noble Forces (Archer Squadron, Conscript, Elite Soldier, Knight of the Realm)",
     "features": [
       {
         "name": "Secret Entrance",
         "type": "passive",
-        "text": "A PC can find or recall a secret way into the castle with a successful Instinct or Knowledge Roll. How do they get in without revealing the pathway to the attackers? Are any of the defenders monitoring this path?",
+        "text": "Un PJ puede encontrar o recordar una entrada secreta al castillo con una Tirada de Instinto o Conocimiento exitosa. ¿Cómo entran sin revelar el camino a los atacantes? ¿Algún defensor vigila este acceso?",
         "costsFear": false
       },
       {
         "name": "Siege Weapons (Environment Change)",
         "type": "action",
-        "text": "Consequence Countdown (6). The attacking force deploys siege weapons to try to raze the defenders’ fortifications. Activate the countdown when the siege begins (for a protracted siege, make this a long-term countdown instead). When it triggers, the defenders’ fortifications have been breached and the attackers flood inside. You gain 2 Fear, then shift to the Pitched Battle environment and spotlight it. What siege weapons are being deployed? Are they magical, mundane, or a mixture of both? What defenses must the characters overcome to storm the castle?",
+        "text": "Cuenta de Consecuencia (6). La fuerza atacante despliega máquinas de asedio para intentar derribar las fortificaciones de los defensores. Activa la cuenta cuando comienza el asedio (para un asedio prolongado, conviértela en una cuenta a largo plazo). Cuando se activa, las fortificaciones de los defensores han sido violadas y los atacantes inundan el interior. Ganas 2 de Miedo, luego cambia al entorno de Batalla Campal y dale el protagonismo. ¿Qué máquinas de asedio se están desplegando? ¿Son mágicas, mundanas o una mezcla de ambas? ¿Qué defensas deben superar los personajes para tomar el castillo?",
         "costsFear": false
       },
       {
         "name": "Reinforcements!",
         "type": "action",
-        "text": "Summon a Knight of the Realm, a number of Tier 3 Minions equal to the number of PCs, and two adversaries of your choice within Far range of a chosen PC as reinforcements. The Knight of the Realm immediately takes the spotlight. Who are they targeting first? What formation do they take?",
+        "text": "Convoca a un Caballero del Reino, un número de Esbirros de Nivel 3 igual al número de PJs, y dos adversarios de tu elección a distancia Lejana de un PJ elegido, como refuerzos. El Caballero del Reino toma el protagonismo de inmediato. ¿A quién apuntan primero? ¿Qué formación adoptan?",
         "costsFear": false
       },
       {
         "name": "Collateral Damage",
         "type": "reaction",
-        "text": "When an adversary is defeated, you can spend a Fear to have a stray attack from a siege weapon hit a point on the battlefield. All targets within Very Close range of that point must make an Agility Reaction Roll. • Targets who fail take 3d8+3 physical or magic damage and must mark a Stress. • Targets who succeed must mark a Stress. What debris is scattered by the attack? What is broken by the strike that can’t be easily mended?",
+        "text": "Cuando un adversario es derrotado, puedes gastar un Miedo para que un disparo desviado de una máquina de asedio golpee un punto del campo de batalla. Todos los objetivos a distancia Muy Cercana de ese punto deben hacer una Tirada de Reacción de Agilidad. • Los objetivos que fallen sufren 3d8+3 de daño físico o mágico y deben marcar Estrés. • Los objetivos que tengan éxito deben marcar Estrés. ¿Qué escombros esparce el ataque? ¿Qué se rompe con el impacto y no puede repararse fácilmente?",
         "costsFear": true
       }
     ]
@@ -490,33 +490,33 @@
     "name": "Pitched Battle",
     "tier": 3,
     "type": "event",
-    "description": "A massive combat between two large groups of armed combatants.",
-    "impulses": "Seize people, land, and wealth, spill blood for greed and glory",
+    "description": "Un combate masivo entre dos grandes grupos de combatientes armados.",
+    "impulses": "Apoderarse de gente, tierras y riquezas, derramar sangre por avaricia y gloria",
     "difficulty": 17,
     "potentialAdversaries": "Mercenaries (Sellsword, Harrier, Spellblade, Weaponmaster), Noble Forces (Archer Squadron, Conscript, Elite Soldier, Knight of the Realm)",
     "features": [
       {
         "name": "Adrift on a Sea of Steel",
         "type": "passive",
-        "text": "Traversing a battlefield during an active combat is extremely dangerous. A PC must succeed on an Agility Roll to move at all, and can only go up to Close range on a success. If an adversary is within Melee range of them, they must mark a Stress to make an Agility Roll to move. Do the combatants mistake you for the enemy or consider you interlopers? Can you tell the difference between friend and foe in the fray?",
+        "text": "Atravesar un campo de batalla durante un combate activo es extremadamente peligroso. Un PJ debe superar una Tirada de Agilidad para moverse siquiera, y solo puede avanzar hasta distancia Cercana con un éxito. Si un adversario está a distancia de Melé, debe marcar Estrés para hacer una Tirada de Agilidad y moverse. ¿Los combatientes te confunden con el enemigo o te consideran un intruso? ¿Puedes distinguir entre amigo y enemigo en medio del caos?",
         "costsFear": false
       },
       {
         "name": "Raze and Pillage",
         "type": "action",
-        "text": "The attacking force raises the stakes by lighting a fire, stealing a valuable asset, kidnapping an important person, or killing the populace. What is valuable here? Who is most vulnerable?",
+        "text": "La fuerza atacante eleva la apuesta prendiendo fuego, robando un bien valioso, secuestrando a una persona importante o matando a la población. ¿Qué es valioso aquí? ¿Quién es más vulnerable?",
         "costsFear": false
       },
       {
         "name": "War Magic",
         "type": "action",
-        "text": "Spend a Fear as a mage from one side uses large-scale destructive magic. Pick a point on the battlefield within Very Far range of the mage. All targets within Close range of that point must make an Agility Reaction Roll. Targets who fail take 3d12+8 magic damage and must mark a Stress. What form does the attack take—fireball, raining acid, a storm of blades? What tactical objective is this attack meant to accomplish, and what comes next?",
+        "text": "Gasta un Miedo mientras un mago de uno de los bandos usa magia destructiva a gran escala. Elige un punto del campo de batalla a distancia Muy Lejana del mago. Todos los objetivos a distancia Cercana de ese punto deben hacer una Tirada de Reacción de Agilidad. Los objetivos que fallen sufren 3d12+8 de daño mágico y deben marcar Estrés. ¿Qué forma toma el ataque: bola de fuego, lluvia de ácido, tormenta de cuchillas? ¿Qué objetivo táctico busca este ataque, y qué viene después?",
         "costsFear": true
       },
       {
         "name": "Reinforcements!",
         "type": "action",
-        "text": "Summon a Knight of the Realm, a number of Tier 3 Minions equal to the number of PCs, and two adversaries of your choice within Far range of a chosen PC as reinforcements. The Knight of the Realm immediately takes the spotlight. Who are they targeting first? What formation do they take?",
+        "text": "Convoca a un Caballero del Reino, un número de Esbirros de Nivel 3 igual al número de PJs, y dos adversarios de tu elección a distancia Lejana de un PJ elegido, como refuerzos. El Caballero del Reino toma el protagonismo de inmediato. ¿A quién apuntan primero? ¿Qué formación adoptan?",
         "costsFear": false
       }
     ]
@@ -526,39 +526,39 @@
     "name": "Chaos Realm",
     "tier": 4,
     "type": "traversal",
-    "description": "An otherworldly space where the laws of reality are unstable and dangerous.",
-    "impulses": "Annihilate certainty, consume power, defy logic",
+    "description": "Un espacio de otro mundo donde las leyes de la realidad son inestables y peligrosas.",
+    "impulses": "Aniquilar la certeza, consumir el poder, desafiar la lógica",
     "difficulty": 20,
     "potentialAdversaries": "Outer Realms Monstrosities (Abomination, Corruptor, Thrall)",
     "features": [
       {
         "name": "Impossible Architecture",
         "type": "passive",
-        "text": "Up is down, down is right, right is starward. Gravity and directionality themselves are in flux, and any attempt to move through this realm is an odyssey unto itself, requiring a Progress Countdown (8). On a failure, a PC must mark a Stress in addition to the roll’s other consequences. What does it feel like to move in a space so alien to the Mortal Realm? What landmark or point do you fixate on to maintain your balance? What bizarre landmarks do you traverse on your journey?",
+        "text": "Arriba es abajo, abajo es a la derecha, y la derecha apunta a las estrellas. La gravedad y la direccionalidad mismas están en constante cambio, y cualquier intento de moverse por este reino es una odisea en sí misma, que requiere una Cuenta de Progreso (8). Con un fallo, un PJ debe marcar Estrés además de las demás consecuencias de la tirada. ¿Cómo se siente moverse en un espacio tan ajeno al Reino Mortal? ¿En qué punto de referencia te fijas para mantener el equilibrio? ¿Qué hitos extraños atraviesas en tu recorrido?",
         "costsFear": false
       },
       {
         "name": "Everything You Are This Place Will Take from You",
         "type": "action",
-        "text": "Countdown (Loop 1d4). Activate the countdown. When it triggers, all PCs must succeed on a Presence Reaction Roll or their highest trait is temporarily reduced by 1d4 unless they mark a number of Stress equal to its value. Any lost trait points are regained if the PC critically succeeds or escapes the Chaos Realm. How does this place try to steal from you that which makes you legendary? What does it feel like to have this power taken from you?",
+        "text": "Cuenta (Cíclica 1d4). Activa la cuenta. Cuando se activa, todos los PJs deben superar una Tirada de Reacción de Presencia o su rasgo más alto se reduce temporalmente en 1d4, a menos que marquen una cantidad de Estrés igual a ese valor. Cualquier punto de rasgo perdido se recupera si el PJ obtiene un éxito crítico o escapa del Reino del Caos. ¿Cómo intenta este lugar robarte aquello que te hace legendario? ¿Cómo se siente que te quiten este poder?",
         "costsFear": false
       },
       {
         "name": "Unmaking",
         "type": "action",
-        "text": "Spend a Fear to force a PC to make a Strength Reaction Roll. On a failure, they take 4d10 direct magic damage. On a success, they must mark a Stress. What glimpse of other worlds do you catch while this place tries to unmake you? What core facet of your personality does the unmaking try to erase?",
+        "text": "Gasta un Miedo para forzar a un PJ a hacer una Tirada de Reacción de Fuerza. Con un fallo, sufre 4d10 de daño mágico directo. Con un éxito, debe marcar Estrés. ¿Qué vislumbre de otros mundos captas mientras este lugar intenta deshacerte? ¿Qué faceta esencial de tu personalidad intenta borrar esta anulación?",
         "costsFear": true
       },
       {
         "name": "Outer Realms Predators",
         "type": "action",
-        "text": "Spend a Fear to summon an Outer Realms Abomination, an Outer Realms Corruptor, and 2d6 Outer Realms Thralls, who appear at Close range of a chosen PC in defiance of logic and causality. Immediately spotlight one of these adversaries, and you can spend an additional Fear to automatically succeed on that adversary’s standard attack. What half-consumed remnants of the shattered world do these monstrosities cast aside in pursuit of living flesh? What jagged reflections of former personhood do you catch between moments of unquestioning malice?",
+        "text": "Gasta un Miedo para convocar a una Abominación de los Reinos Exteriores, un Corruptor de los Reinos Exteriores y 2d6 Siervos de los Reinos Exteriores, que aparecen a distancia Cercana de un PJ elegido desafiando la lógica y la causalidad. Da el protagonismo de inmediato a uno de estos adversarios, y puedes gastar un Miedo adicional para que ese adversario tenga éxito automático en su ataque estándar. ¿Qué restos medio consumidos del mundo destrozado descartan estas monstruosidades en su búsqueda de carne viva? ¿Qué reflejos quebrados de una antigua personalidad captas entre momentos de malicia irreflexiva?",
         "costsFear": true
       },
       {
         "name": "Disorienting Reality",
         "type": "reaction",
-        "text": "On a result with Fear, you can ask the PC to describe which of their fears the Chaos Realm evokes as a vision of reality unmakes and reconstitutes itself to the PC. The PC loses a Hope. If it is their last Hope, you gain a Fear. What moment do they see? If it’s a memory, how is it warped by this place? How hard will it be to hold on to the real memory?",
+        "text": "En un resultado con Miedo, puedes pedirle al PJ que describa cuál de sus miedos evoca el Reino del Caos mientras una visión de la realidad se deshace y se reconstituye ante él. El PJ pierde una Esperanza. Si es su última Esperanza, ganas un Miedo. ¿Qué momento ve? Si es un recuerdo, ¿cómo lo distorsiona este lugar? ¿Qué tan difícil será conservar el recuerdo real?",
         "costsFear": false
       }
     ]
@@ -568,45 +568,45 @@
     "name": "Divine Usurpation",
     "tier": 4,
     "type": "event",
-    "description": "A massive ritual designed to breach the gates of the Hallows Above and unseat the New Gods themselves.",
-    "impulses": "Collect power, overawe, silence dissent",
+    "description": "Un ritual masivo diseñado para abrir las puertas de las Alturas Sagradas y destronar a los Nuevos Dioses mismos.",
+    "impulses": "Acumular poder, imponer respeto por sobrecogimiento, silenciar la disidencia",
     "difficulty": 20,
     "potentialAdversaries": "Arch-Necromancer, Fallen Shock Troops, Mortal Hunter, Oracle of Doom, Perfected Zombie",
     "features": [
       {
         "name": "Final Preparations",
         "type": "passive",
-        "text": "When the environment first takes the spotlight, designate one adversary as the Usurper seeking to overthrow the gods. Activate a Long-Term Countdown (8) as the Usurper assembles what they need to conduct the ritual. When it triggers, spotlight this environment to use the “Beginning of the End” feature. While this environment remains in play, you can hold up to 15 Fear. What does the Usurper still require: The heart of a High Seraph? The lodestone of an ancient waygate? The loyalty of two archenemies? The heartbroken tears of a pure soul?",
+        "text": "Cuando el entorno recibe el protagonismo por primera vez, designa a un adversario como el Usurpador que busca derrocar a los dioses. Activa una Cuenta a Largo Plazo (8) mientras el Usurpador reúne lo que necesita para llevar a cabo el ritual. Cuando se activa, da el protagonismo a este entorno para usar la característica “El Principio del Fin”. Mientras este entorno permanezca en juego, puedes acumular hasta 15 de Miedo. ¿Qué le falta aún al Usurpador: el corazón de un Alto Serafín? ¿La piedra imán de una antigua puerta de paso? ¿La lealtad de dos archienemigos? ¿Las lágrimas de un alma pura con el corazón roto?",
         "costsFear": false
       },
       {
         "name": "Divine Blessing",
         "type": "passive",
-        "text": "When a PC critically succeeds, they can spend 2 Hope to refresh an ability normally limited by uses (such as once per rest, once per session). What god favors you as you fight against this usurpation? How does your renewed power reflect their influence?",
+        "text": "Cuando un PJ obtiene un éxito crítico, puede gastar 2 de Esperanza para restaurar una habilidad normalmente limitada por usos (como una vez por descanso o una vez por sesión). ¿Qué dios te favorece mientras luchas contra esta usurpación? ¿Cómo refleja tu poder renovado su influencia?",
         "costsFear": false
       },
       {
         "name": "Defilers Abound",
         "type": "action",
-        "text": "Spend 2 Fear to summon 1d4+2 Fallen Shock Troops that appear within Close range of the Usurper to assist their divine siege. Immediately spotlight the Shock Troops to use a “Group Attack” action. Which High Fallen do these troops serve? Which god’s flesh do they wish to feast upon?",
+        "text": "Gasta 2 de Miedo para convocar a 1d4+2 Tropas de Choque de los Caídos que aparecen a distancia Cercana del Usurpador para ayudar en su asedio divino. Da de inmediato el protagonismo a las Tropas de Choque para usar una acción de “Ataque en Grupo”. ¿A qué Alto Caído sirven estas tropas? ¿De la carne de qué dios desean alimentarse?",
         "costsFear": true
       },
       {
         "name": "Godslayer",
         "type": "action",
-        "text": "If the Divine Siege Countdown (see “Beginning of the End”) has triggered, you can spend 3 Fear to describe the Usurper slaying one of the gods of the Hallows Above, feasting upon their power and growing stronger. The Usurper clears 2 HP. Increase their Difficulty, damage, attack modifier, or give them a new feature from the slain god. Which god meets their end? What are their last words? How does the Usurper’s new stolen power manifest?",
+        "text": "Si la Cuenta del Asedio Divino (ver “El Principio del Fin”) se ha activado, puedes gastar 3 de Miedo para describir cómo el Usurpador da muerte a uno de los dioses de las Alturas Sagradas, alimentándose de su poder y volviéndose más fuerte. El Usurpador recupera 2 PV. Aumenta su Dificultad, daño, modificador de ataque, o dale una nueva característica del dios caído. ¿Qué dios encuentra su fin? ¿Cuáles son sus últimas palabras? ¿Cómo se manifiesta el nuevo poder robado del Usurpador?",
         "costsFear": true
       },
       {
         "name": "Beginning of the End",
         "type": "reaction",
-        "text": "When the “Final Preparations” long-term countdown triggers, the Usurper begins hammering on the gates of the Hallows themselves. Activate a Divine Siege Countdown (10). Spotlight the Usurper to describe the Usurper’s assault and tick down this countdown by 1. If the Usurper takes Major or greater damage, tick up the countdown by 1. When it triggers, the Usurper shatters the barrier between the Mortal Realm and the Hallows Above to slay the gods and take their place. You gain a Fear for each unmarked HP the Usurper has. You can immediately use the “Godslayer” feature without spending Fear to make an additional GM move. How does the Mortal Realm writhe as the natural order is violated? What mortals witness this blasphemy from afar?",
+        "text": "Cuando se activa la cuenta a largo plazo de “Preparativos Finales”, el Usurpador comienza a golpear las puertas de las Alturas mismas. Activa una Cuenta del Asedio Divino (10). Da el protagonismo al Usurpador para describir su asalto y baja esta cuenta en 1. Si el Usurpador recibe daño Mayor o superior, sube la cuenta en 1. Cuando se activa, el Usurpador rompe la barrera entre el Reino Mortal y las Alturas Sagradas para matar a los dioses y ocupar su lugar. Ganas un Miedo por cada PV sin marcar que tenga el Usurpador. Puedes usar de inmediato la característica “Godslayer” sin gastar Miedo para realizar una jugada de GM adicional. ¿Cómo se retuerce el Reino Mortal mientras se viola el orden natural? ¿Qué mortales son testigos de esta blasfemia desde lejos?",
         "costsFear": false
       },
       {
         "name": "Ritual Nexus",
         "type": "reaction",
-        "text": "On any failure with Fear against the Usurper, the PC must mark 1d4 Stress from the backlash of magical power. What visions of failures past torment you as your efforts fall short? How are these memories twisted by the Usurper?",
+        "text": "En cualquier fallo con Miedo contra el Usurpador, el PJ debe marcar 1d4 de Estrés por la reacción del poder mágico. ¿Qué visiones de fracasos pasados te atormentan mientras tus esfuerzos no bastan? ¿Cómo distorsiona el Usurpador estos recuerdos?",
         "costsFear": false
       }
     ]
@@ -616,39 +616,39 @@
     "name": "Imperial Court",
     "tier": 4,
     "type": "social",
-    "description": "The majestic domain of a powerful empire, lavishly appointed with stolen treasures.",
-    "impulses": "Justify and perpetuate imperial rule, seduce rivals with promises of power and comfort",
+    "description": "El dominio majestuoso de un imperio poderoso, lujosamente decorado con tesoros robados.",
+    "impulses": "Justificar y perpetuar el gobierno imperial, seducir a los rivales con promesas de poder y comodidad",
     "difficulty": 20,
     "potentialAdversaries": "Bladed Guard, Courtesan, Knight of the Realm, Monarch, Spy",
     "features": [
       {
         "name": "All Roads Lead Here",
         "type": "passive",
-        "text": "While in the Imperial Court, a PC has disadvantage on Presence Rolls made to take actions that don’t fit the imperial way of life or support the empire’s dominance. How does the way language is used make even discussing alternative ways of living difficult? What obvious benefits for loyalty create friction when you try to discuss alternatives?",
+        "text": "Mientras esté en la Corte Imperial, un PJ tiene desventaja en las Tiradas de Presencia hechas para realizar acciones que no se ajusten al estilo de vida imperial o que no apoyen el dominio del imperio. ¿Cómo hace el uso del lenguaje que incluso hablar de otras formas de vida sea difícil? ¿Qué beneficios evidentes por lealtad generan fricción cuando intentas discutir alternativas?",
         "costsFear": false
       },
       {
         "name": "Rival Vassals",
         "type": "passive",
-        "text": "The PCs can find imperial subjects, vassals, and supplicants in the court, each vying for favor, seeking proximity to power, exchanging favors for loyalty, and elevating their status above others’. Some might be desperate to undermine their rivals, while others might even be open to discussions that verge on sedition. How do they benefit from vassalage, and what has it cost them? What exploitation drives them to consider opposing the unstoppable?",
+        "text": "Los PJs pueden encontrar en la corte a súbditos imperiales, vasallos y suplicantes, cada uno compitiendo por favores, buscando cercanía al poder, intercambiando favores por lealtad, y elevando su estatus sobre los demás. Algunos podrían estar desesperados por socavar a sus rivales, mientras otros incluso podrían estar dispuestos a conversar sobre temas que rozan la sedición. ¿Cómo se benefician de su vasallaje, y qué les ha costado? ¿Qué explotación los lleva a considerar oponerse a lo imparable?",
         "costsFear": false
       },
       {
         "name": "The Gravity of Empire",
         "type": "action",
-        "text": "Spend a Fear to present a PC with a golden opportunity or offer to satisfy a major goal in exchange for obeying or supporting the empire. The target must make a Presence Reaction Roll. On a failure, they must mark all their Stress or accept the offer. If they have already marked all their Stress, they must accept the offer or exile themselves from the empire. On a success, they must mark 1d4 Stress as they’re taxed by temptation. What do the PCs want so desperately they might consider throwing in with this ruthless power? How did imperial agents learn the PC’s greatest desires?",
+        "text": "Gasta un Miedo para presentar a un PJ una oportunidad dorada u oferta para satisfacer un objetivo importante a cambio de obedecer o apoyar al imperio. El objetivo debe hacer una Tirada de Reacción de Presencia. Con un fallo, debe marcar todo su Estrés o aceptar la oferta. Si ya tiene todo su Estrés marcado, debe aceptar la oferta o exiliarse del imperio. Con un éxito, debe marcar 1d4 de Estrés al verse tentado. ¿Qué desean tanto los PJs que considerarían unirse a este poder despiadado? ¿Cómo descubrieron los agentes imperiales los mayores deseos del PJ?",
         "costsFear": true
       },
       {
         "name": "Imperial Decree",
         "type": "action",
-        "text": "Spend a Fear to tick down a long-term countdown related to the empire’s agenda by 1d4. If this triggers the countdown, a proclamation related to the agenda is announced at court as the plan is executed. What display of power or transfer of wealth was needed to expedite this plan? Whose lives were disrupted or upended to make this happen?",
+        "text": "Gasta un Miedo para bajar una cuenta a largo plazo relacionada con la agenda del imperio en 1d4. Si esto activa la cuenta, se anuncia en la corte una proclamación relacionada con la agenda, señal de que el plan se está ejecutando. ¿Qué despliegue de poder o transferencia de riqueza fue necesaria para acelerar este plan? ¿A quiénes se les alteró o arruinó la vida para que esto ocurriera?",
         "costsFear": true
       },
       {
         "name": "Eyes Everywhere",
         "type": "reaction",
-        "text": "On a result with Fear, you can spend a Fear to have someone loyal to the empire overhear seditious talk within the court. A PC must succeed on an Instinct Reaction Roll to notice that the group has been overheard so they can try to intercept the witness before the PCs are exposed. How has the empire compromised this witness? Why is their first impulse to protect the empire, even if doesn’t treat them well?",
+        "text": "En un resultado con Miedo, puedes gastar un Miedo para que alguien leal al imperio escuche conversaciones sediciosas dentro de la corte. Un PJ debe superar una Tirada de Reacción de Instinto para notar que el grupo ha sido escuchado, de modo que puedan intentar interceptar al testigo antes de que los PJs sean expuestos. ¿Cómo ha comprometido el imperio a este testigo? ¿Por qué su primer impulso es proteger al imperio, aunque este no lo trate bien?",
         "costsFear": true
       }
     ]
@@ -658,39 +658,39 @@
     "name": "Necromancer’s Ossuary",
     "tier": 4,
     "type": "exploration",
-    "description": "A dusty crypt with a library, twisting corridors, and abundant sarcophagi, spattered with the blood of ill-fated invaders.",
-    "impulses": "Confound intruders, delve into secrets best left buried, manifest unlife, unleash a tide of undead",
+    "description": "Una cripta polvorienta con una biblioteca, pasillos sinuosos y abundantes sarcófagos, manchados con la sangre de invasores de mal destino.",
+    "impulses": "Confundir a los intrusos, indagar en secretos mejor dejados enterrados, manifestar no-vida, desatar una marea de no-muertos",
     "difficulty": 19,
     "potentialAdversaries": "Arch-Necromancer’s Host (Perfected Zombie, Zombie Legion)",
     "features": [
       {
         "name": "No Place for the Living",
         "type": "passive",
-        "text": "A feature or action that clears HP requires spending a Hope to use. If it already costs Hope, a PC must spend an additional Hope. What does it feel like to try to heal in a place so antithetical to life?",
+        "text": "Una característica o acción que recupera PV requiere gastar una Esperanza para usarse. Si ya cuesta Esperanza, un PJ debe gastar una Esperanza adicional. ¿Cómo se siente intentar curarse en un lugar tan hostil a la vida?",
         "costsFear": false
       },
       {
         "name": "Centuries of Knowledge",
         "type": "passive",
-        "text": "A PC can investigate the library and laboratory and make a Knowledge Roll to learn information related to arcana, local history, and the Necromancer’s plans. What are the names of the tomes? What project is the necromancer working on and what does it communicate about their plans?",
+        "text": "Un PJ puede investigar la biblioteca y el laboratorio y hacer una Tirada de Conocimiento para descubrir información relacionada con la arcana, la historia local y los planes del Nigromante. ¿Cuáles son los nombres de los tomos? ¿En qué proyecto trabaja el nigromante y qué revela eso sobre sus planes?",
         "costsFear": false
       },
       {
         "name": "Skeletal Burst",
         "type": "action",
-        "text": "All targets within Close range of a point you choose in this environment must succeed on an Agility Reaction Roll or take 4d8+8 physical damage from skeletal shrapnel as part of the ossuary detonates around them. What ancient skeletal architecture is destroyed? What bones stick in your armor?",
+        "text": "Todos los objetivos a distancia Cercana de un punto que elijas en este entorno deben superar una Tirada de Reacción de Agilidad o sufrir 4d8+8 de daño físico por metralla de huesos mientras el osario detona alrededor de ellos. ¿Qué antigua arquitectura ósea queda destruida? ¿Qué huesos se te quedan clavados en la armadura?",
         "costsFear": false
       },
       {
         "name": "Aura of Death",
         "type": "action",
-        "text": "Once per scene, roll a d4. Each undead within Far range of the Necromancer can clear HP and Stress equal to the result rolled. The undead can choose how that number is divided between HP and Stress. How does their renewed vigor manifest? Do they look more lifelike or, paradoxically, are they more decayed but vigorous?",
+        "text": "Una vez por escena, tira un d4. Cada no-muerto a distancia Lejana del Nigromante puede recuperar PV y Estrés en una cantidad igual al resultado obtenido. El no-muerto puede elegir cómo dividir esa cifra entre PV y Estrés. ¿Cómo se manifiesta su vigor renovado? ¿Se ven más vivos o, paradójicamente, más decadentes pero vigorosos?",
         "costsFear": false
       },
       {
         "name": "They Just Keep Coming!",
         "type": "action",
-        "text": "Spend a Fear to summon 1d6 Rotted Zombies, two Perfected Zombies, or a Zombie Legion, who appear at Close range of a chosen PC. Who were these people before they became the necromancer’s pawns? What vestiges of those lives remain for the heroes to see? ADDITIONAL GM GUIDANCE This section provides additional guidance for preparing and running a session of Daggerheart. STORY BEATS In storytelling, a beat is a moment that changes the trajectory of the narrative—a shift in the world, a significant action or reaction, an emotional revelation, or an important decision. Take turns with the players, narrating a beat and then letting them react and carry the scene forward with their own beats. When preparing for a session, plan in terms of the moments that give shape to each scene or sequence, rather than pre- scripting specific details or exchanges. PREPARING COMBAT ENCOUNTERS Build the hurdles the PCs face around the question of “What helps tell the story?” Enemies, environments, and hazards are the tools for heightening tension and creating drama. Ensure that combat is being used to give players more information about the unfolding story, revealing the world, the plot, or the characters. BATTLES AND NARRATIVE Dynamic battles create suspense by forcing players to choose between their various objectives, engaging their character’s motivations and weaknesses, and creating the crucible that the players use to forge their characters into legendary heroes. When preparing combat encounters: • Consider the narrative function of the battle • Base adversaries’ moves on their motives • Use dynamic environments to bring the battleground to life • Add enemies that can interact with the PCs’ features and special abilities SESSION REWARDS Reward players at the end of a session with: • Useful information • Story hooks • Loot • Gold • Access to new equipment or enhancements CRAFTING SCENES Whenever you start a session, arrive at a new place, or change the situation, tell the players what they need to know by thinking with all of your senses and sharing something unique or unexpected about the fiction. ENGAGING YOUR PLAYERS Keep your players engaged by: • Rotating the Focus between the PCs • Tying Together Story Elements • Engaging Quiet Players • Using Visual Aids • Encouraging Unguided Play • Confronting the PCs with internal and external conflicts • Raise the Stakes by Spending Fear • Layering Goals Other than Attrition into Combat (see Table of Random Objectives on the next page) 1d12 PHASED BATTLES Make battles by shifting the nature of its enemies or environment mid-combat: • Change the Terms of Engagement • Alter the Environment • Evolve the Opposition USING DOWNTIME Use downtime scenes as a pressure release valve to vary the intensity of the story and give the PCs room to breathe. Empower your players to frame their own downtime scenes. Ask the players what it looks like as they tend to their wounds or unwind together, encouraging them to take the reins and work with other players whose characters are involved Objective Acquire (obtain or steal) an important item or items. Capture one or more of the opponents. Activate a magical device. Frame a character or tarnish their reputation. Drive the opponent into a corner or ambush point. Stop a magical ritual, legal ceremony, or time- sensitive spell. Hold the line—keep the enemy from reaching a specific area or group. Plant evidence or a tracking device on a target. Secure a specific location ahead of another group’s arrival. Harass the opponent to deplete their resources or keep them occupied. Destroy a piece of architecture, a statue, a shrine, or a weapon. Investigate a situation to confirm or deny existing information. PROJECTS DURING DOWNTIME The Work on a Project downtime move requires more GM input than other downtime moves and is best suited for long- term endeavors the PCs wish to undertake. These projects are typically tracked using a Progress Countdown. When deciding the starting value of the countdown, consider the complexity of the project, the availability of relevant tools, and the impact of the project on the story. Simple projects advance their countdown each time a player uses the Work on a Project move, but complex projects require a roll. EXTENDED DOWNTIME When you fast-forward the story across an extended period, use montages to illustrate the passage of time. You gain 1d6 Fear per PC and advance any long-term countdowns as appropriate. CAMPAIGN FRAMES A campaign frame provides inspiration, tools, and mechanics to support a particular type of story at the table. Every campaign frame has a complexity rating that indicates how much its mechanics deviate from or expand upon the Daggerheart core ruleset. Each campaign frame includes the following sections. • A pitch to present to players • Suggestions and guidance on tone, feel, themes, and touchstones • An overview of the campaign’s background • Guidance for fitting communities, ancestries, and classes into the setting • Principles for players and GMs to focus on during the campaign • Unique setting distinctions • An inciting incident to launch the campaign • Special mechanics to use during the campaign • Questions to consider during session zero You can find each campaign frame map in the appendix of the core rulebook or at www.daggerheart.com/downloads. The Witherwild When an invading nation attacks an ancient forest deity, a virulent overgrowth spreads throughout the land. Designed by Carlos Cisco, Rowan Hall, & Spenser Starke COMPLEXITY RATING: THE PITCH Read this section to your players to introduce them to the campaign. Fanewick was once a place of great abundance and peace—dangerous to those unfamiliar with the land, but a cornucopia to those who respected its ways. When Haven invaded the wilds and forced the land into eternal spring, a dangerous bloom known as the Witherwild took hold and now threatens the lives of all who live there. In a Witherwild campaign, you’ll play unlikely heroes from humble beginnings who are reckoning with their newfound duty to save Fanewick’s people from dangerous corruption. TONE & FEEL Adventurous, Dynamic, Epic, Heroic, Thrilling, Uncanny, Whimsical THEMES Cultural Clash, Ends Justify Means, Grief, People vs. Nature, Transformation and Change, Survival TOUCHSTONES Princess Mononoke, The Legend of Zelda, The Dark Crystal, Nausicaä of the Valley of the Wind OVERVIEW If your group decides to play this campaign, give your players the following information before character creation. Fanewick is a wild and untamed land, long avoided by outside forces. The woods are dark and twisting, filled with Faint Divinities who perform small miracles and services for its inhabitants, but are just as likely to lure travelers off narrow paths to their ruin. Seemingly harmless expanses of field hide bogs that engulf entire armies, consuming heavy artillery as quickly as it can cross the border. This wilderness fosters hardy people who are bold enough to raise families where others have not and strictly follow the unique rules that keep them safe. These Wicklings remained insulated from their neighbors’ wars until plague forced the people of Haven to desperate acts. Haven was once the most powerful force in the region; for centuries, the high stone walls into the capital bore the phrase “The Godless Gate.” While the original meaning has been •",
+        "text": "Gasta un Miedo para convocar a 1d6 Zombis Podridos, dos Zombis Perfeccionados, o una Legión de Zombis, que aparecen a distancia Cercana de un PJ elegido. ¿Quiénes eran estas personas antes de convertirse en peones del nigromante? ¿Qué vestigios de esas vidas quedan para que los héroes los vean? GUÍA ADICIONAL PARA EL GM Esta sección ofrece orientación adicional para preparar y dirigir una sesión de Daggerheart. MOMENTOS NARRATIVOS En la narración, un momento clave es un instante que cambia el rumbo de la historia: un giro en el mundo, una acción o reacción significativa, una revelación emocional o una decisión importante. Túrnense con los jugadores, narrando un momento clave y luego dejando que reaccionen y lleven la escena adelante con sus propios momentos. Al preparar una sesión, planifica en función de los momentos que dan forma a cada escena o secuencia, en lugar de guionizar de antemano intercambios o detalles específicos. PREPARACIÓN DE ENCUENTROS DE COMBATE Construye los obstáculos que enfrentan los PJs en torno a la pregunta “¿Qué ayuda a contar la historia?”. Enemigos, entornos y peligros son las herramientas para intensificar la tensión y crear drama. Asegúrate de que el combate se use para dar a los jugadores más información sobre la historia que se desarrolla, revelando el mundo, la trama o los personajes. BATALLAS Y NARRATIVA Las batallas dinámicas crean suspenso al forzar a los jugadores a elegir entre sus diversos objetivos, involucrando las motivaciones y debilidades de sus personajes, y creando el crisol donde los jugadores forjan a sus personajes en héroes legendarios. Al preparar encuentros de combate: • Considera la función narrativa de la batalla • Basa los movimientos de los adversarios en sus motivaciones • Usa entornos dinámicos para dar vida al campo de batalla • Añade enemigos que puedan interactuar con las características y habilidades especiales de los PJs RECOMPENSAS DE SESIÓN Recompensa a los jugadores al final de una sesión con: • Información útil • Ganchos narrativos • Botín • Oro • Acceso a nuevo equipo o mejoras CREACIÓN DE ESCENAS Cada vez que empieces una sesión, llegues a un nuevo lugar o cambies la situación, comunica a los jugadores lo que necesitan saber pensando con todos tus sentidos y compartiendo algo único o inesperado sobre la ficción. CÓMO MANTENER A TUS JUGADORES INVOLUCRADOS Mantén a tus jugadores involucrados mediante: • Rotar el protagonismo entre los PJs • Enlazar elementos narrativos • Involucrar a los jugadores más callados • Usar ayudas visuales • Fomentar el juego sin guion • Confrontar a los PJs con conflictos internos y externos • Elevar las apuestas gastando Miedo • Añadir objetivos distintos al desgaste dentro del combate (ver Tabla de Objetivos Aleatorios en la página siguiente) TABLA 1d12 DE BATALLAS POR FASES Crea batallas cambiando la naturaleza de sus enemigos o su entorno a mitad del combate: • Cambiar los términos del enfrentamiento • Alterar el entorno • Evolucionar a la oposición USO DEL TIEMPO LIBRE Usa las escenas de tiempo libre como una válvula de escape para variar la intensidad de la historia y dar a los PJs espacio para respirar. Empodera a tus jugadores para que enmarquen sus propias escenas de tiempo libre. Pregunta a los jugadores cómo se ve mientras atienden sus heridas o se relajan juntos, animándolos a tomar la iniciativa y colaborar con otros jugadores cuyos personajes estén involucrados. Objetivo: Adquirir (obtener o robar) un objeto u objetos importantes. Capturar a uno o más de los oponentes. Activar un dispositivo mágico. Incriminar a un personaje o dañar su reputación. Empujar al oponente hacia un rincón o punto de emboscada. Detener un ritual mágico, una ceremonia legal o un hechizo con límite de tiempo. Contener la línea: evitar que el enemigo llegue a una zona o grupo específico. Plantar evidencia o un dispositivo de rastreo en un objetivo. Asegurar una ubicación específica antes de que llegue otro grupo. Acosar al oponente para agotar sus recursos o mantenerlo ocupado. Destruir una pieza de arquitectura, una estatua, un santuario o un arma. Investigar una situación para confirmar o desmentir información existente. PROYECTOS DURANTE EL TIEMPO LIBRE La jugada de tiempo libre Trabajar en un Proyecto requiere más aporte del GM que otras jugadas de tiempo libre y es más adecuada para empresas a largo plazo que los PJs deseen emprender. Estos proyectos suelen rastrearse mediante una Cuenta de Progreso. Al decidir el valor inicial de la cuenta, considera la complejidad del proyecto, la disponibilidad de herramientas relevantes y el impacto del proyecto en la historia. Los proyectos simples avanzan su cuenta cada vez que un jugador usa la jugada Trabajar en un Proyecto, pero los proyectos complejos requieren una tirada. TIEMPO LIBRE EXTENDIDO Cuando adelantas la historia a través de un periodo extenso, usa montajes para ilustrar el paso del tiempo. Ganas 1d6 de Miedo por PJ y avanzas cualquier cuenta a largo plazo según corresponda. MARCOS DE CAMPAÑA Un marco de campaña ofrece inspiración, herramientas y mecánicas para apoyar un tipo particular de historia en la mesa. Cada marco de campaña tiene una calificación de complejidad que indica cuánto se desvían o amplían sus mecánicas respecto a las reglas base de Daggerheart. Cada marco de campaña incluye las siguientes secciones. • Una propuesta para presentar a los jugadores • Sugerencias y orientación sobre tono, sensación, temas y referencias • Una visión general de los antecedentes de la campaña • Orientación para encajar comunidades, ascendencias y clases en el escenario • Principios en los que enfocarse jugadores y GMs durante la campaña • Distinciones únicas del escenario • Un incidente detonante para lanzar la campaña • Mecánicas especiales para usar durante la campaña • Preguntas a considerar durante la sesión cero Puedes encontrar el mapa de cada marco de campaña en el apéndice del manual básico o en www.daggerheart.com/downloads. El Páramo Marchito Cuando una nación invasora ataca a una antigua deidad del bosque, un crecimiento virulento se propaga por toda la tierra. Diseñado por Carlos Cisco, Rowan Hall y Spenser Starke CALIFICACIÓN DE COMPLEJIDAD: LA PROPUESTA Lee esta sección a tus jugadores para presentarles la campaña. Fanewick fue alguna vez un lugar de gran abundancia y paz, peligroso para quienes no conocían la tierra, pero un cuerno de la abundancia para quienes respetaban sus costumbres. Cuando Haven invadió las tierras salvajes y forzó a la región a una primavera eterna, una peligrosa floración conocida como el Páramo Marchito se afianzó y ahora amenaza la vida de todos los que habitan allí. En una campaña del Páramo Marchito, interpretarás a héroes improbables de orígenes humildes que deben afrontar su nuevo deber de salvar al pueblo de Fanewick de una corrupción peligrosa. TONO Y SENSACIÓN Aventurero, Dinámico, Épico, Heroico, Emocionante, Inquietante, Fantasioso TEMAS Choque cultural, El fin justifica los medios, Duelo, La gente contra la naturaleza, Transformación y cambio, Supervivencia REFERENCIAS La princesa Mononoke, La leyenda de Zelda, El cristal oscuro, Nausicaä del Valle del Viento VISIÓN GENERAL Si tu grupo decide jugar esta campaña, dale a tus jugadores la siguiente información antes de la creación de personajes. Fanewick es una tierra salvaje e indómita, evitada durante mucho tiempo por fuerzas externas. Los bosques son oscuros y retorcidos, llenos de Divinidades Menores que realizan pequeños milagros y servicios para sus habitantes, pero que también son igual de propensos a desviar a los viajeros de senderos estrechos hacia su ruina. Extensiones de campo aparentemente inofensivas ocultan pantanos que devoran ejércitos enteros, consumiendo artillería pesada tan rápido como esta cruza la frontera. Esta naturaleza salvaje forja a gente resistente, lo bastante audaz para criar familias donde otros no se atreven, y que sigue estrictamente las reglas particulares que los mantienen a salvo. Estos Habitantes del Páramo permanecieron aislados de las guerras de sus vecinos hasta que la peste obligó al pueblo de Haven a actos desesperados. Haven fue alguna vez la fuerza más poderosa de la región; durante siglos, los altos muros de piedra hacia la capital llevaron la frase “La Puerta sin Dioses”. Aunque el significado original ha sido •",
         "costsFear": true
       }
     ]

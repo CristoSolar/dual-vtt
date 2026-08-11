@@ -32,13 +32,13 @@ export function GMPanel({ room, send }: GMPanelProps) {
     <section className="gm-scope">
       <p className="gm-banner">
         <GmMark />
-        Game Master view
+        Vista del Director de Juego
       </p>
       <div className="card-head">
         <div>
-          <h1>GM Panel</h1>
+          <h1>Panel del DJ</h1>
           <p className="muted">
-            Join code <span className="join-code">{room.code}</span>
+            Código de acceso <span className="join-code">{room.code}</span>
           </p>
         </div>
       </div>
@@ -80,9 +80,9 @@ function GmMark() {
 function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => void }) {
   return (
     <div className="panel">
-      <SectionHead>Fear</SectionHead>
+      <SectionHead>Miedo</SectionHead>
       <div className="tracker-head">
-        <span className="muted">The GM's pool</span>
+        <span className="muted">La reserva del DJ</span>
         <span className="muted">
           {fear} / {MAX_FEAR}
         </span>
@@ -97,7 +97,7 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
                 className="pip fear"
                 data-filled={filled}
                 aria-pressed={filled}
-                aria-label={`Fear ${index + 1} of ${MAX_FEAR}`}
+                aria-label={`Miedo ${index + 1} de ${MAX_FEAR}`}
                 onClick={() =>
                   send(filled ? { type: 'spendFear', amount: 1 } : { type: 'gainFear', amount: 1 })
                 }
@@ -108,7 +108,7 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
           );
         })}
       </ul>
-      <p className="muted">Click an empty pip to gain Fear, a filled one to spend it.</p>
+      <p className="muted">Clic en una ficha vacía para ganar Miedo, en una llena para gastarlo.</p>
     </div>
   );
 }
@@ -118,9 +118,9 @@ function PartyOverview({ room, send }: GMPanelProps) {
 
   return (
     <div className="panel">
-      <SectionHead>Party</SectionHead>
+      <SectionHead>Grupo</SectionHead>
       {entries.length === 0 ? (
-        <p className="muted">No characters claimed yet.</p>
+        <p className="muted">Todavía no hay personajes reclamados.</p>
       ) : (
         <div className="grid cols-2">
           {entries.map(([id, sheet]) => {
@@ -129,7 +129,7 @@ function PartyOverview({ room, send }: GMPanelProps) {
             return (
               <div className="card" key={id}>
                 <div className="card-head">
-                  <strong>{sheet.character.name ?? 'Unnamed'}</strong>
+                  <strong>{sheet.character.name ?? 'Sin nombre'}</strong>
                   <button
                     type="button"
                     aria-pressed={spotlit}
@@ -137,18 +137,18 @@ function PartyOverview({ room, send }: GMPanelProps) {
                       send({ type: 'setSpotlight', spotlight: spotlit ? null : player?.id ?? id })
                     }
                   >
-                    {spotlit ? 'In spotlight' : 'Spotlight'}
+                    {spotlit ? 'En el foco' : 'Dar foco'}
                   </button>
                 </div>
                 <span className="option-meta">
-                  {player?.name ?? 'unclaimed'} · Level {sheet.character.level}
+                  {player?.name ?? 'sin reclamar'} · Nivel {sheet.character.level}
                 </span>
                 <p className="card-text">
-                  HP {sheet.hpMarked}/{sheet.character.hpSlots} · Stress {sheet.stressMarked}/
-                  {sheet.character.stressSlots} · Hope {sheet.hope} · Armor{' '}
+                  PV {sheet.hpMarked}/{sheet.character.hpSlots} · Estrés {sheet.stressMarked}/
+                  {sheet.character.stressSlots} · Esperanza {sheet.hope} · Armadura{' '}
                   {sheet.armorSlotsMarked}/{sheet.character.armorScore}
                   <br />
-                  Evasion {sheet.character.evasion} · Thresholds {sheet.character.major}/
+                  Evasión {sheet.character.evasion} · Umbrales {sheet.character.major}/
                   {sheet.character.severe}
                 </p>
               </div>
@@ -174,9 +174,9 @@ function Countdowns({
 
   return (
     <div className="panel">
-      <SectionHead>Countdowns</SectionHead>
+      <SectionHead>Cuentas atrás</SectionHead>
 
-      {countdowns.length === 0 ? <p className="muted">No countdowns running.</p> : null}
+      {countdowns.length === 0 ? <p className="muted">No hay cuentas atrás en marcha.</p> : null}
       {countdowns.map((countdown) => (
         <div className="card" key={countdown.id}>
           <div className="card-head">
@@ -191,7 +191,7 @@ function Countdowns({
               <span className="stat-value">{countdown.value}</span>
               <button
                 type="button"
-                aria-label={`Advance ${countdown.name}`}
+                aria-label={`Avanzar ${countdown.name}`}
                 onClick={() => send({ type: 'advanceCountdown', id: countdown.id, amount: 1 })}
               >
                 −1
@@ -200,31 +200,31 @@ function Countdowns({
                 type="button"
                 onClick={() => send({ type: 'removeCountdown', id: countdown.id })}
               >
-                Remove
+                Quitar
               </button>
             </div>
           </div>
-          {countdown.triggered ? <span className="badge warn">Triggered</span> : null}
+          {countdown.triggered ? <span className="badge warn">Activada</span> : null}
           {countdown.kind === 'progress' || countdown.kind === 'consequence' ? (
             <p className="card-text">
-              Advances automatically on action rolls, by the dynamic countdown chart.
+              Avanza automáticamente con las tiradas de acción, según la tabla de cuentas atrás dinámicas.
             </p>
           ) : null}
           {countdown.kind === 'longTerm' ? (
-            <p className="card-text">Advances on rests rather than action rolls.</p>
+            <p className="card-text">Avanza con los descansos, no con las tiradas de acción.</p>
           ) : null}
         </div>
       ))}
 
       <fieldset>
-        <legend>New countdown</legend>
+        <legend>Nueva cuenta atrás</legend>
         <div className="grid cols-2">
           <div>
-            <label htmlFor="cd-name">Name</label>
+            <label htmlFor="cd-name">Nombre</label>
             <input id="cd-name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label htmlFor="cd-start">Starting value</label>
+            <label htmlFor="cd-start">Valor inicial</label>
             <input
               id="cd-start"
               type="number"
@@ -234,29 +234,29 @@ function Countdowns({
             />
           </div>
           <div>
-            <label htmlFor="cd-kind">Type</label>
+            <label htmlFor="cd-kind">Tipo</label>
             <select
               id="cd-kind"
               value={kind}
               onChange={(e) => setKind(e.target.value as Countdown['kind'])}
             >
-              <option value="standard">Standard</option>
-              <option value="progress">Progress (dynamic)</option>
-              <option value="consequence">Consequence (dynamic)</option>
-              <option value="longTerm">Long-term</option>
+              <option value="standard">Estándar</option>
+              <option value="progress">Progreso (dinámica)</option>
+              <option value="consequence">Consecuencia (dinámica)</option>
+              <option value="longTerm">Largo plazo</option>
             </select>
           </div>
           <div>
-            <label htmlFor="cd-loop">On trigger</label>
+            <label htmlFor="cd-loop">Al activarse</label>
             <select
               id="cd-loop"
               value={loop}
               onChange={(e) => setLoop(e.target.value as Countdown['loop'])}
             >
-              <option value="none">Stop</option>
-              <option value="loop">Loop</option>
-              <option value="increasing">Loop, increasing</option>
-              <option value="decreasing">Loop, decreasing</option>
+              <option value="none">Detener</option>
+              <option value="loop">Reiniciar</option>
+              <option value="increasing">Reiniciar, aumentando</option>
+              <option value="decreasing">Reiniciar, disminuyendo</option>
             </select>
           </div>
         </div>
@@ -275,12 +275,12 @@ function Countdowns({
             setName('');
           }}
         >
-          Add countdown
+          Añadir cuenta atrás
         </button>
       </fieldset>
 
       <button type="button" onClick={() => send({ type: 'advanceCountdownsForRest', amount: 1 })}>
-        Advance long-term countdowns (rest)
+        Avanzar cuentas atrás de largo plazo (descanso)
       </button>
     </div>
   );
@@ -301,14 +301,14 @@ function Adversaries({ room, send }: GMPanelProps) {
 
   return (
     <div className="panel">
-      <SectionHead>Adversaries</SectionHead>
+      <SectionHead>Adversarios</SectionHead>
 
-      <label htmlFor="adversary-search">Search the SRD</label>
+      <label htmlFor="adversary-search">Buscar en el SRD</label>
       <input
         id="adversary-search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="ooze, bruiser, dragon…"
+        placeholder="limo, matón, dragón…"
       />
 
       {matches.map((adversary) => (
@@ -326,19 +326,19 @@ function Adversaries({ room, send }: GMPanelProps) {
                 })
               }
             >
-              Add to encounter
+              Añadir al encuentro
             </button>
           </div>
           <span className="option-meta">
-            Tier {adversary.tier} · {prettify(adversary.type)} · Difficulty{' '}
-            {adversary.difficulty} · HP {adversary.hp} · Stress {adversary.stress}
+            Nivel {adversary.tier} · {prettify(adversary.type)} · Dificultad{' '}
+            {adversary.difficulty} · PV {adversary.hp} · Estrés {adversary.stress}
           </span>
         </div>
       ))}
 
-      <h3 className="mt-5">In the encounter</h3>
+      <h3 className="mt-5">En el encuentro</h3>
       {room.adversaryInstances.length === 0 ? (
-        <p className="muted">Nothing fielded yet.</p>
+        <p className="muted">Todavía no hay nada en la mesa.</p>
       ) : null}
 
       {room.adversaryInstances.map((instance) => {
@@ -351,17 +351,17 @@ function Adversaries({ room, send }: GMPanelProps) {
                 type="button"
                 onClick={() => send({ type: 'removeAdversary', instanceId: instance.instanceId })}
               >
-                Remove
+                Quitar
               </button>
             </div>
             {stat === undefined ? null : (
               <>
                 <span className="option-meta">
-                  Difficulty {stat.difficulty} · Thresholds{' '}
+                  Dificultad {stat.difficulty} · Umbrales{' '}
                   {stat.thresholds === null
-                    ? 'none'
+                    ? 'ninguno'
                     : `${stat.thresholds.major}/${stat.thresholds.severe ?? '—'}`}{' '}
-                  · ATK{' '}
+                  · ATQ{' '}
                   {stat.attackModifier.flat === null
                     ? `${stat.attackModifier.roll?.count}d${stat.attackModifier.roll?.die}`
                     : stat.attackModifier.flat}
@@ -369,7 +369,7 @@ function Adversaries({ room, send }: GMPanelProps) {
 
                 <div className="row mt-2">
                   <span className="muted">
-                    HP {instance.hpMarked}/{stat.hp}
+                    PV {instance.hpMarked}/{stat.hp}
                   </span>
                   <button
                     type="button"
@@ -382,7 +382,7 @@ function Adversaries({ room, send }: GMPanelProps) {
                       })
                     }
                   >
-                    +HP
+                    +PV
                   </button>
                   <button
                     type="button"
@@ -395,10 +395,10 @@ function Adversaries({ room, send }: GMPanelProps) {
                       })
                     }
                   >
-                    −HP
+                    −PV
                   </button>
                   <span className="muted">
-                    Stress {instance.stressMarked}/{stat.stress}
+                    Estrés {instance.stressMarked}/{stat.stress}
                   </span>
                   <button
                     type="button"
@@ -411,7 +411,7 @@ function Adversaries({ room, send }: GMPanelProps) {
                       })
                     }
                   >
-                    +Stress
+                    +Estrés
                   </button>
                   <button
                     type="button"
@@ -424,12 +424,12 @@ function Adversaries({ room, send }: GMPanelProps) {
                       })
                     }
                   >
-                    −Stress
+                    −Estrés
                   </button>
                 </div>
 
                 <details>
-                  <summary>Features &amp; attack</summary>
+                  <summary>Rasgos y ataque</summary>
                   <p className="card-text">
                     <strong>{stat.standardAttack.name}</strong> · {prettify(stat.standardAttack.range)}{' '}
                     ·{' '}
@@ -442,7 +442,7 @@ function Adversaries({ room, send }: GMPanelProps) {
                     <p className="card-text" key={feature.name}>
                       <strong>
                         {feature.name} — {prettify(feature.type)}
-                        {feature.costsFear ? ' (Fear)' : ''}:
+                        {feature.costsFear ? ' (Miedo)' : ''}:
                       </strong>{' '}
                       {feature.text}
                     </p>
@@ -468,8 +468,8 @@ function EnvironmentPicker({
 
   return (
     <div className="panel">
-      <SectionHead>Environment</SectionHead>
-      <label htmlFor="environment">Active environment</label>
+      <SectionHead>Entorno</SectionHead>
+      <label htmlFor="environment">Entorno activo</label>
       <select
         id="environment"
         value={activeEnvironment ?? ''}
@@ -480,10 +480,10 @@ function EnvironmentPicker({
           })
         }
       >
-        <option value="">None</option>
+        <option value="">Ninguno</option>
         {environments.map((environment) => (
           <option key={environment.id} value={environment.id}>
-            Tier {environment.tier} — {environment.name}
+            Nivel {environment.tier} — {environment.name}
           </option>
         ))}
       </select>
@@ -493,20 +493,20 @@ function EnvironmentPicker({
           <strong>{active.name}</strong>
           <span className="option-meta">
             {' '}
-            Tier {active.tier} · {prettify(active.type)} · Difficulty {active.difficulty}
+            Nivel {active.tier} · {prettify(active.type)} · Dificultad {active.difficulty}
           </span>
           <p className="card-text">{active.description}</p>
           <p className="card-text">
-            <strong>Impulses:</strong> {active.impulses}
+            <strong>Impulsos:</strong> {active.impulses}
           </p>
           <p className="card-text">
-            <strong>Potential adversaries:</strong> {active.potentialAdversaries}
+            <strong>Posibles adversarios:</strong> {active.potentialAdversaries}
           </p>
           {active.features.map((feature) => (
             <p className="card-text" key={feature.name}>
               <strong>
                 {feature.name} — {prettify(feature.type)}
-                {feature.costsFear ? ' (Fear)' : ''}:
+                {feature.costsFear ? ' (Miedo)' : ''}:
               </strong>{' '}
               {feature.text}
             </p>
@@ -520,23 +520,23 @@ function EnvironmentPicker({
 function Presence({ room }: { room: RoomState }) {
   return (
     <div className="panel">
-      <SectionHead>At the table</SectionHead>
+      <SectionHead>En la mesa</SectionHead>
       <ul className="log">
         <li>
           <span className={room.gm.connected ? 'badge' : 'badge warn'}>
-            {room.gm.connected ? 'online' : 'offline'}
+            {room.gm.connected ? 'conectado' : 'desconectado'}
           </span>{' '}
-          {room.gm.name} <span className="muted">(GM)</span>
+          {room.gm.name} <span className="muted">(DJ)</span>
         </li>
         {room.players.map((player) => (
           <li key={player.id}>
             <span className={player.connected ? 'badge' : 'badge warn'}>
-              {player.connected ? 'online' : 'offline'}
+              {player.connected ? 'conectado' : 'desconectado'}
             </span>{' '}
             {player.name}{' '}
             <span className="muted">
               {player.characterId === null
-                ? 'no character yet'
+                ? 'sin personaje todavía'
                 : room.characters[player.characterId]?.character.name ?? ''}
             </span>
           </li>
@@ -549,8 +549,8 @@ function Presence({ room }: { room: RoomState }) {
 function SharedRollLog({ room }: { room: RoomState }) {
   return (
     <div className="panel">
-      <SectionHead>Roll log</SectionHead>
-      {room.rollLog.length === 0 ? <p className="muted">No rolls yet.</p> : null}
+      <SectionHead>Registro de tiradas</SectionHead>
+      {room.rollLog.length === 0 ? <p className="muted">Todavía no hay tiradas.</p> : null}
       <ul className="log">
         {room.rollLog.map((entry) => (
           <li key={entry.id}>
@@ -563,13 +563,13 @@ function SharedRollLog({ room }: { room: RoomState }) {
                   {OUTCOME_LABELS[entry.outcome]}
                 </span>
               ) : (
-                <span>{entry.roll.total} damage</span>
+                <span>{entry.roll.total} de daño</span>
               )}
             </div>
             <span className="muted">
               {entry.kind === 'duality'
-                ? `Hope ${entry.roll.hope} · Fear ${entry.roll.fear} · total ${entry.roll.total} vs ${entry.difficulty}`
-                : `Dice ${entry.roll.rolls.join(', ')}${entry.critical ? ` · critical +${entry.roll.criticalBonus}` : ''}`}
+                ? `Esperanza ${entry.roll.hope} · Miedo ${entry.roll.fear} · total ${entry.roll.total} vs ${entry.difficulty}`
+                : `Dados ${entry.roll.rolls.join(', ')}${entry.critical ? ` · crítico +${entry.roll.criticalBonus}` : ''}`}
             </span>
           </li>
         ))}

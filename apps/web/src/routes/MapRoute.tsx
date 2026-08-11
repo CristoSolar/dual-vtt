@@ -6,9 +6,12 @@ import {
   type Token,
 } from '@daggerheart/protocol';
 import { adversaries } from '@daggerheart/srd-data';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
+import type { PanelLayout } from '../state/floatingPanel.js';
+import { useElementSize } from '../state/useElementSize.js';
 import { uploadMapImage } from '../state/uploadMap.js';
 import {
   adversaryTokenColor,
@@ -29,6 +32,39 @@ const nextId = (prefix: string) => {
   return `${prefix}-${Date.now().toString(36)}-${counter.toString(36)}`;
 };
 
+type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog';
+
+const PANEL_TITLES: Record<PanelId, string> = {
+  scenes: 'Escenas',
+  battlemap: 'Mapa de batalla',
+  grid: 'Cuadrícula y escala',
+  tokens: 'Fichas',
+  fog: 'Niebla de guerra',
+};
+
+const PANELS_KEY = 'daggerheart-vtt:map-panels';
+
+type PanelStore = Record<PanelId, PanelLayout & { open: boolean }>;
+
+const defaultPanels = (): PanelStore => ({
+  scenes: { x: 90, y: 96, z: 1, open: false },
+  battlemap: { x: 90, y: 96, z: 1, open: false },
+  grid: { x: 90, y: 96, z: 1, open: false },
+  tokens: { x: 90, y: 96, z: 1, open: true },
+  fog: { x: 90, y: 96, z: 1, open: false },
+});
+
+/** Reads saved panel positions; any corruption just falls back to defaults. */
+function loadPanels(): PanelStore {
+  try {
+    const raw = window.localStorage.getItem(PANELS_KEY);
+    if (raw === null) return defaultPanels();
+    return { ...defaultPanels(), ...JSON.parse(raw) };
+  } catch {
+    return defaultPanels();
+  }
+}
+
 /** The tactical map: canvas plus, for the GM, the tools that drive it. */
 export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
@@ -36,6 +72,25 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const [measuring, setMeasuring] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const { ref: stageWrapRef, size: stageSize } = useElementSize<HTMLDivElement>();
+
+  const [panels, setPanels] = useState<PanelStore>(loadPanels);
+  useEffect(() => {
+    window.localStorage.setItem(PANELS_KEY, JSON.stringify(panels));
+  }, [panels]);
+
+  const topZ = useRef(1);
+  const focusPanel = (id: PanelId) => {
+    topZ.current += 1;
+    setPanels((prev) => ({ ...prev, [id]: { ...prev[id], z: topZ.current } }));
+  };
+  const togglePanel = (id: PanelId) => {
+    setPanels((prev) => ({ ...prev, [id]: { ...prev[id], open: !prev[id].open } }));
+    if (!panels[id].open) focusPanel(id);
+  };
+  const closePanel = (id: PanelId) => setPanels((prev) => ({ ...prev, [id]: { ...prev[id], open: false } }));
+  const movePanel = (id: PanelId, layout: PanelLayout) =>
+    setPanels((prev) => ({ ...prev, [id]: { ...prev[id], ...layout } }));
 
   const scene = useMemo(
     () => room.map.scenes.find((s) => s.id === room.map.activeSceneId) ?? room.map.scenes[0] ?? null,
@@ -71,187 +126,241 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       const image = await uploadMapImage(file);
       send({ type: 'setSceneImage', sceneId: scene.id, image });
     } catch (error) {
-      setUploadError(error instanceof Error ? error.message : 'Upload failed');
+      setUploadError(error instanceof Error ? error.message : 'Falló la subida');
     }
   };
 
+  const toolButton = (id: PanelId, glyph: string, label: string) => (
+    <button
+      type="button"
+      key={id}
+      className="map-rail-button"
+      aria-pressed={panels[id].open}
+      title={label}
+      onClick={() => togglePanel(id)}
+    >
+      <span aria-hidden="true">{glyph}</span>
+    </button>
+  );
+
   return (
-    <section>
-      <div className="card-head">
-        <div>
-          <h1>Map</h1>
-          <p className="muted">
-            {scene === null
-              ? 'No scene yet.'
-              : `${scene.name}${scene.grid.mode === 'square' ? ' · grid' : ' · gridless'}`}
-          </p>
-        </div>
+    <div className="map-fullscreen">
+      <div className="map-scene-bar">
+        <span className="map-scene-name">
+          {scene === null
+            ? 'Todavía no hay escena'
+            : `${scene.name}${scene.grid.mode === 'square' ? ' · cuadrícula' : ' · sin cuadrícula'}`}
+        </span>
         {isGameMaster ? (
-          <div className="row">
+          <button
+            type="button"
+            onClick={() => send({ type: 'addScene', id: nextId('scene'), name: 'Nueva escena' })}
+          >
+            Nueva escena
+          </button>
+        ) : null}
+      </div>
+
+      {isGameMaster ? (
+        <div className="map-rail">
+          {toolButton('scenes', '🗺', 'Escenas')}
+          {toolButton('battlemap', '🖼', 'Mapa de batalla')}
+          {toolButton('grid', '▦', 'Cuadrícula y escala')}
+          {toolButton('tokens', '🧙', 'Fichas')}
+          {toolButton('fog', '🌫', 'Niebla de guerra')}
+          <button
+            type="button"
+            className="map-rail-button"
+            aria-pressed={measuring}
+            title="Medir distancia"
+            onClick={() => setMeasuring((m) => !m)}
+          >
+            <span aria-hidden="true">📏</span>
+          </button>
+        </div>
+      ) : null}
+
+      <div ref={stageWrapRef} className="map-stage-full">
+        {scene === null ? (
+          <div className="panel map-empty-notice">
+            <p className="muted">
+              {isGameMaster
+                ? 'Crea una escena para empezar a armar el mapa.'
+                : 'El DJ todavía no ha compartido una escena.'}
+            </p>
+          </div>
+        ) : stageSize.width > 0 ? (
+          <MapCanvas
+            scene={scene}
+            isGameMaster={isGameMaster}
+            viewerId={viewerId}
+            width={stageSize.width}
+            height={stageSize.height}
+            selectedTokenId={selectedTokenId}
+            onSelectToken={setSelectedTokenId}
+            onMoveToken={moveToken}
+            fogBrush={fogBrush}
+            onPaintFog={paintFog}
+            measuring={measuring}
+          />
+        ) : null}
+      </div>
+
+      {selected !== null ? (
+        <div className="map-selection-bar">
+          <strong>{selected.name}</strong>
+          <button
+            type="button"
+            aria-pressed={selected.showRings}
+            onClick={() => updateSelected({ showRings: !selected.showRings })}
+          >
+            {selected.showRings ? 'Ocultar anillos de alcance' : 'Mostrar anillos de alcance'}
+          </button>
+        </div>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.scenes.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.scenes}
+          layout={panels.scenes}
+          onLayoutChange={(l) => movePanel('scenes', l)}
+          onFocus={() => focusPanel('scenes')}
+          onClose={() => closePanel('scenes')}
+        >
+          <SceneList room={room} send={send} />
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.battlemap.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.battlemap}
+          layout={panels.battlemap}
+          onLayoutChange={(l) => movePanel('battlemap', l)}
+          onFocus={() => focusPanel('battlemap')}
+          onClose={() => closePanel('battlemap')}
+        >
+          <input
+            ref={fileInput}
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file !== undefined) void onUpload(file);
+            }}
+          />
+          {uploadError !== null ? <p className="field-error">{uploadError}</p> : null}
+          {scene.image === null ? (
+            <p className="muted">Todavía no hay imagen.</p>
+          ) : (
+            <p className="muted">
+              {scene.image.width}×{scene.image.height}
+            </p>
+          )}
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.grid.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.grid}
+          layout={panels.grid}
+          onLayoutChange={(l) => movePanel('grid', l)}
+          onFocus={() => focusPanel('grid')}
+          onClose={() => closePanel('grid')}
+        >
+          <GridControls
+            grid={scene.grid}
+            onChange={(grid) => send({ type: 'setSceneGrid', sceneId: scene.id, grid })}
+          />
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.tokens.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.tokens}
+          layout={panels.tokens}
+          onLayoutChange={(l) => movePanel('tokens', l)}
+          onFocus={() => focusPanel('tokens')}
+          onClose={() => closePanel('tokens')}
+        >
+          <TokenTools
+            room={room}
+            sceneId={scene.id}
+            selected={selected}
+            onAdd={(token) => send({ type: 'addToken', sceneId: scene.id, token })}
+            onUpdate={updateSelected}
+            onRemove={() => {
+              if (selected === null) return;
+              send({ type: 'removeToken', sceneId: scene.id, tokenId: selected.id });
+              setSelectedTokenId(null);
+            }}
+          />
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.fog.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.fog}
+          layout={panels.fog}
+          onLayoutChange={(l) => movePanel('fog', l)}
+          onFocus={() => focusPanel('fog')}
+          onClose={() => closePanel('fog')}
+        >
+          <button
+            type="button"
+            aria-pressed={scene.fog.enabled}
+            onClick={() => send({ type: 'setFogEnabled', sceneId: scene.id, enabled: !scene.fog.enabled })}
+          >
+            {scene.fog.enabled ? 'Niebla activada' : 'Niebla desactivada'}
+          </button>
+          <div className="row mt-3">
             <button
               type="button"
-              onClick={() => send({ type: 'addScene', id: nextId('scene'), name: 'New scene' })}
+              aria-pressed={fogBrush?.reveal === true}
+              onClick={() => setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })}
             >
-              New scene
+              Pincel de revelar
+            </button>
+            <button
+              type="button"
+              aria-pressed={fogBrush?.reveal === false}
+              onClick={() => setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })}
+            >
+              Pincel de ocultar
             </button>
           </div>
-        ) : null}
-      </div>
-
-      <div className="map-layout">
-        <div className="map-stage">
-          {scene === null ? (
-            <div className="panel">
-              <p className="muted">
-                {isGameMaster
-                  ? 'Create a scene to start building the map.'
-                  : 'The GM has not shared a scene yet.'}
-              </p>
-            </div>
-          ) : (
-            <MapCanvas
-              scene={scene}
-              isGameMaster={isGameMaster}
-              viewerId={viewerId}
-              width={900}
-              height={620}
-              selectedTokenId={selectedTokenId}
-              onSelectToken={setSelectedTokenId}
-              onMoveToken={moveToken}
-              fogBrush={fogBrush}
-              onPaintFog={paintFog}
-              measuring={measuring}
-            />
-          )}
-
-          <div className="row mt-3">
-            <button type="button" aria-pressed={measuring} onClick={() => setMeasuring((m) => !m)}>
-              {measuring ? 'Measuring — drag A to B' : 'Measure range'}
-            </button>
-            {selected !== null ? (
-              <button
-                type="button"
-                aria-pressed={selected.showRings}
-                onClick={() => updateSelected({ showRings: !selected.showRings })}
-              >
-                {selected.showRings ? 'Hide range rings' : 'Show range rings'}
-              </button>
-            ) : null}
-            <span className="muted">Scroll to zoom · drag the background to pan</span>
-          </div>
-        </div>
-
-        {isGameMaster && scene !== null ? (
-          <aside>
-            <SceneList room={room} send={send} />
-
-            <div className="panel">
-              <h2>Battle map</h2>
-              <input
-                ref={fileInput}
-                type="file"
-                accept="image/png,image/jpeg,image/gif,image/webp"
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  if (file !== undefined) void onUpload(file);
-                }}
-              />
-              {uploadError !== null ? <p className="field-error">{uploadError}</p> : null}
-              {scene.image === null ? (
-                <p className="muted">No image yet.</p>
-              ) : (
-                <p className="muted">
-                  {scene.image.width}×{scene.image.height}
-                </p>
-              )}
-            </div>
-
-            <GridControls
-              grid={scene.grid}
-              onChange={(grid) => send({ type: 'setSceneGrid', sceneId: scene.id, grid })}
-            />
-
-            <TokenTools
-              room={room}
-              sceneId={scene.id}
-              selected={selected}
-              onAdd={(token) => send({ type: 'addToken', sceneId: scene.id, token })}
-              onUpdate={updateSelected}
-              onRemove={() => {
-                if (selected === null) return;
-                send({ type: 'removeToken', sceneId: scene.id, tokenId: selected.id });
-                setSelectedTokenId(null);
-              }}
-            />
-
-            <div className="panel">
-              <h2>Fog of war</h2>
-              <button
-                type="button"
-                aria-pressed={scene.fog.enabled}
-                onClick={() =>
-                  send({ type: 'setFogEnabled', sceneId: scene.id, enabled: !scene.fog.enabled })
-                }
-              >
-                {scene.fog.enabled ? 'Fog on' : 'Fog off'}
-              </button>
-              <div className="row mt-3">
-                <button
-                  type="button"
-                  aria-pressed={fogBrush?.reveal === true}
-                  onClick={() =>
-                    setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })
-                  }
-                >
-                  Reveal brush
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={fogBrush?.reveal === false}
-                  onClick={() =>
-                    setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })
-                  }
-                >
-                  Hide brush
-                </button>
-              </div>
-              <p className="muted">
-                Players see only revealed areas — the rest is never sent to them.
-              </p>
-            </div>
-          </aside>
-        ) : null}
-      </div>
-    </section>
+          <p className="muted">Los jugadores solo ven las áreas reveladas — el resto nunca se les envía.</p>
+        </FloatingPanel>
+      ) : null}
+    </div>
   );
 }
 
 function SceneList({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   return (
     <div className="panel">
-      <h2>Scenes</h2>
+      <h2>Escenas</h2>
       {room.map.scenes.map((scene) => (
         <div className="card" key={scene.id}>
           <div className="card-head">
             <strong>{scene.name}</strong>
             <div className="row">
               {room.map.activeSceneId === scene.id ? (
-                <span className="badge">Active</span>
+                <span className="badge">Activa</span>
               ) : (
                 <button
                   type="button"
                   onClick={() => send({ type: 'setActiveScene', id: scene.id })}
                 >
-                  Show players
+                  Mostrar a jugadores
                 </button>
               )}
               <button type="button" onClick={() => send({ type: 'removeScene', id: scene.id })}>
-                Delete
+                Eliminar
               </button>
             </div>
           </div>
           <span className="option-meta">
-            {scene.tokens.length} tokens{scene.image === null ? ' · no image' : ''}
+            {scene.tokens.length} fichas{scene.image === null ? ' · sin imagen' : ''}
           </span>
         </div>
       ))}
@@ -262,8 +371,8 @@ function SceneList({ room, send }: { room: RoomState; send: (event: RoomEvent) =
 function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) => void }) {
   return (
     <div className="panel">
-      <h2>Grid &amp; scale</h2>
-      <label htmlFor="grid-mode">Mode</label>
+      <h2>Cuadrícula y escala</h2>
+      <label htmlFor="grid-mode">Modo</label>
       <select
         id="grid-mode"
         value={grid.mode}
@@ -271,13 +380,13 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           onChange({ ...grid, mode: event.target.value === 'square' ? 'square' : 'none' })
         }
       >
-        <option value="none">Gridless (theater of the mind)</option>
-        <option value="square">Square grid</option>
+        <option value="none">Sin cuadrícula (teatro de la mente)</option>
+        <option value="square">Cuadrícula cuadrada</option>
       </select>
 
       <div className="grid cols-2 mt-3">
         <div>
-          <label htmlFor="grid-size">{grid.mode === 'square' ? 'Square size (px)' : 'Pixels per inch'}</label>
+          <label htmlFor="grid-size">{grid.mode === 'square' ? 'Tamaño de casilla (px)' : 'Píxeles por pulgada'}</label>
           <input
             id="grid-size"
             type="number"
@@ -290,7 +399,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-feet">Feet per inch</label>
+          <label htmlFor="grid-feet">Pies por pulgada</label>
           <input
             id="grid-feet"
             type="number"
@@ -303,7 +412,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-x">Offset X</label>
+          <label htmlFor="grid-x">Desplazamiento X</label>
           <input
             id="grid-x"
             type="number"
@@ -312,7 +421,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-y">Offset Y</label>
+          <label htmlFor="grid-y">Desplazamiento Y</label>
           <input
             id="grid-y"
             type="number"
@@ -322,7 +431,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
         </div>
       </div>
       <button type="button" onClick={() => onChange(DEFAULT_GRID)}>
-        Reset grid
+        Restablecer cuadrícula
       </button>
     </div>
   );
@@ -355,10 +464,10 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
 
   return (
     <div className="panel">
-      <h2>Tokens</h2>
+      <h2>Fichas</h2>
 
-      <h3>Add a PC</h3>
-      {characters.length === 0 ? <p className="muted">No characters claimed yet.</p> : null}
+      <h3>Agregar un PJ</h3>
+      {characters.length === 0 ? <p className="muted">Todavía no se ha reclamado ningún personaje.</p> : null}
       <div className="row">
         {characters.map(([id, sheet], index) => {
           const owner = room.players.find((p) => p.characterId === id) ?? null;
@@ -368,7 +477,7 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
               type="button"
               onClick={() =>
                 onAdd({
-                  ...base(sheet.character.name ?? 'PC', tokenColorAt(index)),
+                  ...base(sheet.character.name ?? 'PJ', tokenColorAt(index)),
                   kind: 'pc',
                   refId: id,
                   // The controlling player may drag their own token.
@@ -376,15 +485,15 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
                 })
               }
             >
-              {sheet.character.name ?? 'PC'}
+              {sheet.character.name ?? 'PJ'}
             </button>
           );
         })}
       </div>
 
-      <h3 className="mt-4">Add an adversary</h3>
+      <h3 className="mt-4">Agregar un adversario</h3>
       {room.adversaryInstances.length === 0 ? (
-        <p className="muted">Field adversaries from the GM panel first.</p>
+        <p className="muted">Primero despliega adversarios desde el panel del DJ.</p>
       ) : null}
       <div className="row">
         {room.adversaryInstances.map((instance) => (
@@ -408,21 +517,21 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
       <button
         type="button"
         className="mt-3"
-        onClick={() => onAdd({ ...base('Marker', markerTokenColor()), kind: 'marker', refId: null, ownerId: null })}
+        onClick={() => onAdd({ ...base('Marcador', markerTokenColor()), kind: 'marker', refId: null, ownerId: null })}
       >
-        Add marker
+        Agregar marcador
       </button>
 
       {selected === null ? (
         <p className="muted mt-4">
-          Select a token to edit it.
+          Selecciona una ficha para editarla.
         </p>
       ) : (
         <fieldset className="mt-4">
           <legend>{selected.name}</legend>
           <div className="grid cols-2">
             <div>
-              <label htmlFor="token-size">Size</label>
+              <label htmlFor="token-size">Tamaño</label>
               <input
                 id="token-size"
                 type="number"
@@ -436,7 +545,7 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
               />
             </div>
             <div>
-              <label htmlFor="token-rotation">Rotation</label>
+              <label htmlFor="token-rotation">Rotación</label>
               <input
                 id="token-rotation"
                 type="number"
@@ -453,10 +562,10 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
               aria-pressed={selected.hidden}
               onClick={() => onUpdate({ hidden: !selected.hidden })}
             >
-              {selected.hidden ? 'GM only' : 'Visible to players'}
+              {selected.hidden ? 'Solo DJ' : 'Visible para jugadores'}
             </button>
             <button type="button" onClick={onRemove}>
-              Delete token
+              Eliminar ficha
             </button>
           </div>
         </fieldset>
@@ -474,8 +583,8 @@ function TokenStatus({ room, token }: { room: RoomState; token: Token }) {
     if (sheet === undefined) return null;
     return (
       <p className="muted">
-        HP {sheet.hpMarked}/{sheet.character.hpSlots} · Stress {sheet.stressMarked}/
-        {sheet.character.stressSlots} · Evasion {sheet.character.evasion}
+        PV {sheet.hpMarked}/{sheet.character.hpSlots} · Estrés {sheet.stressMarked}/
+        {sheet.character.stressSlots} · Evasión {sheet.character.evasion}
       </p>
     );
   }
@@ -486,8 +595,8 @@ function TokenStatus({ room, token }: { room: RoomState; token: Token }) {
     const stat = adversaries.find((a) => a.id === instance.adversaryId);
     return (
       <p className="muted">
-        HP {instance.hpMarked}/{stat?.hp ?? '?'} · Stress {instance.stressMarked}/
-        {stat?.stress ?? '?'} · Difficulty {stat?.difficulty ?? '?'}
+        PV {instance.hpMarked}/{stat?.hp ?? '?'} · Estrés {instance.stressMarked}/
+        {stat?.stress ?? '?'} · Dificultad {stat?.difficulty ?? '?'}
       </p>
     );
   }
