@@ -43,7 +43,8 @@
 
 .print-sheet {
   width: 210mm;
-  min-height: 297mm;
+  height: 297mm;
+  overflow: hidden;
   margin: 0 auto;
   background: #fff;
   color: #1a1a1a;
@@ -53,6 +54,16 @@
   display: flex;
   flex-direction: column;
   gap: 6mm;
+}
+
+/* Chrome/Firefox skip backgrounds when printing unless told otherwise — this
+   sheet's banners and shields are backgrounds, so force them on regardless of
+   the print dialog's "background graphics" checkbox. */
+.print-sheet,
+.print-sheet * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
 }
 
 /* -------------------------------------------------------------- header */
@@ -417,13 +428,11 @@
     margin: 0;
   }
 
-  body * {
-    visibility: hidden;
-  }
-
-  .print-overlay,
-  .print-overlay * {
-    visibility: visible;
+  /* PrintableSheet is portaled straight onto document.body, so hiding the
+     app root entirely (not just visually) is enough — no leftover layout
+     height from the rest of the app, and so no blank trailing pages. */
+  #root {
+    display: none !important;
   }
 
   .print-overlay {
@@ -438,7 +447,7 @@
     box-shadow: none;
     margin: 0;
     width: 210mm;
-    min-height: 297mm;
+    height: 297mm;
   }
 
   .no-print {

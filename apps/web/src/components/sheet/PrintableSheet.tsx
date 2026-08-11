@@ -1,4 +1,5 @@
 import { MAX_HOPE } from '@daggerheart/rules';
+import { createPortal } from 'react-dom';
 
 import { describeWeaponDamage, label, selectSheetView } from '../../state/selectors.js';
 import type { SheetState } from '../../state/sheet.js';
@@ -29,7 +30,7 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
   const experiences = Object.entries(character.experiences);
   const equippedWeapons = [view.primaryWeapon, view.secondaryWeapon] as const;
 
-  return (
+  return createPortal(
     <div className="print-overlay">
       <div className="print-toolbar no-print">
         <button type="button" onClick={() => window.print()}>
@@ -268,6 +269,7 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
 
         <p className="ps-footer">Daggerheart © Darrington Press 2025 · Traducción no oficial</p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
