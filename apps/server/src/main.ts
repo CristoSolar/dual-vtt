@@ -3,15 +3,23 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 
 import { registerGateway } from './gateway.js';
+import { handleAuth } from './auth-http.js';
 import { RoomStore } from './rooms.js';
+import { SessionStore } from './sessions.js';
 import { readSnapshot, startSnapshots, writeSnapshot } from './snapshot.js';
 import { handleUploads } from './uploads.js';
+import { UserStore } from './users.js';
+import { readUsersSnapshot, writeUsersSnapshot } from './users-snapshot.js';
 
 const PORT = Number(process.env.PORT ?? 4000);
 const SNAPSHOT_PATH = process.env.SNAPSHOT_PATH ?? '.data/rooms.json';
 const SNAPSHOT_INTERVAL_MS = Number(process.env.SNAPSHOT_INTERVAL_MS ?? 15_000);
 /** Map images live beside the room snapshots. */
 const UPLOAD_DIR = process.env.UPLOAD_DIR ?? '.data/uploads';
+const USERS_SNAPSHOT_PATH = process.env.USERS_SNAPSHOT_PATH ?? '.data/users.json';
+/** The first GM account, created on boot if no account by this name exists yet. */
+const GM_USERNAME = process.env.GM_USERNAME ?? 'gm';
+const GM_PASSWORD = process.env.GM_PASSWORD ?? 'gm';
 
 /** The web app's dev server and preview origins. This is a local tool, not public. */
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173')
@@ -24,12 +32,32 @@ async function main(): Promise<void> {
   store.restore(await readSnapshot(SNAPSHOT_PATH));
   if (store.size > 0) console.log(`restored ${store.size} room(s) from ${SNAPSHOT_PATH}`);
 
+  const users = new UserStore();
+  users.restore(await readUsersSnapshot(USERS_SNAPSHOT_PATH));
+  const persistUsers = (): void => {
+    void writeUsersSnapshot(USERS_SNAPSHOT_PATH, users.serialize()).catch((error: unknown) =>
+      console.error('users snapshot failed', error),
+    );
+  };
+  if (users.findByUsername(GM_USERNAME) === null) {
+    await users.createUser(GM_USERNAME, GM_PASSWORD, 'gm');
+    persistUsers();
+    const usingDefaults = GM_USERNAME === 'gm' && GM_PASSWORD === 'gm';
+    console.warn(
+      `No GM account named "${GM_USERNAME}" existed — created it.` +
+        (usingDefaults
+          ? ' Using the default gm/gm credentials — set GM_USERNAME and GM_PASSWORD to change them.'
+          : ''),
+    );
+  }
+  const sessions = new SessionStore();
+
   const http = createServer((request, response) => {
     // The web app runs on another origin in development.
     const origin = request.headers.origin;
     if (origin !== undefined && ALLOWED_ORIGINS.includes(origin)) {
       response.setHeader('access-control-allow-origin', origin);
-      response.setHeader('access-control-allow-headers', 'content-type');
+      response.setHeader('access-control-allow-headers', 'content-type, authorization');
       response.setHeader('access-control-allow-methods', 'GET,POST,OPTIONS');
     }
     if (request.method === 'OPTIONS') {
@@ -45,10 +73,13 @@ async function main(): Promise<void> {
       return;
     }
 
-    void handleUploads(request, response, UPLOAD_DIR).then((handled) => {
+    void handleAuth(request, response, { users, sessions, persist: persistUsers }).then((handled) => {
       if (handled) return;
-      response.writeHead(404);
-      response.end();
+      void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
+        if (uploadHandled) return;
+        response.writeHead(404);
+        response.end();
+      });
     });
   });
 
