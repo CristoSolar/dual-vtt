@@ -376,6 +376,49 @@ legend {
   cursor: pointer;
 }
 
+/* ============================================================ auth screens */
+
+/*
+ * Login and the forced password change are single-purpose screens with no
+ * page chrome around them yet (the user isn't in the app), so they get their
+ * own narrow, centred card instead of stretching the panel to the app's full
+ * content width.
+ */
+.auth-shell {
+  min-height: calc(100vh - var(--sp-8) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-7) var(--sp-4);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 22rem;
+}
+
+.auth-card h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  letter-spacing: var(--ls-wider);
+  text-align: center;
+}
+
+.auth-card .muted {
+  text-align: center;
+}
+
+.auth-card label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+.auth-card button[type='button'] {
+  width: 100%;
+}
+
 /* The sheet is read for a whole session: the art sits fixed behind it, dim
    enough that the panels on top stay the thing you're actually reading. */
 .sheet-backdrop::before {

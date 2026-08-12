@@ -11,39 +11,44 @@ export function ChangePasswordRoute({ error, onChange }: ChangePasswordRouteProp
   const [newPassword, setNewPassword] = useState('');
 
   return (
-    <section>
-      <div className="hero">
-        <h1>Cambia tu contraseña</h1>
-        <p className="muted">Tu DJ creó esta cuenta con una contraseña inicial. Elige una nueva.</p>
-      </div>
-      <div className="panel">
-        <label htmlFor="current-password">Contraseña actual</label>
-        <input
-          id="current-password"
-          type="password"
-          value={currentPassword}
-          onChange={(event) => setCurrentPassword(event.target.value)}
-        />
-        <label htmlFor="new-password" className="mt-3">
-          Contraseña nueva
-        </label>
-        <input
-          id="new-password"
-          type="password"
-          value={newPassword}
-          onChange={(event) => setNewPassword(event.target.value)}
-        />
-        <div className="mt-3">
-          <button
-            type="button"
-            disabled={currentPassword === '' || newPassword === ''}
-            onClick={() => onChange(currentPassword, newPassword)}
-          >
-            Guardar contraseña
-          </button>
+    <div className="auth-shell">
+      <section className="auth-card">
+        <div className="panel">
+          <h1>Cambia tu contraseña</h1>
+          <p className="muted mt-3">
+            Tu DJ creó esta cuenta con una contraseña inicial. Elige una nueva.
+          </p>
+
+          <label htmlFor="current-password" className="mt-4">
+            Contraseña actual
+          </label>
+          <input
+            id="current-password"
+            type="password"
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+          />
+          <label htmlFor="new-password" className="mt-3">
+            Contraseña nueva
+          </label>
+          <input
+            id="new-password"
+            type="password"
+            value={newPassword}
+            onChange={(event) => setNewPassword(event.target.value)}
+          />
+          <div className="mt-4">
+            <button
+              type="button"
+              disabled={currentPassword === '' || newPassword === ''}
+              onClick={() => onChange(currentPassword, newPassword)}
+            >
+              Guardar contraseña
+            </button>
+          </div>
+          {error !== null ? <div className="errors">{error}</div> : null}
         </div>
-        {error !== null ? <div className="errors">{error}</div> : null}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
