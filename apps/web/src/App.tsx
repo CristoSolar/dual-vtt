@@ -3,10 +3,14 @@ import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } f
 
 import { GMPanel } from './components/gm/GMPanel.js';
 import { CharactersRoute } from './routes/CharactersRoute.js';
+import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { HomeRoute } from './routes/HomeRoute.js';
+import { LoginRoute } from './routes/LoginRoute.js';
 import { MapRoute } from './routes/MapRoute.js';
+import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
+import { useAuth } from './state/auth.js';
 import { loadCreation } from './state/storage.js';
 import { useCharacters } from './state/useCharacters.js';
 import { useRoom } from './state/useRoom.js';
@@ -27,6 +31,7 @@ function Shell() {
   const { characters, active, activeId, setActiveId, addCharacter, updateActive, deleteCharacter } =
     useCharacters(storage);
   const room = useRoom(storage);
+  const auth = useAuth(storage);
 
   const hasCreationInProgress = useMemo(() => loadCreation(storage) !== null, [storage]);
 
@@ -50,6 +55,22 @@ function Shell() {
     room.claimCharacter(active.id, active.sheet);
   }, [active, room]);
 
+  if (auth.status === 'loading') {
+    return (
+      <div className="app">
+        <p className="muted">Cargando…</p>
+      </div>
+    );
+  }
+
+  if (auth.status === 'signedOut') {
+    return <LoginRoute error={auth.error} onLogin={auth.login} />;
+  }
+
+  if (auth.user?.mustChangePassword === true) {
+    return <ChangePasswordRoute error={auth.error} onChange={auth.changePassword} />;
+  }
+
   return (
     <div className={isMapRoute ? 'app app--map' : 'app'}>
       <header className={isMapRoute ? 'topbar topbar--overlay' : 'topbar'}>
@@ -60,6 +81,11 @@ function Shell() {
           <Link to="/">
             <button type="button">Inicio</button>
           </Link>
+          {auth.user?.role === 'gm' ? (
+            <Link to="/players">
+              <button type="button">Jugadores</button>
+            </Link>
+          ) : null}
           {inCampaign ? (
             <>
               <Link to="/map">
@@ -90,6 +116,9 @@ function Shell() {
               ) : null}
             </>
           )}
+          <button type="button" onClick={auth.logout}>
+            Cerrar sesión
+          </button>
         </nav>
       </header>
 
@@ -146,6 +175,16 @@ function Shell() {
               addCharacter={addCharacter}
               onFinish={() => navigate('/sheet')}
             />
+          }
+        />
+        <Route
+          path="/players"
+          element={
+            auth.user?.role !== 'gm' || auth.token === null ? (
+              <Navigate to="/" replace />
+            ) : (
+              <PlayersRoute token={auth.token} />
+            )
           }
         />
         <Route path="/create" element={<Navigate to="/create/1" replace />} />
