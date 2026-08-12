@@ -5,3 +5,4 @@ export * from './room.js';
 export * from './events.js';
 export * from './ranges.js';
 export * from './map.js';
+export * from './auth.js';
