@@ -22,7 +22,9 @@ COPY apps/web/package.json apps/web/package.json
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN pnpm -F @daggerheart/web build
+# Same-origin build: the server serves this build itself, on whatever host/port
+# it's reached at (localhost, or the tunnel's domain) — never bake in localhost:4000.
+RUN VITE_SERVER_URL= pnpm -F @daggerheart/web build
 
 ENV NODE_ENV=production
 # The server serves this build itself — no separate web process, no CORS relaxation.
