@@ -32,8 +32,8 @@ export const TokenSchema = z.object({
   height: z.number().positive().max(4000),
   rotation: z.number().min(-360).max(360),
   /**
-   * The player session id allowed to drag this token. Null means GM-only. The server
-   * checks this; a client cannot move a token it does not own.
+   * The player account id allowed to drag this token. Null means GM-only. The
+   * server checks this; a client cannot move a token it does not own.
    */
   ownerId: z.string().min(1).max(64).nullable(),
   /** GM-only tokens are stripped from the state players receive. */

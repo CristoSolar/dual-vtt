@@ -90,7 +90,8 @@ export type AdversaryInstance = z.infer<typeof AdversaryInstanceSchema>;
  * reshaping the protocol or the patch mechanism.
  */
 export const RoomStateSchema = z.object({
-  code: z.string().length(6),
+  /** Opaque campaign id. Not a code a player types in — membership gates joining. */
+  id: z.string().min(1),
   gm: GameMasterSchema,
   players: z.array(PlayerSchema),
   /** Character id -> that character's full sheet. */
@@ -112,9 +113,9 @@ export type RoomState = z.infer<typeof RoomStateSchema>;
 /** Keeps the log bounded so a long session can't grow without limit. */
 export const MAX_ROOM_LOG = 200;
 
-export function createRoom(code: string, gm: GameMaster): RoomState {
+export function createRoomState(id: string, gm: GameMaster): RoomState {
   return {
-    code,
+    id,
     gm,
     players: [],
     characters: {},

@@ -10,12 +10,9 @@ import { SheetStateSchema } from './sheet.js';
 export const CHANNEL = {
   /** client -> server */
   intent: 'intent',
-  createRoom: 'createRoom',
-  joinRoom: 'joinRoom',
-  resume: 'resume',
+  joinCampaign: 'joinCampaign',
   claimCharacter: 'claimCharacter',
   /** server -> client */
-  session: 'session',
   roomState: 'roomState',
   roomPatch: 'roomPatch',
   rolled: 'rolled',
@@ -216,41 +213,21 @@ export type RoomEvent = z.infer<typeof RoomEventSchema>;
 
 // --- connection messages ----------------------------------------------------
 
-export const CreateRoomSchema = z.object({
-  gmName: z.string().min(1).max(40),
+/**
+ * Enter a campaign's live room. The socket is already authenticated (its account id
+ * came from the connection handshake); this only asks to be seated in one specific
+ * campaign, and the server checks membership before seating it.
+ */
+export const JoinCampaignSchema = z.object({
+  campaignId: z.string().min(1),
 });
-export type CreateRoomMessage = z.infer<typeof CreateRoomSchema>;
+export type JoinCampaignMessage = z.infer<typeof JoinCampaignSchema>;
 
-export const JoinRoomSchema = z.object({
-  code: z.string().length(6),
-  name: z.string().min(1).max(40),
-});
-export type JoinRoomMessage = z.infer<typeof JoinRoomSchema>;
-
-/** Reconnect: the client presents the token it was issued and gets full state back. */
-export const ResumeSchema = z.object({
-  code: z.string().length(6),
-  token: z.string().min(8).max(128),
-});
-export type ResumeMessage = z.infer<typeof ResumeSchema>;
-
-/** A player claims a character slot, uploading the sheet they created locally. */
+/** A player claims their one character for the campaign they are seated in. */
 export const ClaimCharacterSchema = z.object({
-  characterId: z.string().min(1).max(64),
   sheet: SheetStateSchema,
 });
 export type ClaimCharacterMessage = z.infer<typeof ClaimCharacterSchema>;
-
-// --- server -> client -------------------------------------------------------
-
-/** Issued once on create/join/resume. The token is how a client reclaims its seat. */
-export const SessionSchema = z.object({
-  token: z.string().min(8),
-  sessionId: z.string().min(1),
-  role: z.enum(['gm', 'player']),
-  code: z.string().length(6),
-});
-export type SessionMessage = z.infer<typeof SessionSchema>;
 
 /**
  * A slice-level diff. Only the top-level slices that actually changed are sent;
