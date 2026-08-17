@@ -8,6 +8,7 @@ import { handleCampaigns } from './campaigns-http.js';
 import { readCampaignsSnapshot, writeCampaignsSnapshot } from './campaigns-snapshot.js';
 import { registerGateway } from './gateway.js';
 import { SessionStore } from './sessions.js';
+import { handleStatic } from './static.js';
 import { handleUploads } from './uploads.js';
 import { UserStore } from './users.js';
 import { readUsersSnapshot, writeUsersSnapshot } from './users-snapshot.js';
@@ -17,6 +18,9 @@ const CAMPAIGNS_SNAPSHOT_PATH = process.env.CAMPAIGNS_SNAPSHOT_PATH ?? '.data/ca
 const CAMPAIGNS_SNAPSHOT_INTERVAL_MS = Number(process.env.CAMPAIGNS_SNAPSHOT_INTERVAL_MS ?? 15_000);
 /** Map images live beside the campaign snapshots. */
 const UPLOAD_DIR = process.env.UPLOAD_DIR ?? '.data/uploads';
+/** The web app's production build. Absent in `pnpm dev` — Vite serves the app
+ * itself there. Present when run via `pnpm host` (see host.ts). */
+const WEB_DIST_DIR = process.env.WEB_DIST_DIR ?? '../web/dist';
 const USERS_SNAPSHOT_PATH = process.env.USERS_SNAPSHOT_PATH ?? '.data/users.json';
 /** The first GM account, created on boot if no account by this name exists yet. */
 const GM_USERNAME = process.env.GM_USERNAME ?? 'gm';
@@ -88,8 +92,11 @@ async function main(): Promise<void> {
           if (campaignsHandled) return;
           void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
             if (uploadHandled) return;
-            response.writeHead(404);
-            response.end();
+            void handleStatic(request, response, WEB_DIST_DIR).then((staticHandled) => {
+              if (staticHandled) return;
+              response.writeHead(404);
+              response.end();
+            });
           });
         },
       );

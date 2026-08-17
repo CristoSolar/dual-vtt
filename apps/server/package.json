@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch --include 'src/**' --exclude '**/node_modules/**' src/main.ts",
     "start": "tsx src/main.ts",
+    "host": "tsx src/host.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"
@@ -14,14 +15,15 @@
     "@daggerheart/protocol": "workspace:*",
     "@daggerheart/rules": "workspace:*",
     "@daggerheart/srd-data": "workspace:*",
+    "cloudflared": "^0.7.3",
     "socket.io": "^4.8.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@daggerheart/character": "workspace:*",
     "@types/node": "^22.10.2",
     "socket.io-client": "^4.8.1",
     "tsx": "^4.19.2",
-    "vitest": "^2.1.8",
-    "@daggerheart/character": "workspace:*"
+    "vitest": "^2.1.8"
   }
 }

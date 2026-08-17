@@ -46,11 +46,14 @@ t.once('error', (error: Error) => console.error(error));
 
 `Tunnel` extiende `EventEmitter`; emite `'url'` una vez que Cloudflare
 asigna el subdominio `https://*.trycloudflare.com`, `'connected'`,
-`'disconnected'`, `'exit'`, `'error'`. `bin` es la ruta al binario
-(por defecto en el cache del paquete); se sobreescribe con `use(path)` si
-se quiere fijar una ubicación propia — se fija a `.data/cloudflared/`
-(ya ignorado por git) para no ensuciar el home del usuario ni depender del
-cache del paquete entre corridas.
+`'disconnected'`, `'exit'`, `'error'`. En la práctica el propio
+`postinstall` del paquete ya descarga el binario a su ruta por defecto
+(`bin`) apenas se corre `pnpm install` — el chequeo
+`existsSync(bin) || install(bin)` en `host.ts` queda solo como red de
+seguridad para un setup que se instaló con `--ignore-scripts`.
+`pnpm-workspace.yaml` necesita `allowBuilds: { cloudflared: true }` para
+que ese postinstall corra (pnpm bloquea scripts de paquetes nuevos por
+default).
 
 ## Servir el front construido
 
