@@ -1,0 +1,14 @@
+services:
+  daggerheart:
+    build: .
+    ports:
+      - '4000:4000'
+    volumes:
+      # Campaigns/users/map-upload snapshots — survive `docker compose down`.
+      - daggerheart-data:/app/apps/server/.data
+    environment:
+      - GM_USERNAME=${GM_USERNAME:-gm}
+      - GM_PASSWORD=${GM_PASSWORD:-gm}
+
+volumes:
+  daggerheart-data:
