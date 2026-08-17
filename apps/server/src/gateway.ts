@@ -65,15 +65,23 @@ export function registerGateway(
   sessions: SessionStore,
   users: UserStore,
 ): void {
-  io.on('connection', (socket) => {
+  // Auth runs in connection middleware, not the `connection` handler: by the time
+  // that handler fires the client has already seen a `connect` event, so rejecting
+  // there only produces a `disconnect` on a socket the client believes is live.
+  // Rejecting here instead makes the client's connection attempt fail with
+  // `connect_error`, before any `connect` event is ever emitted.
+  io.use((socket, next) => {
     const token = socket.handshake.auth?.token as unknown;
     const accountId = typeof token === 'string' ? sessions.resolve(token) : null;
     if (accountId === null) {
-      socket.disconnect(true);
+      next(new Error('unauthorized'));
       return;
     }
     accountOf.set(socket, accountId);
+    next();
+  });
 
+  io.on('connection', (socket) => {
     socket.on(CHANNEL.joinCampaign, (payload: unknown) => {
       const parsed = JoinCampaignSchema.safeParse(payload);
       if (!parsed.success) return reject(socket, 'badRequest', 'invalid joinCampaign');

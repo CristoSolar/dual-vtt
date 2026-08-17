@@ -2,7 +2,7 @@ import { createSheet, makeDualityRoll } from '@daggerheart/protocol';
 import { resolveActionRoll, rollDuality, seededRng } from '@daggerheart/rules';
 import { describe, expect, it } from 'vitest';
 
-import { generateCode, rngForRoll, RoomStore } from '../src/rooms.js';
+import { CampaignStore, rngForRoll } from '../src/campaigns.js';
 import { buildCharacter, buildSheet } from './helpers.js';
 
 describe('server-side dice', () => {
@@ -17,7 +17,6 @@ describe('server-side dice', () => {
       experiences: [],
     };
 
-    // What the rules package produces on its own with this seed.
     const expected = rollDuality({
       modifiers: request.modifiers,
       advantage: request.advantage,
@@ -26,7 +25,6 @@ describe('server-side dice', () => {
     });
     const expectedOutcome = resolveActionRoll(expected, request.difficulty);
 
-    // What the server produces for the first roll in a room with the same seed.
     const sheet = createSheet(buildCharacter('ranger'));
     const actual = makeDualityRoll(sheet, request, rngForRoll(seed, 0));
 
@@ -41,23 +39,18 @@ describe('server-side dice', () => {
     expect(first).toEqual(second);
   });
 
-  it('advances the dice between rolls so a room does not repeat itself', () => {
-    const store = new RoomStore();
-    const { room, session } = store.createRoom('GM', 555);
-    store.claimCharacter(room.state.code, session.token, 'pc', buildSheet('ranger'));
+  it('advances the dice between rolls so a campaign does not repeat itself', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Dice Test', 555);
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.seatFor(campaign.id, 'u-player', 'player');
+    store.claimCharacter(campaign.id, 'u-player', buildSheet('ranger'));
 
     const roll = () => {
-      const outcome = store.apply(room.state.code, session.token, {
+      const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
         type: 'rollDuality',
-        characterId: 'pc',
-        request: {
-          label: 'Roll',
-          modifiers: 0,
-          difficulty: 10,
-          advantage: 0,
-          disadvantage: 0,
-          experiences: [],
-        },
+        characterId: 'u-player',
+        request: { label: 'Roll', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, experiences: [] },
       });
       const entry = outcome.entries[0];
       if (entry === undefined || entry.kind !== 'duality') throw new Error('no roll');
@@ -65,50 +58,34 @@ describe('server-side dice', () => {
     };
 
     const rolls = [roll(), roll(), roll()];
-    expect(room.rollCount).toBe(3);
-    // Three consecutive rolls must not all be the same dice.
+    expect(store.get(campaign.id)?.rollCount).toBe(3);
     expect(new Set(rolls.map((r) => `${r.hope}-${r.fear}`)).size).toBeGreaterThan(1);
   });
 
   it('replays a logged roll from its seed and index for auditing', () => {
-    const store = new RoomStore();
-    const { room, session } = store.createRoom('GM', 2024);
-    store.claimCharacter(room.state.code, session.token, 'pc', buildSheet());
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Audit Test', 2024);
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.seatFor(campaign.id, 'u-player', 'player');
+    store.claimCharacter(campaign.id, 'u-player', buildSheet());
 
-    const outcome = store.apply(room.state.code, session.token, {
+    const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
       type: 'rollDuality',
-      characterId: 'pc',
-      request: {
-        label: 'Audit',
-        modifiers: 0,
-        difficulty: 10,
-        advantage: 0,
-        disadvantage: 0,
-        experiences: [],
-      },
+      characterId: 'u-player',
+      request: { label: 'Audit', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, experiences: [] },
     });
 
     const entry = outcome.entries[0];
     if (entry === undefined || entry.kind !== 'duality') throw new Error('no roll');
-    // Anyone holding the room's seed can recompute the roll that was logged.
     expect(rollDuality({ rng: rngForRoll(2024, 0) })).toEqual(entry.roll);
   });
 });
 
-describe('join codes', () => {
-  it('are six characters from an unambiguous alphabet', () => {
-    for (let i = 0; i < 50; i++) {
-      const code = generateCode();
-      expect(code).toHaveLength(6);
-      // No 0/O/1/I, which are easy to mishear or mistype.
-      expect(code).toMatch(/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/);
-    }
-  });
-
-  it('never issues the same code to two live rooms', () => {
-    const store = new RoomStore();
-    const codes = new Set<string>();
-    for (let i = 0; i < 30; i++) codes.add(store.createRoom(`GM ${i}`).room.state.code);
-    expect(codes.size).toBe(30);
+describe('campaign ids', () => {
+  it('never issues the same id to two live campaigns', () => {
+    const store = new CampaignStore();
+    const ids = new Set<string>();
+    for (let i = 0; i < 30; i++) ids.add(store.createCampaign(`u-gm-${i}`, `gm-${i}`, `Campaign ${i}`).id);
+    expect(ids.size).toBe(30);
   });
 });

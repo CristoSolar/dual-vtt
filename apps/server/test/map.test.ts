@@ -1,7 +1,7 @@
 import { CHANNEL, type RoomPatch, type RoomState, type Token } from '@daggerheart/protocol';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createRoomAs, joinRoomAs, startTestServer, type TestServer } from './helpers.js';
+import { accountFor, createCampaignAs, joinCampaignAs, startTestServer, type TestServer } from './helpers.js';
 
 const token = (over: Partial<Token> = {}): Token => ({
   id: 'tok-1',
@@ -20,19 +20,18 @@ const token = (over: Partial<Token> = {}): Token => ({
   ...over,
 });
 
-/** Sets up a room with one scene and one player, returning both clients. */
-async function tableWithScene(url: string) {
-  const gm = await createRoomAs(url, 'GM');
-  const player = await joinRoomAs(url, gm.session.code, 'Alice');
+/** Sets up a campaign with one scene and one player, returning both clients. */
+async function tableWithScene(server: TestServer, suffix: string) {
+  const gm = await accountFor(server, `gm-map-${suffix}`, 'gm');
+  const alicePlayer = await accountFor(server, `alice-map-${suffix}`);
+  const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Map Test');
+  const player = await joinCampaignAs(server, gm, campaignId, alicePlayer);
 
-  const created = player.client.until<RoomPatch>(
-    CHANNEL.roomPatch,
-    (p) => (p.map?.scenes.length ?? 0) > 0,
-  );
-  gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'scene-1', name: 'The Bridge' });
+  const created = player.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => (p.map?.scenes.length ?? 0) > 0);
+  gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'scene-1', name: 'The Bridge' });
   await created;
 
-  return { gm, player, code: gm.session.code };
+  return { gm, gmClient, player, campaignId, playerId: alicePlayer.id };
 }
 
 describe('map sync', () => {
@@ -47,20 +46,20 @@ describe('map sync', () => {
   });
 
   it('broadcasts a GM token move to a connected player', async () => {
-    const { gm, player, code } = await tableWithScene(server.url);
+    const { gmClient, player, campaignId } = await tableWithScene(server, 'a');
 
     const added = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
     );
-    gm.client.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
+    gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
     await added;
 
     const moved = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => p.map?.scenes[0]?.tokens[0]?.x === 400,
     );
-    gm.client.emit(CHANNEL.intent, {
+    gmClient.emit(CHANNEL.intent, {
       type: 'moveToken',
       sceneId: 'scene-1',
       tokenId: 'tok-1',
@@ -71,33 +70,28 @@ describe('map sync', () => {
 
     const patch = await moved;
     expect(patch.map?.scenes[0]?.tokens[0]).toMatchObject({ x: 400, y: 250 });
-    // The server's own copy agrees.
-    const scene = server.store.get(code)?.state.map.scenes[0];
+    const scene = server.campaigns.get(campaignId)?.state.map.scenes[0];
     expect(scene?.tokens[0]).toMatchObject({ x: 400, y: 250 });
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('lets a player move only the token they own', async () => {
-    const { gm, player, code } = await tableWithScene(server.url);
-    const playerId = player.session.sessionId;
+    const { gmClient, player, campaignId, playerId } = await tableWithScene(server, 'b');
 
     const added = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
     );
-    gm.client.emit(CHANNEL.intent, {
+    gmClient.emit(CHANNEL.intent, {
       type: 'addToken',
       sceneId: 'scene-1',
       token: token({ ownerId: playerId }),
     });
     await added;
 
-    const moved = gm.client.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.map?.scenes[0]?.tokens[0]?.x === 220,
-    );
+    const moved = gmClient.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.scenes[0]?.tokens[0]?.x === 220);
     player.client.emit(CHANNEL.intent, {
       type: 'moveToken',
       sceneId: 'scene-1',
@@ -108,27 +102,26 @@ describe('map sync', () => {
     });
     await moved;
 
-    expect(server.store.get(code)?.state.map.scenes[0]?.tokens[0]).toMatchObject({
+    expect(server.campaigns.get(campaignId)?.state.map.scenes[0]?.tokens[0]).toMatchObject({
       x: 220,
       y: 180,
     });
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('rejects a player moving a token they do not own, changing nothing', async () => {
-    const { gm, player, code } = await tableWithScene(server.url);
+    const { gmClient, player, campaignId } = await tableWithScene(server, 'c');
 
     const added = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
     );
-    // ownerId null means GM-only.
-    gm.client.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
+    gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
     await added;
 
-    const before = server.store.get(code)?.state.map.scenes[0]?.tokens[0];
+    const before = server.campaigns.get(campaignId)?.state.map.scenes[0]?.tokens[0];
 
     const rejected = player.client.next<{ error: string }>(CHANNEL.rejected);
     player.client.emit(CHANNEL.intent, {
@@ -141,14 +134,14 @@ describe('map sync', () => {
     });
 
     expect((await rejected).error).toBe('notYourToken');
-    expect(server.store.get(code)?.state.map.scenes[0]?.tokens[0]).toEqual(before);
+    expect(server.campaigns.get(campaignId)?.state.map.scenes[0]?.tokens[0]).toEqual(before);
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('rejects every other map mutation from a player', async () => {
-    const { gm, player } = await tableWithScene(server.url);
+    const { gmClient, player } = await tableWithScene(server, 'd');
 
     const playerIntents: unknown[] = [
       { type: 'addScene', id: 'sneaky', name: 'Sneaky' },
@@ -166,73 +159,57 @@ describe('map sync', () => {
       expect((await rejected).error, JSON.stringify(intent)).toBe('notGameMaster');
     }
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('sends players revealed fog only, never the unrevealed regions', async () => {
-    const { gm, player, code } = await tableWithScene(server.url);
+    const { gmClient, player, campaignId } = await tableWithScene(server, 'e');
 
-    // Give the scene an image so the fog grid has a size, then switch fog on.
-    const sized = gm.client.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => (p.map?.scenes[0]?.fog.cols ?? 0) > 0,
-    );
-    gm.client.emit(CHANNEL.intent, {
+    const sized = gmClient.until<RoomPatch>(CHANNEL.roomPatch, (p) => (p.map?.scenes[0]?.fog.cols ?? 0) > 0);
+    gmClient.emit(CHANNEL.intent, {
       type: 'setSceneImage',
       sceneId: 'scene-1',
       image: { url: '/uploads/test.png', width: 1000, height: 1000 },
     });
-    gm.client.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
+    gmClient.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
     await sized;
 
     const revealed = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => (p.map?.scenes[0]?.fog.revealed.length ?? 0) > 0,
     );
-    gm.client.emit(CHANNEL.intent, {
-      type: 'paintFog',
-      sceneId: 'scene-1',
-      x: 100,
-      y: 100,
-      radius: 60,
-      reveal: true,
-    });
+    gmClient.emit(CHANNEL.intent, { type: 'paintFog', sceneId: 'scene-1', x: 100, y: 100, radius: 60, reveal: true });
 
     const patch = await revealed;
     const playerFog = patch.map?.scenes[0]?.fog;
     expect(playerFog).toBeDefined();
     if (playerFog === undefined) return;
 
-    // The player learns which cells are revealed...
     expect(playerFog.revealed.length).toBeGreaterThan(0);
-    // ...and that is strictly fewer than the whole grid: the rest was never sent.
     expect(playerFog.revealed.length).toBeLessThan(playerFog.cols * playerFog.rows);
 
-    // The server holds the same revealed set, so nothing was withheld incorrectly.
-    const serverFog = server.store.get(code)?.state.map.scenes[0]?.fog;
+    const serverFog = server.campaigns.get(campaignId)?.state.map.scenes[0]?.fog;
     expect(serverFog?.revealed).toEqual(playerFog.revealed);
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('never sends players an inactive scene or a GM-only token', async () => {
-    const gm = await createRoomAs(server.url, 'GM');
-    const player = await joinRoomAs(server.url, gm.session.code, 'Alice');
+    const gm = await accountFor(server, 'gm-map-f', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-map-f');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Hidden Scene Test');
+    const player = await joinCampaignAs(server, gm, campaignId, alicePlayer);
 
     const ready = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
       (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
     );
-    gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'visible', name: 'Visible' });
-    gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'secret', name: 'Secret Lair' });
-    gm.client.emit(CHANNEL.intent, {
-      type: 'addToken',
-      sceneId: 'visible',
-      token: token({ id: 'seen', name: 'Seen' }),
-    });
-    gm.client.emit(CHANNEL.intent, {
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'visible', name: 'Visible' });
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'secret', name: 'Secret Lair' });
+    gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'visible', token: token({ id: 'seen', name: 'Seen' }) });
+    gmClient.emit(CHANNEL.intent, {
       type: 'addToken',
       sceneId: 'visible',
       token: token({ id: 'ambush', name: 'Ambusher', hidden: true }),
@@ -245,77 +222,57 @@ describe('map sync', () => {
     expect(patch.map?.scenes).toHaveLength(1);
     expect(patch.map?.scenes[0]?.tokens.map((t) => t.id)).toEqual(['seen']);
 
-    // The GM does see both scenes and the hidden token.
-    const gmState = server.store.get(gm.session.code)?.state;
+    const gmState = server.campaigns.get(campaignId)?.state;
     expect(gmState?.map.scenes).toHaveLength(2);
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('broadcasts only the newly active scene when the GM switches', async () => {
-    const gm = await createRoomAs(server.url, 'GM');
-    const player = await joinRoomAs(server.url, gm.session.code, 'Alice');
+    const gm = await accountFor(server, 'gm-map-g', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-map-g');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Switch Scene Test');
+    const player = await joinCampaignAs(server, gm, campaignId, alicePlayer);
 
-    gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'one', name: 'Scene One' });
-    const second = player.client.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.map?.scenes[0]?.id === 'one',
-    );
-    gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'two', name: 'Scene Two' });
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'one', name: 'Scene One' });
+    const second = player.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.scenes[0]?.id === 'one');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'two', name: 'Scene Two' });
     await second;
 
-    // Switching makes the other scene the only one players receive.
-    const switched = player.client.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.map?.activeSceneId === 'two',
-    );
-    gm.client.emit(CHANNEL.intent, { type: 'setActiveScene', id: 'two' });
+    const switched = player.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'two');
+    gmClient.emit(CHANNEL.intent, { type: 'setActiveScene', id: 'two' });
 
     const patch = await switched;
     expect(patch.map?.scenes).toHaveLength(1);
     expect(patch.map?.scenes[0]?.name).toBe('Scene Two');
     expect(JSON.stringify(patch)).not.toContain('Scene One');
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
+    void campaignId;
   });
 
   it('rejects a move on a scene that is not active', async () => {
-    const { gm, player } = await tableWithScene(server.url);
-    const playerId = player.session.sessionId;
+    const { gmClient, player, playerId } = await tableWithScene(server, 'h');
 
-    gm.client.emit(CHANNEL.intent, {
-      type: 'addToken',
-      sceneId: 'scene-1',
-      token: token({ ownerId: playerId }),
-    });
-    const switched = gm.client.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.map?.activeSceneId === 'other',
-    );
-    gm.client.emit(CHANNEL.intent, { type: 'addScene', id: 'other', name: 'Elsewhere' });
-    gm.client.emit(CHANNEL.intent, { type: 'setActiveScene', id: 'other' });
+    gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token({ ownerId: playerId }) });
+    const switched = gmClient.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'other');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'other', name: 'Elsewhere' });
+    gmClient.emit(CHANNEL.intent, { type: 'setActiveScene', id: 'other' });
     await switched;
 
     const rejected = player.client.next<{ error: string }>(CHANNEL.rejected);
-    player.client.emit(CHANNEL.intent, {
-      type: 'moveToken',
-      sceneId: 'scene-1',
-      tokenId: 'tok-1',
-      x: 10,
-      y: 10,
-      commit: true,
-    });
+    player.client.emit(CHANNEL.intent, { type: 'moveToken', sceneId: 'scene-1', tokenId: 'tok-1', x: 10, y: 10, commit: true });
     expect((await rejected).error).toBe('unknownScene');
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
   });
 
   it('includes the map in the full state a reconnecting client receives', async () => {
-    const { gm, player, code } = await tableWithScene(server.url);
-    gm.client.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
+    const { gm, gmClient, player, campaignId } = await tableWithScene(server, 'i');
+    gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
 
     const seen = player.client.until<RoomPatch>(
       CHANNEL.roomPatch,
@@ -323,12 +280,13 @@ describe('map sync', () => {
     );
     await seen;
 
-    const returning = await joinRoomAs(server.url, code, 'Late');
+    const late = await accountFor(server, 'late-i');
+    const returning = await joinCampaignAs(server, gm, campaignId, late);
     const state: RoomState = returning.state;
     expect(state.map.scenes).toHaveLength(1);
     expect(state.map.scenes[0]?.tokens).toHaveLength(1);
 
-    gm.client.close();
+    gmClient.close();
     player.client.close();
     returning.client.close();
   });

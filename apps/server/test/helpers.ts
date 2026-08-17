@@ -14,8 +14,10 @@ import { classes, type ClassId } from '@daggerheart/srd-data';
 import { Server } from 'socket.io';
 import { io as connect, type Socket } from 'socket.io-client';
 
+import { CampaignStore } from '../src/campaigns.js';
 import { registerGateway } from '../src/gateway.js';
-import { RoomStore } from '../src/rooms.js';
+import { SessionStore } from '../src/sessions.js';
+import { UserStore } from '../src/users.js';
 
 /** Builds a finished character through the real creation reducer. */
 export function buildCharacter(classId: ClassId = 'guardian'): Character {
@@ -71,29 +73,37 @@ export function buildCharacter(classId: ClassId = 'guardian'): Character {
 export const buildSheet = (classId: ClassId = 'guardian'): SheetState =>
   createSheet(buildCharacter(classId));
 
-/** A running server plus a helper to open clients against it. */
+/** A running server plus everything a test needs to authenticate against it. */
 export interface TestServer {
   url: string;
-  store: RoomStore;
+  campaigns: CampaignStore;
+  users: UserStore;
+  sessions: SessionStore;
   close: () => Promise<void>;
 }
 
 export async function startTestServer(seed = 1234): Promise<TestServer> {
   const http: HttpServer = createServer();
   const io = new Server(http, { cors: { origin: '*' } });
-  // Fixed seed so every roll in a test is reproducible.
-  const store = new RoomStore();
-  const originalCreate = store.createRoom.bind(store);
-  store.createRoom = (gmName: string) => originalCreate(gmName, seed);
 
-  registerGateway(io, store);
+  const campaigns = new CampaignStore();
+  const originalCreate = campaigns.createCampaign.bind(campaigns);
+  campaigns.createCampaign = (ownerId: string, ownerUsername: string, name: string) =>
+    originalCreate(ownerId, ownerUsername, name, seed);
+
+  const users = new UserStore();
+  const sessions = new SessionStore();
+
+  registerGateway(io, campaigns, sessions, users);
 
   await new Promise<void>((resolve) => http.listen(0, resolve));
   const address = http.address() as AddressInfo;
 
   return {
     url: `http://localhost:${address.port}`,
-    store,
+    campaigns,
+    users,
+    sessions,
     close: async () => {
       await io.close();
       await new Promise<void>((resolve) => http.close(() => resolve()));
@@ -101,12 +111,12 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
   };
 }
 
-/** A connected client with promise-based helpers for the messages tests care about. */
+/** A connected, authenticated socket client with promise-based helpers. */
 export class TestClient {
   private constructor(readonly socket: Socket) {}
 
-  static async connect(url: string): Promise<TestClient> {
-    const socket = connect(url, { transports: ['websocket'], forceNew: true });
+  static async connect(url: string, token: string): Promise<TestClient> {
+    const socket = connect(url, { transports: ['websocket'], forceNew: true, auth: { token } });
     await new Promise<void>((resolve, reject) => {
       socket.once('connect', () => resolve());
       socket.once('connect_error', reject);
@@ -114,7 +124,6 @@ export class TestClient {
     return new TestClient(socket);
   }
 
-  /** Waits for the next message on a channel, or rejects on timeout. */
   next<T>(channel: string, timeoutMs = 2000): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -130,11 +139,6 @@ export class TestClient {
     });
   }
 
-  /**
-   * Waits for the next message on a channel that satisfies `predicate`. Patches
-   * arrive for every change in the room, so a test must wait for the one it means
-   * rather than simply the next one.
-   */
   until<T>(channel: string, predicate: (payload: T) => boolean, timeoutMs = 3000): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -160,36 +164,48 @@ export class TestClient {
   }
 }
 
-export interface SessionInfo {
+export interface AccountFixture {
+  id: string;
+  username: string;
   token: string;
-  sessionId: string;
-  role: 'gm' | 'player';
-  code: string;
 }
 
-/** Creates a room and returns the GM's client, session, and initial state. */
-export async function createRoomAs(
-  url: string,
-  gmName = 'GM',
-): Promise<{ client: TestClient; session: SessionInfo; state: RoomState }> {
-  const client = await TestClient.connect(url);
-  const session = client.next<SessionInfo>(CHANNEL.session);
-  const state = client.next<RoomState>(CHANNEL.roomState);
-  client.emit(CHANNEL.createRoom, { gmName });
-  return { client, session: await session, state: await state };
+/** Creates a fresh account on the running test server and logs it in (no HTTP round trip needed). */
+export async function accountFor(
+  server: TestServer,
+  username: string,
+  role: 'gm' | 'player' = 'player',
+): Promise<AccountFixture> {
+  const user = await server.users.createUser(username, 'password', role);
+  const token = server.sessions.create(user.id);
+  return { id: user.id, username, token };
 }
 
-/** Joins an existing room and returns the player's client, session, and state. */
-export async function joinRoomAs(
-  url: string,
-  code: string,
-  name: string,
-): Promise<{ client: TestClient; session: SessionInfo; state: RoomState }> {
-  const client = await TestClient.connect(url);
-  const session = client.next<SessionInfo>(CHANNEL.session);
+/** Creates a campaign owned by `gm`, connects its socket, and seats it. */
+export async function createCampaignAs(
+  server: TestServer,
+  gm: AccountFixture,
+  name = 'Test Campaign',
+): Promise<{ client: TestClient; campaignId: string; state: RoomState }> {
+  const record = server.campaigns.createCampaign(gm.id, gm.username, name);
+  const client = await TestClient.connect(server.url, gm.token);
   const state = client.next<RoomState>(CHANNEL.roomState);
-  client.emit(CHANNEL.joinRoom, { code, name });
-  return { client, session: await session, state: await state };
+  client.emit(CHANNEL.joinCampaign, { campaignId: record.id });
+  return { client, campaignId: record.id, state: await state };
+}
+
+/** Adds `player` as a member of `campaignId` and connects/seats their socket. */
+export async function joinCampaignAs(
+  server: TestServer,
+  gm: AccountFixture,
+  campaignId: string,
+  player: AccountFixture,
+): Promise<{ client: TestClient; state: RoomState }> {
+  server.campaigns.addMember(campaignId, gm.id, player.id);
+  const client = await TestClient.connect(server.url, player.token);
+  const state = client.next<RoomState>(CHANNEL.roomState);
+  client.emit(CHANNEL.joinCampaign, { campaignId });
+  return { client, state: await state };
 }
 
 export type { RoomPatch };
