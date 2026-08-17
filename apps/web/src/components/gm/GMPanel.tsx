@@ -14,6 +14,7 @@ import { SectionHead } from '../SectionHead.js';
 
 interface GMPanelProps {
   room: RoomState;
+  campaignName: string;
   send: (event: RoomEvent) => void;
 }
 
@@ -27,7 +28,7 @@ const nextId = (prefix: string) => {
  * The GM's screen. Every control emits an intent; the server validates it, applies
  * it, and broadcasts the result — nothing here changes state directly.
  */
-export function GMPanel({ room, send }: GMPanelProps) {
+export function GMPanel({ room, campaignName, send }: GMPanelProps) {
   return (
     <section className="gm-scope">
       <p className="gm-banner">
@@ -37,9 +38,7 @@ export function GMPanel({ room, send }: GMPanelProps) {
       <div className="card-head">
         <div>
           <h1>Panel del DJ</h1>
-          <p className="muted">
-            Código de acceso <span className="join-code">{room.code}</span>
-          </p>
+          <p className="muted">{campaignName}</p>
         </div>
       </div>
 
@@ -113,7 +112,13 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
   );
 }
 
-function PartyOverview({ room, send }: GMPanelProps) {
+function PartyOverview({
+  room,
+  send,
+}: {
+  room: RoomState;
+  send: (event: RoomEvent) => void;
+}) {
   const entries = Object.entries(room.characters);
 
   return (
@@ -286,7 +291,13 @@ function Countdowns({
   );
 }
 
-function Adversaries({ room, send }: GMPanelProps) {
+function Adversaries({
+  room,
+  send,
+}: {
+  room: RoomState;
+  send: (event: RoomEvent) => void;
+}) {
   const [query, setQuery] = useState('');
 
   const matches = useMemo(() => {
