@@ -33,8 +33,8 @@ export interface CampaignConnection {
   room: RoomState | null;
   /**
    * Derived, not stored: the owner id already present in the matching
-   * `CampaignSummary` (from the HTTP list) compared against the connected room's
-   * `gm.id` (the account id the server seated as GM) — no separate state to drift.
+   * `CampaignSummary` (from the HTTP list) compared against this account's own id —
+   * no separate state to drift, and known before the socket even connects.
    */
   role: 'gm' | 'player' | null;
   activeCampaignId: string | null;
@@ -56,7 +56,11 @@ export interface CampaignConnection {
  * campaign's room state mirror. The client is never authoritative for room state:
  * it sends intents and renders whatever the server broadcasts back.
  */
-export function useCampaign(storage: Storage, token: string | null): CampaignConnection {
+export function useCampaign(
+  storage: Storage,
+  token: string | null,
+  accountId: string | null,
+): CampaignConnection {
   const [status, setStatus] = useState<ConnectionStatus>('idle');
   const [campaigns, setCampaigns] = useState<CampaignSummary[]>([]);
   const [room, setRoom] = useState<RoomState | null>(null);
@@ -211,11 +215,11 @@ export function useCampaign(storage: Storage, token: string | null): CampaignCon
   }, [storage]);
 
   const role = useMemo<'gm' | 'player' | null>(() => {
-    if (activeCampaignId === null) return null;
+    if (activeCampaignId === null || accountId === null) return null;
     const summary = campaigns.find((c) => c.id === activeCampaignId);
     if (summary === undefined) return null;
-    return room?.gm.id === summary.ownerId ? 'gm' : 'player';
-  }, [activeCampaignId, campaigns, room]);
+    return summary.ownerId === accountId ? 'gm' : 'player';
+  }, [activeCampaignId, accountId, campaigns]);
 
   return useMemo(
     () => ({

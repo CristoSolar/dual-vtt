@@ -117,10 +117,23 @@ export class CampaignStore {
     return true;
   }
 
+  /**
+   * Removing a member also strips them from the live room: leaving their roster entry
+   * and character behind would keep them visible (and, once re-added, stale) even
+   * though they are no longer allowed in.
+   */
   removeMember(campaignId: string, requesterId: string, memberId: string): boolean {
     const campaign = this.campaigns.get(campaignId);
     if (campaign === undefined || campaign.ownerId !== requesterId) return false;
     campaign.memberIds = campaign.memberIds.filter((id) => id !== memberId);
+
+    campaign.state = {
+      ...campaign.state,
+      players: campaign.state.players.filter((p) => p.id !== memberId),
+      characters: Object.fromEntries(
+        Object.entries(campaign.state.characters).filter(([id]) => id !== memberId),
+      ),
+    };
     campaign.updatedAt = this.now();
     return true;
   }

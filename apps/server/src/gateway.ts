@@ -46,6 +46,27 @@ function joinChannels(socket: Socket, campaignId: string, role: 'gm' | 'player')
   void socket.join(role === 'gm' ? gmChannelFor(campaignId) : playerChannelFor(campaignId));
 }
 
+/**
+ * Membership is re-checked on every seated message, not just at join: the GM can
+ * remove a player while their socket is still open, and until they disconnect that
+ * socket would otherwise keep sending intents and receiving broadcasts. On failure
+ * the seat is dropped and the socket leaves every channel for that campaign.
+ */
+function stillMember(
+  socket: Socket,
+  campaigns: CampaignStore,
+  seat: { campaignId: string; role: 'gm' | 'player' },
+  account: string,
+): boolean {
+  if (campaigns.roleOf(seat.campaignId, account) !== null) return true;
+  seatOf.delete(socket);
+  void socket.leave(channelFor(seat.campaignId));
+  void socket.leave(gmChannelFor(seat.campaignId));
+  void socket.leave(playerChannelFor(seat.campaignId));
+  reject(socket, 'forbidden', 'no longer a member of that campaign');
+  return false;
+}
+
 function broadcastPatches(
   io: Server,
   campaignId: string,
@@ -110,6 +131,7 @@ export function registerGateway(
 
       const account = accountOf.get(socket);
       if (account === undefined) return;
+      if (!stillMember(socket, campaigns, seat, account)) return;
 
       const outcome = campaigns.claimCharacter(seat.campaignId, account, parsed.data.sheet);
       if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'claim rejected');
@@ -125,6 +147,7 @@ export function registerGateway(
 
       const account = accountOf.get(socket);
       if (account === undefined) return;
+      if (!stillMember(socket, campaigns, seat, account)) return;
 
       const actor: Actor = { id: account, role: seat.role };
       const outcome = campaigns.apply(seat.campaignId, actor, parsed.data);

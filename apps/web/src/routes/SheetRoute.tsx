@@ -563,15 +563,17 @@ export function SheetRoute({
           experienceNames={experiences.map((e) => e.name)}
           traitNames={view.traits.map((t) => t.trait)}
           onApply={(choices) => {
-            run((s) =>
-              applyLevelUp(s, {
-                advancements: choices.advancements as Advancement[],
-                traitsToIncrease: choices.traitsToIncrease,
-                experiencesToIncrease: choices.experiencesToIncrease,
-                ...(choices.newExperienceName === ''
-                  ? {}
-                  : { newExperienceName: choices.newExperienceName }),
-              }),
+            const levelUpChoices = {
+              advancements: choices.advancements as Advancement[],
+              traitsToIncrease: choices.traitsToIncrease,
+              experiencesToIncrease: choices.experiencesToIncrease,
+              ...(choices.newExperienceName === ''
+                ? {}
+                : { newExperienceName: choices.newExperienceName }),
+            };
+            run(
+              (s) => applyLevelUp(s, levelUpChoices),
+              forMe({ type: 'levelUp', choices: levelUpChoices }),
             );
             setShowLevelUp(false);
           }}

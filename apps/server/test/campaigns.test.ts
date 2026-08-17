@@ -31,6 +31,22 @@ describe('CampaignStore', () => {
     expect(store.roleOf(campaign.id, 'u-player')).toBeNull();
   });
 
+  it('strips a removed member from the live room, not just from memberIds', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.addMember(campaign.id, 'u-gm', 'u-other');
+    store.seatFor(campaign.id, 'u-player', 'alex');
+    store.seatFor(campaign.id, 'u-other', 'sam');
+    store.claimCharacter(campaign.id, 'u-player', { fake: 'sheet' } as never);
+    store.claimCharacter(campaign.id, 'u-other', { fake: 'other' } as never);
+
+    expect(store.removeMember(campaign.id, 'u-gm', 'u-player')).toBe(true);
+    const state = store.get(campaign.id)?.state;
+    expect(state?.players.map((p) => p.id)).toEqual(['u-other']);
+    expect(Object.keys(state?.characters ?? {})).toEqual(['u-other']);
+  });
+
   it('lists campaigns an account owns or belongs to, and none it does not', () => {
     const store = new CampaignStore();
     const owned = store.createCampaign('u-gm', 'gm', 'Owned');

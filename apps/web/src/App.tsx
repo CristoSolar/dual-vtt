@@ -26,7 +26,7 @@ function Shell() {
   // and draws its own thin scene bar instead of sharing the page chrome.
   const isMapRoute = useLocation().pathname === '/map';
   const auth = useAuth(storage);
-  const campaign = useCampaign(storage, auth.token);
+  const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null);
 
   const inCampaign = campaign.activeCampaignId !== null && campaign.room !== null;
   const isGameMaster = campaign.role === 'gm';

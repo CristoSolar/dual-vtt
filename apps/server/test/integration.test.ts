@@ -163,6 +163,35 @@ describe('campaign lifecycle over a socket', () => {
     bob.client.close();
   });
 
+  it('rejects intents from a seated socket whose member was removed', async () => {
+    const gm = await accountFor(server, 'gm-removed', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-removed');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Removal Test');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const claimed = alice.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.characters?.[alicePlayer.id] !== undefined,
+    );
+    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    await claimed;
+
+    // The GM removes them while their socket is still open and seated.
+    server.campaigns.removeMember(campaignId, gm.id, alicePlayer.id);
+
+    const rejected = alice.client.next<{ error: string }>(CHANNEL.rejected);
+    alice.client.emit(CHANNEL.intent, { type: 'markHP', characterId: alicePlayer.id, amount: 1 });
+    expect((await rejected).error).toBe('forbidden');
+
+    // Their roster entry and character are gone, and the intent changed nothing.
+    const state = server.campaigns.get(campaignId)?.state;
+    expect(state?.players.some((p) => p.id === alicePlayer.id)).toBe(false);
+    expect(state?.characters[alicePlayer.id]).toBeUndefined();
+
+    gmClient.close();
+    alice.client.close();
+  });
+
   it('rejects spendFear from a non-GM client', async () => {
     const gm = await accountFor(server, 'gm7', 'gm');
     const alicePlayer = await accountFor(server, 'alice7');
