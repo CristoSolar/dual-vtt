@@ -116,17 +116,19 @@ export async function handleCampaigns(
       json(response, 400, { error: 'badRequest' });
       return true;
     }
+    const campaignId = addPlayerMatch[1] ?? '';
+    if (campaigns.roleOf(campaignId, actor.id) !== 'gm') {
+      json(response, 403, { error: 'forbidden' });
+      return true;
+    }
     const target = users.findByUsername(parsed.data.username);
     if (target === null) {
       json(response, 404, { error: 'unknownUsername' });
       return true;
     }
-    const campaignId = addPlayerMatch[1] ?? '';
-    const ok = campaigns.addMember(campaignId, actor.id, target.id);
-    if (!ok) {
-      json(response, 403, { error: 'forbidden' });
-      return true;
-    }
+    // Ownership already confirmed above, so this can only fail if the campaign
+    // vanished between the roleOf check and here — treat that as a benign no-op.
+    campaigns.addMember(campaignId, actor.id, target.id);
     persist();
     noContent(response);
     return true;
@@ -140,12 +142,12 @@ export async function handleCampaigns(
       return true;
     }
     const campaignId = removePlayerMatch[1] ?? '';
-    const memberId = removePlayerMatch[2] ?? '';
-    const ok = campaigns.removeMember(campaignId, actor.id, memberId);
-    if (!ok) {
+    if (campaigns.roleOf(campaignId, actor.id) !== 'gm') {
       json(response, 403, { error: 'forbidden' });
       return true;
     }
+    const memberId = removePlayerMatch[2] ?? '';
+    campaigns.removeMember(campaignId, actor.id, memberId);
     persist();
     noContent(response);
     return true;

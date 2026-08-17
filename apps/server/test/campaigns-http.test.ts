@@ -111,6 +111,22 @@ describe('campaigns HTTP endpoints', () => {
     expect(playerCampaigns.some((c) => c.id === campaignId && c.memberIds.includes(playerId))).toBe(true);
   });
 
+  it('403s a non-owner adding a nonexistent username, not 404 — ownership is checked before the username lookup', async () => {
+    const created = await fetch(`${server.url}/campaigns`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
+      body: JSON.stringify({ name: 'No leak' }),
+    });
+    const { id: campaignId } = (await created.json()) as { id: string };
+
+    const response = await fetch(`${server.url}/campaigns/${campaignId}/players`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${playerToken}` },
+      body: JSON.stringify({ username: 'nobody-here' }),
+    });
+    expect(response.status).toBe(403);
+  });
+
   it('404s adding an unknown username', async () => {
     const created = await fetch(`${server.url}/campaigns`, {
       method: 'POST',
