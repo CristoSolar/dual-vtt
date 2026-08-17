@@ -1,179 +1,139 @@
 import {
   CHANNEL,
   ClaimCharacterSchema,
-  CreateRoomSchema,
-  JoinRoomSchema,
-  ResumeSchema,
+  JoinCampaignSchema,
   RoomEventSchema,
+  roomForRole,
+  type Actor,
   type RoomPatch,
-  type RoomState,
 } from '@daggerheart/protocol';
 import type { Server, Socket } from 'socket.io';
 
-import { viewFor, type RoomStore } from './rooms.js';
+import type { CampaignStore } from './campaigns.js';
+import type { SessionStore } from './sessions.js';
+import type { UserStore } from './users.js';
 
 /**
- * The transport layer. It validates every message, resolves who is asking from the
- * socket's session, and hands the intent to the store — it contains no game logic
- * of its own, and never trusts a value the client sent about itself.
+ * The transport layer. A socket authenticates once, at connection, with the same
+ * login token Phase A already issues over HTTP — there is no separate per-campaign
+ * seat token anymore. From there, `joinCampaign` seats it in one specific campaign
+ * after checking membership, and every later message is scoped to that seat.
  */
 
-/** What the server remembers about a live socket. Set only by the server. */
-interface SocketSession {
-  code: string;
-  token: string;
-  role: 'gm' | 'player';
-}
-
-const sessions = new WeakMap<Socket, SocketSession>();
+/** Set once per socket, right after a successful connection-time auth check. */
+const accountOf = new WeakMap<Socket, string>();
+/** Set once the socket has joined a campaign; absent until then. */
+const seatOf = new WeakMap<Socket, { campaignId: string; role: 'gm' | 'player' }>();
 
 const reject = (socket: Socket, error: string, message: string): void => {
   socket.emit(CHANNEL.rejected, { error, message });
 };
 
-/**
- * Rooms are broadcast to two socket.io rooms per code: one for the GM and one for
- * the players. They receive different payloads, because a player must never be sent
- * unrevealed fog, inactive scenes, or GM-only tokens.
- */
-const channelFor = (code: string): string => `room:${code}`;
-const gmChannelFor = (code: string): string => `room:${code}:gm`;
-const playerChannelFor = (code: string): string => `room:${code}:players`;
+const channelFor = (campaignId: string): string => `campaign:${campaignId}`;
+const gmChannelFor = (campaignId: string): string => `campaign:${campaignId}:gm`;
+const playerChannelFor = (campaignId: string): string => `campaign:${campaignId}:players`;
 
-function sendFullState(socket: Socket, state: RoomState, role: 'gm' | 'player'): void {
-  socket.emit(CHANNEL.roomState, viewFor(state, role));
+/** Sends the whole current room, filtered to what this role may see — never GM-only
+ * tokens or unrevealed fog to a player. */
+function sendFullState(socket: Socket, campaigns: CampaignStore, campaignId: string, role: 'gm' | 'player'): void {
+  const campaign = campaigns.get(campaignId);
+  if (campaign === null) return;
+  socket.emit(CHANNEL.roomState, roomForRole(campaign.state, role));
 }
 
-/** Sends each audience the patch it is allowed to see. */
+function joinChannels(socket: Socket, campaignId: string, role: 'gm' | 'player'): void {
+  void socket.join(channelFor(campaignId));
+  void socket.join(role === 'gm' ? gmChannelFor(campaignId) : playerChannelFor(campaignId));
+}
+
 function broadcastPatches(
   io: Server,
-  code: string,
+  campaignId: string,
   outcome: { patch: RoomPatch; playerPatch: RoomPatch },
 ): void {
   if (Object.keys(outcome.patch).length > 0) {
-    io.to(gmChannelFor(code)).emit(CHANNEL.roomPatch, outcome.patch);
+    io.to(gmChannelFor(campaignId)).emit(CHANNEL.roomPatch, outcome.patch);
   }
   if (Object.keys(outcome.playerPatch).length > 0) {
-    io.to(playerChannelFor(code)).emit(CHANNEL.roomPatch, outcome.playerPatch);
+    io.to(playerChannelFor(campaignId)).emit(CHANNEL.roomPatch, outcome.playerPatch);
   }
 }
 
-/** Puts a socket in the room channels appropriate to its role. */
-function joinChannels(socket: Socket, code: string, role: 'gm' | 'player'): void {
-  void socket.join(channelFor(code));
-  void socket.join(role === 'gm' ? gmChannelFor(code) : playerChannelFor(code));
-}
-
-export function registerGateway(io: Server, store: RoomStore): void {
+export function registerGateway(
+  io: Server,
+  campaigns: CampaignStore,
+  sessions: SessionStore,
+  users: UserStore,
+): void {
   io.on('connection', (socket) => {
-    socket.on(CHANNEL.createRoom, (payload: unknown) => {
-      const parsed = CreateRoomSchema.safeParse(payload);
-      if (!parsed.success) return reject(socket, 'badRequest', 'invalid createRoom');
+    const token = socket.handshake.auth?.token as unknown;
+    const accountId = typeof token === 'string' ? sessions.resolve(token) : null;
+    if (accountId === null) {
+      socket.disconnect(true);
+      return;
+    }
+    accountOf.set(socket, accountId);
 
-      const { room, session } = store.createRoom(parsed.data.gmName);
-      sessions.set(socket, { code: session.code, token: session.token, role: session.role });
-      joinChannels(socket, session.code, session.role);
+    socket.on(CHANNEL.joinCampaign, (payload: unknown) => {
+      const parsed = JoinCampaignSchema.safeParse(payload);
+      if (!parsed.success) return reject(socket, 'badRequest', 'invalid joinCampaign');
 
-      socket.emit(CHANNEL.session, {
-        token: session.token,
-        sessionId: session.sessionId,
-        role: session.role,
-        code: session.code,
-      });
-      sendFullState(socket, room.state, session.role);
-    });
+      const account = accountOf.get(socket);
+      if (account === undefined) return; // unreachable: connection already required auth
 
-    socket.on(CHANNEL.joinRoom, (payload: unknown) => {
-      const parsed = JoinRoomSchema.safeParse(payload);
-      if (!parsed.success) return reject(socket, 'badRequest', 'invalid joinRoom');
+      const user = users.findById(account);
+      const seat = campaigns.seatFor(parsed.data.campaignId, account, user?.username ?? 'Jugador');
+      if (seat === null) return reject(socket, 'forbidden', 'not a member of that campaign');
 
-      const joined = store.joinRoom(parsed.data.code, parsed.data.name);
-      if (joined === null) return reject(socket, 'unknownRoom', 'no room with that code');
-
-      const { room, session } = joined;
-      sessions.set(socket, { code: session.code, token: session.token, role: session.role });
-      joinChannels(socket, session.code, session.role);
-
-      socket.emit(CHANNEL.session, {
-        token: session.token,
-        sessionId: session.sessionId,
-        role: session.role,
-        code: session.code,
-      });
-      // The joiner gets the view for their role; the rest of the table just gets the
-      // new seat.
-      sendFullState(socket, room.state, session.role);
-      socket.to(channelFor(session.code)).emit(CHANNEL.roomPatch, { players: room.state.players });
-    });
-
-    socket.on(CHANNEL.resume, (payload: unknown) => {
-      const parsed = ResumeSchema.safeParse(payload);
-      if (!parsed.success) return reject(socket, 'badRequest', 'invalid resume');
-
-      const resumed = store.resume(parsed.data.code, parsed.data.token);
-      if (resumed === null) return reject(socket, 'unknownSession', 'that session has expired');
-
-      const { room, session } = resumed;
-      sessions.set(socket, { code: session.code, token: session.token, role: session.role });
-      joinChannels(socket, session.code, session.role);
-
-      socket.emit(CHANNEL.session, {
-        token: session.token,
-        sessionId: session.sessionId,
-        role: session.role,
-        code: session.code,
-      });
-      // A reconnecting client is handed its whole current view, not a diff.
-      sendFullState(socket, room.state, session.role);
+      seatOf.set(socket, { campaignId: parsed.data.campaignId, role: seat.role });
+      joinChannels(socket, parsed.data.campaignId, seat.role);
+      sendFullState(socket, campaigns, parsed.data.campaignId, seat.role);
       socket
-        .to(channelFor(session.code))
-        .emit(CHANNEL.roomPatch, { players: room.state.players, gm: room.state.gm });
+        .to(channelFor(parsed.data.campaignId))
+        .emit(CHANNEL.roomPatch, { players: campaigns.get(parsed.data.campaignId)?.state.players, gm: campaigns.get(parsed.data.campaignId)?.state.gm });
     });
 
     socket.on(CHANNEL.claimCharacter, (payload: unknown) => {
-      const session = sessions.get(socket);
-      if (!session) return reject(socket, 'noSession', 'join a room first');
+      const seat = seatOf.get(socket);
+      if (seat === undefined) return reject(socket, 'noSeat', 'join a campaign first');
 
       const parsed = ClaimCharacterSchema.safeParse(payload);
       if (!parsed.success) return reject(socket, 'badRequest', 'invalid character');
 
-      const outcome = store.claimCharacter(
-        session.code,
-        session.token,
-        parsed.data.characterId,
-        parsed.data.sheet,
-      );
-      if (!outcome.ok) {
-        return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'claim rejected');
-      }
-      broadcastPatches(io, session.code, outcome);
+      const account = accountOf.get(socket);
+      if (account === undefined) return;
+
+      const outcome = campaigns.claimCharacter(seat.campaignId, account, parsed.data.sheet);
+      if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'claim rejected');
+      broadcastPatches(io, seat.campaignId, outcome);
     });
 
     socket.on(CHANNEL.intent, (payload: unknown) => {
-      const session = sessions.get(socket);
-      if (!session) return reject(socket, 'noSession', 'join a room first');
+      const seat = seatOf.get(socket);
+      if (seat === undefined) return reject(socket, 'noSeat', 'join a campaign first');
 
       const parsed = RoomEventSchema.safeParse(payload);
       if (!parsed.success) return reject(socket, 'badRequest', 'invalid intent');
 
-      const outcome = store.apply(session.code, session.token, parsed.data);
-      if (!outcome.ok) {
-        return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'rejected');
-      }
+      const account = accountOf.get(socket);
+      if (account === undefined) return;
 
-      // Everyone, including the sender, gets the authoritative result — filtered to
-      // what their role may see.
-      broadcastPatches(io, session.code, outcome);
+      const actor: Actor = { id: account, role: seat.role };
+      const outcome = campaigns.apply(seat.campaignId, actor, parsed.data);
+      if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'rejected');
+
+      broadcastPatches(io, seat.campaignId, outcome);
       if (outcome.entries.length > 0) {
-        io.to(channelFor(session.code)).emit(CHANNEL.rolled, { entries: outcome.entries });
+        io.to(channelFor(seat.campaignId)).emit(CHANNEL.rolled, { entries: outcome.entries });
       }
     });
 
     socket.on('disconnect', () => {
-      const session = sessions.get(socket);
-      if (!session) return;
-      const patch = store.setConnected(session.code, session.token, false);
-      if (patch !== null) io.to(channelFor(session.code)).emit(CHANNEL.roomPatch, patch);
+      const seat = seatOf.get(socket);
+      const account = accountOf.get(socket);
+      if (seat === undefined || account === undefined) return;
+      const patch = campaigns.setConnected(seat.campaignId, account, false);
+      if (patch !== null) io.to(channelFor(seat.campaignId)).emit(CHANNEL.roomPatch, patch);
     });
   });
 }
