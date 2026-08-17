@@ -52,10 +52,17 @@ export class TunnelManager {
     this.tunnel = tunnel;
     const url = await new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('timed out waiting for a tunnel URL')), 30_000);
-      tunnel.once('url', (found: string) => {
+      const onUrl = (found: string): void => {
+        // cloudflared's own "url" handler regex-matches any *.trycloudflare.com —
+        // including its literal API host, which shows up in error lines like
+        // "failed to request quick Tunnel: ... https://api.trycloudflare.com ...".
+        // That's not a real tunnel; keep waiting for the actual one.
+        if (found === 'https://api.trycloudflare.com') return;
         clearTimeout(timer);
+        tunnel.off('url', onUrl);
         resolve(found);
-      });
+      };
+      tunnel.on('url', onUrl);
       tunnel.once('error', (error: Error) => {
         clearTimeout(timer);
         reject(error);
