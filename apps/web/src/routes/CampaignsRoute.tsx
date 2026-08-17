@@ -4,17 +4,19 @@ import { useState } from 'react';
 interface CampaignsRouteProps {
   accountId: string;
   campaigns: readonly CampaignSummary[];
-  error: string | null;
   onCreate: (name: string) => void;
   onJoin: (campaignId: string) => void;
   onAddPlayer: (campaignId: string, username: string) => void;
 }
 
-/** Lists the campaigns this account owns or belongs to, and offers to create one. */
+/**
+ * Lists the campaigns this account owns or belongs to, and offers to create one.
+ * Connection errors surface once, higher up in `App.tsx`'s shared `Toast` — not
+ * duplicated here.
+ */
 export function CampaignsRoute({
   accountId,
   campaigns,
-  error,
   onCreate,
   onJoin,
   onAddPlayer,
@@ -29,8 +31,6 @@ export function CampaignsRoute({
         <h1>Campañas</h1>
         <p className="muted">Elige una campaña para entrar, o crea una nueva.</p>
       </div>
-
-      {error !== null ? <div className="errors">{error}</div> : null}
 
       <div className="panel">
         <h2>Crear una campaña</h2>

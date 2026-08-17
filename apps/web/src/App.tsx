@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
+import { Toast } from './components/Toast.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
@@ -106,6 +107,8 @@ function Shell() {
         </nav>
       </header>
 
+      {campaign.error !== null ? <Toast message={campaign.error} onDismiss={campaign.dismissError} /> : null}
+
       {!isMapRoute && inCampaign && !isGameMaster && !hasClaimedCharacter ? (
         <div className="panel">
           <div className="row spread">
@@ -157,13 +160,11 @@ function Shell() {
                     Salir de la campaña
                   </button>
                 </div>
-                {campaign.error !== null ? <div className="errors">{campaign.error}</div> : null}
               </section>
             ) : (
               <CampaignsRoute
                 accountId={account.id}
                 campaigns={campaign.campaigns}
-                error={campaign.error}
                 onCreate={(name) => void campaign.createCampaign(name)}
                 onJoin={(campaignId) => {
                   campaign.join(campaignId);
@@ -177,7 +178,11 @@ function Shell() {
         <Route
           path="/create/:step"
           element={
-            campaign.activeCampaignId === null ? (
+            // Not just activeCampaignId: the socket must have actually finished
+            // joining (room !== null) before the wizard can claim a character —
+            // otherwise a fast finish can race the join and the server rejects
+            // the claim with 'noSeat'.
+            campaign.activeCampaignId === null || campaign.room === null ? (
               <Navigate to="/" replace />
             ) : (
               <WizardRoute

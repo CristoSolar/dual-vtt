@@ -49,6 +49,8 @@ export interface CampaignConnection {
   /** Sends an intent. The server decides the result; this never mutates locally. */
   send: (event: RoomEvent) => void;
   leave: () => void;
+  /** Clears a shown error — a rejection otherwise sticks until the next 'connect'. */
+  dismissError: () => void;
 }
 
 /**
@@ -214,6 +216,8 @@ export function useCampaign(
     setStatus('idle');
   }, [storage]);
 
+  const dismissError = useCallback(() => setError(null), []);
+
   const role = useMemo<'gm' | 'player' | null>(() => {
     if (activeCampaignId === null || accountId === null) return null;
     const summary = campaigns.find((c) => c.id === activeCampaignId);
@@ -237,6 +241,7 @@ export function useCampaign(
       claimCharacter,
       send,
       leave,
+      dismissError,
     }),
     [
       status,
@@ -253,6 +258,7 @@ export function useCampaign(
       claimCharacter,
       send,
       leave,
+      dismissError,
     ],
   );
 }
