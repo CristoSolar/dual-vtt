@@ -1,7 +1,7 @@
 import type { User } from '@daggerheart/protocol';
 import { useEffect, useState } from 'react';
 
-import { SERVER_URL } from '../state/useRoom.js';
+import { SERVER_URL } from '../state/useCampaign.js';
 
 interface PlayersRouteProps {
   token: string;

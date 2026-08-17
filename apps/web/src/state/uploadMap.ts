@@ -1,6 +1,6 @@
 import type { SceneImage } from '@daggerheart/protocol';
 
-import { SERVER_URL } from './useRoom.js';
+import { SERVER_URL } from './useCampaign.js';
 
 /** Images the server will accept. It re-checks the bytes regardless of this list. */
 export const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];

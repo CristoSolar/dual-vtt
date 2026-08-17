@@ -1,7 +1,7 @@
 import { UserSchema, type User } from '@daggerheart/protocol';
 import { useCallback, useEffect, useState } from 'react';
 
-import { SERVER_URL } from './useRoom.js';
+import { SERVER_URL } from './useCampaign.js';
 
 /**
  * Login session persistence. Same trust-boundary rule as `storage.ts`: a saved
