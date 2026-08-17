@@ -2,19 +2,20 @@ import { createServer } from 'node:http';
 
 import { Server } from 'socket.io';
 
-import { registerGateway } from './gateway.js';
 import { handleAuth } from './auth-http.js';
-import { RoomStore } from './rooms.js';
+import { CampaignStore } from './campaigns.js';
+import { handleCampaigns } from './campaigns-http.js';
+import { readCampaignsSnapshot, writeCampaignsSnapshot } from './campaigns-snapshot.js';
+import { registerGateway } from './gateway.js';
 import { SessionStore } from './sessions.js';
-import { readSnapshot, startSnapshots, writeSnapshot } from './snapshot.js';
 import { handleUploads } from './uploads.js';
 import { UserStore } from './users.js';
 import { readUsersSnapshot, writeUsersSnapshot } from './users-snapshot.js';
 
 const PORT = Number(process.env.PORT ?? 4000);
-const SNAPSHOT_PATH = process.env.SNAPSHOT_PATH ?? '.data/rooms.json';
-const SNAPSHOT_INTERVAL_MS = Number(process.env.SNAPSHOT_INTERVAL_MS ?? 15_000);
-/** Map images live beside the room snapshots. */
+const CAMPAIGNS_SNAPSHOT_PATH = process.env.CAMPAIGNS_SNAPSHOT_PATH ?? '.data/campaigns.json';
+const CAMPAIGNS_SNAPSHOT_INTERVAL_MS = Number(process.env.CAMPAIGNS_SNAPSHOT_INTERVAL_MS ?? 15_000);
+/** Map images live beside the campaign snapshots. */
 const UPLOAD_DIR = process.env.UPLOAD_DIR ?? '.data/uploads';
 const USERS_SNAPSHOT_PATH = process.env.USERS_SNAPSHOT_PATH ?? '.data/users.json';
 /** The first GM account, created on boot if no account by this name exists yet. */
@@ -28,9 +29,16 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173')
   .filter((origin) => origin !== '');
 
 async function main(): Promise<void> {
-  const store = new RoomStore();
-  store.restore(await readSnapshot(SNAPSHOT_PATH));
-  if (store.size > 0) console.log(`restored ${store.size} room(s) from ${SNAPSHOT_PATH}`);
+  const campaigns = new CampaignStore();
+  campaigns.restore(await readCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH));
+  if (campaigns.size > 0) {
+    console.log(`restored ${campaigns.size} campaign(s) from ${CAMPAIGNS_SNAPSHOT_PATH}`);
+  }
+  const persistCampaigns = (): void => {
+    void writeCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH, campaigns.serialize()).catch((error: unknown) =>
+      console.error('campaigns snapshot failed', error),
+    );
+  };
 
   const users = new UserStore();
   users.restore(await readUsersSnapshot(USERS_SNAPSHOT_PATH));
@@ -58,7 +66,7 @@ async function main(): Promise<void> {
     if (origin !== undefined && ALLOWED_ORIGINS.includes(origin)) {
       response.setHeader('access-control-allow-origin', origin);
       response.setHeader('access-control-allow-headers', 'content-type, authorization');
-      response.setHeader('access-control-allow-methods', 'GET,POST,OPTIONS');
+      response.setHeader('access-control-allow-methods', 'GET,POST,DELETE,OPTIONS');
     }
     if (request.method === 'OPTIONS') {
       response.writeHead(204);
@@ -69,32 +77,36 @@ async function main(): Promise<void> {
     // A health probe, so `pnpm dev` can tell the server is actually up.
     if (request.url === '/health') {
       response.writeHead(200, { 'content-type': 'application/json' });
-      response.end(JSON.stringify({ ok: true, rooms: store.size }));
+      response.end(JSON.stringify({ ok: true, campaigns: campaigns.size }));
       return;
     }
 
     void handleAuth(request, response, { users, sessions, persist: persistUsers }).then((handled) => {
       if (handled) return;
-      void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
-        if (uploadHandled) return;
-        response.writeHead(404);
-        response.end();
-      });
+      void handleCampaigns(request, response, { campaigns, users, sessions, persist: persistCampaigns }).then(
+        (campaignsHandled) => {
+          if (campaignsHandled) return;
+          void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
+            if (uploadHandled) return;
+            response.writeHead(404);
+            response.end();
+          });
+        },
+      );
     });
   });
 
   const io = new Server(http, { cors: { origin: ALLOWED_ORIGINS } });
-  registerGateway(io, store);
+  registerGateway(io, campaigns, sessions, users);
 
-  const stopSnapshots = startSnapshots(store, SNAPSHOT_PATH, SNAPSHOT_INTERVAL_MS, (error) =>
-    console.error('snapshot failed', error),
-  );
+  const stopSnapshots = setInterval(persistCampaigns, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
+  stopSnapshots.unref();
 
   const shutdown = async (): Promise<void> => {
-    stopSnapshots();
+    clearInterval(stopSnapshots);
     // One last snapshot so a clean stop never loses the table's progress.
-    await writeSnapshot(SNAPSHOT_PATH, store.serialize()).catch((error: unknown) =>
-      console.error('final snapshot failed', error),
+    await writeCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH, campaigns.serialize()).catch((error: unknown) =>
+      console.error('final campaigns snapshot failed', error),
     );
     await io.close();
     http.close();
