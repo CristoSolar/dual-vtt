@@ -7,8 +7,6 @@ import { StaticRouter } from 'react-router-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { GMPanel } from '../src/components/gm/GMPanel.js';
-import { CampaignRoute } from '../src/routes/CampaignRoute.js';
-import { CharactersRoute } from '../src/routes/CharactersRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
 import {
@@ -40,7 +38,6 @@ describe('sheet renders', () => {
 
     expect(html).toContain('Test Character');
     expect(html).toContain('Bard');
-    // Core sheet regions are all present.
     for (const heading of [
       'Rasgos',
       'Defensas',
@@ -60,7 +57,6 @@ describe('sheet renders', () => {
       expect(html, heading).toContain(heading);
     }
 
-    // Derived numbers come through, not placeholders.
     expect(html).toContain(`>${sheet.character.evasion}<`);
     expect(html).toContain(`>${sheet.character.major}<`);
     expect(html).toContain(`>${sheet.character.severe}<`);
@@ -107,39 +103,6 @@ describe('sheet renders', () => {
   });
 });
 
-describe('characters list renders', () => {
-  it('shows an empty state with no saved characters', () => {
-    const html = render(
-      <CharactersRoute
-        characters={[]}
-        activeId={null}
-        onSelect={() => {}}
-        onDelete={() => {}}
-        hasCreationInProgress={false}
-      />,
-    );
-    expect(html).toContain('Todavía no hay personajes');
-    expect(html).toContain('Nuevo personaje');
-  });
-
-  it('lists a saved character and offers to resume a creation', () => {
-    const sheet = createSheet(buildCharacter('rogue'));
-    const html = render(
-      <CharactersRoute
-        characters={[{ id: 'pc-1', sheet, updatedAt: 1 }]}
-        activeId="pc-1"
-        onSelect={() => {}}
-        onDelete={() => {}}
-        hasCreationInProgress
-      />,
-    );
-    expect(html).toContain('Test Character');
-    expect(html).toContain('Pícaro');
-    expect(html).toContain('Activo');
-    expect(html).toContain('Continuar creación');
-  });
-});
-
 describe('wizard renders', () => {
   const storage = () => {
     const data = new Map<string, string>();
@@ -160,7 +123,12 @@ describe('wizard renders', () => {
           <Route
             path="/create/:step"
             element={
-              <WizardRoute storage={store} addCharacter={() => 'pc-1'} onFinish={() => {}} />
+              <WizardRoute
+                storage={store}
+                campaignId="campaign-1"
+                onClaim={() => {}}
+                onFinish={() => {}}
+              />
             }
           />
         </Routes>
@@ -169,7 +137,6 @@ describe('wizard renders', () => {
 
   it('lists class options sourced from the SRD data, not hardcoded', () => {
     const html = wizardAt('/create/1');
-    // Every class in the dataset is offered.
     for (const characterClass of classes) {
       expect(html, characterClass.name).toContain(characterClass.name);
     }
@@ -179,13 +146,12 @@ describe('wizard renders', () => {
 
   it('disables Next until the step validates', () => {
     const html = wizardAt('/create/1');
-    // The Next button renders disabled while nothing has been chosen.
     expect(html).toMatch(/<button[^>]*disabled[^>]*>Siguiente/);
   });
 
   it('resumes a saved creation at its step with choices intact', () => {
     const store = storage();
-    saveCreation(store, buildCreationState('sorcerer'));
+    saveCreation(store, 'campaign-1', buildCreationState('sorcerer'));
     const html = wizardAt('/create/8', store);
 
     expect(html).toContain('Paso 8');
@@ -196,14 +162,13 @@ describe('wizard renders', () => {
   });
 });
 
-describe('offline mode', () => {
-  it('renders and mutates a sheet with no server and no campaign props', () => {
+describe('offline sheet reducers', () => {
+  it('mutates a sheet with no server and no campaign props', () => {
     // No characterId/send: the sheet must fall back to local pure reducers.
     const sheet = createSheet(buildCharacter('bard'));
     const html = render(<SheetRoute sheet={sheet} update={noopUpdate} rng={() => 0.5} />);
     expect(html).toContain('Test Character');
 
-    // The same transitions the offline sheet uses still work with no socket at all.
     const damaged = takeDamage(sheet, {
       incoming: sheet.character.thresholds.severe,
       damageType: 'physical',
@@ -226,31 +191,13 @@ describe('offline mode', () => {
     );
     expect(rolled.outcome?.result.outcome).toBe('criticalSuccess');
   });
-
-  it('shows the campaign screen with no connection', () => {
-    const html = render(
-      <CampaignRoute
-        status="offline"
-        error={null}
-        code={null}
-        role={null}
-        onCreate={() => {}}
-        onJoin={() => {}}
-        onLeave={() => {}}
-      />,
-    );
-    expect(html).toContain('Crear una campaña');
-    expect(html).toContain('Unirse a una campaña');
-    // Offline play is explicitly still supported.
-    expect(html).toContain('Jugando sin conexión');
-  });
 });
 
 describe('GM panel renders', () => {
   it('shows Fear, party, countdowns, adversaries, environment, presence and log', () => {
     const sheet = createSheet(buildCharacter('seraph'));
     const room: RoomState = {
-      code: 'ABC234',
+      id: 'c-abc234',
       gm: { id: 'gm-1', name: 'The GM', connected: true },
       players: [{ id: 'p1', name: 'Alice', connected: false, characterId: 'pc1' }],
       characters: { pc1: sheet },
@@ -295,16 +242,15 @@ describe('GM panel renders', () => {
       ],
     };
 
-    const html = render(<GMPanel room={room} send={() => {}} />);
+    const html = render(<GMPanel room={room} campaignName="Grupo Martes" send={() => {}} />);
 
     expect(html).toContain('Panel del DJ');
-    expect(html).toContain('ABC234');
+    expect(html).toContain('Grupo Martes');
     expect(html).toContain('Miedo');
     expect(html).toContain('The Siege');
     expect(html).toContain('Courtier');
     expect(html).toContain('Entorno');
     expect(html).toContain('En la mesa');
-    // Presence shows a disconnected player, and the shared log names the roller.
     expect(html).toContain('desconectado');
     expect(html).toContain('Alice');
     expect(html).toContain('Success with Hope');
