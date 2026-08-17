@@ -14,6 +14,7 @@ import {
   type StepProps,
 } from '../components/wizard/Steps.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
+import { createSheet } from '../state/sheet.js';
 import { useCreation } from '../state/useCreation.js';
 
 const STEP_TITLES: Record<Step, string> = {
@@ -44,15 +45,16 @@ const isStep = (value: number): value is Step => STEPS.includes(value as Step);
 
 interface WizardRouteProps {
   storage: Storage;
-  onFinish: (characterId: string) => void;
-  addCharacter: (character: ReturnType<typeof finalize>) => string;
+  campaignId: string;
+  onFinish: () => void;
+  onClaim: (sheet: ReturnType<typeof createSheet>) => void;
 }
 
-/** The nine-step creation wizard: one route per step. */
-export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProps) {
+/** The nine-step creation wizard: one route per step, always for one specific campaign. */
+export function WizardRoute({ storage, campaignId, onFinish, onClaim }: WizardRouteProps) {
   const { step: stepParam } = useParams();
   const navigate = useNavigate();
-  const { state, dispatch, discard, reset } = useCreation(storage);
+  const { state, dispatch, discard, reset } = useCreation(storage, campaignId);
 
   const parsed = Number(stepParam ?? '1');
   const step: Step = isStep(parsed) ? parsed : 1;
@@ -69,9 +71,9 @@ export function WizardRoute({ storage, onFinish, addCharacter }: WizardRouteProp
 
   const finish = () => {
     const character = finalize(state);
-    const id = addCharacter(character);
+    onClaim(createSheet(character));
     discard();
-    onFinish(id);
+    onFinish();
   };
 
   return (
