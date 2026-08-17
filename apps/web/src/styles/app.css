@@ -21,7 +21,7 @@ body {
   /* A faint warm vignette, so the near-black reads as ink rather than grey. */
   background-image: radial-gradient(
     ellipse at 50% 0%,
-    rgb(90 62 30 / 12%) 0%,
+    rgb(90 55 140 / 12%) 0%,
     transparent 60%
   );
   background-attachment: fixed;
@@ -355,7 +355,7 @@ legend {
   padding: var(--sp-8) var(--sp-5) var(--sp-6);
   margin: calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) var(--sp-5);
   background:
-    linear-gradient(180deg, rgb(10 8 6 / 55%) 0%, rgb(10 8 6 / 88%) 75%, var(--c-bg) 100%),
+    linear-gradient(180deg, rgb(14 10 22 / 55%) 0%, rgb(14 10 22 / 88%) 75%, var(--c-bg) 100%),
     url('/images/backgrounds/bck-02.webp') center 60% / cover no-repeat;
   border-bottom: var(--size-rule) solid var(--c-line);
 }
@@ -427,7 +427,7 @@ legend {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgb(10 8 6 / 92%) 0%, rgb(10 8 6 / 97%) 40%, var(--c-bg) 85%),
+    linear-gradient(180deg, rgb(14 10 22 / 92%) 0%, rgb(14 10 22 / 97%) 40%, var(--c-bg) 85%),
     url('/images/backgrounds/bck-01.webp') center 30% / cover no-repeat fixed;
 }
 
@@ -726,7 +726,7 @@ legend {
 .dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: rgb(8 5 3 / 78%);
+  background: rgb(12 8 18 / 78%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1019,7 +1019,7 @@ legend {
   margin: 0;
   padding: var(--sp-2) var(--sp-5);
   border-bottom: none;
-  background: linear-gradient(180deg, rgb(10 8 6 / 85%), transparent);
+  background: linear-gradient(180deg, rgb(14 10 22 / 85%), transparent);
   pointer-events: none;
 }
 
@@ -1058,7 +1058,7 @@ legend {
   font-family: var(--font-display);
   letter-spacing: var(--ls-wide);
   color: var(--c-text-muted);
-  background: rgb(10 8 6 / 70%);
+  background: rgb(14 10 22 / 70%);
   border: var(--size-rule) solid var(--c-line);
   padding: var(--sp-1) var(--sp-4);
 }
@@ -1087,7 +1087,7 @@ legend {
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
-  background: rgb(10 8 6 / 70%);
+  background: rgb(14 10 22 / 70%);
   border: var(--size-rule) solid var(--c-line);
   padding: var(--sp-2);
 }
@@ -1111,7 +1111,7 @@ legend {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  background: rgb(10 8 6 / 70%);
+  background: rgb(14 10 22 / 70%);
   border: var(--size-rule) solid var(--c-line);
   padding: var(--sp-2) var(--sp-4);
 }

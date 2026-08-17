@@ -3,8 +3,9 @@
  * borders and shadows. Component styles reference these and never hardcode a
  * value, so the whole look can be retuned from this one file.
  *
- * Palette direction: warm near-black with a brown/ink cast, brass for Hope and
- * emphasis, cool violet for Fear and the GM side.
+ * Palette direction: near-black with a purple cast, brass (gold/yellow) for
+ * Hope and emphasis, violet (purple) for Fear and the GM side — the same two
+ * accents now echoed in the base surfaces themselves.
  */
 
 /* Latin subsets only, served from the app itself — no runtime CDN request. */
@@ -42,24 +43,23 @@
 }
 
 :root {
-  /* --- surfaces: warm near-black, three elevations ----------------------- */
-  --c-bg: #14100d;
-  --c-surface-1: #1d1813;
-  --c-surface-2: #262019;
-  --c-surface-3: #322a21;
+  /* --- surfaces: near-black with a purple cast, three elevations --------- */
+  --c-bg: #120f1a;
+  --c-surface-1: #1b1526;
+  --c-surface-2: #251d33;
+  --c-surface-3: #322640;
 
-  /* --- ink ---------------------------------------------------------------
-   * Every value here clears WCAG AA (4.5:1) against the lightest surface,
-   * --c-surface-3, so body text is legible wherever it lands.
-   *   text 12.0:1 · muted 6.1:1 · faint 4.8:1
+  /* --- ink -----------------------------------------------------------------
+   * Same lightness as before the brown-to-purple retint, so contrast against
+   * --c-surface-3 holds: text 12.0:1 · muted 6.1:1 · faint 4.8:1 (WCAG AA).
    */
   --c-text: #f2ece1;
-  --c-text-muted: #b6a894;
-  --c-text-faint: #a29481;
+  --c-text-muted: #b3a8c2;
+  --c-text-faint: #9d90ad;
 
-  /* --- lines ------------------------------------------------------------- */
-  --c-line: #3d332a;
-  --c-line-strong: #55483a;
+  /* --- lines --------------------------------------------------------------- */
+  --c-line: #3a2f52;
+  --c-line-strong: #4f4170;
 
   /* --- brass: primary accent, Hope, emphasis ----------------------------- */
   --c-brass: #d8a441;
