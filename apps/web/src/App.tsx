@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
@@ -11,7 +11,7 @@ import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
-import { useCampaign } from './state/useCampaign.js';
+import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 
 /**
  * Dice come from here for the sheet's optimistic local echo — a campaign's real
@@ -28,6 +28,27 @@ function Shell() {
   const isMapRoute = useLocation().pathname === '/map';
   const auth = useAuth(storage);
   const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null);
+
+  // The tunnel is one per server, not per campaign — GM-only, checked via `GET
+  // /tunnel` on the campaigns list and started on demand from a campaign card.
+  const [tunnelUrl, setTunnelUrl] = useState<string | null>(null);
+  const [tunnelLoading, setTunnelLoading] = useState(false);
+  const token = auth.token;
+  const generateTunnel = useCallback(() => {
+    if (token === null) return;
+    setTunnelLoading(true);
+    void fetch(`${SERVER_URL}/tunnel`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: unknown) => {
+        if (body !== null && typeof body === 'object' && 'url' in body && typeof body.url === 'string') {
+          setTunnelUrl(body.url);
+        }
+      })
+      .finally(() => setTunnelLoading(false));
+  }, [token]);
 
   const inCampaign = campaign.activeCampaignId !== null && campaign.room !== null;
   const isGameMaster = campaign.role === 'gm';
@@ -171,6 +192,9 @@ function Shell() {
                   navigate('/');
                 }}
                 onAddPlayer={(campaignId, username) => void campaign.addPlayer(campaignId, username)}
+                tunnelUrl={tunnelUrl}
+                tunnelLoading={tunnelLoading}
+                onGenerateTunnel={generateTunnel}
               />
             )
           }

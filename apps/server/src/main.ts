@@ -9,6 +9,8 @@ import { readCampaignsSnapshot, writeCampaignsSnapshot } from './campaigns-snaps
 import { registerGateway } from './gateway.js';
 import { SessionStore } from './sessions.js';
 import { handleStatic } from './static.js';
+import { handleTunnel } from './tunnel-http.js';
+import { TunnelManager } from './tunnel.js';
 import { handleUploads } from './uploads.js';
 import { UserStore } from './users.js';
 import { readUsersSnapshot, writeUsersSnapshot } from './users-snapshot.js';
@@ -63,6 +65,7 @@ async function main(): Promise<void> {
     );
   }
   const sessions = new SessionStore();
+  const tunnel = new TunnelManager(PORT, WEB_DIST_DIR);
 
   const http = createServer((request, response) => {
     // The web app runs on another origin in development.
@@ -90,12 +93,15 @@ async function main(): Promise<void> {
       void handleCampaigns(request, response, { campaigns, users, sessions, persist: persistCampaigns }).then(
         (campaignsHandled) => {
           if (campaignsHandled) return;
-          void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
-            if (uploadHandled) return;
-            void handleStatic(request, response, WEB_DIST_DIR).then((staticHandled) => {
-              if (staticHandled) return;
-              response.writeHead(404);
-              response.end();
+          void handleTunnel(request, response, { tunnel, users, sessions }).then((tunnelHandled) => {
+            if (tunnelHandled) return;
+            void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
+              if (uploadHandled) return;
+              void handleStatic(request, response, WEB_DIST_DIR).then((staticHandled) => {
+                if (staticHandled) return;
+                response.writeHead(404);
+                response.end();
+              });
             });
           });
         },
@@ -110,6 +116,7 @@ async function main(): Promise<void> {
   stopSnapshots.unref();
 
   const shutdown = async (): Promise<void> => {
+    tunnel.stop();
     clearInterval(stopSnapshots);
     // One last snapshot so a clean stop never loses the table's progress.
     await writeCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH, campaigns.serialize()).catch((error: unknown) =>

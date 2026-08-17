@@ -7,6 +7,11 @@ interface CampaignsRouteProps {
   onCreate: (name: string) => void;
   onJoin: (campaignId: string) => void;
   onAddPlayer: (campaignId: string, username: string) => void;
+  /** The tunnel is one per server, not per campaign — the same URL (or none yet)
+   * shows on every card the account owns. */
+  tunnelUrl: string | null;
+  tunnelLoading: boolean;
+  onGenerateTunnel: () => void;
 }
 
 /**
@@ -20,10 +25,14 @@ export function CampaignsRoute({
   onCreate,
   onJoin,
   onAddPlayer,
+  tunnelUrl,
+  tunnelLoading,
+  onGenerateTunnel,
 }: CampaignsRouteProps) {
   const [name, setName] = useState('');
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [username, setUsername] = useState('');
+  const [copied, setCopied] = useState(false);
 
   return (
     <section>
@@ -103,6 +112,29 @@ export function CampaignsRoute({
                   >
                     Agregar
                   </button>
+                </div>
+              ) : null}
+              {campaign.ownerId === accountId ? (
+                <div className="row mt-3">
+                  {tunnelUrl === null ? (
+                    <button type="button" disabled={tunnelLoading} onClick={onGenerateTunnel}>
+                      {tunnelLoading ? 'Generando…' : 'Generar enlace para jugadores'}
+                    </button>
+                  ) : (
+                    <>
+                      <input readOnly value={tunnelUrl} onFocus={(event) => event.target.select()} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          void navigator.clipboard.writeText(tunnelUrl);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                      >
+                        {copied ? 'Copiado' : 'Copiar'}
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : null}
             </div>
