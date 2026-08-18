@@ -12,7 +12,7 @@ import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
-import { uploadMapImage } from '../state/uploadMap.js';
+import { uploadImage } from '../state/uploadMap.js';
 import {
   adversaryTokenColor,
   markerTokenColor,
@@ -123,7 +123,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     if (scene === null) return;
     setUploadError(null);
     try {
-      const image = await uploadMapImage(file);
+      const image = await uploadImage(file);
       send({ type: 'setSceneImage', sceneId: scene.id, image });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : 'Falló la subida');
@@ -460,7 +460,19 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
     hidden: false,
     showRings: false,
     color,
+    image: null,
   });
+
+  const [imageError, setImageError] = useState<string | null>(null);
+  const onUploadTokenImage = async (file: File) => {
+    setImageError(null);
+    try {
+      const image = await uploadImage(file);
+      onUpdate({ image });
+    } catch (error) {
+      setImageError(error instanceof Error ? error.message : 'Falló la subida');
+    }
+  };
 
   return (
     <div className="panel">
@@ -567,6 +579,24 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
             <button type="button" onClick={onRemove}>
               Eliminar ficha
             </button>
+          </div>
+          <div className="mt-3">
+            <label htmlFor="token-image">Imagen</label>
+            <input
+              id="token-image"
+              type="file"
+              accept="image/png,image/jpeg,image/gif,image/webp"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file !== undefined) void onUploadTokenImage(file);
+              }}
+            />
+            {imageError !== null ? <p className="field-error">{imageError}</p> : null}
+            {selected.image !== null ? (
+              <button type="button" onClick={() => onUpdate({ image: null })}>
+                Quitar imagen
+              </button>
+            ) : null}
           </div>
         </fieldset>
       )}

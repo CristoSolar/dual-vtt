@@ -296,6 +296,53 @@ function RangeRings({ token, scale }: { token: Token; scale: RangeScale }) {
   );
 }
 
+// One <img> per URL, shared across every token that uses it — a battlefield
+// full of the same adversary sprite should load it once, not once per token.
+const tokenImageCache = new Map<string, HTMLImageElement>();
+
+function useTokenImage(url: string | null): HTMLImageElement | null {
+  const [image, setImage] = useState<HTMLImageElement | null>(
+    () => (url !== null ? tokenImageCache.get(url) ?? null : null),
+  );
+  useEffect(() => {
+    if (url === null) {
+      setImage(null);
+      return;
+    }
+    const cached = tokenImageCache.get(url);
+    if (cached !== undefined) {
+      setImage(cached);
+      return;
+    }
+    const element = new window.Image();
+    element.src = url.startsWith('http') ? url : `${MAP_ORIGIN}${url}`;
+    element.onload = () => {
+      tokenImageCache.set(url, element);
+      setImage(element);
+    };
+    return () => {
+      element.onload = null;
+    };
+  }, [url]);
+  return image;
+}
+
+/** A rounded-rect path; `radius === width/2` (and `height === width`) draws a circle. */
+function roundedRectPath(ctx: Konva.Context, width: number, height: number, radius: number): void {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(width - r, 0);
+  ctx.arc(width - r, r, r, -Math.PI / 2, 0);
+  ctx.lineTo(width, height - r);
+  ctx.arc(width - r, height - r, r, 0, Math.PI / 2);
+  ctx.lineTo(r, height);
+  ctx.arc(r, height - r, r, Math.PI / 2, Math.PI);
+  ctx.lineTo(0, r);
+  ctx.arc(r, r, r, Math.PI, Math.PI * 1.5);
+  ctx.closePath();
+}
+
 interface TokenShapeProps {
   token: Token;
   selected: boolean;
@@ -313,6 +360,9 @@ function TokenShape({
   onDragMove,
   onDragEnd,
 }: TokenShapeProps) {
+  const image = useTokenImage(token.image?.url ?? null);
+  const radius = token.kind === 'adversary' ? 4 : token.width / 2;
+
   return (
     <Group
       x={token.x}
@@ -325,11 +375,18 @@ function TokenShape({
       onDragEnd={(event) => onDragEnd(event.target.x(), event.target.y())}
       opacity={token.hidden ? 0.55 : 1}
     >
+      {image !== null ? (
+        <Group clipFunc={(ctx) => roundedRectPath(ctx, token.width, token.height, radius)}>
+          <KonvaImage image={image} width={token.width} height={token.height} />
+        </Group>
+      ) : (
+        <Rect width={token.width} height={token.height} fill={token.color} cornerRadius={radius} />
+      )}
       <Rect
         width={token.width}
         height={token.height}
-        fill={token.color}
-        cornerRadius={token.kind === 'adversary' ? 4 : token.width / 2}
+        fill="transparent"
+        cornerRadius={radius}
         stroke={selected ? canvasPalette.tokenOutline() : canvasPalette.tokenOutlineIdle()}
         strokeWidth={selected ? 3 : 1}
       />

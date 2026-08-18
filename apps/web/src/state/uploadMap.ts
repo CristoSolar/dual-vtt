@@ -22,13 +22,15 @@ async function readDimensions(file: File): Promise<{ width: number; height: numb
 }
 
 /**
- * Uploads a battle map and returns the scene image to attach.
+ * Uploads an image (a battle map background, or a token portrait) and returns the
+ * `{url, width, height}` to attach. The endpoint itself has no notion of "map" vs
+ * "token" — that distinction is purely what the caller does with the result.
  *
  * The body is the raw file, so there is no multipart parsing on either side. These
  * client-side checks are for a fast error message only — the server validates the
  * bytes itself and is the one that decides.
  */
-export async function uploadMapImage(file: File): Promise<SceneImage> {
+export async function uploadImage(file: File): Promise<SceneImage> {
   if (!ACCEPTED_TYPES.includes(file.type)) {
     throw new Error('Maps must be a PNG, JPEG, GIF, or WEBP image.');
   }

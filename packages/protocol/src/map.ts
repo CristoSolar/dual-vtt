@@ -20,6 +20,14 @@ export const TokenKindSchema = z.enum([
 ]);
 export type TokenKind = z.infer<typeof TokenKindSchema>;
 
+export const SceneImageSchema = z.object({
+  /** Path served by the server, e.g. "/uploads/abc123.png". */
+  url: z.string().min(1).max(512),
+  width: z.number().int().positive().max(20_000),
+  height: z.number().int().positive().max(20_000),
+});
+export type SceneImage = z.infer<typeof SceneImageSchema>;
+
 export const TokenSchema = z.object({
   id: z.string().min(1).max(64),
   kind: TokenKindSchema,
@@ -41,6 +49,8 @@ export const TokenSchema = z.object({
   /** Whether to draw the Daggerheart range rings around this token. */
   showRings: z.boolean(),
   color: z.string().min(1).max(24),
+  /** A token portrait, if the GM/player attached one. Falls back to `color`. */
+  image: SceneImageSchema.nullable(),
 });
 export type Token = z.infer<typeof TokenSchema>;
 
@@ -59,14 +69,6 @@ export const FogSchema = z.object({
   revealed: z.array(z.number().int().nonnegative()).max(200_000),
 });
 export type Fog = z.infer<typeof FogSchema>;
-
-export const SceneImageSchema = z.object({
-  /** Path served by the server, e.g. "/uploads/abc123.png". */
-  url: z.string().min(1).max(512),
-  width: z.number().int().positive().max(20_000),
-  height: z.number().int().positive().max(20_000),
-});
-export type SceneImage = z.infer<typeof SceneImageSchema>;
 
 export const GridSchema = z.object({
   mode: GridModeSchema,

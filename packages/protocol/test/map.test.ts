@@ -36,6 +36,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   hidden: false,
   showRings: false,
   color: '#e2b857',
+  image: null,
   ...over,
 });
 
@@ -131,5 +132,15 @@ describe('what a player is sent', () => {
     const view = mapForPlayer({ ...map, activeSceneId: null });
     expect(view.scenes).toEqual([]);
     expect(view.activeSceneId).toBeNull();
+  });
+
+  it('passes a token portrait through untouched', () => {
+    const portrait = { url: '/uploads/orc.png', width: 128, height: 128 };
+    const withImage: MapState = {
+      ...map,
+      scenes: [{ ...map.scenes[0]!, tokens: [token({ image: portrait })] }, ...map.scenes.slice(1)],
+    };
+    const view = mapForPlayer(withImage);
+    expect(view.scenes[0]?.tokens[0]?.image).toEqual(portrait);
   });
 });

@@ -17,6 +17,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   hidden: false,
   showRings: false,
   color: '#e2b857',
+  image: null,
   ...over,
 });
 
