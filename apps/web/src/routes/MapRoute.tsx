@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
+import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
@@ -32,7 +33,7 @@ const nextId = (prefix: string) => {
   return `${prefix}-${Date.now().toString(36)}-${counter.toString(36)}`;
 };
 
-type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog';
+type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet';
 
 const PANEL_TITLES: Record<PanelId, string> = {
   scenes: 'Escenas',
@@ -40,6 +41,7 @@ const PANEL_TITLES: Record<PanelId, string> = {
   grid: 'Cuadrícula y escala',
   tokens: 'Fichas',
   fog: 'Niebla de guerra',
+  sheet: 'Hoja de personaje',
 };
 
 const PANELS_KEY = 'daggerheart-vtt:map-panels';
@@ -52,6 +54,7 @@ const defaultPanels = (): PanelStore => ({
   grid: { x: 90, y: 96, z: 1, open: false },
   tokens: { x: 90, y: 96, z: 1, open: true },
   fog: { x: 90, y: 96, z: 1, open: false },
+  sheet: { x: 90, y: 96, z: 1, open: false },
 });
 
 /** Reads saved panel positions; any corruption just falls back to defaults. */
@@ -97,6 +100,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     [room.map],
   );
   const selected = scene?.tokens.find((t) => t.id === selectedTokenId) ?? null;
+  const mySheet = viewerId !== null ? room.characters[viewerId] ?? null : null;
 
   const moveToken = useCallback(
     (tokenId: string, x: number, y: number, commit: boolean) => {
@@ -161,22 +165,28 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         ) : null}
       </div>
 
-      {isGameMaster ? (
+      {isGameMaster || mySheet !== null ? (
         <div className="map-rail">
-          {toolButton('scenes', '🗺', 'Escenas')}
-          {toolButton('battlemap', '🖼', 'Mapa de batalla')}
-          {toolButton('grid', '▦', 'Cuadrícula y escala')}
-          {toolButton('tokens', '🧙', 'Fichas')}
-          {toolButton('fog', '🌫', 'Niebla de guerra')}
-          <button
-            type="button"
-            className="map-rail-button"
-            aria-pressed={measuring}
-            title="Medir distancia"
-            onClick={() => setMeasuring((m) => !m)}
-          >
-            <span aria-hidden="true">📏</span>
-          </button>
+          {isGameMaster ? (
+            <>
+              {toolButton('scenes', '🗺', 'Escenas')}
+              {toolButton('battlemap', '🖼', 'Mapa de batalla')}
+              {toolButton('grid', '▦', 'Cuadrícula y escala')}
+              {toolButton('tokens', '🧙', 'Fichas')}
+              {toolButton('fog', '🌫', 'Niebla de guerra')}
+              <button
+                type="button"
+                className="map-rail-button"
+                aria-pressed={measuring}
+                title="Medir distancia"
+                onClick={() => setMeasuring((m) => !m)}
+              >
+                <span aria-hidden="true">📏</span>
+              </button>
+            </>
+          ) : (
+            toolButton('sheet', '📜', 'Hoja de personaje')
+          )}
         </div>
       ) : null}
 
@@ -217,6 +227,18 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             {selected.showRings ? 'Ocultar anillos de alcance' : 'Mostrar anillos de alcance'}
           </button>
         </div>
+      ) : null}
+
+      {!isGameMaster && viewerId !== null && mySheet !== null && panels.sheet.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.sheet}
+          layout={panels.sheet}
+          onLayoutChange={(l) => movePanel('sheet', l)}
+          onFocus={() => focusPanel('sheet')}
+          onClose={() => closePanel('sheet')}
+        >
+          <MapSheetPanel sheet={mySheet} characterId={viewerId} send={send} sharedLog={room.rollLog} />
+        </FloatingPanel>
       ) : null}
 
       {isGameMaster && scene !== null && panels.scenes.open ? (
