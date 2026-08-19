@@ -166,6 +166,12 @@ function RollOutcome({
             <span className="die-label">Desventaja</span>
           </div>
         ) : null}
+        {roll.modifiers !== 0 ? (
+          <div className="die">
+            <span className="die-value">{formatSigned(roll.modifiers)}</span>
+            <span className="die-label">Modificador</span>
+          </div>
+        ) : null}
         <div className="die">
           <span className="die-value">{roll.total}</span>
           <span className="die-label">Total</span>

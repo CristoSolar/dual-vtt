@@ -27,6 +27,9 @@ describe('rollDuality', () => {
     expect(roll.fear).toBe(7);
     expect(roll.total).toBe(13);
     expect(roll.withHope).toBe(false);
+    // The modifier folded into `total` must also be reported on its own — otherwise
+    // a player sees hope + fear that don't add up to the total with no explanation.
+    expect(roll.modifiers).toBe(1);
   });
 
   it('flags matching dice as critical and counts them as with Hope', () => {

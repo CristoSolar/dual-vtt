@@ -63,7 +63,16 @@ export function FloatingPanel({
         onPointerUp={onHeaderPointerUp}
       >
         <span>{title}</span>
-        <button type="button" className="floating-panel-close" onClick={onClose} aria-label={`Cerrar ${title}`}>
+        <button
+          type="button"
+          className="floating-panel-close"
+          // The header above captures the pointer on pointerdown to drag the panel;
+          // without stopping it here, that capture retargets this button's pointerup
+          // to the header instead, so the browser never synthesizes a click on it.
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={onClose}
+          aria-label={`Cerrar ${title}`}
+        >
           ×
         </button>
       </div>

@@ -13,6 +13,8 @@ export const DualityRollSchema = z.object({
   hope: z.number().int(),
   fear: z.number().int(),
   total: z.number().int(),
+  /** The flat modifier folded into `total` — trait, Experience, and so on. */
+  modifiers: z.number().int(),
   critical: z.boolean(),
   withHope: z.boolean(),
   advantageRoll: z.number().int().nullable(),

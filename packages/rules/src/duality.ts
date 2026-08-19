@@ -15,6 +15,8 @@ export interface DualityRoll {
   fear: number;
   /** hope + fear + advantage − disadvantage + modifiers. */
   total: number;
+  /** The flat modifier folded into `total` — trait, Experience, and so on. */
+  modifiers: number;
   /** Matching Duality Dice. A Critical Success also counts as a roll "with Hope". */
   critical: boolean;
   /** True on a critical or when the Hope Die is higher (SRD p.36). */
@@ -96,6 +98,7 @@ export function rollDuality(options: RollDualityOptions): DualityRoll {
     hope,
     fear,
     total,
+    modifiers,
     critical,
     withHope: critical || hope > fear,
     advantageRoll,

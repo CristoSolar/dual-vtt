@@ -230,6 +230,7 @@ describe('GM panel renders', () => {
             hope: 7,
             fear: 3,
             total: 10,
+            modifiers: 0,
             critical: false,
             withHope: true,
             advantageRoll: null,

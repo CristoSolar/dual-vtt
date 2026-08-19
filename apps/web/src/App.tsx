@@ -128,7 +128,13 @@ function Shell() {
         </nav>
       </header>
 
-      {campaign.error !== null ? <Toast message={campaign.error} onDismiss={campaign.dismissError} /> : null}
+      {campaign.error !== null ? (
+        <Toast message={campaign.error} onDismiss={campaign.dismissError} />
+      ) : campaign.lastRoll !== null ? (
+        // Same fixed slot as the error toast above, so only ever one shows at
+        // once — an error is actionable and takes priority over a roll notice.
+        <Toast key={campaign.lastRoll.id} message={campaign.lastRoll.message} onDismiss={campaign.dismissLastRoll} />
+      ) : null}
 
       {!isMapRoute && inCampaign && !isGameMaster && !hasClaimedCharacter ? (
         <div className="panel">

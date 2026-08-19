@@ -31,7 +31,8 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
                   </span>
                 </div>
                 <span className="muted">
-                  Esperanza {entry.roll.hope} · Miedo {entry.roll.fear} · total{' '}
+                  Esperanza {entry.roll.hope} · Miedo {entry.roll.fear}
+                  {entry.roll.modifiers !== 0 ? ` · modificador ${entry.roll.modifiers}` : ''} · total{' '}
                   {entry.roll.total} vs {entry.difficulty}
                   {entry.experiences.length > 0 ? ` · ${entry.experiences.join(', ')}` : ''}
                 </span>

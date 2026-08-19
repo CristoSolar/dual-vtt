@@ -11,6 +11,7 @@ import {
   type RoomState,
   type SheetState,
 } from '@daggerheart/protocol';
+import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 
@@ -39,6 +40,9 @@ export interface CampaignConnection {
   role: 'gm' | 'player' | null;
   activeCampaignId: string | null;
   error: string | null;
+  /** The most recent roll broadcast to the room, for a live "so-and-so rolled" toast. */
+  lastRoll: { id: string; message: string } | null;
+  dismissLastRoll: () => void;
   refreshCampaigns: () => Promise<void>;
   createCampaign: (name: string) => Promise<CampaignSummary | null>;
   addPlayer: (campaignId: string, username: string) => Promise<boolean>;
@@ -68,6 +72,7 @@ export function useCampaign(
   const [room, setRoom] = useState<RoomState | null>(null);
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
+  const [lastRoll, setLastRoll] = useState<{ id: string; message: string } | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
   const refreshCampaigns = useCallback(async () => {
@@ -127,7 +132,12 @@ export function useCampaign(
     });
 
     socket.on(CHANNEL.rolled, (payload: unknown) => {
-      RolledSchema.safeParse(payload);
+      const parsed = RolledSchema.safeParse(payload);
+      if (!parsed.success || parsed.data.entries.length === 0) return;
+      setLastRoll({
+        id: parsed.data.entries.map((entry) => entry.id).join('-'),
+        message: parsed.data.entries.map(describeRollEntry).join(' · '),
+      });
     });
 
     socket.on(CHANNEL.rejected, (payload: unknown) => {
@@ -217,6 +227,7 @@ export function useCampaign(
   }, [storage]);
 
   const dismissError = useCallback(() => setError(null), []);
+  const dismissLastRoll = useCallback(() => setLastRoll(null), []);
 
   const role = useMemo<'gm' | 'player' | null>(() => {
     if (activeCampaignId === null || accountId === null) return null;
@@ -233,6 +244,8 @@ export function useCampaign(
       role,
       activeCampaignId,
       error,
+      lastRoll,
+      dismissLastRoll,
       refreshCampaigns,
       createCampaign,
       addPlayer,
@@ -250,6 +263,8 @@ export function useCampaign(
       role,
       activeCampaignId,
       error,
+      lastRoll,
+      dismissLastRoll,
       refreshCampaigns,
       createCampaign,
       addPlayer,
