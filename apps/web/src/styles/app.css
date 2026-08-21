@@ -527,8 +527,8 @@ legend {
  */
 .step-pip {
   position: relative;
-  min-height: var(--size-cell);
-  min-width: var(--size-cell);
+  min-height: var(--size-tap);
+  min-width: var(--size-tap);
   padding: 0 var(--sp-2);
   font-weight: var(--fw-semibold);
   border-radius: 0;
@@ -621,9 +621,9 @@ legend {
 
 /* Outlined square cells that fill when marked, sized as a comfortable target. */
 .pip {
-  width: var(--size-cell);
-  height: var(--size-cell);
-  min-height: var(--size-cell);
+  width: var(--size-tap);
+  height: var(--size-tap);
+  min-height: var(--size-tap);
   padding: 0;
   border-radius: var(--radius-sm);
   background: var(--c-bg);

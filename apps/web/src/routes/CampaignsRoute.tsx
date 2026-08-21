@@ -122,7 +122,12 @@ export function CampaignsRoute({
                     </button>
                   ) : (
                     <>
-                      <input readOnly value={tunnelUrl} onFocus={(event) => event.target.select()} />
+                      <input
+                        readOnly
+                        aria-label="Enlace para jugadores"
+                        value={tunnelUrl}
+                        onFocus={(event) => event.target.select()}
+                      />
                       <button
                         type="button"
                         onClick={() => {

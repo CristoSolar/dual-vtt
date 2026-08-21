@@ -140,6 +140,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       key={id}
       className="map-rail-button"
       aria-pressed={panels[id].open}
+      aria-label={label}
       title={label}
       onClick={() => togglePanel(id)}
     >
@@ -178,6 +179,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                 type="button"
                 className="map-rail-button"
                 aria-pressed={measuring}
+                aria-label="Medir distancia"
                 title="Medir distancia"
                 onClick={() => setMeasuring((m) => !m)}
               >

@@ -145,7 +145,6 @@
   /* --- sizing ------------------------------------------------------------ */
   /* Nothing interactive goes below this. */
   --size-tap: 44px;
-  --size-cell: 40px;
   --size-rule: 1px;
   --size-rule-thick: 2px;
   --size-bevel: 10px;
