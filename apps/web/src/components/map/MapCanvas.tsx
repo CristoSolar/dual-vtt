@@ -13,6 +13,7 @@ import { Circle, Group, Image as KonvaImage, Layer, Line, Rect, Stage, Text } fr
 import type Konva from 'konva';
 
 import { DragThrottle } from '../../state/dragCommit.js';
+import { snapToGrid } from '../../state/gridSnap.js';
 import { canvasPalette, rangeRingColor } from '../../styles/canvasTokens.js';
 
 export interface MapCanvasProps {
@@ -193,7 +194,8 @@ export function MapCanvas({
             }}
             onDragEnd={(x, y) => {
               const commit = throttle.current.end(x, y);
-              onMoveToken(token.id, commit.x, commit.y, true);
+              const snapped = snapToGrid(commit.x, commit.y, scene.grid);
+              onMoveToken(token.id, snapped.x, snapped.y, true);
             }}
           />
         ))}

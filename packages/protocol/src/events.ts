@@ -168,8 +168,9 @@ export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 const sceneId = z.string().min(1).max(64);
 
 /**
- * Map intents. All are GM-only except `moveToken`, which a player may send for a
- * token they own — the server checks ownership, never the client.
+ * Map intents. All are GM-only except `moveToken` (a player may send it for a
+ * token they own) and `addToken` (a player may send it once, to place their own
+ * claimed character's token) — the server checks both, never the client.
  */
 export const MapRoomEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('addScene'), id: sceneId, name: z.string().min(1).max(80) }),

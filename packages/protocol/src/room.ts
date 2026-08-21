@@ -155,6 +155,7 @@ export type RoomError =
   | 'unknownScene'
   | 'unknownToken'
   | 'notYourToken'
+  | 'tokenExists'
   | 'rejected';
 
 export type RoomResult =
@@ -334,15 +335,38 @@ export function applyRoomEvent(
     case 'setActiveScene':
     case 'setSceneImage':
     case 'setSceneGrid':
-    case 'addToken':
     case 'updateToken':
     case 'removeToken':
     case 'paintFog':
     case 'setFogEnabled':
       return applyMapEvent(state, actor, event);
 
+    case 'addToken': {
+      const scene = state.map.scenes.find((s) => s.id === event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+
+      if (actor.role !== 'gm') {
+        // The other map mutation a player may make: placing their own claimed
+        // character's token, owned by themself, on the scene the table is
+        // actually looking at — and only once.
+        const isOwnCharacterToken =
+          event.token.kind === 'pc' &&
+          event.token.refId === actor.id &&
+          event.token.ownerId === actor.id;
+        if (!isOwnCharacterToken) return fail('notGameMaster', 'only the GM can change the map');
+        if (state.map.activeSceneId !== scene.id) {
+          return fail('unknownScene', 'that scene is not active');
+        }
+        if (scene.tokens.some((t) => t.kind === 'pc' && t.refId === actor.id)) {
+          return fail('tokenExists', 'you already have a token on this scene');
+        }
+      }
+
+      return ok(withScene(state, scene.id, { ...scene, tokens: [...scene.tokens, event.token] }));
+    }
+
     case 'moveToken': {
-      // The one map mutation a player may make, and only for their own token.
+      // The other player-permitted mutation: moving a token, only their own.
       const scene = state.map.scenes.find((s) => s.id === event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
       const token = scene.tokens.find((t) => t.id === event.tokenId);
@@ -550,13 +574,13 @@ function withScene(state: RoomState, sceneId: string, scene: Scene): RoomState {
 }
 
 /**
- * Every map mutation except `moveToken` is GM-only. `moveToken` is handled in the
- * main reducer because a player may send it for a token they own.
+ * Every map mutation except `addToken` and `moveToken` is GM-only. Those two are
+ * handled in the main reducer because a player may send them for their own token.
  */
 function applyMapEvent(
   state: RoomState,
   actor: Actor,
-  event: Exclude<MapRoomEvent, { type: 'moveToken' }>,
+  event: Exclude<MapRoomEvent, { type: 'moveToken' | 'addToken' }>,
 ): RoomResult {
   if (actor.role !== 'gm') return fail('notGameMaster', 'only the GM can change the map');
 
@@ -618,12 +642,6 @@ function applyMapEvent(
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
       return ok(withScene(state, scene.id, { ...scene, grid: event.grid }));
-    }
-
-    case 'addToken': {
-      const scene = findScene(event.sceneId);
-      if (scene === undefined) return fail('unknownScene', 'no such scene');
-      return ok(withScene(state, scene.id, { ...scene, tokens: [...scene.tokens, event.token] }));
     }
 
     case 'updateToken': {

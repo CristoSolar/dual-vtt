@@ -75,4 +75,3 @@ export function tokenColorAt(index: number): string {
 }
 
 export const adversaryTokenColor = (): string => token('--c-crimson');
-export const markerTokenColor = (): string => token('--c-text-muted');

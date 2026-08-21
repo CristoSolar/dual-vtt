@@ -14,11 +14,7 @@ import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
-import {
-  adversaryTokenColor,
-  markerTokenColor,
-  tokenColorAt,
-} from '../styles/canvasTokens.js';
+import { adversaryTokenColor, tokenColorAt } from '../styles/canvasTokens.js';
 
 interface MapRouteProps {
   room: RoomState;
@@ -124,6 +120,39 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     send({ type: 'updateToken', sceneId: scene.id, token: { ...selected, ...patch } });
   };
 
+  const deployAdversary = (adversaryId: string, name: string): string => {
+    const instanceId = nextId('adv');
+    send({ type: 'addAdversary', instanceId, adversaryId, name });
+    return instanceId;
+  };
+
+  const hasOwnToken =
+    viewerId !== null && scene !== null && scene.tokens.some((t) => t.kind === 'pc' && t.refId === viewerId);
+
+  const placeMyToken = () => {
+    if (scene === null || viewerId === null || mySheet === null) return;
+    send({
+      type: 'addToken',
+      sceneId: scene.id,
+      token: {
+        id: nextId('tok'),
+        kind: 'pc',
+        refId: viewerId,
+        name: mySheet.character.name ?? 'PJ',
+        x: 200,
+        y: 200,
+        width: 50,
+        height: 50,
+        rotation: 0,
+        ownerId: viewerId,
+        hidden: false,
+        showRings: false,
+        color: tokenColorAt(0),
+        image: null,
+      },
+    });
+  };
+
   const onUpload = async (file: File) => {
     if (scene === null) return;
     setUploadError(null);
@@ -166,6 +195,11 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             onClick={() => send({ type: 'addScene', id: nextId('scene'), name: 'Nueva escena' })}
           >
             Nueva escena
+          </button>
+        ) : null}
+        {!isGameMaster && !hasOwnToken && mySheet !== null && scene !== null ? (
+          <button type="button" onClick={placeMyToken}>
+            Colocar mi ficha
           </button>
         ) : null}
       </div>
@@ -317,6 +351,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             sceneId={scene.id}
             selected={selected}
             onAdd={(token) => send({ type: 'addToken', sceneId: scene.id, token })}
+            onDeploy={deployAdversary}
             onUpdate={updateSelected}
             onRemove={() => {
               if (selected === null) return;
@@ -472,12 +507,24 @@ interface TokenToolsProps {
   sceneId: string;
   selected: Token | null;
   onAdd: (token: Token) => void;
+  /** Deploys a bestiary adversary into `room.adversaryInstances` and returns its
+   * new instance id, so the caller can place a token for it in the same click. */
+  onDeploy: (adversaryId: string, name: string) => string;
   onUpdate: (patch: Partial<Token>) => void;
   onRemove: () => void;
 }
 
-function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsProps) {
+function TokenTools({ room, selected, onAdd, onDeploy, onUpdate, onRemove }: TokenToolsProps) {
   const characters = Object.entries(room.characters);
+  const [query, setQuery] = useState('');
+
+  const matches = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (needle === '') return [];
+    return adversaries
+      .filter((a) => a.name.toLowerCase().includes(needle) || a.type.toLowerCase().includes(needle))
+      .slice(0, 8);
+  }, [query]);
 
   const base = (name: string, color: string): Omit<Token, 'kind' | 'refId' | 'ownerId'> => ({
     id: nextId('tok'),
@@ -560,13 +607,29 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
         ))}
       </div>
 
-      <button
-        type="button"
-        className="mt-3"
-        onClick={() => onAdd({ ...base('Marcador', markerTokenColor()), kind: 'marker', refId: null, ownerId: null })}
-      >
-        Agregar marcador
-      </button>
+      <h3 className="mt-4">Agregar desde el bestiario</h3>
+      <label htmlFor="token-adversary-search">Buscar</label>
+      <input
+        id="token-adversary-search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="limo, matón, dragón…"
+      />
+      <div className="row">
+        {matches.map((adversary) => (
+          <button
+            key={adversary.id}
+            type="button"
+            onClick={() => {
+              const instanceId = onDeploy(adversary.id, adversary.name);
+              onAdd({ ...base(adversary.name, adversaryTokenColor()), kind: 'adversary', refId: instanceId, ownerId: null });
+              setQuery('');
+            }}
+          >
+            {adversary.name}
+          </button>
+        ))}
+      </div>
 
       {selected === null ? (
         <p className="muted mt-4">

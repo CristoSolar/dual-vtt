@@ -271,6 +271,56 @@ describe('map sync', () => {
     player.client.close();
   });
 
+  it('lets a player place their own character token, once', async () => {
+    const { player, campaignId, playerId } = await tableWithScene(server, 'j');
+
+    const added = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
+    );
+    player.client.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'self-tok', refId: playerId, ownerId: playerId }),
+    });
+    await added;
+
+    expect(server.campaigns.get(campaignId)?.state.map.scenes[0]?.tokens).toHaveLength(1);
+
+    // A second token for the same character is rejected — one per player.
+    const rejected = player.client.next<{ error: string }>(CHANNEL.rejected);
+    player.client.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'self-tok-2', refId: playerId, ownerId: playerId }),
+    });
+    expect((await rejected).error).toBe('tokenExists');
+
+    player.client.close();
+  });
+
+  it('rejects a player placing a token for someone else, or unowned by themself', async () => {
+    const { player, playerId } = await tableWithScene(server, 'k');
+
+    const otherRefId = player.client.next<{ error: string }>(CHANNEL.rejected);
+    player.client.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'x1', refId: 'someone-else', ownerId: playerId }),
+    });
+    expect((await otherRefId).error).toBe('notGameMaster');
+
+    const unowned = player.client.next<{ error: string }>(CHANNEL.rejected);
+    player.client.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'x2', refId: playerId, ownerId: null }),
+    });
+    expect((await unowned).error).toBe('notGameMaster');
+
+    player.client.close();
+  });
+
   it('includes the map in the full state a reconnecting client receives', async () => {
     const { gm, gmClient, player, campaignId } = await tableWithScene(server, 'i');
     gmClient.emit(CHANNEL.intent, { type: 'addToken', sceneId: 'scene-1', token: token() });
