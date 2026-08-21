@@ -79,9 +79,9 @@ export const GridSchema = z.object({
   /** Feet represented by one inch of map (SRD p.40 assumes 5). */
   feetPerInch: z.number().min(1).max(100),
   /** Line color, as a CSS color string (e.g. "#f2ece1"). */
-  color: z.string().min(1).max(24),
+  color: z.string().min(1).max(24).default('#5c5470'),
   /** Line thickness in pixels. */
-  lineWidth: z.number().min(1).max(10),
+  lineWidth: z.number().min(1).max(10).default(1),
 });
 export type Grid = z.infer<typeof GridSchema>;
 

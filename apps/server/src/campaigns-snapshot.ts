@@ -17,9 +17,9 @@ const SerializedCampaignSchema = z.object({
   updatedAt: z.number(),
 });
 
-const SnapshotSchema = z.object({
+const SnapshotEnvelopeSchema = z.object({
   version: z.literal(1),
-  campaigns: z.array(SerializedCampaignSchema),
+  campaigns: z.array(z.unknown()),
 });
 
 export const CAMPAIGNS_SNAPSHOT_VERSION = 1;
@@ -36,7 +36,12 @@ export async function writeCampaignsSnapshot(
   await rename(temporary, path);
 }
 
-/** Anything unreadable or from another version is discarded rather than crashing on boot. */
+/**
+ * Anything unreadable or from another version is discarded rather than crashing
+ * on boot. Each campaign is parsed on its own, so one bad record (e.g. saved
+ * before a field the schema now requires was added) never drops every other
+ * campaign in the file — it did once, and cost a real campaign's data.
+ */
 export async function readCampaignsSnapshot(path: string): Promise<SerializedCampaign[]> {
   let raw: string;
   try {
@@ -46,9 +51,20 @@ export async function readCampaignsSnapshot(path: string): Promise<SerializedCam
   }
 
   try {
-    const parsed = SnapshotSchema.safeParse(JSON.parse(raw) as unknown);
-    if (!parsed.success) return [];
-    return parsed.data.campaigns;
+    const envelope = SnapshotEnvelopeSchema.safeParse(JSON.parse(raw) as unknown);
+    if (!envelope.success) return [];
+
+    const campaigns: SerializedCampaign[] = [];
+    for (const candidate of envelope.data.campaigns) {
+      const parsed = SerializedCampaignSchema.safeParse(candidate);
+      if (parsed.success) {
+        campaigns.push(parsed.data);
+      } else {
+        const id = typeof candidate === 'object' && candidate !== null && 'id' in candidate ? candidate.id : '?';
+        console.error(`campaign snapshot: dropping unreadable campaign ${JSON.stringify(id)}: ${parsed.error.message}`);
+      }
+    }
+    return campaigns;
   } catch {
     return [];
   }
