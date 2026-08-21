@@ -7,6 +7,9 @@ interface CampaignsRouteProps {
   onCreate: (name: string) => void;
   onJoin: (campaignId: string) => void;
   onAddPlayer: (campaignId: string, username: string) => void;
+  /** True while creating a campaign or adding a player — disables the relevant
+   * form so a double-click can't fire the request twice. */
+  pending: boolean;
   /** The tunnel is one per server, not per campaign — the same URL (or none yet)
    * shows on every card the account owns. */
   tunnelUrl: string | null;
@@ -25,6 +28,7 @@ export function CampaignsRoute({
   onCreate,
   onJoin,
   onAddPlayer,
+  pending,
   tunnelUrl,
   tunnelLoading,
   onGenerateTunnel,
@@ -53,13 +57,13 @@ export function CampaignsRoute({
         <div className="mt-3">
           <button
             type="button"
-            disabled={name.trim() === ''}
+            disabled={pending || name.trim() === ''}
             onClick={() => {
               onCreate(name.trim());
               setName('');
             }}
           >
-            Crear campaña
+            {pending ? 'Creando…' : 'Crear campaña'}
           </button>
         </div>
       </div>
@@ -103,14 +107,14 @@ export function CampaignsRoute({
                   />
                   <button
                     type="button"
-                    disabled={username.trim() === ''}
+                    disabled={pending || username.trim() === ''}
                     onClick={() => {
                       onAddPlayer(campaign.id, username.trim());
                       setUsername('');
                       setAddingTo(null);
                     }}
                   >
-                    Agregar
+                    {pending ? 'Agregando…' : 'Agregar'}
                   </button>
                 </div>
               ) : null}

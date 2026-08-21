@@ -74,6 +74,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
   const [measuring, setMeasuring] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const { ref: stageWrapRef, size: stageSize } = useElementSize<HTMLDivElement>();
 
@@ -126,11 +127,14 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const onUpload = async (file: File) => {
     if (scene === null) return;
     setUploadError(null);
+    setUploading(true);
     try {
       const image = await uploadImage(file);
       send({ type: 'setSceneImage', sceneId: scene.id, image });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : 'Falló la subida');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -266,12 +270,14 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           <input
             ref={fileInput}
             type="file"
+            disabled={uploading}
             accept="image/png,image/jpeg,image/gif,image/webp"
             onChange={(event) => {
               const file = event.target.files?.[0];
               if (file !== undefined) void onUpload(file);
             }}
           />
+          {uploading ? <p className="muted">Subiendo…</p> : null}
           {uploadError !== null ? <p className="field-error">{uploadError}</p> : null}
           {scene.image === null ? (
             <p className="muted">Todavía no hay imagen.</p>
@@ -488,13 +494,17 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
   });
 
   const [imageError, setImageError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const onUploadTokenImage = async (file: File) => {
     setImageError(null);
+    setUploadingImage(true);
     try {
       const image = await uploadImage(file);
       onUpdate({ image });
     } catch (error) {
       setImageError(error instanceof Error ? error.message : 'Falló la subida');
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -609,12 +619,14 @@ function TokenTools({ room, selected, onAdd, onUpdate, onRemove }: TokenToolsPro
             <input
               id="token-image"
               type="file"
+              disabled={uploadingImage}
               accept="image/png,image/jpeg,image/gif,image/webp"
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (file !== undefined) void onUploadTokenImage(file);
               }}
             />
+            {uploadingImage ? <p className="muted">Subiendo…</p> : null}
             {imageError !== null ? <p className="field-error">{imageError}</p> : null}
             {selected.image !== null ? (
               <button type="button" onClick={() => onUpdate({ image: null })}>

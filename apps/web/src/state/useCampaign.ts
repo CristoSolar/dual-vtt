@@ -43,6 +43,9 @@ export interface CampaignConnection {
   /** The most recent roll broadcast to the room, for a live "so-and-so rolled" toast. */
   lastRoll: { id: string; message: string } | null;
   dismissLastRoll: () => void;
+  /** True while `createCampaign`/`addPlayer` is in flight — disable the form on
+   * this, not just field validation, or a double-click fires the request twice. */
+  pending: boolean;
   refreshCampaigns: () => Promise<void>;
   createCampaign: (name: string) => Promise<CampaignSummary | null>;
   addPlayer: (campaignId: string, username: string) => Promise<boolean>;
@@ -73,6 +76,7 @@ export function useCampaign(
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
   const [lastRoll, setLastRoll] = useState<{ id: string; message: string } | null>(null);
+  const [pending, setPending] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
   const refreshCampaigns = useCallback(async () => {
@@ -159,16 +163,21 @@ export function useCampaign(
   const createCampaign = useCallback(
     async (name: string): Promise<CampaignSummary | null> => {
       if (token === null) return null;
-      const response = await fetch(`${SERVER_URL}/campaigns`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
-        body: JSON.stringify({ name }),
-      });
-      if (!response.ok) return null;
-      const parsed = CampaignSummarySchema.safeParse(await response.json());
-      if (!parsed.success) return null;
-      await refreshCampaigns();
-      return parsed.data;
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/campaigns`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+          body: JSON.stringify({ name }),
+        });
+        if (!response.ok) return null;
+        const parsed = CampaignSummarySchema.safeParse(await response.json());
+        if (!parsed.success) return null;
+        await refreshCampaigns();
+        return parsed.data;
+      } finally {
+        setPending(false);
+      }
     },
     [token, refreshCampaigns],
   );
@@ -176,13 +185,18 @@ export function useCampaign(
   const addPlayer = useCallback(
     async (campaignId: string, username: string): Promise<boolean> => {
       if (token === null) return false;
-      const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/players`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
-        body: JSON.stringify({ username }),
-      });
-      if (response.ok) await refreshCampaigns();
-      return response.ok;
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/players`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+          body: JSON.stringify({ username }),
+        });
+        if (response.ok) await refreshCampaigns();
+        return response.ok;
+      } finally {
+        setPending(false);
+      }
     },
     [token, refreshCampaigns],
   );
@@ -246,6 +260,7 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      pending,
       refreshCampaigns,
       createCampaign,
       addPlayer,
@@ -265,6 +280,7 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      pending,
       refreshCampaigns,
       createCampaign,
       addPlayer,

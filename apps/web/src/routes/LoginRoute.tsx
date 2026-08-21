@@ -2,16 +2,17 @@ import { useState } from 'react';
 
 interface LoginRouteProps {
   error: string | null;
+  pending: boolean;
   onLogin: (username: string, password: string) => void;
 }
 
 /** The front door when nobody is logged in yet. Nothing past this point is reachable. */
-export function LoginRoute({ error, onLogin }: LoginRouteProps) {
+export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const submit = () => {
-    if (username.trim() === '' || password === '') return;
+    if (pending || username.trim() === '' || password === '') return;
     onLogin(username.trim(), password);
   };
 
@@ -44,8 +45,8 @@ export function LoginRoute({ error, onLogin }: LoginRouteProps) {
             }}
           />
           <div className="mt-4">
-            <button type="button" disabled={username.trim() === '' || password === ''} onClick={submit}>
-              Entrar
+            <button type="button" disabled={pending || username.trim() === '' || password === ''} onClick={submit}>
+              {pending ? 'Entrando…' : 'Entrar'}
             </button>
           </div>
           {error !== null ? <div className="errors">{error}</div> : null}

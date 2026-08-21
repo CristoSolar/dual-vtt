@@ -55,6 +55,10 @@ export interface AuthConnection {
   user: User | null;
   token: string | null;
   error: string | null;
+  /** True while a `login`/`changePassword` request is in flight — disable the
+   * submit button on this, not just field validation, or a double-click/double-
+   * Enter fires the request twice. */
+  pending: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
@@ -68,6 +72,7 @@ export function useAuth(storage: StorageLike): AuthConnection {
   const [status, setStatus] = useState<AuthStatus>('loading');
   const [auth, setAuth] = useState<StoredAuth | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     const saved = loadAuth(storage);
@@ -95,25 +100,30 @@ export function useAuth(storage: StorageLike): AuthConnection {
   const login = useCallback(
     async (username: string, password: string) => {
       setError(null);
-      const response = await fetch(`${SERVER_URL}/login`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!response.ok) {
-        setError('Usuario o contraseña incorrectos.');
-        return;
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/login`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        if (!response.ok) {
+          setError('Usuario o contraseña incorrectos.');
+          return;
+        }
+        const body = (await response.json()) as { token: string; user: unknown };
+        const parsedUser = UserSchema.safeParse(body.user);
+        if (!parsedUser.success) {
+          setError('El servidor respondió algo inesperado.');
+          return;
+        }
+        const next: StoredAuth = { token: body.token, user: parsedUser.data };
+        saveAuth(storage, next);
+        setAuth(next);
+        setStatus('signedIn');
+      } finally {
+        setPending(false);
       }
-      const body = (await response.json()) as { token: string; user: unknown };
-      const parsedUser = UserSchema.safeParse(body.user);
-      if (!parsedUser.success) {
-        setError('El servidor respondió algo inesperado.');
-        return;
-      }
-      const next: StoredAuth = { token: body.token, user: parsedUser.data };
-      saveAuth(storage, next);
-      setAuth(next);
-      setStatus('signedIn');
     },
     [storage],
   );
@@ -135,18 +145,23 @@ export function useAuth(storage: StorageLike): AuthConnection {
     async (currentPassword: string, newPassword: string) => {
       setError(null);
       if (auth === null) return;
-      const response = await fetch(`${SERVER_URL}/change-password`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${auth.token}` },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      if (!response.ok) {
-        setError('La contraseña actual no es correcta.');
-        return;
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/change-password`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', authorization: `Bearer ${auth.token}` },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        if (!response.ok) {
+          setError('La contraseña actual no es correcta.');
+          return;
+        }
+        const next: StoredAuth = { token: auth.token, user: { ...auth.user, mustChangePassword: false } };
+        saveAuth(storage, next);
+        setAuth(next);
+      } finally {
+        setPending(false);
       }
-      const next: StoredAuth = { token: auth.token, user: { ...auth.user, mustChangePassword: false } };
-      saveAuth(storage, next);
-      setAuth(next);
     },
     [auth, storage],
   );
@@ -156,6 +171,7 @@ export function useAuth(storage: StorageLike): AuthConnection {
     user: auth?.user ?? null,
     token: auth?.token ?? null,
     error,
+    pending,
     login,
     logout,
     changePassword,

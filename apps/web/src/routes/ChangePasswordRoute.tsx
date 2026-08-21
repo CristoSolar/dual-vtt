@@ -2,11 +2,12 @@ import { useState } from 'react';
 
 interface ChangePasswordRouteProps {
   error: string | null;
+  pending: boolean;
   onChange: (currentPassword: string, newPassword: string) => void;
 }
 
 /** Forced screen right after login when the account's password is still the GM-set one. */
-export function ChangePasswordRoute({ error, onChange }: ChangePasswordRouteProps) {
+export function ChangePasswordRoute({ error, pending, onChange }: ChangePasswordRouteProps) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
@@ -40,10 +41,10 @@ export function ChangePasswordRoute({ error, onChange }: ChangePasswordRouteProp
           <div className="mt-4">
             <button
               type="button"
-              disabled={currentPassword === '' || newPassword === ''}
+              disabled={pending || currentPassword === '' || newPassword === ''}
               onClick={() => onChange(currentPassword, newPassword)}
             >
-              Guardar contraseña
+              {pending ? 'Guardando…' : 'Guardar contraseña'}
             </button>
           </div>
           {error !== null ? <div className="errors">{error}</div> : null}

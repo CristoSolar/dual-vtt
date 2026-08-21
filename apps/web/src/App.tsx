@@ -75,7 +75,7 @@ function Shell() {
   }
 
   if (auth.status === 'signedOut') {
-    return <LoginRoute error={auth.error} onLogin={auth.login} />;
+    return <LoginRoute error={auth.error} pending={auth.pending} onLogin={auth.login} />;
   }
 
   const account = auth.user;
@@ -88,7 +88,7 @@ function Shell() {
   }
 
   if (account.mustChangePassword === true) {
-    return <ChangePasswordRoute error={auth.error} onChange={auth.changePassword} />;
+    return <ChangePasswordRoute error={auth.error} pending={auth.pending} onChange={auth.changePassword} />;
   }
 
   return (
@@ -198,6 +198,7 @@ function Shell() {
                   navigate('/');
                 }}
                 onAddPlayer={(campaignId, username) => void campaign.addPlayer(campaignId, username)}
+                pending={campaign.pending}
                 tunnelUrl={tunnelUrl}
                 tunnelLoading={tunnelLoading}
                 onGenerateTunnel={generateTunnel}
