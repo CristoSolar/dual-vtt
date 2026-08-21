@@ -78,6 +78,10 @@ export const GridSchema = z.object({
   offsetY: z.number().min(-500).max(500),
   /** Feet represented by one inch of map (SRD p.40 assumes 5). */
   feetPerInch: z.number().min(1).max(100),
+  /** Line color, as a CSS color string (e.g. "#f2ece1"). */
+  color: z.string().min(1).max(24),
+  /** Line thickness in pixels. */
+  lineWidth: z.number().min(1).max(10),
 });
 export type Grid = z.infer<typeof GridSchema>;
 
@@ -98,7 +102,15 @@ export const MapStateSchema = z.object({
 });
 export type MapState = z.infer<typeof MapStateSchema>;
 
-export const DEFAULT_GRID: Grid = { mode: 'none', size: 50, offsetX: 0, offsetY: 0, feetPerInch: 5 };
+export const DEFAULT_GRID: Grid = {
+  mode: 'none',
+  size: 50,
+  offsetX: 0,
+  offsetY: 0,
+  feetPerInch: 5,
+  color: '#5c5470',
+  lineWidth: 1,
+};
 export const DEFAULT_FOG: Fog = { enabled: false, cellSize: 50, cols: 0, rows: 0, revealed: [] };
 
 export function createMapState(): MapState {

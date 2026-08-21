@@ -35,7 +35,6 @@ export function tokenAlpha(name: string, alpha: number): string {
 export const canvasPalette = {
   stage: () => token('--c-bg'),
   fog: () => token('--c-bg'),
-  gridLine: () => tokenAlpha('--c-text', 0.13),
   measureLine: () => token('--c-brass'),
   measureText: () => token('--c-brass'),
   tokenLabel: () => token('--c-text'),

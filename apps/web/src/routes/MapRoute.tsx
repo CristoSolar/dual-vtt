@@ -494,6 +494,28 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
             onChange={(event) => onChange({ ...grid, offsetY: Number(event.target.value) })}
           />
         </div>
+        <div>
+          <label htmlFor="grid-color">Color</label>
+          <input
+            id="grid-color"
+            type="color"
+            value={grid.color}
+            onChange={(event) => onChange({ ...grid, color: event.target.value })}
+          />
+        </div>
+        <div>
+          <label htmlFor="grid-line-width">Grosor (px)</label>
+          <input
+            id="grid-line-width"
+            type="number"
+            min={1}
+            max={10}
+            value={grid.lineWidth}
+            onChange={(event) =>
+              onChange({ ...grid, lineWidth: Math.max(1, Number(event.target.value)) })
+            }
+          />
+        </div>
       </div>
       <button type="button" onClick={() => onChange(DEFAULT_GRID)}>
         Restablecer cuadrícula

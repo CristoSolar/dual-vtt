@@ -257,22 +257,12 @@ function GridLines({ grid, width, height }: { grid: Grid; width: number; height:
   const lines: JSX.Element[] = [];
   for (let x = grid.offsetX; x <= width; x += grid.size) {
     lines.push(
-      <Line
-        key={`v${x}`}
-        points={[x, 0, x, height]}
-        stroke={canvasPalette.gridLine()}
-        strokeWidth={1}
-      />,
+      <Line key={`v${x}`} points={[x, 0, x, height]} stroke={grid.color} strokeWidth={grid.lineWidth} />,
     );
   }
   for (let y = grid.offsetY; y <= height; y += grid.size) {
     lines.push(
-      <Line
-        key={`h${y}`}
-        points={[0, y, width, y]}
-        stroke={canvasPalette.gridLine()}
-        strokeWidth={1}
-      />,
+      <Line key={`h${y}`} points={[0, y, width, y]} stroke={grid.color} strokeWidth={grid.lineWidth} />,
     );
   }
   return <>{lines}</>;
