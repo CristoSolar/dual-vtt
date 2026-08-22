@@ -399,4 +399,65 @@ describe('map sync', () => {
     player.client.close();
     returning.client.close();
   });
+
+  it('auto-reveals fog around a player token when the scene is in auto vision mode', async () => {
+    const { gmClient, player, campaignId, playerId } = await tableWithScene(server, 'walls-b');
+
+    gmClient.emit(CHANNEL.intent, {
+      type: 'setSceneImage',
+      sceneId: 'scene-1',
+      image: { url: '/uploads/test.png', width: 1000, height: 1000 },
+    });
+    gmClient.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
+    gmClient.emit(CHANNEL.intent, { type: 'setSceneVisionMode', sceneId: 'scene-1', visionMode: 'auto' });
+
+    const revealed = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.fog.revealed.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'auto-1', kind: 'pc', refId: playerId, ownerId: playerId, x: 500, y: 500 }),
+    });
+
+    const patch = await revealed;
+    const playerFog = patch.map?.scenes[0]?.fog;
+    expect(playerFog).toBeDefined();
+    if (playerFog === undefined) return;
+    expect(playerFog.revealed.length).toBeGreaterThan(0);
+
+    const serverFog = server.campaigns.get(campaignId)?.state.map.scenes[0]?.fog;
+    expect(serverFog?.revealed).toEqual(playerFog.revealed);
+
+    gmClient.close();
+    player.client.close();
+  });
+
+  it('does not auto-reveal in manual mode', async () => {
+    const { gmClient, player, playerId } = await tableWithScene(server, 'walls-c');
+
+    gmClient.emit(CHANNEL.intent, {
+      type: 'setSceneImage',
+      sceneId: 'scene-1',
+      image: { url: '/uploads/test.png', width: 1000, height: 1000 },
+    });
+    gmClient.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
+    // visionMode left at its default: 'manual'.
+
+    const added = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'manual-1', kind: 'pc', refId: playerId, ownerId: playerId, x: 500, y: 500 }),
+    });
+    const patch = await added;
+    expect(patch.map?.scenes[0]?.fog.revealed ?? []).toEqual([]);
+
+    gmClient.close();
+    player.client.close();
+  });
 });

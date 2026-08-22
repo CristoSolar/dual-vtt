@@ -19,6 +19,7 @@ import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import {
   MapStateSchema,
   cellsInBrush,
+  cellsInPolygon,
   createMapState,
   createScene,
   fitFogToImage,
@@ -29,6 +30,7 @@ import {
   type Scene,
   type Token,
 } from './map.js';
+import { computeVisionPolygon } from './vision.js';
 import { RollEntrySchema, type RollEntry } from './rollLog.js';
 import {
   SheetStateSchema,
@@ -193,6 +195,15 @@ function appendEntries(state: RoomState, entries: readonly RollEntry[]): RoomSta
 
 export { advanceOnActionRoll, advanceOnRest };
 export type { Countdown, SheetEffect, SheetState };
+
+/** When a scene auto-computes vision, reveals the fog cells a `pc` token at
+ * (x, y) can see. A no-op in manual mode or for non-pc tokens. */
+function revealVisionFor(scene: Scene, token: Token, x: number, y: number): Scene {
+  if (scene.visionMode !== 'auto' || token.kind !== 'pc') return scene;
+  const bounds = scene.image ?? { width: 0, height: 0 };
+  const polygon = computeVisionPolygon({ x, y }, token.visionRadius, scene.walls, bounds);
+  return { ...scene, fog: reveal(scene.fog, cellsInPolygon(scene.fog, polygon)) };
+}
 
 /**
  * Applies one validated intent to the room, enforcing permissions.
@@ -366,7 +377,8 @@ export function applyRoomEvent(
         }
       }
 
-      return ok(withScene(state, scene.id, { ...scene, tokens: [...scene.tokens, event.token] }));
+      const withToken = { ...scene, tokens: [...scene.tokens, event.token] };
+      return ok(withScene(state, scene.id, revealVisionFor(withToken, event.token, event.token.x, event.token.y)));
     }
 
     case 'moveToken': {
@@ -384,14 +396,11 @@ export function applyRoomEvent(
         return fail('unknownScene', 'that scene is not active');
       }
 
-      return ok(
-        withScene(state, scene.id, {
-          ...scene,
-          tokens: scene.tokens.map((t) =>
-            t.id === token.id ? { ...t, x: event.x, y: event.y } : t,
-          ),
-        }),
-      );
+      const moved = {
+        ...scene,
+        tokens: scene.tokens.map((t) => (t.id === token.id ? { ...t, x: event.x, y: event.y } : t)),
+      };
+      return ok(withScene(state, scene.id, revealVisionFor(moved, token, event.x, event.y)));
     }
 
     case 'updateAdversary': {
