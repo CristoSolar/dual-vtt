@@ -339,6 +339,10 @@ export function applyRoomEvent(
     case 'removeToken':
     case 'paintFog':
     case 'setFogEnabled':
+    case 'addWall':
+    case 'removeWall':
+    case 'updateWall':
+    case 'setSceneVisionMode':
       return applyMapEvent(state, actor, event);
 
     case 'addToken': {
@@ -688,6 +692,40 @@ function applyMapEvent(
           fog: fitFogToImage({ ...scene.fog, enabled: event.enabled }, scene.image),
         }),
       );
+    }
+
+    case 'addWall': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(withScene(state, scene.id, { ...scene, walls: [...scene.walls, event.wall] }));
+    }
+
+    case 'removeWall': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(
+        withScene(state, scene.id, {
+          ...scene,
+          walls: scene.walls.filter((wall) => wall.id !== event.wallId),
+        }),
+      );
+    }
+
+    case 'updateWall': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(
+        withScene(state, scene.id, {
+          ...scene,
+          walls: scene.walls.map((wall) => (wall.id === event.wall.id ? event.wall : wall)),
+        }),
+      );
+    }
+
+    case 'setSceneVisionMode': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(withScene(state, scene.id, { ...scene, visionMode: event.visionMode }));
     }
   }
 }

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
-import { GridSchema, SceneImageSchema, TokenSchema } from './map.js';
+import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
 import { RollEntrySchema } from './rollLog.js';
 import { RoomStateSchema, type RoomState } from './room.js';
 import { SheetStateSchema } from './sheet.js';
@@ -201,6 +201,10 @@ export const MapRoomEventSchema = z.discriminatedUnion('type', [
     reveal: z.boolean(),
   }),
   z.object({ type: z.literal('setFogEnabled'), sceneId, enabled: z.boolean() }),
+  z.object({ type: z.literal('addWall'), sceneId, wall: WallSchema }),
+  z.object({ type: z.literal('removeWall'), sceneId, wallId: z.string().min(1).max(64) }),
+  z.object({ type: z.literal('updateWall'), sceneId, wall: WallSchema }),
+  z.object({ type: z.literal('setSceneVisionMode'), sceneId, visionMode: VisionModeSchema }),
 ]);
 export type MapRoomEvent = z.infer<typeof MapRoomEventSchema>;
 

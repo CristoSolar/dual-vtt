@@ -166,6 +166,62 @@ describe('map sync', () => {
     player.client.close();
   });
 
+  it('lets the GM manage walls and vision mode, but never a player', async () => {
+    const { gmClient, player, campaignId } = await tableWithScene(server, 'walls-a');
+
+    const added = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.walls?.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addWall',
+      sceneId: 'scene-1',
+      wall: { id: 'w1', x1: 0, y1: 0, x2: 100, y2: 0, kind: 'wall', open: false },
+    });
+    await added;
+    expect(server.campaigns.get(campaignId)?.state.map.scenes[0]?.walls).toHaveLength(1);
+
+    const doored = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.map?.scenes[0]?.walls?.[0]?.open === true,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'updateWall',
+      sceneId: 'scene-1',
+      wall: { id: 'w1', x1: 0, y1: 0, x2: 100, y2: 0, kind: 'door', open: true },
+    });
+    await doored;
+
+    const modeSet = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.map?.scenes[0]?.visionMode === 'auto',
+    );
+    gmClient.emit(CHANNEL.intent, { type: 'setSceneVisionMode', sceneId: 'scene-1', visionMode: 'auto' });
+    await modeSet;
+
+    const removed = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.walls?.length ?? 0) === 0,
+    );
+    gmClient.emit(CHANNEL.intent, { type: 'removeWall', sceneId: 'scene-1', wallId: 'w1' });
+    await removed;
+
+    const playerIntents: unknown[] = [
+      { type: 'addWall', sceneId: 'scene-1', wall: { id: 'sneaky', x1: 0, y1: 0, x2: 1, y2: 1, kind: 'wall', open: false } },
+      { type: 'removeWall', sceneId: 'scene-1', wallId: 'w1' },
+      { type: 'updateWall', sceneId: 'scene-1', wall: { id: 'w1', x1: 0, y1: 0, x2: 1, y2: 1, kind: 'wall', open: false } },
+      { type: 'setSceneVisionMode', sceneId: 'scene-1', visionMode: 'auto' },
+    ];
+    for (const intent of playerIntents) {
+      const rejected = player.client.next<{ error: string }>(CHANNEL.rejected);
+      player.client.emit(CHANNEL.intent, intent);
+      expect((await rejected).error, JSON.stringify(intent)).toBe('notGameMaster');
+    }
+
+    gmClient.close();
+    player.client.close();
+  });
+
   it('sends players revealed fog only, never the unrevealed regions', async () => {
     const { gmClient, player, campaignId } = await tableWithScene(server, 'e');
 
