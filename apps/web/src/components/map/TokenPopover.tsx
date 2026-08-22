@@ -211,6 +211,20 @@ export function TokenPopover({
               </div>
             </div>
 
+            {token.kind === 'pc' ? (
+              <div className="mt-3">
+                <label htmlFor="popover-token-vision-radius">Radio de visión (px)</label>
+                <input
+                  id="popover-token-vision-radius"
+                  type="number"
+                  min={0}
+                  max={4000}
+                  value={token.visionRadius}
+                  onChange={(event) => onUpdate({ visionRadius: Math.max(0, Number(event.target.value)) })}
+                />
+              </div>
+            ) : null}
+
             <div className="mt-3">
               <label htmlFor="popover-token-color">Color</label>
               <input

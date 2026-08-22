@@ -434,6 +434,144 @@ describe('map sync', () => {
     player.client.close();
   });
 
+  it('casts auto-reveal vision from the token centre, not its top-left corner', async () => {
+    const { gmClient, player, campaignId, playerId } = await tableWithScene(server, 'walls-centre');
+
+    gmClient.emit(CHANNEL.intent, {
+      type: 'setSceneImage',
+      sceneId: 'scene-1',
+      image: { url: '/uploads/test.png', width: 1000, height: 1000 },
+    });
+    gmClient.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
+    gmClient.emit(CHANNEL.intent, { type: 'setSceneVisionMode', sceneId: 'scene-1', visionMode: 'auto' });
+    // A tall wall at x=110 sits between the token's top-left corner (100,100)
+    // and its centre (125,125) for a 50x50 token: the corner is left of the
+    // wall, the centre is already on the right of it.
+    const walled = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.walls?.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addWall',
+      sceneId: 'scene-1',
+      wall: { id: 'centre-wall', x1: 110, y1: 0, x2: 110, y2: 1000, kind: 'wall', open: false },
+    });
+    await walled;
+
+    const revealed = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.fog.revealed.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'centre-tok', kind: 'pc', refId: playerId, ownerId: playerId, x: 100, y: 100 }),
+    });
+    await revealed;
+
+    const fog = server.campaigns.get(campaignId)?.state.map.scenes[0]?.fog;
+    expect(fog).toBeDefined();
+    if (fog === undefined) return;
+
+    // Right of the wall (x > 110): reachable from the centre (125,125).
+    const rightCol = Math.floor(300 / fog.cellSize);
+    const rightRow = Math.floor(125 / fog.cellSize);
+    expect(fog.revealed).toContain(rightRow * fog.cols + rightCol);
+
+    // Left of the wall (x < 110): would only be reachable if vision were
+    // (wrongly) cast from the corner at (100,100), which sits left of the
+    // wall itself.
+    const leftCol = Math.floor(50 / fog.cellSize);
+    const leftRow = Math.floor(125 / fog.cellSize);
+    expect(fog.revealed).not.toContain(leftRow * fog.cols + leftCol);
+
+    gmClient.close();
+    player.client.close();
+  });
+
+  it('rejects adding a wall past the 500-wall cap on a scene', async () => {
+    const { gmClient, campaignId } = await tableWithScene(server, 'walls-cap');
+
+    const record = server.campaigns.get(campaignId);
+    expect(record).not.toBeNull();
+    if (record === null || record === undefined) return;
+    const scene = record.state.map.scenes[0];
+    expect(scene).toBeDefined();
+    if (scene === undefined) return;
+
+    const walls = Array.from({ length: 500 }, (_, i) => ({
+      id: `cap-wall-${i}`,
+      x1: 0,
+      y1: i,
+      x2: 10,
+      y2: i,
+      kind: 'wall' as const,
+      open: false,
+    }));
+    record.state = {
+      ...record.state,
+      map: {
+        ...record.state.map,
+        scenes: record.state.map.scenes.map((s) => (s.id === scene.id ? { ...s, walls } : s)),
+      },
+    };
+
+    const rejected = gmClient.next<{ error: string }>(CHANNEL.rejected);
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addWall',
+      sceneId: 'scene-1',
+      wall: { id: 'one-too-many', x1: 0, y1: 0, x2: 1, y2: 1, kind: 'wall', open: false },
+    });
+    expect((await rejected).error).toBe('tooManyWalls');
+    expect(server.campaigns.get(campaignId)?.state.map.scenes[0]?.walls).toHaveLength(500);
+
+    gmClient.close();
+  });
+
+  it('auto-reveals fog around existing tokens immediately when vision mode switches to auto', async () => {
+    const { gmClient, player, campaignId, playerId } = await tableWithScene(server, 'walls-switch');
+
+    gmClient.emit(CHANNEL.intent, {
+      type: 'setSceneImage',
+      sceneId: 'scene-1',
+      image: { url: '/uploads/test.png', width: 1000, height: 1000 },
+    });
+    const fogReady = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.fog.cols ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, { type: 'setFogEnabled', sceneId: 'scene-1', enabled: true });
+    await fogReady;
+
+    const added = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.tokens.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, {
+      type: 'addToken',
+      sceneId: 'scene-1',
+      token: token({ id: 'presw-1', kind: 'pc', refId: playerId, ownerId: playerId, x: 500, y: 500 }),
+    });
+    await added;
+
+    // No moveToken/addToken happens after this: fog must reveal purely from
+    // the mode switch itself.
+    const revealed = player.client.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => (p.map?.scenes[0]?.fog.revealed.length ?? 0) > 0,
+    );
+    gmClient.emit(CHANNEL.intent, { type: 'setSceneVisionMode', sceneId: 'scene-1', visionMode: 'auto' });
+
+    const patch = await revealed;
+    expect(patch.map?.scenes[0]?.fog.revealed.length ?? 0).toBeGreaterThan(0);
+
+    const serverFog = server.campaigns.get(campaignId)?.state.map.scenes[0]?.fog;
+    expect(serverFog?.revealed).toEqual(patch.map?.scenes[0]?.fog.revealed);
+
+    gmClient.close();
+    player.client.close();
+  });
+
   it('does not auto-reveal in manual mode', async () => {
     const { gmClient, player, playerId } = await tableWithScene(server, 'walls-c');
 

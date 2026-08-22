@@ -158,6 +158,7 @@ export type RoomError =
   | 'unknownToken'
   | 'notYourToken'
   | 'tokenExists'
+  | 'tooManyWalls'
   | 'rejected';
 
 export type RoomResult =
@@ -196,12 +197,15 @@ function appendEntries(state: RoomState, entries: readonly RollEntry[]): RoomSta
 export { advanceOnActionRoll, advanceOnRest };
 export type { Countdown, SheetEffect, SheetState };
 
-/** When a scene auto-computes vision, reveals the fog cells a `pc` token at
- * (x, y) can see. A no-op in manual mode or for non-pc tokens. */
+/** When a scene auto-computes vision, reveals the fog cells a `pc` token whose
+ * top-left corner is at (x, y) can see, casting vision from the token's centre
+ * (matching how it's actually drawn and where its range rings are anchored). A
+ * no-op in manual mode, for non-pc tokens, or when fog is disabled entirely. */
 function revealVisionFor(scene: Scene, token: Token, x: number, y: number): Scene {
-  if (scene.visionMode !== 'auto' || token.kind !== 'pc') return scene;
+  if (scene.visionMode !== 'auto' || token.kind !== 'pc' || !scene.fog.enabled) return scene;
+  const centre = { x: x + token.width / 2, y: y + token.height / 2 };
   const bounds = scene.image ?? { width: 0, height: 0 };
-  const polygon = computeVisionPolygon({ x, y }, token.visionRadius, scene.walls, bounds);
+  const polygon = computeVisionPolygon(centre, token.visionRadius, scene.walls, bounds);
   return { ...scene, fog: reveal(scene.fog, cellsInPolygon(scene.fog, polygon)) };
 }
 
@@ -706,6 +710,7 @@ function applyMapEvent(
     case 'addWall': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
+      if (scene.walls.length >= 500) return fail('tooManyWalls', 'wall limit reached');
       return ok(withScene(state, scene.id, { ...scene, walls: [...scene.walls, event.wall] }));
     }
 
@@ -734,7 +739,13 @@ function applyMapEvent(
     case 'setSceneVisionMode': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
-      return ok(withScene(state, scene.id, { ...scene, visionMode: event.visionMode }));
+      let next: Scene = { ...scene, visionMode: event.visionMode };
+      if (event.visionMode === 'auto') {
+        for (const token of next.tokens) {
+          if (token.kind === 'pc') next = revealVisionFor(next, token, token.x, token.y);
+        }
+      }
+      return ok(withScene(state, scene.id, next));
     }
   }
 }

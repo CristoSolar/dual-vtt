@@ -179,7 +179,13 @@ export function MapCanvas({
       onPointerUp={() => {
         setMeasureLine(null);
         if (wallDraft !== null) {
-          onAddWall(wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y);
+          const dx = wallDraft.to.x - wallDraft.from.x;
+          const dy = wallDraft.to.y - wallDraft.from.y;
+          // A plain click without any drag would otherwise create an invisible
+          // zero-length wall that still occupies a slot in the scene.
+          if (Math.hypot(dx, dy) >= 4) {
+            onAddWall(wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y);
+          }
           setWallDraft(null);
         }
       }}

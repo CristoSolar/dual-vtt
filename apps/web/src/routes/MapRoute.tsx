@@ -456,7 +456,10 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           layout={panels.walls}
           onLayoutChange={(l) => movePanel('walls', l)}
           onFocus={() => focusPanel('walls')}
-          onClose={() => closePanel('walls')}
+          onClose={() => {
+            closePanel('walls');
+            setDrawingWall(false);
+          }}
         >
           <button type="button" aria-pressed={drawingWall} onClick={() => setDrawingWall((d) => !d)}>
             {drawingWall ? 'Dibujando muro…' : 'Dibujar muro'}
