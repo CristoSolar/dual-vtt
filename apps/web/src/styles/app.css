@@ -1116,6 +1116,20 @@ legend {
   padding: var(--sp-2) var(--sp-4);
 }
 
+/* A small editor anchored to a selected token on the map — tracks the canvas's
+   pan/zoom, so it stays glued to the token instead of drifting. */
+.token-popover {
+  position: absolute;
+  z-index: 40;
+  width: 16rem;
+  max-height: calc(100vh - var(--sp-6));
+  overflow-y: auto;
+  background: var(--c-surface-2);
+  border: var(--size-rule) solid var(--c-line);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3);
+}
+
 /* Floating windows — draggable by their header, stacked by z-index the
    caller assigns on focus. */
 .floating-panel {

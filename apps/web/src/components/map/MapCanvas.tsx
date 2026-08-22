@@ -31,6 +31,9 @@ export interface MapCanvasProps {
   fogBrush: { radius: number; reveal: boolean } | null;
   onPaintFog: (x: number, y: number) => void;
   measuring: boolean;
+  /** Reports the current pan/zoom, so the caller can anchor an HTML overlay
+   * (e.g. a token popover) to a scene-space point in screen coordinates. */
+  onViewChange?: (view: { x: number; y: number; scale: number }) => void;
 }
 
 /** Scene grid settings translated into the scale the range module expects. */
@@ -58,10 +61,12 @@ export function MapCanvas({
   fogBrush,
   onPaintFog,
   measuring,
+  onViewChange,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
+  useEffect(() => onViewChange?.(view), [view, onViewChange]);
   const [measureLine, setMeasureLine] = useState<{
     from: { x: number; y: number };
     to: { x: number; y: number };

@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
+import { TokenPopover } from '../components/map/TokenPopover.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
@@ -71,6 +72,9 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const [measuring, setMeasuring] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [tokenImageError, setTokenImageError] = useState<string | null>(null);
+  const [uploadingTokenImage, setUploadingTokenImage] = useState(false);
+  const [canvasView, setCanvasView] = useState({ x: 0, y: 0, scale: 1 });
   const fileInput = useRef<HTMLInputElement>(null);
   const { ref: stageWrapRef, size: stageSize } = useElementSize<HTMLDivElement>();
 
@@ -118,6 +122,19 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const updateSelected = (patch: Partial<Token>) => {
     if (scene === null || selected === null) return;
     send({ type: 'updateToken', sceneId: scene.id, token: { ...selected, ...patch } });
+  };
+
+  const onUploadTokenImage = async (file: File) => {
+    setTokenImageError(null);
+    setUploadingTokenImage(true);
+    try {
+      const image = await uploadImage(file);
+      updateSelected({ image });
+    } catch (error) {
+      setTokenImageError(error instanceof Error ? error.message : 'Falló la subida');
+    } finally {
+      setUploadingTokenImage(false);
+    }
   };
 
   const deployAdversary = (adversaryId: string, name: string): string => {
@@ -252,6 +269,26 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             fogBrush={fogBrush}
             onPaintFog={paintFog}
             measuring={measuring}
+            onViewChange={setCanvasView}
+          />
+        ) : null}
+        {isGameMaster && selected !== null ? (
+          <TokenPopover
+            token={selected}
+            room={room}
+            x={selected.x * canvasView.scale + canvasView.x}
+            y={(selected.y + selected.height) * canvasView.scale + canvasView.y}
+            onUpdate={updateSelected}
+            onRemove={() => {
+              if (scene === null) return;
+              send({ type: 'removeToken', sceneId: scene.id, tokenId: selected.id });
+              setSelectedTokenId(null);
+            }}
+            onClose={() => setSelectedTokenId(null)}
+            send={send}
+            onUploadImage={(file) => void onUploadTokenImage(file)}
+            uploadingImage={uploadingTokenImage}
+            imageError={tokenImageError}
           />
         ) : null}
       </div>
@@ -348,16 +385,8 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         >
           <TokenTools
             room={room}
-            sceneId={scene.id}
-            selected={selected}
             onAdd={(token) => send({ type: 'addToken', sceneId: scene.id, token })}
             onDeploy={deployAdversary}
-            onUpdate={updateSelected}
-            onRemove={() => {
-              if (selected === null) return;
-              send({ type: 'removeToken', sceneId: scene.id, tokenId: selected.id });
-              setSelectedTokenId(null);
-            }}
           />
         </FloatingPanel>
       ) : null}
@@ -526,17 +555,18 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
 
 interface TokenToolsProps {
   room: RoomState;
-  sceneId: string;
-  selected: Token | null;
   onAdd: (token: Token) => void;
   /** Deploys a bestiary adversary into `room.adversaryInstances` and returns its
    * new instance id, so the caller can place a token for it in the same click. */
   onDeploy: (adversaryId: string, name: string) => string;
-  onUpdate: (patch: Partial<Token>) => void;
-  onRemove: () => void;
 }
 
-function TokenTools({ room, selected, onAdd, onDeploy, onUpdate, onRemove }: TokenToolsProps) {
+/**
+ * Just the "add" tools — sizing, image, visibility, and adversary stats for the
+ * selected token live in the on-map `TokenPopover` instead, so this panel doesn't
+ * turn into a single crowded box.
+ */
+function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
   const characters = Object.entries(room.characters);
   const [query, setQuery] = useState('');
 
@@ -561,21 +591,6 @@ function TokenTools({ room, selected, onAdd, onDeploy, onUpdate, onRemove }: Tok
     color,
     image: null,
   });
-
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const onUploadTokenImage = async (file: File) => {
-    setImageError(null);
-    setUploadingImage(true);
-    try {
-      const image = await uploadImage(file);
-      onUpdate({ image });
-    } catch (error) {
-      setImageError(error instanceof Error ? error.message : 'Falló la subida');
-    } finally {
-      setUploadingImage(false);
-    }
-  };
 
   return (
     <div className="panel">
@@ -653,104 +668,7 @@ function TokenTools({ room, selected, onAdd, onDeploy, onUpdate, onRemove }: Tok
         ))}
       </div>
 
-      {selected === null ? (
-        <p className="muted mt-4">
-          Selecciona una ficha para editarla.
-        </p>
-      ) : (
-        <fieldset className="mt-4">
-          <legend>{selected.name}</legend>
-          <div className="grid cols-2">
-            <div>
-              <label htmlFor="token-size">Tamaño</label>
-              <input
-                id="token-size"
-                type="number"
-                min={10}
-                max={500}
-                value={selected.width}
-                onChange={(event) => {
-                  const size = Math.max(10, Number(event.target.value));
-                  onUpdate({ width: size, height: size });
-                }}
-              />
-            </div>
-            <div>
-              <label htmlFor="token-rotation">Rotación</label>
-              <input
-                id="token-rotation"
-                type="number"
-                min={-360}
-                max={360}
-                value={selected.rotation}
-                onChange={(event) => onUpdate({ rotation: Number(event.target.value) })}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <button
-              type="button"
-              aria-pressed={selected.hidden}
-              onClick={() => onUpdate({ hidden: !selected.hidden })}
-            >
-              {selected.hidden ? 'Solo DJ' : 'Visible para jugadores'}
-            </button>
-            <button type="button" onClick={onRemove}>
-              Eliminar ficha
-            </button>
-          </div>
-          <div className="mt-3">
-            <label htmlFor="token-image">Imagen</label>
-            <input
-              id="token-image"
-              type="file"
-              disabled={uploadingImage}
-              accept="image/png,image/jpeg,image/gif,image/webp"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file !== undefined) void onUploadTokenImage(file);
-              }}
-            />
-            {uploadingImage ? <p className="muted">Subiendo…</p> : null}
-            {imageError !== null ? <p className="field-error">{imageError}</p> : null}
-            {selected.image !== null ? (
-              <button type="button" onClick={() => onUpdate({ image: null })}>
-                Quitar imagen
-              </button>
-            ) : null}
-          </div>
-        </fieldset>
-      )}
-
-      {selected !== null ? <TokenStatus room={room} token={selected} /> : null}
+      <p className="muted mt-4">Selecciona una ficha en el mapa para editarla ahí mismo.</p>
     </div>
   );
-}
-
-/** The live numbers behind a token, read from the room rather than duplicated. */
-function TokenStatus({ room, token }: { room: RoomState; token: Token }) {
-  if (token.kind === 'pc' && token.refId !== null) {
-    const sheet = room.characters[token.refId];
-    if (sheet === undefined) return null;
-    return (
-      <p className="muted">
-        PV {sheet.hpMarked}/{sheet.character.hpSlots} · Estrés {sheet.stressMarked}/
-        {sheet.character.stressSlots} · Evasión {sheet.character.evasion}
-      </p>
-    );
-  }
-
-  if (token.kind === 'adversary' && token.refId !== null) {
-    const instance = room.adversaryInstances.find((a) => a.instanceId === token.refId);
-    if (instance === undefined) return null;
-    const stat = adversaries.find((a) => a.id === instance.adversaryId);
-    return (
-      <p className="muted">
-        PV {instance.hpMarked}/{stat?.hp ?? '?'} · Estrés {instance.stressMarked}/
-        {stat?.stress ?? '?'} · Dificultad {stat?.difficulty ?? '?'}
-      </p>
-    );
-  }
-
-  return null;
 }
