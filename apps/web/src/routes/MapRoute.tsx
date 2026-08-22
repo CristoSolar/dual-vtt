@@ -30,7 +30,7 @@ const nextId = (prefix: string) => {
   return `${prefix}-${Date.now().toString(36)}-${counter.toString(36)}`;
 };
 
-type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet';
+type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet' | 'walls';
 
 const PANEL_TITLES: Record<PanelId, string> = {
   scenes: 'Escenas',
@@ -39,6 +39,7 @@ const PANEL_TITLES: Record<PanelId, string> = {
   tokens: 'Fichas',
   fog: 'Niebla de guerra',
   sheet: 'Hoja de personaje',
+  walls: 'Muros y puertas',
 };
 
 const PANELS_KEY = 'daggerheart-vtt:map-panels';
@@ -52,6 +53,7 @@ const defaultPanels = (): PanelStore => ({
   tokens: { x: 90, y: 96, z: 1, open: true },
   fog: { x: 90, y: 96, z: 1, open: false },
   sheet: { x: 90, y: 96, z: 1, open: false },
+  walls: { x: 90, y: 96, z: 1, open: false },
 });
 
 /** Reads saved panel positions; any corruption just falls back to defaults. */
@@ -70,6 +72,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
   const [measuring, setMeasuring] = useState(false);
+  const [drawingWall, setDrawingWall] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [tokenImageError, setTokenImageError] = useState<string | null>(null);
@@ -232,6 +235,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
               {toolButton('grid', '▦', 'Cuadrícula y escala')}
               {toolButton('tokens', '🧙', 'Fichas')}
               {toolButton('fog', '🌫', 'Niebla de guerra')}
+              {toolButton('walls', '🚪', 'Muros y puertas')}
               <button
                 type="button"
                 className="map-rail-button"
@@ -272,6 +276,15 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             onPaintFog={paintFog}
             measuring={measuring}
             onViewChange={setCanvasView}
+            drawingWall={drawingWall}
+            onAddWall={(x1, y1, x2, y2) => {
+              if (scene === null) return;
+              send({
+                type: 'addWall',
+                sceneId: scene.id,
+                wall: { id: nextId('wall'), x1, y1, x2, y2, kind: 'wall', open: false },
+              });
+            }}
           />
         ) : null}
         {isGameMaster && selected !== null ? (
@@ -401,30 +414,112 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           onFocus={() => focusPanel('fog')}
           onClose={() => closePanel('fog')}
         >
+          {scene.visionMode === 'manual' ? (
+            <>
+              <button
+                type="button"
+                aria-pressed={scene.fog.enabled}
+                onClick={() => send({ type: 'setFogEnabled', sceneId: scene.id, enabled: !scene.fog.enabled })}
+              >
+                {scene.fog.enabled ? 'Niebla activada' : 'Niebla desactivada'}
+              </button>
+              <div className="row mt-3">
+                <button
+                  type="button"
+                  aria-pressed={fogBrush?.reveal === true}
+                  onClick={() => setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })}
+                >
+                  Pincel de revelar
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={fogBrush?.reveal === false}
+                  onClick={() => setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })}
+                >
+                  Pincel de ocultar
+                </button>
+              </div>
+              <p className="muted">Los jugadores solo ven las áreas reveladas — el resto nunca se les envía.</p>
+            </>
+          ) : (
+            <p className="muted">
+              Visión automática activa (panel "Muros y puertas") — el pincel manual está desactivado para esta
+              escena.
+            </p>
+          )}
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.walls.open ? (
+        <FloatingPanel
+          title={PANEL_TITLES.walls}
+          layout={panels.walls}
+          onLayoutChange={(l) => movePanel('walls', l)}
+          onFocus={() => focusPanel('walls')}
+          onClose={() => closePanel('walls')}
+        >
+          <button type="button" aria-pressed={drawingWall} onClick={() => setDrawingWall((d) => !d)}>
+            {drawingWall ? 'Dibujando muro…' : 'Dibujar muro'}
+          </button>
+          <p className="muted mt-2">
+            {scene.visionMode === 'auto'
+              ? 'Visión automática: la niebla se revela sola según lo que cada PJ puede ver.'
+              : 'Niebla manual: usa el pincel del panel de niebla.'}
+          </p>
           <button
             type="button"
-            aria-pressed={scene.fog.enabled}
-            onClick={() => send({ type: 'setFogEnabled', sceneId: scene.id, enabled: !scene.fog.enabled })}
+            className="mt-2"
+            onClick={() =>
+              send({
+                type: 'setSceneVisionMode',
+                sceneId: scene.id,
+                visionMode: scene.visionMode === 'auto' ? 'manual' : 'auto',
+              })
+            }
           >
-            {scene.fog.enabled ? 'Niebla activada' : 'Niebla desactivada'}
+            Cambiar a {scene.visionMode === 'auto' ? 'manual' : 'automática'}
           </button>
-          <div className="row mt-3">
-            <button
-              type="button"
-              aria-pressed={fogBrush?.reveal === true}
-              onClick={() => setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })}
-            >
-              Pincel de revelar
-            </button>
-            <button
-              type="button"
-              aria-pressed={fogBrush?.reveal === false}
-              onClick={() => setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })}
-            >
-              Pincel de ocultar
-            </button>
-          </div>
-          <p className="muted">Los jugadores solo ven las áreas reveladas — el resto nunca se les envía.</p>
+
+          {scene.walls.length === 0 ? (
+            <p className="muted mt-3">Todavía no hay muros en esta escena.</p>
+          ) : (
+            <ul className="log mt-3">
+              {scene.walls.map((wall) => (
+                <li key={wall.id}>
+                  <div className="row spread">
+                    <span>{wall.kind === 'door' ? 'Puerta' : 'Muro'}</span>
+                    <div className="row">
+                      {wall.kind === 'door' ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            send({ type: 'updateWall', sceneId: scene.id, wall: { ...wall, open: !wall.open } })
+                          }
+                        >
+                          {wall.open ? 'Abierta' : 'Cerrada'}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            send({ type: 'updateWall', sceneId: scene.id, wall: { ...wall, kind: 'door' } })
+                          }
+                        >
+                          Convertir en puerta
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => send({ type: 'removeWall', sceneId: scene.id, wallId: wall.id })}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </FloatingPanel>
       ) : null}
     </div>

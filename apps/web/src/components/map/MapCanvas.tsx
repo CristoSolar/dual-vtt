@@ -204,7 +204,7 @@ export function MapCanvas({
             points={[wall.x1, wall.y1, wall.x2, wall.y2]}
             stroke={wall.kind === 'door' ? canvasPalette.doorLine() : canvasPalette.wallLine()}
             strokeWidth={wall.kind === 'door' && wall.open ? 1 : 3}
-            dash={wall.kind === 'door' ? [10, 6] : undefined}
+            {...(wall.kind === 'door' ? { dash: [10, 6] } : {})}
             opacity={wall.kind === 'door' && wall.open ? 0.4 : 1}
           />
         ))}
