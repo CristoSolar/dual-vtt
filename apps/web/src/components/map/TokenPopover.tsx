@@ -210,6 +210,28 @@ export function TokenPopover({
                 />
               </div>
             </div>
+
+            <div className="mt-3">
+              <label htmlFor="popover-token-color">Color</label>
+              <input
+                id="popover-token-color"
+                type="color"
+                value={token.color}
+                onChange={(event) => onUpdate({ color: event.target.value })}
+              />
+            </div>
+            {token.image !== null ? (
+              <div className="row mt-2">
+                <button
+                  type="button"
+                  aria-pressed={token.colorFrame}
+                  onClick={() => onUpdate({ colorFrame: !token.colorFrame })}
+                >
+                  {token.colorFrame ? 'Marco de color activo' : 'Marco de color desactivado'}
+                </button>
+              </div>
+            ) : null}
+
             <div className="row mt-3">
               <button type="button" aria-pressed={token.hidden} onClick={() => onUpdate({ hidden: !token.hidden })}>
                 {token.hidden ? 'Solo DJ' : 'Visible para jugadores'}

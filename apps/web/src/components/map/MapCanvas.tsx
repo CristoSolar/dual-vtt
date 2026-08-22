@@ -379,6 +379,18 @@ function TokenShape({
       ) : (
         <Rect width={token.width} height={token.height} fill={token.color} cornerRadius={radius} />
       )}
+      {image !== null && token.colorFrame ? (
+        // Distinguishes tokens sharing the same portrait — drawn thicker than the
+        // selection outline so it still shows around it.
+        <Rect
+          width={token.width}
+          height={token.height}
+          fill="transparent"
+          cornerRadius={radius}
+          stroke={token.color}
+          strokeWidth={4}
+        />
+      ) : null}
       <Rect
         width={token.width}
         height={token.height}

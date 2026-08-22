@@ -51,6 +51,11 @@ export const TokenSchema = z.object({
   color: z.string().min(1).max(24),
   /** A token portrait, if the GM/player attached one. Falls back to `color`. */
   image: SceneImageSchema.nullable(),
+  /**
+   * Draws `color` as a ring around the portrait — lets the GM tell apart
+   * several tokens sharing the same sprite. Meaningless without `image`.
+   */
+  colorFrame: z.boolean().default(false),
 });
 export type Token = z.infer<typeof TokenSchema>;
 
