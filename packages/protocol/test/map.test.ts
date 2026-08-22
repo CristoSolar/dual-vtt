@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   SceneSchema,
   cellsInBrush,
+  cellsInPolygon,
   createScene,
   fitFogToImage,
   hide,
@@ -91,6 +92,25 @@ describe('fog', () => {
 
   it('treats everything as visible when fog is switched off', () => {
     expect(isRevealed(fog({ enabled: false }), { x: 900, y: 900 })).toBe(true);
+  });
+});
+
+describe('cellsInPolygon', () => {
+  it('reveals cells whose centre falls inside a square polygon', () => {
+    const square = [
+      { x: 0, y: 0 },
+      { x: 100, y: 0 },
+      { x: 100, y: 100 },
+      { x: 0, y: 100 },
+    ];
+    // 10x10 grid of 50px cells → cells 0..3 (rows 0-1, cols 0-1) have
+    // centres at (25,25),(75,25),(25,75),(75,75), all inside the square.
+    const cells = cellsInPolygon(fog(), square);
+    expect(cells.sort((a, b) => a - b)).toEqual([0, 1, 10, 11]);
+  });
+
+  it('reveals nothing for an empty polygon', () => {
+    expect(cellsInPolygon(fog(), [])).toEqual([]);
   });
 });
 

@@ -195,6 +195,51 @@ export function cellsInBrush(
   return cells;
 }
 
+/** Point-in-polygon test (even-odd rule), for `cellsInPolygon` below. */
+function pointInPolygon(point: { x: number; y: number }, polygon: readonly { x: number; y: number }[]): boolean {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const a = polygon[i];
+    const b = polygon[j];
+    if (a === undefined || b === undefined) continue;
+    const crosses =
+      a.y > point.y !== b.y > point.y &&
+      point.x < ((b.x - a.x) * (point.y - a.y)) / (b.y - a.y) + a.x;
+    if (crosses) inside = !inside;
+  }
+  return inside;
+}
+
+/** The fog cell indices whose centre falls inside a vision polygon. */
+export function cellsInPolygon(fog: Fog, polygon: readonly { x: number; y: number }[]): number[] {
+  if (polygon.length === 0 || fog.cols === 0 || fog.rows === 0) return [];
+
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const point of polygon) {
+    minX = Math.min(minX, point.x);
+    maxX = Math.max(maxX, point.x);
+    minY = Math.min(minY, point.y);
+    maxY = Math.max(maxY, point.y);
+  }
+
+  const minCol = Math.max(0, Math.floor(minX / fog.cellSize));
+  const maxCol = Math.min(fog.cols - 1, Math.floor(maxX / fog.cellSize));
+  const minRow = Math.max(0, Math.floor(minY / fog.cellSize));
+  const maxRow = Math.min(fog.rows - 1, Math.floor(maxY / fog.cellSize));
+
+  const cells: number[] = [];
+  for (let row = minRow; row <= maxRow; row++) {
+    for (let col = minCol; col <= maxCol; col++) {
+      const centre = { x: col * fog.cellSize + fog.cellSize / 2, y: row * fog.cellSize + fog.cellSize / 2 };
+      if (pointInPolygon(centre, polygon)) cells.push(row * fog.cols + col);
+    }
+  }
+  return cells;
+}
+
 /** Adds cells to the revealed set, keeping it sorted and free of duplicates. */
 export function reveal(fog: Fog, cells: readonly number[]): Fog {
   if (cells.length === 0) return fog;
