@@ -42,6 +42,8 @@ export const canvasPalette = {
   tokenOutline: () => token('--c-text'),
   tokenOutlineIdle: () => tokenAlpha('--c-bg', 0.4),
   ringFallback: () => tokenAlpha('--c-text', 0.33),
+  wallLine: () => token('--c-text'),
+  doorLine: () => token('--c-brass'),
 } as const;
 
 /** Range rings reuse the band colours defined alongside the rest of the palette. */

@@ -31,6 +31,10 @@ export interface MapCanvasProps {
   fogBrush: { radius: number; reveal: boolean } | null;
   onPaintFog: (x: number, y: number) => void;
   measuring: boolean;
+  /** Set while the GM is placing a wall; a drag then draws a segment instead
+   * of panning, same interaction shape as `measuring`. */
+  drawingWall: boolean;
+  onAddWall: (x1: number, y1: number, x2: number, y2: number) => void;
   /** Reports the current pan/zoom, so the caller can anchor an HTML overlay
    * (e.g. a token popover) to a scene-space point in screen coordinates. */
   onViewChange?: (view: { x: number; y: number; scale: number }) => void;
@@ -61,6 +65,8 @@ export function MapCanvas({
   fogBrush,
   onPaintFog,
   measuring,
+  drawingWall,
+  onAddWall,
   onViewChange,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
@@ -68,6 +74,10 @@ export function MapCanvas({
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
   useEffect(() => onViewChange?.(view), [view, onViewChange]);
   const [measureLine, setMeasureLine] = useState<{
+    from: { x: number; y: number };
+    to: { x: number; y: number };
+  } | null>(null);
+  const [wallDraft, setWallDraft] = useState<{
     from: { x: number; y: number };
     to: { x: number; y: number };
   } | null>(null);
@@ -125,6 +135,10 @@ export function MapCanvas({
       onPaintFog(point.x, point.y);
       return;
     }
+    if (drawingWall) {
+      setWallDraft({ from: point, to: point });
+      return;
+    }
     if (measuring) {
       setMeasureLine({ from: point, to: point });
       return;
@@ -140,6 +154,7 @@ export function MapCanvas({
 
     if (painting && stageRef.current?.isDragging() === false) return;
     if (measureLine !== null) setMeasureLine({ ...measureLine, to: point });
+    if (wallDraft !== null) setWallDraft({ ...wallDraft, to: point });
   };
 
   const canDrag = (token: Token): boolean =>
@@ -157,11 +172,17 @@ export function MapCanvas({
       y={view.y}
       scaleX={view.scale}
       scaleY={view.scale}
-      draggable={!painting && !measuring}
+      draggable={!painting && !measuring && !drawingWall}
       onWheel={onWheel}
       onPointerDown={onStagePointerDown}
       onPointerMove={onStagePointerMove}
-      onPointerUp={() => setMeasureLine(null)}
+      onPointerUp={() => {
+        setMeasureLine(null);
+        if (wallDraft !== null) {
+          onAddWall(wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y);
+          setWallDraft(null);
+        }
+      }}
       onDragEnd={(event) => {
         if (event.target === stageRef.current) {
           setView((current) => ({ ...current, x: event.target.x(), y: event.target.y() }));
@@ -173,6 +194,27 @@ export function MapCanvas({
         {image === null ? null : <KonvaImage image={image} x={0} y={0} />}
         {scene.grid.mode === 'square' && scene.image !== null ? (
           <GridLines grid={scene.grid} width={scene.image.width} height={scene.image.height} />
+        ) : null}
+      </Layer>
+
+      <Layer listening={false}>
+        {scene.walls.map((wall) => (
+          <Line
+            key={wall.id}
+            points={[wall.x1, wall.y1, wall.x2, wall.y2]}
+            stroke={wall.kind === 'door' ? canvasPalette.doorLine() : canvasPalette.wallLine()}
+            strokeWidth={wall.kind === 'door' && wall.open ? 1 : 3}
+            dash={wall.kind === 'door' ? [10, 6] : undefined}
+            opacity={wall.kind === 'door' && wall.open ? 0.4 : 1}
+          />
+        ))}
+        {wallDraft !== null ? (
+          <Line
+            points={[wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y]}
+            stroke={canvasPalette.wallLine()}
+            strokeWidth={3}
+            dash={[4, 4]}
+          />
         ) : null}
       </Layer>
 
