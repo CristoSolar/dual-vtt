@@ -167,6 +167,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         color: tokenColorAt(0),
         image: null,
         colorFrame: false,
+        visionRadius: 720,
       },
     });
   };
@@ -592,6 +593,7 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
     color,
     image: null,
     colorFrame: false,
+    visionRadius: 720,
   });
 
   return (

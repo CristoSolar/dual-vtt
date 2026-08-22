@@ -56,6 +56,8 @@ export const TokenSchema = z.object({
    * several tokens sharing the same sprite. Meaningless without `image`.
    */
   colorFrame: z.boolean().default(false),
+  /** Pixels a `pc` token can see in `visionMode: 'auto'`. Ignored otherwise. */
+  visionRadius: z.number().min(0).max(4000).default(720),
 });
 export type Token = z.infer<typeof TokenSchema>;
 
@@ -90,6 +92,25 @@ export const GridSchema = z.object({
 });
 export type Grid = z.infer<typeof GridSchema>;
 
+export const WallKindSchema = z.enum(['wall', 'door']);
+export type WallKind = z.infer<typeof WallKindSchema>;
+
+export const WallSchema = z.object({
+  id: z.string().min(1).max(64),
+  x1: z.number(),
+  y1: z.number(),
+  x2: z.number(),
+  y2: z.number(),
+  kind: WallKindSchema.default('wall'),
+  /** Doors only. Open doors don't block vision. Ignored for plain walls. */
+  open: z.boolean().default(false),
+});
+export type Wall = z.infer<typeof WallSchema>;
+
+/** `auto` computes fog reveals from wall geometry; `manual` is the GM's brush. */
+export const VisionModeSchema = z.enum(['manual', 'auto']);
+export type VisionMode = z.infer<typeof VisionModeSchema>;
+
 export const SceneSchema = z.object({
   id: z.string().min(1).max(64),
   name: z.string().min(1).max(80),
@@ -97,6 +118,8 @@ export const SceneSchema = z.object({
   grid: GridSchema,
   tokens: z.array(TokenSchema).max(200),
   fog: FogSchema,
+  walls: z.array(WallSchema).max(500).default([]),
+  visionMode: VisionModeSchema.default('manual'),
 });
 export type Scene = z.infer<typeof SceneSchema>;
 
@@ -123,7 +146,16 @@ export function createMapState(): MapState {
 }
 
 export function createScene(id: string, name: string): Scene {
-  return { id, name, image: null, grid: DEFAULT_GRID, tokens: [], fog: DEFAULT_FOG };
+  return {
+    id,
+    name,
+    image: null,
+    grid: DEFAULT_GRID,
+    tokens: [],
+    fog: DEFAULT_FOG,
+    walls: [],
+    visionMode: 'manual',
+  };
 }
 
 // --- fog helpers -------------------------------------------------------------
@@ -201,6 +233,6 @@ export function mapForPlayer(map: MapState): MapState {
 
   return {
     activeSceneId: map.activeSceneId,
-    scenes: [{ ...active, tokens: active.tokens.filter((token) => !token.hidden) }],
+    scenes: [{ ...active, tokens: active.tokens.filter((token) => !token.hidden), walls: [] }],
   };
 }

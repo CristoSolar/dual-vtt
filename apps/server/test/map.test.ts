@@ -19,6 +19,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   color: '#e2b857',
   image: null,
   colorFrame: false,
+  visionRadius: 720,
   ...over,
 });
 

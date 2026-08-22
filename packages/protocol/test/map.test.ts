@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  SceneSchema,
   cellsInBrush,
   createScene,
   fitFogToImage,
@@ -38,6 +39,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   color: '#e2b857',
   image: null,
   colorFrame: false,
+  visionRadius: 720,
   ...over,
 });
 
@@ -143,5 +145,38 @@ describe('what a player is sent', () => {
     };
     const view = mapForPlayer(withImage);
     expect(view.scenes[0]?.tokens[0]?.image).toEqual(portrait);
+  });
+});
+
+describe('walls', () => {
+  it('defaults visionMode to manual and walls to empty on a fresh scene', () => {
+    const scene = createScene('s1', 'Fresh');
+    expect(scene.visionMode).toBe('manual');
+    expect(scene.walls).toEqual([]);
+  });
+
+  it('parses a scene saved before walls/visionMode existed', () => {
+    // Simulates a pre-existing snapshot record: no `walls`, no `visionMode`.
+    const legacy = { ...createScene('s2', 'Legacy') } as Record<string, unknown>;
+    delete legacy.walls;
+    delete legacy.visionMode;
+    const parsed = SceneSchema.parse(legacy);
+    expect(parsed.visionMode).toBe('manual');
+    expect(parsed.walls).toEqual([]);
+  });
+
+  it('never sends wall geometry to a player', () => {
+    const withWalls: MapState = {
+      activeSceneId: 'scene-1',
+      scenes: [
+        {
+          ...createScene('scene-1', 'Vault'),
+          walls: [{ id: 'w1', x1: 0, y1: 0, x2: 100, y2: 0, kind: 'wall', open: false }],
+          tokens: [token()],
+        },
+      ],
+    };
+    const view = mapForPlayer(withWalls);
+    expect(view.scenes[0]?.walls).toEqual([]);
   });
 });
