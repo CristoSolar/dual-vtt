@@ -57,6 +57,7 @@ export function CampaignsRoute({
         <div className="mt-3">
           <button
             type="button"
+            className="btn-primary"
             disabled={pending || name.trim() === ''}
             onClick={() => {
               onCreate(name.trim());
@@ -86,7 +87,7 @@ export function CampaignsRoute({
                   : `DJ: ${campaign.ownerUsername}`}
               </p>
               <div className="row">
-                <button type="button" onClick={() => onJoin(campaign.id)}>
+                <button type="button" className="btn-primary" onClick={() => onJoin(campaign.id)}>
                   Entrar
                 </button>
                 {campaign.ownerId === accountId ? (

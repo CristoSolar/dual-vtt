@@ -7,36 +7,16 @@ interface SectionHeadProps {
 }
 
 /**
- * A section header styled after the chevron-flanked bars on the printed sheet:
- * a centred label with an angled bracket at each end and a rule running out to
- * the edges. The brackets are inline SVG so no icon package is needed.
+ * A section header in the app's ornament grammar: a small rotated-square
+ * diamond, the label, and a gradient rule running out to the edge. Replaces
+ * the old `> Título <` chevron-bracket pattern, which read as decoration
+ * competing with the title rather than framing it.
  */
 export function SectionHead({ children, level = 2 }: SectionHeadProps) {
   return (
     <div className="section-head">
-      <Chevron direction="right" />
+      <span className="ornament-diamond" aria-hidden="true" />
       {level === 2 ? <h2>{children}</h2> : <h3>{children}</h3>}
-      <Chevron direction="left" />
     </div>
-  );
-}
-
-function Chevron({ direction }: { direction: 'left' | 'right' }) {
-  return (
-    <svg
-      className="chevron"
-      viewBox="0 0 12 16"
-      aria-hidden="true"
-      focusable="false"
-      style={direction === 'left' ? { transform: 'scaleX(-1)' } : undefined}
-    >
-      <path
-        d="M2 1 L10 8 L2 15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="square"
-      />
-    </svg>
   );
 }

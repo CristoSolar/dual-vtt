@@ -18,12 +18,12 @@ html {
 body {
   margin: 0;
   background-color: var(--c-bg);
-  /* A faint warm vignette, so the near-black reads as ink rather than grey. */
-  background-image: radial-gradient(
-    ellipse at 50% 0%,
-    rgb(90 55 140 / 12%) 0%,
-    transparent 60%
-  );
+  /* A faint violet-and-bronze vignette — the "system" and "ink" accents
+   * bleeding in from opposite corners, so the near-black reads as ink
+   * rather than grey. */
+  background-image:
+    radial-gradient(120% 60% at 50% 0%, rgb(123 107 196 / 10%), transparent 60%),
+    radial-gradient(80% 50% at 10% 100%, rgb(216 164 65 / 5%), transparent 70%);
   background-attachment: fixed;
   color: var(--c-text);
   font-family: var(--font-sans);
@@ -76,39 +76,135 @@ ul {
 
 /* ================================================================= controls */
 
+/*
+ * Four variants, one rule: exactly one gold Primary action per screen.
+ * Everything else is Secondary (the plain `<button>` default), Ghost (low-
+ * emphasis, chromeless until touched), or Danger. Selection/press states
+ * change fill and shadow together, never a 1px border alone.
+ */
 button {
   font: inherit;
-  font-weight: var(--fw-medium);
-  color: var(--c-text);
-  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-2));
-  border: var(--size-rule) solid var(--c-line-strong);
-  border-radius: var(--radius-md);
+  font-size: 0.87em;
+  font-weight: var(--fw-semibold);
+  color: var(--c-text-muted);
+  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-1));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
   padding: var(--sp-2) var(--sp-4);
   min-height: var(--size-tap);
   cursor: pointer;
+  box-shadow: var(--shadow-inset-gold), 0 var(--size-rule) 0 var(--c-bg);
   transition:
     border-color var(--motion-fast) var(--ease),
-    color var(--motion-fast) var(--ease);
+    background var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease),
+    box-shadow var(--motion-fast) var(--ease),
+    transform var(--motion-fast) var(--ease);
 }
 
 button:hover:not(:disabled) {
-  border-color: var(--c-brass);
+  border-color: var(--c-line-bronze-hover);
   color: var(--c-brass-bright);
+  background: linear-gradient(180deg, #2e2637, #221c2c);
+}
+
+button:active:not(:disabled) {
+  background: var(--c-surface-1);
+  box-shadow: var(--shadow-press);
+  transform: translateY(1px);
 }
 
 button:disabled {
-  opacity: 0.4;
+  color: var(--c-text-faint);
+  background: var(--c-surface-1);
+  border-color: var(--c-line);
+  box-shadow: none;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-/* A pressed control is marked by weight and a brass rule, not by hue alone. */
+/* Primary: the one solid-gold action per screen. Apply with `.btn-primary`. */
+.btn-primary {
+  color: #1e1405;
+  border-color: var(--c-brass-deep);
+  background: linear-gradient(180deg, #e3b75c, #c08f2e);
+  box-shadow:
+    inset 0 var(--size-rule) 0 rgb(255 255 255 / 38%),
+    0 var(--size-rule) 0 var(--c-bg),
+    0 8px 18px -10px rgb(216 164 65 / 55%);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f0c971, #d19e38);
+  box-shadow:
+    inset 0 var(--size-rule) 0 rgb(255 255 255 / 45%),
+    0 var(--size-rule) 0 var(--c-bg),
+    0 10px 22px -8px rgb(216 164 65 / 70%);
+}
+
+.btn-primary:active:not(:disabled) {
+  background: linear-gradient(180deg, #b98a2c, #d2a342);
+  box-shadow: var(--shadow-press);
+}
+
+.btn-primary:disabled {
+  color: var(--c-text-faint);
+  background: var(--c-surface-1);
+  border-color: var(--c-line);
+  box-shadow: none;
+}
+
+/* Ghost: chromeless until touched — the lowest-emphasis action. */
+.btn-ghost {
+  color: var(--c-text-muted);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--c-brass-bright);
+  background: rgb(234 199 122 / 7%);
+  border-color: rgb(234 199 122 / 20%);
+}
+
+.btn-ghost:active:not(:disabled) {
+  background: rgb(234 199 122 / 12%);
+}
+
+.btn-ghost:disabled {
+  color: var(--c-text-faint);
+  background: transparent;
+  border-color: transparent;
+}
+
+/* Danger: destructive actions — a crimson-tinted secondary, same weight. */
+.btn-danger {
+  color: #f0c9c4;
+  border-color: #5e2a2a;
+  background: linear-gradient(180deg, #3a1d22, #2a1519);
+}
+
+.btn-danger:hover:not(:disabled) {
+  border-color: #8e3a38;
+  background: linear-gradient(180deg, #4a2429, #33181d);
+}
+
+.btn-danger:active:not(:disabled) {
+  background: #26141a;
+  box-shadow: var(--shadow-press);
+}
+
+/* A pressed toggle is marked by fill and a brass edge, not by border alone. */
 button[aria-pressed='true'] {
   border-color: var(--c-brass);
   color: var(--c-brass-bright);
-  box-shadow: inset 0 0 0 var(--size-rule) var(--c-brass-dim);
+  background: linear-gradient(180deg, #3a2e14, #251c0f);
+  box-shadow: var(--shadow-inset-gold), var(--glow-gold);
 }
 
-/* Focus must be obvious: this gets driven fast, at a table. */
+/* Focus must be obvious: this gets driven fast, at a table. Violet is the
+   system colour — reserved for exactly this, never a general border. */
 :focus-visible {
   outline: var(--focus-ring) solid var(--c-focus);
   outline-offset: var(--focus-offset);
@@ -120,9 +216,9 @@ select,
 textarea {
   font: inherit;
   color: var(--c-text);
-  background: var(--c-bg);
-  border: var(--size-rule) solid var(--c-line-strong);
-  border-radius: var(--radius-md);
+  background: var(--c-surface-input);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
   padding: var(--sp-2) var(--sp-3);
   min-height: var(--size-tap);
   width: 100%;
@@ -240,38 +336,26 @@ legend {
 /* ==================================================================== panel */
 
 /*
- * Panels and cards are clipped at two opposite corners rather than rounded,
- * echoing the cut-corner frames on the printed sheet.
+ * Panels and cards: bronze border (not violet), top highlight + bottom
+ * shadow (light falls from above, nothing floats without a reason), and
+ * the panel radius tier instead of the tighter control radius.
  */
 .panel {
-  background: linear-gradient(180deg, var(--c-surface-1), var(--c-surface-2));
-  border: var(--size-rule) solid var(--c-line);
-  box-shadow: var(--shadow-1), var(--shadow-inset);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-inset), var(--shadow-panel);
   padding: var(--sp-5);
   margin-bottom: var(--sp-5);
-  clip-path: polygon(
-    var(--size-bevel) 0,
-    100% 0,
-    100% calc(100% - var(--size-bevel)),
-    calc(100% - var(--size-bevel)) 100%,
-    0 100%,
-    0 var(--size-bevel)
-  );
 }
 
 .card {
   background: var(--c-surface-2);
-  border: var(--size-rule) solid var(--c-line);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-inset);
   padding: var(--sp-3) var(--sp-4);
   margin-bottom: var(--sp-3);
-  clip-path: polygon(
-    var(--size-bevel-sm) 0,
-    100% 0,
-    100% calc(100% - var(--size-bevel-sm)),
-    calc(100% - var(--size-bevel-sm)) 100%,
-    0 100%,
-    0 var(--size-bevel-sm)
-  );
 }
 
 .card-head {
@@ -294,8 +378,10 @@ legend {
 }
 
 /*
- * Section header: a centred label flanked by angled brackets, after the bars on
- * the official sheet. Drawn in CSS and inline SVG so no image is needed.
+ * Section header, in the app's ornament grammar: a small rotated-square
+ * diamond, the label as an Inter overline, and a rule fading out to the
+ * edge. Repeats across headers, cards, the sheet and the map HUD so every
+ * screen reads as the same product.
  */
 .section-head {
   display: flex;
@@ -304,30 +390,32 @@ legend {
   margin: 0 0 var(--sp-4);
 }
 
-.section-head::before,
 .section-head::after {
   content: '';
   flex: 1;
-  height: var(--size-rule-thick);
-  background: linear-gradient(90deg, transparent, var(--c-brass-dim), transparent);
+  height: var(--size-rule);
+  background: linear-gradient(90deg, var(--c-line-bronze), transparent);
 }
 
 .section-head > h2,
 .section-head > h3 {
   margin: 0;
-  font-size: var(--fs-sm);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-wider);
   text-transform: uppercase;
-  color: var(--c-brass);
+  color: var(--c-brass-dim);
   white-space: nowrap;
 }
 
-.section-head .chevron {
+/* 6px rotated-square diamond — the ornament grammar's smallest unit. */
+.ornament-diamond {
   flex: none;
-  width: var(--sp-4);
-  height: var(--sp-4);
-  color: var(--c-brass-dim);
+  width: 6px;
+  height: 6px;
+  background: var(--c-brass-dim);
+  transform: rotate(45deg);
 }
 
 /* =================================================================== badges */

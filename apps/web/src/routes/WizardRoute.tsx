@@ -162,12 +162,13 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
         </button>
 
         {isLast ? (
-          <button type="button" disabled={!allValid || submitting} onClick={finish}>
+          <button type="button" className="btn-primary" disabled={!allValid || submitting} onClick={finish}>
             {submitting ? 'Guardando…' : 'Terminar y abrir hoja'}
           </button>
         ) : (
           <button
             type="button"
+            className="btn-primary"
             disabled={!validation.ok}
             onClick={() => goTo((step + 1) as Step)}
           >

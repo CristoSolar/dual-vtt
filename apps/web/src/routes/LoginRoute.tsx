@@ -45,7 +45,12 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
             }}
           />
           <div className="mt-4">
-            <button type="button" disabled={pending || username.trim() === '' || password === ''} onClick={submit}>
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={pending || username.trim() === '' || password === ''}
+              onClick={submit}
+            >
               {pending ? 'Entrando…' : 'Entrar'}
             </button>
           </div>

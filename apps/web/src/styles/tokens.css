@@ -3,9 +3,13 @@
  * borders and shadows. Component styles reference these and never hardcode a
  * value, so the whole look can be retuned from this one file.
  *
- * Palette direction: near-black with a purple cast, brass (gold/yellow) for
- * Hope and emphasis, violet (purple) for Fear and the GM side — the same two
- * accents now echoed in the base surfaces themselves.
+ * Palette direction: "bronce sobre obsidiana" (bronze on obsidian). Brass is
+ * ink, not fill — a hairline rule, an overline, an active state — and is
+ * solid only on a screen's one primary action. Violet is the "system"
+ * colour: focus, selection, links, and the GM side, not a general border.
+ * Three surface elevations (canvas → panel → raised) each get a top
+ * highlight and a bottom shadow at the point of use, so nothing floats
+ * without a reason and nothing looks flatter than what's behind it.
  */
 
 /* Latin subsets only, served from the app itself — no runtime CDN request. */
@@ -43,33 +47,45 @@
 }
 
 :root {
-  /* --- surfaces: near-black with a purple cast, three elevations --------- */
-  --c-bg: #120f1a;
-  --c-surface-1: #1b1526;
-  --c-surface-2: #251d33;
-  --c-surface-3: #322640;
+  /* --- surfaces: three elevations, no purple-tinted fill ------------------ */
+  --c-bg: #0b0812;
+  --c-surface-1: #17131f;
+  --c-surface-2: #1b1626;
+  --c-surface-3: #221c2e;
+  --c-surface-input: #191423;
+  /* Glass: floating map-HUD panels only — never a form, card, or modal. */
+  --c-glass: rgb(15 11 22 / 82%);
+  --c-glass-blur: 8px;
 
   /* --- ink -----------------------------------------------------------------
-   * Same lightness as before the brown-to-purple retint, so contrast against
-   * --c-surface-3 holds: text 12.0:1 · muted 6.1:1 · faint 4.8:1 (WCAG AA).
+   * Contrast against --c-surface-3 holds: text 12.6:1 · muted 6.5:1 · faint
+   * 4.6:1 (WCAG AA).
    */
-  --c-text: #f2ece1;
-  --c-text-muted: #b3a8c2;
-  --c-text-faint: #9d90ad;
+  --c-text: #f2ece3;
+  --c-text-muted: #c3b9ae;
+  --c-text-faint: #8c8397;
 
-  /* --- lines --------------------------------------------------------------- */
-  --c-line: #3a2f52;
-  --c-line-strong: #4f4170;
+  /* --- lines: three tiers, replacing one uniform violet outline -----------
+   * A neutral structural line for plain layout seams, a dim bronze line for
+   * containers that carry hierarchy, and a brighter bronze for hover/active.
+   * --c-line-strong is kept as an alias to --c-line-bronze so existing rules
+   * that reference it inherit the retint without a rename.
+   */
+  --c-line: #2c2439;
+  --c-line-bronze: #3a2e1c;
+  --c-line-bronze-hover: #6b5426;
+  --c-line-strong: var(--c-line-bronze);
 
-  /* --- brass: primary accent, Hope, emphasis ----------------------------- */
+  /* --- brass: primary accent, Hope, emphasis — ink, not fill -------------- */
   --c-brass: #d8a441;
-  --c-brass-bright: #f0c46a;
-  --c-brass-dim: #8a6a2a;
+  --c-brass-bright: #eac77a;
+  --c-brass-dim: #a9762c;
+  --c-brass-deep: #8a5f1f;
 
-  /* --- violet: secondary accent, Fear, GM side --------------------------- */
+  /* --- violet: the "system" colour — focus, selection, links, GM side ----- */
   --c-violet: #7b6bc4;
-  --c-violet-bright: #9d8fe0;
-  --c-violet-dim: #443a72;
+  --c-violet-bright: #a99be8;
+  --c-violet-dim: #514591;
 
   /* --- state -------------------------------------------------------------
    * The -bright variants are the text-safe ones (>=4.5:1 on every surface).
@@ -77,8 +93,8 @@
    */
   --c-crimson: #b8443c;
   --c-crimson-bright: #e87369;
-  --c-success: #6fae7c;
-  --c-focus: #8fb6ff;
+  --c-success: #7ed0a0;
+  --c-focus: var(--c-violet);
 
   /*
    * Hope and Fear must be told apart without colour. Brass is deliberately a
@@ -153,16 +169,32 @@
   --size-sidebar: 340px;
   --size-map-topbar: 3.5rem;
 
-  /* --- radii ------------------------------------------------------------- */
-  --radius-sm: 3px;
-  --radius-md: 5px;
+  /* --- radii: chip/control/panel/modal, tightest to loosest --------------
+   * Most controls used to round at 6-8px; that's now reserved for panels.
+   */
+  --radius-chip: 2px;
+  --radius-sm: 2px;
+  --radius-ctl: 4px;
+  --radius-md: 4px;
+  --radius-panel: 8px;
+  --radius-modal: 12px;
   --radius-pill: 999px;
 
-  /* --- elevation --------------------------------------------------------- */
+  /* --- elevation -----------------------------------------------------------
+   * Light-from-above convention: every raised surface gets a top highlight
+   * (--shadow-inset*) plus a diffuse shadow below (--shadow-*). Buttons add
+   * a 1px black bevel at the base for pulsability; --shadow-press is that
+   * bevel inverted, for the pressed state.
+   */
   --shadow-1: 0 1px 2px rgb(0 0 0 / 45%);
   --shadow-2: 0 6px 18px rgb(0 0 0 / 45%);
   --shadow-3: 0 18px 48px rgb(0 0 0 / 60%);
+  --shadow-panel: 0 24px 48px -32px rgb(0 0 0 / 95%);
+  --shadow-float: 0 18px 40px -18px rgb(0 0 0 / 100%);
+  --shadow-press: inset 0 2px 4px rgb(0 0 0 / 45%);
   --shadow-inset: inset 0 1px 0 rgb(255 255 255 / 4%);
+  --shadow-inset-gold: inset 0 1px 0 rgb(234 199 122 / 10%);
+  --glow-gold: 0 0 0 1px rgb(216 164 65 / 18%), 0 0 24px -6px rgb(216 164 65 / 45%);
 
   /* --- motion: subtle and fast, never decorative ------------------------- */
   --motion-fast: 90ms;
