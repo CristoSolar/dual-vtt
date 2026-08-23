@@ -79,6 +79,10 @@ export interface TestServer {
   campaigns: CampaignStore;
   users: UserStore;
   sessions: SessionStore;
+  /** Times `registerGateway`'s persist callback has fired — lets a test confirm an
+   * event triggered an immediate snapshot rather than waiting on a periodic timer,
+   * which nothing in this harness runs. */
+  persistCount: () => number;
   close: () => Promise<void>;
 }
 
@@ -94,7 +98,10 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
   const users = new UserStore();
   const sessions = new SessionStore();
 
-  registerGateway(io, campaigns, sessions, users);
+  let persists = 0;
+  registerGateway(io, campaigns, sessions, users, () => {
+    persists += 1;
+  });
 
   await new Promise<void>((resolve) => http.listen(0, resolve));
   const address = http.address() as AddressInfo;
@@ -104,6 +111,7 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
     campaigns,
     users,
     sessions,
+    persistCount: () => persists,
     close: async () => {
       await io.close();
       await new Promise<void>((resolve) => http.close(() => resolve()));

@@ -1,4 +1,5 @@
 import { finalize, STEPS, validateStep, type Step } from '@daggerheart/character';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
@@ -48,13 +49,41 @@ interface WizardRouteProps {
   campaignId: string;
   onFinish: () => void;
   onClaim: (sheet: ReturnType<typeof createSheet>) => void;
+  /** Whether the server has actually confirmed the claim (the character shows up
+   * in the room state) — not just that we asked. */
+  claimed: boolean;
+  /** Set when the server rejects something — including our claim — so the button
+   * can re-enable instead of being stuck on "Guardando…" forever. */
+  error: string | null;
 }
 
 /** The nine-step creation wizard: one route per step, always for one specific campaign. */
-export function WizardRoute({ storage, campaignId, onFinish, onClaim }: WizardRouteProps) {
+export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, error }: WizardRouteProps) {
   const { step: stepParam } = useParams();
   const navigate = useNavigate();
   const { state, dispatch, discard, reset } = useCreation(storage, campaignId);
+  // Set once "Terminar" is clicked; stays true until the server confirms (or the
+  // player navigates away and back). Only while true does a later `claimed` flip
+  // mean "the claim we just sent" rather than some pre-existing state.
+  const [submitting, setSubmitting] = useState(false);
+
+  // Only clear the local draft and leave the wizard once the server has actually
+  // confirmed the claim — sending the intent is not the same as it having landed.
+  // A rejection (bad request, no seat, etc.) surfaces via the shared error toast
+  // and leaves the draft and this screen exactly as they were, so the player can
+  // just press the button again instead of having already lost their work.
+  useEffect(() => {
+    if (submitting && claimed) {
+      discard();
+      onFinish();
+    }
+  }, [submitting, claimed, discard, onFinish]);
+
+  // A rejection re-enables the button instead of leaving it stuck on "Guardando…"
+  // with no way to retry.
+  useEffect(() => {
+    if (submitting && !claimed && error !== null) setSubmitting(false);
+  }, [submitting, claimed, error]);
 
   const parsed = Number(stepParam ?? '1');
   const step: Step = isStep(parsed) ? parsed : 1;
@@ -72,8 +101,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim }: WizardRo
   const finish = () => {
     const character = finalize(state);
     onClaim(createSheet(character));
-    discard();
-    onFinish();
+    setSubmitting(true);
   };
 
   return (
@@ -134,8 +162,8 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim }: WizardRo
         </button>
 
         {isLast ? (
-          <button type="button" disabled={!allValid} onClick={finish}>
-            Terminar y abrir hoja
+          <button type="button" disabled={!allValid || submitting} onClick={finish}>
+            {submitting ? 'Guardando…' : 'Terminar y abrir hoja'}
           </button>
         ) : (
           <button

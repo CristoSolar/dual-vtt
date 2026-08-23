@@ -221,6 +221,8 @@ function Shell() {
                 campaignId={campaign.activeCampaignId}
                 onClaim={campaign.claimCharacter}
                 onFinish={() => navigate('/sheet')}
+                claimed={hasClaimedCharacter}
+                error={campaign.error}
               />
             )
           }

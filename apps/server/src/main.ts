@@ -110,7 +110,7 @@ async function main(): Promise<void> {
   });
 
   const io = new Server(http, { cors: { origin: ALLOWED_ORIGINS } });
-  registerGateway(io, campaigns, sessions, users);
+  registerGateway(io, campaigns, sessions, users, persistCampaigns);
 
   const stopSnapshots = setInterval(persistCampaigns, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
   stopSnapshots.unref();

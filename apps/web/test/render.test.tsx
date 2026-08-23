@@ -128,6 +128,8 @@ describe('wizard renders', () => {
                 campaignId="campaign-1"
                 onClaim={() => {}}
                 onFinish={() => {}}
+                claimed={false}
+                error={null}
               />
             }
           />

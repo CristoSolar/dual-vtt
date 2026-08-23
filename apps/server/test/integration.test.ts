@@ -61,6 +61,28 @@ describe('campaign lifecycle over a socket', () => {
     await expect(TestClient.connect(server.url, 'not-a-real-token')).rejects.toBeDefined();
   });
 
+  it('persists immediately when a character is claimed, not just on the periodic snapshot', async () => {
+    const gm = await accountFor(server, 'gm-persist', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-persist');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Persist Test');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const before = server.persistCount();
+    const claimed = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.characters?.[alicePlayer.id] !== undefined,
+    );
+    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    await claimed;
+
+    // No periodic timer runs in this test harness — a restart between the claim
+    // and the next tick would otherwise lose the character with no warning.
+    expect(server.persistCount()).toBeGreaterThan(before);
+
+    gmClient.close();
+    alice.client.close();
+  });
+
   it('broadcasts one client’s damage to the other within a single broadcast', async () => {
     const gm = await accountFor(server, 'gm4', 'gm');
     const alicePlayer = await accountFor(server, 'alice4');
