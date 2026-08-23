@@ -2,8 +2,10 @@ interface TrackerProps {
   label: string;
   marked: number;
   total: number;
-  /** Rendering hook only: changes the pip colour. */
-  tone?: 'default' | 'hope' | 'armor';
+  /** Rendering hook only: each tone gets its own colour and shape, so a
+   * resource reads at a glance without needing its label — HP and Stress
+   * are bars (red/orange), Hope a diamond, Armor a hexagon. */
+  tone?: 'default' | 'stress' | 'hope' | 'armor';
   /** Filled pips read as "spent" for HP/Stress, "held" for Hope. */
   fillLabel: string;
   onMark: () => void;
@@ -36,20 +38,22 @@ export function Tracker({
         </span>
       </div>
       <ul className="pips">
-        {pips.map((filled, index) => (
-          <li key={index}>
-            <button
-              type="button"
-              className={`pip ${tone === 'default' ? '' : tone}`}
-              data-filled={filled}
-              aria-pressed={filled}
-              aria-label={`${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`}
-              onClick={filled ? onClear : onMark}
-            >
-              {index + 1}
-            </button>
-          </li>
-        ))}
+        {pips.map((filled, index) => {
+          const description = `${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`;
+          return (
+            <li key={index}>
+              <button
+                type="button"
+                className={`pip ${tone === 'default' ? '' : tone}`}
+                data-filled={filled}
+                aria-pressed={filled}
+                aria-label={description}
+                title={description}
+                onClick={filled ? onClear : onMark}
+              />
+            </li>
+          );
+        })}
       </ul>
       {total === 0 ? <p className="muted">No hay disponibles.</p> : null}
     </div>

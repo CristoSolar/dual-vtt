@@ -87,6 +87,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
         label="Estrés"
         marked={sheet.stressMarked}
         total={character.stressSlots}
+        tone="stress"
         fillLabel="marcados"
         onMark={() => send(forMe({ type: 'markStress', amount: 1 }))}
         onClear={() => send(forMe({ type: 'clearStress', amount: 1 }))}

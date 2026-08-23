@@ -75,80 +75,87 @@ export function CampaignsRoute({
         </div>
       ) : (
         <div className="grid cols-2">
-          {campaigns.map((campaign) => (
-            <div className="panel" key={campaign.id}>
-              <div className="card-head">
-                <h2>{campaign.name}</h2>
-                {campaign.ownerId === accountId ? <span className="badge">DJ</span> : null}
-              </div>
-              <p className="muted">
-                {campaign.ownerId === accountId
-                  ? `${campaign.memberIds.length} jugador(es)`
-                  : `DJ: ${campaign.ownerUsername}`}
-              </p>
-              <div className="row">
-                <button type="button" className="btn-primary" onClick={() => onJoin(campaign.id)}>
-                  Entrar
-                </button>
-                {campaign.ownerId === accountId ? (
-                  <button
-                    type="button"
-                    onClick={() => setAddingTo(addingTo === campaign.id ? null : campaign.id)}
-                  >
-                    Agregar jugador
-                  </button>
-                ) : null}
-              </div>
-              {addingTo === campaign.id ? (
-                <div className="row mt-3">
-                  <input
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                    placeholder="usuario"
-                  />
-                  <button
-                    type="button"
-                    disabled={pending || username.trim() === ''}
-                    onClick={() => {
-                      onAddPlayer(campaign.id, username.trim());
-                      setUsername('');
-                      setAddingTo(null);
-                    }}
-                  >
-                    {pending ? 'Agregando…' : 'Agregar'}
-                  </button>
+          {campaigns.map((campaign) => {
+            const isOwner = campaign.ownerId === accountId;
+            return (
+              <div className="campaign-card" key={campaign.id}>
+                <div className="campaign-card-art">
+                  {isOwner ? <span className="campaign-card-chip">DJ</span> : null}
                 </div>
-              ) : null}
-              {campaign.ownerId === accountId ? (
-                <div className="row mt-3">
-                  {tunnelUrl === null ? (
-                    <button type="button" disabled={tunnelLoading} onClick={onGenerateTunnel}>
-                      {tunnelLoading ? 'Generando…' : 'Generar enlace para jugadores'}
+                <div className="campaign-card-body">
+                  <h2>{campaign.name}</h2>
+                  <p className="muted">
+                    {isOwner
+                      ? `${campaign.memberIds.length} jugador(es)`
+                      : `DJ: ${campaign.ownerUsername}`}
+                  </p>
+                  <div className="campaign-card-footer">
+                    <button type="button" className="btn-primary" onClick={() => onJoin(campaign.id)}>
+                      Entrar
                     </button>
-                  ) : (
-                    <>
+                    {isOwner ? (
+                      <button
+                        type="button"
+                        className="btn-ghost"
+                        onClick={() => setAddingTo(addingTo === campaign.id ? null : campaign.id)}
+                      >
+                        Agregar jugador
+                      </button>
+                    ) : null}
+                  </div>
+                  {addingTo === campaign.id ? (
+                    <div className="row mt-3">
                       <input
-                        readOnly
-                        aria-label="Enlace para jugadores"
-                        value={tunnelUrl}
-                        onFocus={(event) => event.target.select()}
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                        placeholder="usuario"
                       />
                       <button
                         type="button"
+                        disabled={pending || username.trim() === ''}
                         onClick={() => {
-                          void navigator.clipboard.writeText(tunnelUrl);
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 2000);
+                          onAddPlayer(campaign.id, username.trim());
+                          setUsername('');
+                          setAddingTo(null);
                         }}
                       >
-                        {copied ? 'Copiado' : 'Copiar'}
+                        {pending ? 'Agregando…' : 'Agregar'}
                       </button>
-                    </>
-                  )}
+                    </div>
+                  ) : null}
+                  {isOwner ? (
+                    <div className="row mt-3">
+                      {tunnelUrl === null ? (
+                        <button type="button" className="btn-ghost" disabled={tunnelLoading} onClick={onGenerateTunnel}>
+                          {tunnelLoading ? 'Generando…' : 'Generar enlace para jugadores'}
+                        </button>
+                      ) : (
+                        <>
+                          <input
+                            readOnly
+                            aria-label="Enlace para jugadores"
+                            value={tunnelUrl}
+                            onFocus={(event) => event.target.select()}
+                          />
+                          <button
+                            type="button"
+                            className="btn-ghost"
+                            onClick={() => {
+                              void navigator.clipboard.writeText(tunnelUrl);
+                              setCopied(true);
+                              setTimeout(() => setCopied(false), 2000);
+                            }}
+                          >
+                            {copied ? 'Copiado' : 'Copiar'}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

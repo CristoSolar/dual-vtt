@@ -8,6 +8,7 @@ import {
 import { adversaries } from '@daggerheart/srd-data';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { Icon, type IconName } from '../components/icons/Icon.js';
 import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
@@ -189,7 +190,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     }
   };
 
-  const toolButton = (id: PanelId, glyph: string, label: string) => (
+  const toolButton = (id: PanelId, icon: IconName, label: string) => (
     <button
       type="button"
       key={id}
@@ -199,7 +200,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       title={label}
       onClick={() => togglePanel(id)}
     >
-      <span aria-hidden="true">{glyph}</span>
+      <Icon name={icon} size={20} />
     </button>
   );
 
@@ -230,12 +231,12 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         <div className="map-rail">
           {isGameMaster ? (
             <>
-              {toolButton('scenes', '🗺', 'Escenas')}
-              {toolButton('battlemap', '🖼', 'Mapa de batalla')}
-              {toolButton('grid', '▦', 'Cuadrícula y escala')}
-              {toolButton('tokens', '🧙', 'Fichas')}
-              {toolButton('fog', '🌫', 'Niebla de guerra')}
-              {toolButton('walls', '🚪', 'Muros y puertas')}
+              {toolButton('scenes', 'map', 'Escenas')}
+              {toolButton('battlemap', 'scene', 'Mapa de batalla')}
+              {toolButton('grid', 'select', 'Cuadrícula y escala')}
+              {toolButton('tokens', 'group', 'Fichas')}
+              {toolButton('fog', 'fog', 'Niebla de guerra')}
+              {toolButton('walls', 'door', 'Muros y puertas')}
               <button
                 type="button"
                 className="map-rail-button"
@@ -244,11 +245,11 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                 title="Medir distancia"
                 onClick={() => setMeasuring((m) => !m)}
               >
-                <span aria-hidden="true">📏</span>
+                <Icon name="measure" size={20} />
               </button>
             </>
           ) : (
-            toolButton('sheet', '📜', 'Hoja de personaje')
+            toolButton('sheet', 'shield', 'Hoja de personaje')
           )}
         </div>
       ) : null}

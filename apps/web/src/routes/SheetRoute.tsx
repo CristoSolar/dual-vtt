@@ -352,6 +352,7 @@ export function SheetRoute({
               label="Estrés"
               marked={sheet.stressMarked}
               total={character.stressSlots}
+              tone="stress"
               fillLabel="marcados"
               note={vulnerable ? 'Vulnerable' : undefined}
               onMark={() => run((s) => markSheetStress(s), forMe({ type: 'markStress', amount: 1 }))}

@@ -108,6 +108,27 @@
   --c-fear-ink: var(--c-violet-bright);
   --c-fear-edge: var(--c-violet);
 
+  /* --- fields: input heights per context, and the "hundown" inset that
+   * tells a field apart from a button (field is hollow, button is raised) */
+  --size-field-lg: 48px;
+  --size-field: 40px;
+  --size-field-sm: 34px;
+  --shadow-field-inset: inset 0 var(--size-rule-thick) 2px rgb(0 0 0 / 50%);
+
+  /* --- selection: fill + edge + glow together, never a border alone ----- */
+  --sel-bg: linear-gradient(180deg, #3a2e14, #241b0e);
+  --sel-ring: inset 0 0 0 var(--size-rule) var(--c-brass);
+  --sel-glow: 0 0 22px -6px rgb(216 164 65 / 55%);
+
+  /* --- card states shared across campaign/scene/domain cards ------------- */
+  --archived-opacity: 0.72;
+  --lift: translateY(-2px);
+
+  /* --- icons: the 16-icon linear set — the stroke never scales ----------- */
+  --icon-stroke: 1.5px;
+  --icon-box: 24px;
+  --icon-hit: 36px;
+
   /* --- domain colours, for domain cards ---------------------------------- */
   --c-domain-arcana: #8d6fd1;
   --c-domain-blade: #b8443c;

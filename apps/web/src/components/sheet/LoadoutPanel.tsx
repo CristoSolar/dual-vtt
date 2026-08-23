@@ -44,7 +44,7 @@ export function LoadoutPanel({
 
       {loadout.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level" title="Nivel de la carta">
+          <span className="domain-corner level domain-hex" title="Nivel de la carta">
             {card.level}
           </span>
           <span className="domain-corner recall" title="Coste de Recuperación">
@@ -89,7 +89,7 @@ export function LoadoutPanel({
 
       {vault.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level" title="Nivel de la carta">
+          <span className="domain-corner level domain-hex" title="Nivel de la carta">
             {card.level}
           </span>
           <span className="domain-corner recall" title="Coste de Recuperación">

@@ -220,14 +220,28 @@ textarea {
   border: var(--size-rule) solid var(--c-line-bronze);
   border-radius: var(--radius-ctl);
   padding: var(--sp-2) var(--sp-3);
-  min-height: var(--size-tap);
+  min-height: var(--size-field);
   width: 100%;
+  box-shadow: var(--shadow-field-inset);
+  transition:
+    border-color var(--motion-fast) var(--ease),
+    box-shadow var(--motion-fast) var(--ease);
 }
 
+/* A field's focus never turns red for an error — the error message carries
+   the colour, the field keeps its bronze rule (see .field-error). */
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--c-brass);
+  border-color: var(--c-line-bronze-hover);
+  box-shadow: var(--shadow-field-inset), 0 0 0 var(--focus-offset) var(--c-bg), 0 0 0 4px var(--c-focus);
+  outline: none;
+}
+
+input:read-only,
+textarea:read-only {
+  background: var(--c-surface-1);
+  box-shadow: none;
 }
 
 textarea {
@@ -507,6 +521,96 @@ legend {
   width: 100%;
 }
 
+/* Login: a two-column frame — art on the left (a veiled texture stands in
+ * for a commissioned cover, per the spec's "aditivo, no bloqueante" rule),
+ * the form on the right. Wide enough that it needs its own max-width
+ * instead of the narrow single-column auth-card default. */
+.auth-card--wide {
+  max-width: 62rem;
+}
+
+.login-frame {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  background: #0f0b16;
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / 100%), var(--shadow-inset-gold);
+  min-height: 30rem;
+}
+
+@media (max-width: 720px) {
+  .login-frame {
+    grid-template-columns: 1fr;
+  }
+}
+
+.login-art {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--sp-5);
+  padding: var(--sp-7);
+  background:
+    linear-gradient(180deg, rgb(11 8 18 / 25%), rgb(11 8 18 / 92%)),
+    repeating-linear-gradient(115deg, var(--c-surface-3) 0 10px, var(--c-surface-1) 10px 20px);
+  border-right: var(--size-rule) solid var(--c-line-bronze);
+}
+
+@media (max-width: 720px) {
+  .login-art {
+    display: none;
+  }
+}
+
+.login-art-overline {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-brass-dim);
+}
+
+.login-art-headline {
+  margin: 0;
+  max-width: 22ch;
+  font-size: var(--fs-2xl);
+  line-height: 1.1;
+  color: #f7eedd;
+}
+
+.login-art .muted,
+.login-form .muted {
+  text-align: left;
+  max-width: 40ch;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-7);
+  background: linear-gradient(180deg, var(--c-surface-1), #120e1b);
+}
+
+.login-overline {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-brass-dim);
+}
+
+.login-headline {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-xl);
+  color: var(--c-text);
+}
+
 /* The sheet is read for a whole session: the art sits fixed behind it, dim
    enough that the panels on top stay the thing you're actually reading. */
 .sheet-backdrop::before {
@@ -571,8 +675,8 @@ legend {
 
 .option[aria-pressed='true'] {
   border-color: var(--c-brass);
-  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-2));
-  box-shadow: inset var(--size-rule-thick) 0 0 var(--c-brass);
+  background: var(--sel-bg);
+  box-shadow: var(--sel-ring), var(--sel-glow);
 }
 
 .option-portrait {
@@ -610,48 +714,70 @@ legend {
 }
 
 /*
- * Three states, each readable without colour: a done step is ticked, the
- * current one is ringed and bold, an incomplete one is a plain dim outline.
+ * A diamond-numbered rail, three states, each readable without colour: the
+ * current step gets a gold bottom rule and a filled diamond; a done step's
+ * diamond ticks; a pending one stays a dim outline. Replaces the old
+ * clip-path number tab — a bare 1px border was the only signal it had.
  */
 .step-pip {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
   min-height: var(--size-tap);
-  min-width: var(--size-tap);
-  padding: 0 var(--sp-2);
-  font-weight: var(--fw-semibold);
+  padding: var(--sp-2) var(--sp-2) calc(var(--sp-2) + 2px);
+  border: none;
   border-radius: 0;
-  clip-path: polygon(
-    var(--size-bevel-sm) 0,
-    100% 0,
-    100% calc(100% - var(--size-bevel-sm)),
-    calc(100% - var(--size-bevel-sm)) 100%,
-    0 100%,
-    0 var(--size-bevel-sm)
-  );
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  box-shadow: none;
 }
 
-.step-pip[data-state='done'] {
+.step-pip-diamond {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: var(--size-rule) solid var(--c-line-bronze);
+  background: var(--c-surface-1);
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-pip-num {
+  transform: rotate(-45deg);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.step-pip-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.step-pip[data-state='done'] .step-pip-diamond {
   border-color: var(--c-success);
   color: var(--c-success);
 }
 
-.step-pip[data-state='done']::after {
-  content: '✓';
-  position: absolute;
-  right: var(--sp-1);
-  bottom: 0;
-  font-size: var(--fs-xs);
-  line-height: 1;
-}
-
 .step-pip[data-state='current'] {
-  border-color: var(--c-brass);
-  color: var(--c-brass-bright);
-  background: var(--c-surface-3);
-  box-shadow: 0 0 0 var(--size-rule-thick) var(--c-brass-dim);
+  border-bottom-color: var(--c-brass);
 }
 
-.step-pip[data-state='todo'] {
+.step-pip[data-state='current'] .step-pip-diamond {
+  border-color: var(--c-brass);
+  background: var(--c-brass);
+  color: #1e1405;
+}
+
+.step-pip[data-state='current'] .step-pip-label {
+  color: var(--c-brass-bright);
+}
+
+.step-pip[data-state='todo'] .step-pip-label,
+.step-pip[data-state='todo'] .step-pip-num {
   color: var(--c-text-faint);
 }
 
@@ -707,45 +833,84 @@ legend {
   list-style: none;
 }
 
-/* Outlined square cells that fill when marked, sized as a comfortable target. */
+/*
+ * Every resource gets its own shape as well as its own colour, so it reads
+ * at a glance without the label: HP and Stress are segmented bars (red vs.
+ * amber), Hope is a rotated diamond (the player's "currency"), Armor a
+ * hexagon, Fear an elongated bar. Distinct forms survive greyscale in a way
+ * a same-shaped, differently-coloured square never does.
+ */
 .pip {
-  width: var(--size-tap);
-  height: var(--size-tap);
-  min-height: var(--size-tap);
+  width: 28px;
+  height: 24px;
+  min-height: 24px;
   padding: 0;
-  border-radius: var(--radius-sm);
-  background: var(--c-bg);
-  border: var(--size-rule-thick) solid var(--c-line-strong);
-  font-size: var(--fs-xs);
-  color: var(--c-text-faint);
+  border-radius: var(--radius-chip);
+  background: var(--c-surface-1);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  box-shadow: none;
+  cursor: pointer;
 }
 
 .pip[data-filled='true'] {
-  background: var(--c-crimson);
-  border-color: var(--c-crimson-bright);
-  color: var(--c-text);
-  font-weight: var(--fw-semibold);
+  background: linear-gradient(180deg, var(--c-crimson-bright), var(--c-crimson));
+  border-color: var(--c-crimson);
+  box-shadow: var(--shadow-inset);
 }
 
-/* Hope: a bright filled cell — the lightest thing on the screen. */
+/* Stress: the same bar shape, amber instead of red. */
+.pip.stress {
+  height: 22px;
+  border-color: #4a3620;
+}
+
+.pip.stress[data-filled='true'] {
+  background: linear-gradient(180deg, #d8913f, #8f5a21);
+  border-color: #8f5a21;
+  box-shadow: var(--shadow-inset);
+}
+
+/* Hope: a rotated-square diamond — the player's currency, not a bar. */
+.pip.hope {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-chip);
+  border-color: #4a3a22;
+  transform: rotate(45deg);
+}
+
 .pip.hope[data-filled='true'] {
-  background: var(--c-hope-fill);
+  background: linear-gradient(180deg, var(--c-hope-fill), var(--c-brass-dim));
   border-color: var(--c-hope-edge);
-  color: var(--c-hope-ink);
+  box-shadow: var(--shadow-inset);
+}
+
+/* Armor: a hexagon, and violet rather than brass or crimson — it's neither
+ * a resource spent in the moment nor the GM's pool. */
+.pip.armor {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--c-surface-1);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 
 .pip.armor[data-filled='true'] {
-  background: var(--c-line-strong);
-  border-color: var(--c-text-faint);
-  color: var(--c-text);
+  background: linear-gradient(180deg, var(--c-violet-bright), var(--c-violet-dim));
 }
 
-/* The GM's Fear pool: Hope's opposite — a dark face with a bright violet rim. */
+/* The GM's Fear pool: an elongated bar, dark face with a bright violet rim —
+ * Hope's opposite in every dimension a greyscale render can still show. */
+.pip.fear {
+  width: 12px;
+  height: 20px;
+  border-color: #4a2a28;
+  background: #150f1c;
+}
+
 .pip.fear[data-filled='true'] {
-  background: var(--c-fear-fill);
+  background: linear-gradient(180deg, var(--c-fear-edge), var(--c-fear-fill));
   border-color: var(--c-fear-edge);
-  color: var(--c-fear-ink);
-  font-weight: var(--fw-semibold);
 }
 
 /* ==================================================================== stats */
@@ -959,23 +1124,42 @@ legend {
 /* ============================================================= domain cards */
 
 /*
- * Loadout cards are laid out like the physical cards: level top-left, recall
- * cost top-right, domain colour down the spine, title in the display serif.
+ * Loadout cards are laid out like the physical cards: level in a hexagon
+ * top-left, recall cost top-right, a 3px domain-coloured rule along the top
+ * edge (was a left spine — the spec's convention is a top rule so the card
+ * reads the same whether it's in-play or lying flat in the vault grid).
  */
 .domain-card {
   position: relative;
-  padding: var(--sp-6) var(--sp-4) var(--sp-3) var(--sp-6);
-  border-color: var(--c-line-strong);
+  padding: var(--sp-6) var(--sp-4) var(--sp-3) var(--sp-4);
+  border-color: var(--c-line-bronze);
 }
 
 .domain-card::before {
   content: '';
   position: absolute;
   left: 0;
+  right: 0;
   top: 0;
-  bottom: 0;
-  width: var(--sp-2);
-  background: var(--domain-color, var(--c-line-strong));
+  height: 3px;
+  background: linear-gradient(90deg, var(--domain-color, var(--c-line-bronze)), transparent 130%);
+}
+
+/* The level badge: a small hexagon in the domain's colour, echoing the
+ * armor-slot hexagons — level is a stat, not free-floating text. */
+.domain-hex {
+  top: var(--sp-2);
+  left: var(--sp-2);
+  width: 22px;
+  height: 22px;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--domain-color, var(--c-brass-dim));
+  color: var(--c-bg);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 
 .domain-title {
@@ -1001,10 +1185,6 @@ legend {
   font-weight: var(--fw-semibold);
   font-variant-numeric: tabular-nums;
   color: var(--c-text-muted);
-}
-
-.domain-corner.level {
-  left: var(--sp-6);
 }
 
 .domain-corner.recall {
@@ -1052,6 +1232,108 @@ legend {
 }
 
 /* ================================================================= campaign */
+
+/*
+ * Campaign card: art-placeholder header (a diagonal-stripe texture stands in
+ * for commissioned art — an "aditivo" per the spec, not a blocker), a status
+ * chip, and on hover a lifted bronze edge plus four corner brackets — the
+ * ornament grammar's 12px unit, reused instead of inventing a new hover cue.
+ */
+.campaign-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: var(--size-rule) solid var(--c-line);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+  box-shadow: var(--shadow-inset), var(--shadow-panel);
+  overflow: hidden;
+  transition:
+    border-color var(--motion-base) var(--ease),
+    box-shadow var(--motion-base) var(--ease),
+    transform var(--motion-base) var(--ease);
+}
+
+.campaign-card:hover {
+  border-color: var(--c-line-bronze-hover);
+  box-shadow: var(--shadow-inset-gold), var(--shadow-panel), var(--glow-gold);
+  transform: var(--lift);
+}
+
+.campaign-card::before,
+.campaign-card::after,
+.campaign-card-art::before,
+.campaign-card-art::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease);
+  pointer-events: none;
+}
+
+.campaign-card::before {
+  top: 8px;
+  left: 8px;
+  border-top: var(--size-rule) solid var(--c-brass);
+  border-left: var(--size-rule) solid var(--c-brass);
+}
+
+.campaign-card::after {
+  top: 8px;
+  right: 8px;
+  border-top: var(--size-rule) solid var(--c-brass);
+  border-right: var(--size-rule) solid var(--c-brass);
+}
+
+.campaign-card:hover::before,
+.campaign-card:hover::after {
+  opacity: 1;
+}
+
+.campaign-card-art {
+  height: 8.25rem;
+  background: repeating-linear-gradient(115deg, var(--c-surface-3) 0 8px, var(--c-surface-1) 8px 16px);
+  border-bottom: var(--size-rule) solid var(--c-line-bronze);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: var(--sp-2);
+}
+
+.campaign-card-chip {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-brass-bright);
+  background: rgb(11 8 18 / 72%);
+  border: var(--size-rule) solid rgb(216 164 65 / 35%);
+  border-radius: var(--radius-chip);
+  padding: var(--sp-1) var(--sp-2);
+}
+
+.campaign-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+}
+
+.campaign-card-body h2 {
+  font-size: var(--fs-md);
+}
+
+.campaign-card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  border-top: var(--size-rule) solid var(--c-line);
+  padding-top: var(--sp-3);
+}
 
 .join-code {
   font-family: var(--font-mono);
@@ -1146,8 +1428,10 @@ legend {
   font-family: var(--font-display);
   letter-spacing: var(--ls-wide);
   color: var(--c-text-muted);
-  background: rgb(14 10 22 / 70%);
-  border: var(--size-rule) solid var(--c-line);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--c-glass-blur));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
   padding: var(--sp-1) var(--sp-4);
 }
 
@@ -1164,8 +1448,9 @@ legend {
   max-width: 28rem;
 }
 
-/* Left icon rail — Foundry's scene-control toolbar, in text glyphs so no
-   icon dependency ships. */
+/* Left icon rail — Foundry's scene-control toolbar. "Vidrio, no cajas": a
+ * translucent, blurred glass panel with a bronze filet, never the opaque
+ * violet-bordered box a form or card gets. */
 .map-rail {
   position: absolute;
   top: 50%;
@@ -1175,19 +1460,26 @@ legend {
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
-  background: rgb(14 10 22 / 70%);
-  border: var(--size-rule) solid var(--c-line);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--c-glass-blur));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
   padding: var(--sp-2);
+  box-shadow: var(--shadow-float), var(--shadow-inset-gold);
 }
 
 .map-rail-button {
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  font-size: var(--fs-lg);
+  color: var(--c-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.map-rail-button[aria-pressed='true'] {
+  color: #241806;
 }
 
 .map-selection-bar {
@@ -1199,9 +1491,12 @@ legend {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  background: rgb(14 10 22 / 70%);
-  border: var(--size-rule) solid var(--c-line);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--c-glass-blur));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
   padding: var(--sp-2) var(--sp-4);
+  box-shadow: var(--shadow-float), var(--shadow-inset-gold);
 }
 
 /* A small editor anchored to a selected token on the map — tracks the canvas's

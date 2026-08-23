@@ -97,12 +97,11 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
                 data-filled={filled}
                 aria-pressed={filled}
                 aria-label={`Miedo ${index + 1} de ${MAX_FEAR}`}
+                title={`Miedo ${index + 1} de ${MAX_FEAR}`}
                 onClick={() =>
                   send(filled ? { type: 'spendFear', amount: 1 } : { type: 'gainFear', amount: 1 })
                 }
-              >
-                {index + 1}
-              </button>
+              />
             </li>
           );
         })}

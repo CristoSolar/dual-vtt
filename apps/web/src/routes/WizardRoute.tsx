@@ -134,7 +134,10 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
                 aria-label={`Paso ${s}: ${STEP_TITLES[s]}${done ? ' (completo)' : ''}`}
                 onClick={() => goTo(s)}
               >
-                {s}
+                <span className="step-pip-diamond">
+                  <span className="step-pip-num">{done && s !== step ? '✓' : s}</span>
+                </span>
+                <span className="step-pip-label">{STEP_TITLES[s]}</span>
               </button>
             </li>
           );
