@@ -5,6 +5,7 @@ import {
   type RoomState,
   type Token,
 } from '@daggerheart/protocol';
+import { MAX_FEAR } from '@daggerheart/rules';
 import { adversaries } from '@daggerheart/srd-data';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -107,6 +108,34 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const selected = scene?.tokens.find((t) => t.id === selectedTokenId) ?? null;
   const mySheet = viewerId !== null ? room.characters[viewerId] ?? null : null;
 
+  /**
+   * HP per token, for the bar under each name chip. Both sides come from real
+   * state — a PC token from its claimed sheet, an adversary from its instance
+   * — so a token whose HP nobody tracks simply gets no bar.
+   */
+  const tokenHealth = useMemo(() => {
+    const byToken: Record<string, { marked: number; total: number }> = {};
+    for (const token of scene?.tokens ?? []) {
+      if (token.refId === null) continue;
+      if (token.kind === 'pc') {
+        const sheet = room.characters[token.refId];
+        if (sheet !== undefined) {
+          byToken[token.id] = { marked: sheet.hpMarked, total: sheet.character.hpSlots };
+        }
+        continue;
+      }
+      const instance = room.adversaryInstances.find((a) => a.instanceId === token.refId);
+      const stats = adversaries.find((a) => a.id === instance?.adversaryId);
+      if (instance !== undefined && stats !== undefined) {
+        byToken[token.id] = { marked: instance.hpMarked, total: stats.hp };
+      }
+    }
+    return byToken;
+  }, [scene, room.characters, room.adversaryInstances]);
+
+  // Filled in by the canvas; the HUD's zoom buttons call through it.
+  const zoomApi = useRef<((direction: 1 | -1) => void) | null>(null);
+
   const moveToken = useCallback(
     (tokenId: string, x: number, y: number, commit: boolean) => {
       if (scene === null) return;
@@ -208,9 +237,15 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     <div className="map-fullscreen">
       <div className="map-scene-bar">
         <span className="map-scene-name">
-          {scene === null
-            ? 'Todavía no hay escena'
-            : `${scene.name}${scene.grid.mode === 'square' ? ' · cuadrícula' : ' · sin cuadrícula'}`}
+          <span className="ornament-diamond" aria-hidden="true" />
+          <span className="map-scene-title">{scene === null ? 'Todavía no hay escena' : scene.name}</span>
+          {scene === null ? null : (
+            <span className="map-scene-meta">
+              {scene.grid.mode === 'square'
+                ? `cuadrícula ${scene.grid.feetPerInch} pies`
+                : 'sin cuadrícula'}
+            </span>
+          )}
         </span>
         {isGameMaster ? (
           <button
@@ -276,6 +311,8 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             fogBrush={fogBrush}
             onPaintFog={paintFog}
             measuring={measuring}
+            health={tokenHealth}
+            zoomApi={zoomApi}
             onViewChange={setCanvasView}
             drawingWall={drawingWall}
             onAddWall={(x1, y1, x2, y2) => {
@@ -322,6 +359,58 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         </div>
       ) : null}
 
+      {/* The GM's Fear reserve, on the map itself: it's spent mid-scene, so it
+          belongs where the scene is, not one panel away. */}
+      {isGameMaster ? (
+        <div className="map-fear-bar">
+          <span className="map-fear-label">Miedo</span>
+          <ul className="pips">
+            {Array.from({ length: MAX_FEAR }, (_, index) => {
+              const filled = index < room.fear;
+              const description = `Miedo ${index + 1} de ${MAX_FEAR}`;
+              return (
+                <li key={index}>
+                  <button
+                    type="button"
+                    className="pip fear"
+                    data-filled={filled}
+                    aria-pressed={filled}
+                    aria-label={description}
+                    title={description}
+                    onClick={() =>
+                      send(filled ? { type: 'spendFear', amount: 1 } : { type: 'gainFear', amount: 1 })
+                    }
+                  />
+                </li>
+              );
+            })}
+          </ul>
+          <span className="map-fear-count">
+            {room.fear} / {MAX_FEAR}
+          </span>
+        </div>
+      ) : null}
+
+      <div className="map-zoom-bar">
+        <button
+          type="button"
+          className="map-zoom-button"
+          aria-label="Alejar"
+          onClick={() => zoomApi.current?.(-1)}
+        >
+          −
+        </button>
+        <span className="map-zoom-value">{Math.round(canvasView.scale * 100)}%</span>
+        <button
+          type="button"
+          className="map-zoom-button"
+          aria-label="Acercar"
+          onClick={() => zoomApi.current?.(1)}
+        >
+          +
+        </button>
+      </div>
+
       {!isGameMaster && viewerId !== null && mySheet !== null && panels.sheet.open ? (
         <FloatingPanel
           title={PANEL_TITLES.sheet}
@@ -329,6 +418,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           onLayoutChange={(l) => movePanel('sheet', l)}
           onFocus={() => focusPanel('sheet')}
           onClose={() => closePanel('sheet')}
+          wide
         >
           <MapSheetPanel sheet={mySheet} characterId={viewerId} send={send} sharedLog={room.rollLog} />
         </FloatingPanel>

@@ -9,9 +9,17 @@ import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
 import { PrintableSheet } from '../components/sheet/PrintableSheet.js';
 import { RollDialog, type RollDialogSpec } from '../components/sheet/RollDialog.js';
 import { RollLogPanel } from '../components/sheet/RollLogPanel.js';
+import {
+  ArmorSlots,
+  CornerBrackets,
+  DefenseHex,
+  HopeRow,
+  SegmentTracker,
+  ThresholdRibbon,
+  TraitPlaque,
+} from '../components/sheet/SheetFurniture.js';
 import { SectionHead } from '../components/SectionHead.js';
 import { Toast } from '../components/Toast.js';
-import { Tracker } from '../components/Tracker.js';
 import type { RoomEvent } from '@daggerheart/protocol';
 
 import { appendRoll, type RollEntry } from '../state/rollLog.js';
@@ -278,22 +286,19 @@ export function SheetRoute({
 
       <div className="sheet-layout">
         <div>
-          <div className="panel">
+          <div className="panel sheet-document">
+            <CornerBrackets />
             <SectionHead>Rasgos</SectionHead>
             <p className="muted">Haz clic en un rasgo para hacer una tirada de acción con él.</p>
-            <div className="stat-grid">
+            <div className="trait-plaques">
               {view.traits.map((trait) => (
-                <button
+                <TraitPlaque
                   key={trait.trait}
-                  type="button"
-                  className="stat trait-button"
+                  label={trait.label}
+                  modifier={trait.modifier}
+                  uses={trait.uses}
                   onClick={() => openTraitRoll(trait.label, trait.modifier)}
-                >
-                  <span className="trait-mod">
-                    {trait.modifier >= 0 ? `+${trait.modifier}` : `−${Math.abs(trait.modifier)}`}
-                  </span>
-                  <span className="stat-label">{trait.label}</span>
-                </button>
+                />
               ))}
             </div>
 
@@ -315,69 +320,71 @@ export function SheetRoute({
 
           <div className="panel">
             <SectionHead>Defensas</SectionHead>
-            <div className="stat-grid">
-              <div className="stat">
-                <span className="stat-value">{character.evasion}</span>
-                <span className="stat-label">Evasión</span>
+            <div className="sheet-defense-row">
+              <div className="sheet-defense-hexes">
+                <DefenseHex value={character.evasion} label="Evasión" />
+                <DefenseHex value={character.armorScore} label="Armadura" />
               </div>
-              <div className="stat">
-                <span className="stat-value">{character.armorScore}</span>
-                <span className="stat-label">Puntuación de Armadura</span>
+              <div className="stat-grid">
+                <div className="stat">
+                  <span className="stat-value">{character.proficiency}</span>
+                  <span className="stat-label">Competencia</span>
+                </div>
               </div>
-              <div className="stat">
-                <span className="stat-value">{character.major}</span>
-                <span className="stat-label">Daño Mayor</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value">{character.severe}</span>
-                <span className="stat-label">Daño Grave</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value">{character.proficiency}</span>
-                <span className="stat-label">Competencia</span>
-              </div>
+            </div>
+            <div className="mt-5">
+              <ThresholdRibbon
+                major={character.major}
+                severe={character.severe}
+                onCalculate={() => setShowDamage(true)}
+              />
             </div>
           </div>
 
           <div className="panel">
-            <Tracker
+            <SegmentTracker
               label="Puntos de Vida"
               marked={sheet.hpMarked}
               total={character.hpSlots}
+              tone="hp"
               fillLabel="marcados"
               onMark={() => run((s) => markSheetHP(s), forMe({ type: 'markHP', amount: 1 }))}
               onClear={() => run((s) => clearSheetHP(s), forMe({ type: 'clearHP', amount: 1 }))}
             />
-            <Tracker
-              label="Estrés"
-              marked={sheet.stressMarked}
-              total={character.stressSlots}
-              tone="stress"
-              fillLabel="marcados"
-              note={vulnerable ? 'Vulnerable' : undefined}
-              onMark={() => run((s) => markSheetStress(s), forMe({ type: 'markStress', amount: 1 }))}
-              onClear={() => run((s) => clearSheetStress(s), forMe({ type: 'clearStress', amount: 1 }))}
-            />
-            <Tracker
-              label="Esperanza"
-              marked={sheet.hope}
-              total={MAX_HOPE}
-              tone="hope"
-              fillLabel="en reserva"
-              onMark={() => run((s) => gainSheetHope(s), forMe({ type: 'gainHope', amount: 1 }))}
-              onClear={() => run((s) => spendSheetHope(s), forMe({ type: 'spendHope', amount: 1 }))}
-            />
-            <Tracker
-              label="Ranuras de Armadura"
-              marked={sheet.armorSlotsMarked}
-              total={character.armorScore}
-              tone="armor"
-              fillLabel="marcadas"
-              onMark={() => run((s) => markSheetArmorSlot(s), forMe({ type: 'markArmorSlot', amount: 1 }))}
-              onClear={() => run((s) => clearSheetArmorSlot(s), forMe({ type: 'clearArmorSlot', amount: 1 }))}
-            />
+            <div className="mt-4">
+              <SegmentTracker
+                label="Estrés"
+                marked={sheet.stressMarked}
+                total={character.stressSlots}
+                tone="stress"
+                fillLabel="marcados"
+                note={vulnerable ? 'Vulnerable' : undefined}
+                onMark={() => run((s) => markSheetStress(s), forMe({ type: 'markStress', amount: 1 }))}
+                onClear={() => run((s) => clearSheetStress(s), forMe({ type: 'clearStress', amount: 1 }))}
+              />
+            </div>
+            <div className="mt-4">
+              <HopeRow
+                label="Esperanza"
+                marked={sheet.hope}
+                total={MAX_HOPE}
+                fillLabel="en reserva"
+                onMark={() => run((s) => gainSheetHope(s), forMe({ type: 'gainHope', amount: 1 }))}
+                onClear={() => run((s) => spendSheetHope(s), forMe({ type: 'spendHope', amount: 1 }))}
+              />
+            </div>
+            <div className="mt-4">
+              <ArmorSlots
+                label="Ranuras de Armadura"
+                marked={sheet.armorSlotsMarked}
+                total={character.armorScore}
+                fillLabel="marcadas"
+                onMark={() => run((s) => markSheetArmorSlot(s), forMe({ type: 'markArmorSlot', amount: 1 }))}
+                onClear={() => run((s) => clearSheetArmorSlot(s), forMe({ type: 'clearArmorSlot', amount: 1 }))}
+              />
+            </div>
 
-            <div className="tracker">
+            <div className="tracker mt-4">
               <div className="tracker-head">
                 <h3>Oro</h3>
                 <span className="muted">

@@ -8,6 +8,9 @@ interface FloatingPanelProps {
   onLayoutChange: (layout: PanelLayout) => void;
   onFocus: () => void;
   onClose: () => void;
+  /** The character sheet needs the design's 820px document width; every other
+   * panel is a narrow tool palette. */
+  wide?: boolean;
   children: ReactNode;
 }
 
@@ -22,6 +25,7 @@ export function FloatingPanel({
   onLayoutChange,
   onFocus,
   onClose,
+  wide = false,
   children,
 }: FloatingPanelProps) {
   const drag = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(
@@ -52,7 +56,7 @@ export function FloatingPanel({
 
   return (
     <div
-      className="floating-panel"
+      className={wide ? 'floating-panel floating-panel--wide' : 'floating-panel'}
       style={{ left: layout.x, top: layout.y, zIndex: layout.z }}
       onPointerDownCapture={onFocus}
     >

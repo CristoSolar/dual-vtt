@@ -36,10 +36,24 @@ export interface SheetView {
   armor: Armor | null;
   loadout: readonly DomainCard[];
   vault: readonly DomainCard[];
-  traits: readonly { trait: Trait; label: string; modifier: number }[];
+  traits: readonly { trait: Trait; label: string; modifier: number; uses: readonly string[] }[];
 }
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/**
+ * The three example uses the SRD prints under each trait. They belong on the
+ * sheet, not just in the rulebook: the plaque tells you what the trait is for
+ * without a lookup, which is the whole point of a sheet you read mid-session.
+ */
+const TRAIT_USES: Record<Trait, readonly string[]> = {
+  agility: ['Correr', 'Esquivar', 'Saltar'],
+  strength: ['Alzar', 'Golpear', 'Forcejear'],
+  finesse: ['Controlar', 'Ocultar', 'Trastear'],
+  instinct: ['Percibir', 'Sentir', 'Rastrear'],
+  presence: ['Encantar', 'Actuar', 'Engañar'],
+  knowledge: ['Recordar', 'Analizar', 'Comprender'],
+};
 
 /** Trait names, spelled out in Spanish rather than title-cased from the English id. */
 const TRAIT_LABELS: Record<Trait, string> = {
@@ -108,6 +122,7 @@ export function selectSheetView(sheet: SheetState): SheetView {
       trait,
       label: TRAIT_LABELS[trait],
       modifier: character.traits[trait],
+      uses: TRAIT_USES[trait],
     })),
   };
 }

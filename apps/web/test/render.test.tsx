@@ -7,6 +7,7 @@ import { StaticRouter } from 'react-router-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { GMPanel } from '../src/components/gm/GMPanel.js';
+import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
 import {
@@ -100,6 +101,45 @@ describe('sheet renders', () => {
     expect(render(<SheetRoute sheet={stressed} update={noopUpdate} rng={() => 0.5} />)).toContain(
       'Vulnerable',
     );
+  });
+});
+
+describe('compact sheet renders', () => {
+  it('shows the combat furniture: level, defences, traits, thresholds and tracks', () => {
+    const sheet = createSheet(buildCharacter('warrior'));
+    const html = render(
+      <MapSheetPanel sheet={sheet} characterId="pc1" send={() => {}} sharedLog={[]} />,
+    );
+
+    // The level shield, the two defence hexagons and the threshold ribbon are
+    // the pieces that make it read as a sheet rather than a form.
+    expect(html).toContain('Nivel');
+    expect(html).toContain('Evasión');
+    expect(html).toContain('Armadura');
+    expect(html).toContain('Umbrales de daño');
+    expect(html).toContain(`>${sheet.character.major}<`);
+    expect(html).toContain(`>${sheet.character.severe}<`);
+
+    // Every trait plaque carries its name and its three SRD uses.
+    expect(html).toContain('Instinto');
+    expect(html).toContain('Percibir');
+    expect(html).toContain('Rastrear');
+
+    for (const track of ['Puntos de Vida', 'Estrés', 'Esperanza', 'Ranuras de armadura']) {
+      expect(html, track).toContain(track);
+    }
+  });
+
+  it('marks Vulnerable as a condition chip once Stress is full', () => {
+    const sheet = createSheet(buildCharacter());
+    const stressed: SheetState = { ...sheet, stressMarked: sheet.character.stressSlots };
+
+    expect(render(<MapSheetPanel sheet={sheet} characterId="pc1" send={() => {}} sharedLog={[]} />)).toContain(
+      'ninguna activa',
+    );
+    expect(
+      render(<MapSheetPanel sheet={stressed} characterId="pc1" send={() => {}} sharedLog={[]} />),
+    ).toContain('Vulnerable');
   });
 });
 

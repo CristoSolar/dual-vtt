@@ -108,6 +108,50 @@
   --c-fear-ink: var(--c-violet-bright);
   --c-fear-edge: var(--c-violet);
 
+  /* --- resource tracks: each one has its own face, edge, fill and ink, so a
+   * glance at colour and shape identifies the track without reading a label.
+   * (Vida crimson bars · Estrés amber bars · Esperanza gold diamonds.) */
+  --c-hp-bright: #d0625a;
+  --c-hp-deep: #8e2f32;
+  --c-hp-edge: #4a2a28;
+  --c-hp-face: #180f18;
+  --c-hp-ink: #e9bab6;
+  --c-hp-ink-dim: #c79c98;
+  --c-stress-bright: #d8913f;
+  --c-stress-deep: #8f5a21;
+  --c-stress-edge: #4a3620;
+  --c-stress-face: #181220;
+  --c-stress-ink: #ebc08a;
+  --c-stress-ink-dim: #c7a277;
+  --c-hope-bright: #f0ce80;
+  --c-hope-deep: #b98a2c;
+  --c-hope-face: #191322;
+  --c-hope-rim: #4a3a22;
+
+  /* --- sheet furniture: the "rulebook" surfaces (plaques, hexes, bands) --- */
+  --c-on-brass: #1e1405;
+  --c-on-brass-dim: #4a3410;
+  --c-brass-label: #c99b45;
+  --c-brass-pale: #f5dca6;
+  --c-parchment: #f0e4cc;
+  --c-parchment-deep: #cfbe9c;
+  --c-plaque-top: #2c2338;
+  --c-plaque-bottom: #1b1524;
+  --c-plaque-ink: #f7eedd;
+  --c-hex-top: #33293f;
+  --c-hex-bottom: #1e1829;
+  --c-band-edge: #3b3157;
+  --c-band-minor-top: #2e2648;
+  --c-band-minor-bottom: #241d3a;
+  --c-band-major-top: #33294a;
+  --c-band-major-bottom: #26203c;
+  --c-band-severe-top: #3a2436;
+  --c-band-severe-bottom: #2b1a2a;
+  --c-band-severe-edge: #4a2a3a;
+  --c-band-minor-ink: #c9bfe6;
+  --c-band-major-ink: #dcd3ee;
+  --c-band-severe-ink: #e9c2c0;
+
   /* --- fields: input heights per context, and the "hundown" inset that
    * tells a field apart from a button (field is hollow, button is raised) */
   --size-field-lg: 48px;

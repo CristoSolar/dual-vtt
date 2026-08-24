@@ -38,6 +38,13 @@ export interface MapCanvasProps {
   /** Reports the current pan/zoom, so the caller can anchor an HTML overlay
    * (e.g. a token popover) to a scene-space point in screen coordinates. */
   onViewChange?: (view: { x: number; y: number; scale: number }) => void;
+  /** Health per token id, for the 4px bar under a token's name chip. Only
+   * tokens the caller has real numbers for get one — no bar is drawn for a
+   * token whose HP nobody tracks. */
+  health?: Readonly<Record<string, { marked: number; total: number }>>;
+  /** Filled in by the canvas with a one-step zoom, so the HUD's zoom control
+   * (an HTML overlay, outside the Konva tree) can drive it. */
+  zoomApi?: { current: ((direction: 1 | -1) => void) | null };
 }
 
 /** Scene grid settings translated into the scale the range module expects. */
@@ -68,6 +75,8 @@ export function MapCanvas({
   drawingWall,
   onAddWall,
   onViewChange,
+  health,
+  zoomApi,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -106,21 +115,38 @@ export function MapCanvas({
     return { x: (point.x - view.x) / view.scale, y: (point.y - view.y) / view.scale };
   }, [view]);
 
+  /** Zooms one step about a fixed stage point, which stays put on screen. */
+  const zoomAbout = useCallback((pointer: { x: number; y: number }, direction: 1 | -1) => {
+    setView((current) => {
+      const next = Math.min(
+        MAX_ZOOM,
+        Math.max(MIN_ZOOM, current.scale * (direction > 0 ? 1.1 : 1 / 1.1)),
+      );
+      const scenePoint = {
+        x: (pointer.x - current.x) / current.scale,
+        y: (pointer.y - current.y) / current.scale,
+      };
+      return { scale: next, x: pointer.x - scenePoint.x * next, y: pointer.y - scenePoint.y * next };
+    });
+  }, []);
+
+  // The HUD's zoom control lives outside the canvas (it's an HTML overlay), so
+  // hand it a way in: zooming about the viewport centre, the way a button
+  // should, rather than about a pointer it doesn't have.
+  useEffect(() => {
+    if (zoomApi === undefined) return;
+    zoomApi.current = (direction) => zoomAbout({ x: width / 2, y: height / 2 }, direction);
+    return () => {
+      zoomApi.current = null;
+    };
+  }, [zoomApi, zoomAbout, width, height]);
+
   const onWheel = (event: Konva.KonvaEventObject<WheelEvent>) => {
     event.evt.preventDefault();
     const stage = stageRef.current;
     const pointer = stage?.getPointerPosition();
     if (!stage || !pointer) return;
-
-    const direction = event.evt.deltaY > 0 ? -1 : 1;
-    const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, view.scale * (direction > 0 ? 1.1 : 1 / 1.1)));
-    // Keep the point under the cursor fixed while zooming.
-    const scenePoint = { x: (pointer.x - view.x) / view.scale, y: (pointer.y - view.y) / view.scale };
-    setView({
-      scale: next,
-      x: pointer.x - scenePoint.x * next,
-      y: pointer.y - scenePoint.y * next,
-    });
+    zoomAbout(pointer, event.evt.deltaY > 0 ? -1 : 1);
   };
 
   const painting = fogBrush !== null && isGameMaster;
@@ -240,6 +266,7 @@ export function MapCanvas({
             token={token}
             selected={token.id === selectedTokenId}
             draggable={canDrag(token)}
+            health={health?.[token.id]}
             onSelect={() => onSelectToken(token.id)}
             onDragMove={(x, y) => {
               const preview = throttle.current.move(x, y);
@@ -392,21 +419,35 @@ interface TokenShapeProps {
   token: Token;
   selected: boolean;
   draggable: boolean;
+  health: { marked: number; total: number } | undefined;
   onSelect: () => void;
   onDragMove: (x: number, y: number) => void;
   onDragEnd: (x: number, y: number) => void;
 }
 
+/** Chip and pip geometry for a token's label, in scene pixels. */
+const CHIP_HEIGHT = 16;
+const CHIP_GAP = 6;
+const PIP_HEIGHT = 4;
+const PIP_GAP = 2;
+
 function TokenShape({
   token,
   selected,
   draggable,
+  health,
   onSelect,
   onDragMove,
   onDragEnd,
 }: TokenShapeProps) {
   const image = useTokenImage(token.image?.url ?? null);
   const radius = token.kind === 'adversary' ? 4 : token.width / 2;
+  const chipY = token.height + CHIP_GAP;
+  // Pips run the token's width, one per HP slot, so a glance reads both how
+  // much is gone and how much there was.
+  const pipCount = health?.total ?? 0;
+  const pipWidth =
+    pipCount === 0 ? 0 : (token.width - PIP_GAP * (pipCount - 1)) / pipCount;
 
   return (
     <Group
@@ -420,6 +461,26 @@ function TokenShape({
       onDragEnd={(event) => onDragEnd(event.target.x(), event.target.y())}
       opacity={token.hidden ? 0.55 : 1}
     >
+      {/*
+       * A double ring lifts the token off the art: its side's colour, then a
+       * ring of the canvas colour outside it. Without the second ring a dark
+       * token on a dark map has no edge at all.
+       */}
+      <Rect
+        x={-4}
+        y={-4}
+        width={token.width + 8}
+        height={token.height + 8}
+        fill="transparent"
+        cornerRadius={radius + 4}
+        stroke={canvasPalette.canvas()}
+        strokeWidth={4}
+        listening={false}
+        shadowColor="#000000"
+        shadowBlur={20}
+        shadowOffsetY={10}
+        shadowOpacity={0.9}
+      />
       {image !== null ? (
         <Group clipFunc={(ctx) => roundedRectPath(ctx, token.width, token.height, radius)}>
           <KonvaImage image={image} width={token.width} height={token.height} />
@@ -427,38 +488,78 @@ function TokenShape({
       ) : (
         <Rect width={token.width} height={token.height} fill={token.color} cornerRadius={radius} />
       )}
-      {image !== null && token.colorFrame ? (
-        // Distinguishes tokens sharing the same portrait — drawn thicker than the
-        // selection outline so it still shows around it.
+      <Rect
+        x={-1}
+        y={-1}
+        width={token.width + 2}
+        height={token.height + 2}
+        fill="transparent"
+        cornerRadius={radius + 1}
+        stroke={token.color}
+        strokeWidth={2}
+        listening={false}
+      />
+      {/* Selection reads as a brighter, wider ring outside the band, so it
+          never has to compete with the band for the same pixels. */}
+      {selected ? (
         <Rect
-          width={token.width}
-          height={token.height}
+          x={-6}
+          y={-6}
+          width={token.width + 12}
+          height={token.height + 12}
           fill="transparent"
-          cornerRadius={radius}
-          stroke={token.color}
-          strokeWidth={4}
+          cornerRadius={radius + 6}
+          stroke={canvasPalette.tokenOutline()}
+          strokeWidth={2}
+          listening={false}
         />
       ) : null}
+      {/* The name never floats loose over the art: it sits in a chip dark
+          enough to read against anything underneath. */}
       <Rect
-        width={token.width}
-        height={token.height}
-        fill="transparent"
-        cornerRadius={radius}
-        stroke={selected ? canvasPalette.tokenOutline() : canvasPalette.tokenOutlineIdle()}
-        strokeWidth={selected ? 3 : 1}
+        x={-6}
+        y={chipY}
+        width={token.width + 12}
+        height={CHIP_HEIGHT}
+        fill={canvasPalette.tokenChip()}
+        cornerRadius={2}
+        stroke={token.color}
+        strokeWidth={1}
+        opacity={0.95}
+        listening={false}
       />
       <Text
-        y={token.height + 2}
-        width={token.width}
+        x={-6}
+        y={chipY + 3}
+        width={token.width + 12}
         align="center"
         text={token.name}
         fill={canvasPalette.tokenLabel()}
-        fontSize={12}
+        fontSize={11}
+        fontStyle="600"
         listening={false}
       />
+      {health === undefined
+        ? null
+        : Array.from({ length: pipCount }, (_, index) => (
+            <Rect
+              key={`hp-${index}`}
+              x={index * (pipWidth + PIP_GAP)}
+              y={chipY + CHIP_HEIGHT + PIP_GAP}
+              width={pipWidth}
+              height={PIP_HEIGHT}
+              cornerRadius={1}
+              fill={
+                index < health.total - health.marked
+                  ? canvasPalette.hpFull()
+                  : canvasPalette.hpEmpty()
+              }
+              listening={false}
+            />
+          ))}
       {token.hidden ? (
         <Text
-          y={-14}
+          y={-18}
           text="Solo DJ"
           fill={canvasPalette.tokenLabelMuted()}
           fontSize={11}

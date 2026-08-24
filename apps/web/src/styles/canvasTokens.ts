@@ -35,12 +35,19 @@ export function tokenAlpha(name: string, alpha: number): string {
 export const canvasPalette = {
   stage: () => token('--c-bg'),
   fog: () => token('--c-bg'),
+  /** The ring drawn outside a token's colour band, so it reads as lifted off
+   * the art rather than painted onto it. */
+  canvas: () => token('--c-bg'),
   measureLine: () => token('--c-brass'),
   measureText: () => token('--c-brass'),
   tokenLabel: () => token('--c-text'),
   tokenLabelMuted: () => token('--c-text-muted'),
-  tokenOutline: () => token('--c-text'),
+  /** The dark plate a token's name sits on — text never floats over art. */
+  tokenChip: () => token('--c-bg'),
+  tokenOutline: () => token('--c-brass-bright'),
   tokenOutlineIdle: () => tokenAlpha('--c-bg', 0.4),
+  hpFull: () => token('--c-hp-bright'),
+  hpEmpty: () => token('--c-hp-edge'),
   ringFallback: () => tokenAlpha('--c-text', 0.33),
   wallLine: () => token('--c-text'),
   doorLine: () => token('--c-brass'),
