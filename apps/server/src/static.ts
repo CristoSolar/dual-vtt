@@ -27,13 +27,28 @@ const MIME_BY_EXTENSION: Record<string, string> = {
   '.json': 'application/json; charset=utf-8',
 };
 
+/**
+ * Cache policy. Vite fingerprints every built asset (`index-BmSIRXRS.js`), so
+ * those are safe to cache forever: a new build means a new URL. `index.html` is
+ * the opposite — it's the file that *names* those URLs, so caching it pins the
+ * browser to a build that no longer exists on disk. Without an explicit header
+ * browsers apply heuristic caching to it and a redeploy silently keeps serving
+ * the old app until someone hard-reloads.
+ */
+const IMMUTABLE = 'public, max-age=31536000, immutable';
+const NEVER = 'no-cache, no-store, must-revalidate';
+
 async function serveFile(response: ServerResponse, path: string): Promise<boolean> {
   const mime = MIME_BY_EXTENSION[extname(path)];
   if (mime === undefined) return false;
 
   try {
     const info = await stat(path);
-    response.writeHead(200, { 'content-type': mime, 'content-length': info.size });
+    response.writeHead(200, {
+      'content-type': mime,
+      'content-length': info.size,
+      'cache-control': path.endsWith('index.html') ? NEVER : IMMUTABLE,
+    });
     createReadStream(path).pipe(response);
     return true;
   } catch {

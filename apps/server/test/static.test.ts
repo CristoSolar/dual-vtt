@@ -56,6 +56,23 @@ describe('serving the web build', () => {
     expect(await response.text()).toBe('console.log("app")');
   });
 
+  it('never lets a browser cache index.html, but caches hashed assets forever', async () => {
+    // The bug this guards: with no cache-control, browsers heuristically cache
+    // index.html, so a redeploy keeps serving the previous build's asset URLs
+    // until someone hard-reloads. The fingerprinted assets are the opposite —
+    // a new build gives them new names, so they can never go stale.
+    const index = await fetch(`${server.url}/`);
+    expect(index.headers.get('cache-control')).toContain('no-store');
+
+    const asset = await fetch(`${server.url}/assets/app.js`);
+    expect(asset.headers.get('cache-control')).toContain('immutable');
+  });
+
+  it('does not cache the index.html served as a client-route fallback', async () => {
+    const response = await fetch(`${server.url}/campaigns`);
+    expect(response.headers.get('cache-control')).toContain('no-store');
+  });
+
   it('falls back to index.html for a route the HashRouter owns client-side', async () => {
     const response = await fetch(`${server.url}/campaigns`);
     expect(response.status).toBe(200);
