@@ -79,8 +79,8 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 - Help lives at `/help`: an app guide, a short rules primer (hand-written, with
   SRD page references), and a compendium that browses the bundled SRD data in
   the active language. A first-run guide opens once per account per device.
-- Characters and in-progress creations are saved to `localStorage`, and the sheet
-  works with the server stopped. A campaign is opt-in.
+- In-progress character creations are saved to `localStorage` per campaign; a
+  finished character is claimed into its campaign on the server.
 - In a campaign the **server is authoritative**: clients send intents, never results.
   A client asks to `takeDamage`; the server computes the HP with `applyDamage` and
   broadcasts it. Dice are rolled server-side from a per-room seed, so every roll is
@@ -88,9 +88,9 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 - Permissions are enforced server-side: a player may only mutate their own character,
   and only the GM may touch Fear, spotlight, countdowns, adversaries, or the
   environment.
-- Rooms live in memory and are snapshotted to `.data/rooms.json`; a lost snapshot
-  costs the session's progress, not the characters, which live on each player's
-  device.
+- Campaigns and accounts live in memory and are snapshotted to `.data/campaigns.json`
+  and `.data/users.json` every few seconds; losing `.data/` loses the campaigns and
+  their characters, so back it up.
 - The map has no grid by default: distances are reported as Daggerheart's range
   bands (Melee / Very Close / Close / Far / Very Far), with the SRD's optional
   1-inch-grid rule available per scene. The band maths lives in
