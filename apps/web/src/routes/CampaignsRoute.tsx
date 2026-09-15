@@ -1,6 +1,8 @@
 import type { CampaignSummary } from '@daggerheart/protocol';
 import { useState } from 'react';
 
+import { t } from '../i18n/index.js';
+
 interface CampaignsRouteProps {
   accountId: string;
   campaigns: readonly CampaignSummary[];
@@ -41,18 +43,18 @@ export function CampaignsRoute({
   return (
     <section>
       <div className="hero">
-        <h1>Campañas</h1>
-        <p className="muted">Elige una campaña para entrar, o crea una nueva.</p>
+        <h1>{t('campaigns.title')}</h1>
+        <p className="muted">{t('campaigns.subtitle')}</p>
       </div>
 
       <div className="panel">
-        <h2>Crear una campaña</h2>
-        <label htmlFor="campaign-name">Nombre</label>
+        <h2>{t('campaigns.createTitle')}</h2>
+        <label htmlFor="campaign-name">{t('campaigns.name')}</label>
         <input
           id="campaign-name"
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="Grupo del martes"
+          placeholder={t('campaigns.namePlaceholder')}
         />
         <div className="mt-3">
           <button
@@ -64,14 +66,14 @@ export function CampaignsRoute({
               setName('');
             }}
           >
-            {pending ? 'Creando…' : 'Crear campaña'}
+            {pending ? t('campaigns.creating') : t('campaigns.create')}
           </button>
         </div>
       </div>
 
       {campaigns.length === 0 ? (
         <div className="panel">
-          <p className="muted">Todavía no perteneces a ninguna campaña.</p>
+          <p className="muted">{t('campaigns.none')}</p>
         </div>
       ) : (
         <div className="grid cols-2">
@@ -80,18 +82,18 @@ export function CampaignsRoute({
             return (
               <div className="campaign-card" key={campaign.id}>
                 <div className="campaign-card-art">
-                  {isOwner ? <span className="campaign-card-chip">DJ</span> : null}
+                  {isOwner ? <span className="campaign-card-chip">{t('campaigns.gmChip')}</span> : null}
                 </div>
                 <div className="campaign-card-body">
                   <h2>{campaign.name}</h2>
                   <p className="muted">
                     {isOwner
-                      ? `${campaign.memberIds.length} jugador(es)`
-                      : `DJ: ${campaign.ownerUsername}`}
+                      ? t('campaigns.memberCount', { count: campaign.memberIds.length })
+                      : t('campaigns.ownedBy', { username: campaign.ownerUsername })}
                   </p>
                   <div className="campaign-card-footer">
                     <button type="button" className="btn-primary" onClick={() => onJoin(campaign.id)}>
-                      Entrar
+                      {t('campaigns.join')}
                     </button>
                     {isOwner ? (
                       <button
@@ -99,7 +101,7 @@ export function CampaignsRoute({
                         className="btn-ghost"
                         onClick={() => setAddingTo(addingTo === campaign.id ? null : campaign.id)}
                       >
-                        Agregar jugador
+                        {t('campaigns.addPlayer')}
                       </button>
                     ) : null}
                   </div>
@@ -108,7 +110,7 @@ export function CampaignsRoute({
                       <input
                         value={username}
                         onChange={(event) => setUsername(event.target.value)}
-                        placeholder="usuario"
+                        placeholder={t('common.usernamePlaceholder')}
                       />
                       <button
                         type="button"
@@ -119,7 +121,7 @@ export function CampaignsRoute({
                           setAddingTo(null);
                         }}
                       >
-                        {pending ? 'Agregando…' : 'Agregar'}
+                        {pending ? t('campaigns.adding') : t('campaigns.add')}
                       </button>
                     </div>
                   ) : null}
@@ -127,13 +129,13 @@ export function CampaignsRoute({
                     <div className="row mt-3">
                       {tunnelUrl === null ? (
                         <button type="button" className="btn-ghost" disabled={tunnelLoading} onClick={onGenerateTunnel}>
-                          {tunnelLoading ? 'Generando…' : 'Generar enlace para jugadores'}
+                          {tunnelLoading ? t('campaigns.generatingLink') : t('campaigns.generateLink')}
                         </button>
                       ) : (
                         <>
                           <input
                             readOnly
-                            aria-label="Enlace para jugadores"
+                            aria-label={t('campaigns.linkLabel')}
                             value={tunnelUrl}
                             onFocus={(event) => event.target.select()}
                           />
@@ -146,7 +148,7 @@ export function CampaignsRoute({
                               setTimeout(() => setCopied(false), 2000);
                             }}
                           >
-                            {copied ? 'Copiado' : 'Copiar'}
+                            {copied ? t('campaigns.copied') : t('campaigns.copy')}
                           </button>
                         </>
                       )}

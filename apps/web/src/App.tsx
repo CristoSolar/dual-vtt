@@ -71,7 +71,7 @@ function Shell() {
   if (auth.status === 'loading') {
     return (
       <div className="app">
-        <p className="muted">Cargando…</p>
+        <p className="muted">{t('common.loading')}</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ function Shell() {
   if (account === null) {
     return (
       <div className="app">
-        <p className="muted">Cargando…</p>
+        <p className="muted">{t('common.loading')}</p>
       </div>
     );
   }
@@ -101,25 +101,25 @@ function Shell() {
         </Link>
         <nav>
           <Link to="/">
-            <button type="button">Inicio</button>
+            <button type="button">{t('app.home')}</button>
           </Link>
           {account.role === 'gm' ? (
             <Link to="/players">
-              <button type="button">Jugadores</button>
+              <button type="button">{t('app.players')}</button>
             </Link>
           ) : null}
           {inCampaign ? (
             <>
               <Link to="/map">
-                <button type="button">Mapa</button>
+                <button type="button">{t('app.map')}</button>
               </Link>
               {isGameMaster ? (
                 <Link to="/gm">
-                  <button type="button">Panel del DJ</button>
+                  <button type="button">{t('app.gmPanel')}</button>
                 </Link>
               ) : hasClaimedCharacter ? (
                 <Link to="/sheet">
-                  <button type="button">Hoja</button>
+                  <button type="button">{t('app.sheet')}</button>
                 </Link>
               ) : null}
             </>
@@ -132,7 +132,7 @@ function Shell() {
             {locale === 'es' ? 'EN' : 'ES'}
           </button>
           <button type="button" onClick={auth.logout}>
-            Cerrar sesión
+            {t('app.logout')}
           </button>
         </nav>
       </header>
@@ -149,11 +149,10 @@ function Shell() {
         <div className="panel">
           <div className="row spread">
             <span>
-              Estás en la campaña <strong>{activeCampaignName}</strong> pero todavía no creaste tu
-              personaje.
+              {t('app.inCampaignPrefix')} <strong>{activeCampaignName}</strong> {t('app.inCampaignSuffix')}
             </span>
             <Link to="/create/1">
-              <button type="button">Crear personaje</button>
+              <button type="button">{t('app.createCharacter')}</button>
             </Link>
           </div>
         </div>
@@ -167,33 +166,33 @@ function Shell() {
               <section>
                 <div className="hero">
                   <h1>{activeCampaignName}</h1>
-                  <p className="muted">{isGameMaster ? 'Eres el DJ.' : 'Eres jugador.'}</p>
+                  <p className="muted">{isGameMaster ? t('app.gmRole') : t('app.playerRole')}</p>
                 </div>
                 <div className="grid cols-2">
                   <Link to="/map" className="option home-option">
-                    <span className="option-name">Abrir el mapa</span>
-                    <span className="option-meta">Escenas tácticas, fichas, niebla de guerra.</span>
+                    <span className="option-name">{t('app.openMap')}</span>
+                    <span className="option-meta">{t('app.openMapDesc')}</span>
                   </Link>
                   {isGameMaster ? (
                     <Link to="/gm" className="option home-option">
-                      <span className="option-name">Panel del DJ</span>
-                      <span className="option-meta">Adversarios, miedo, registro de tiradas.</span>
+                      <span className="option-name">{t('app.gmPanel')}</span>
+                      <span className="option-meta">{t('app.gmPanelDesc')}</span>
                     </Link>
                   ) : hasClaimedCharacter ? (
                     <Link to="/sheet" className="option home-option">
-                      <span className="option-name">Hoja de personaje</span>
-                      <span className="option-meta">Tus rasgos, movimientos y recursos.</span>
+                      <span className="option-name">{t('app.characterSheet')}</span>
+                      <span className="option-meta">{t('app.characterSheetDesc')}</span>
                     </Link>
                   ) : (
                     <Link to="/create/1" className="option home-option">
-                      <span className="option-name">Crear personaje</span>
-                      <span className="option-meta">Todavía no tienes uno en esta campaña.</span>
+                      <span className="option-name">{t('app.createCharacter')}</span>
+                      <span className="option-meta">{t('app.createCharacterDesc')}</span>
                     </Link>
                   )}
                 </div>
                 <div className="row mt-4">
                   <button type="button" onClick={campaign.leave}>
-                    Salir de la campaña
+                    {t('app.leaveCampaign')}
                   </button>
                 </div>
               </section>

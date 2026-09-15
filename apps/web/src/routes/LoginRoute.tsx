@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { t } from '../i18n/index.js';
+
 interface LoginRouteProps {
   error: string | null;
   pending: boolean;
@@ -25,27 +27,25 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
               <span className="ornament-diamond" aria-hidden="true" />
               <span className="login-art-overline">Daggerheart VTT</span>
             </div>
-            <h1 className="login-art-headline">Tu mesa te espera del otro lado de la puerta.</h1>
-            <p className="muted">
-              Hojas sincronizadas, mapa compartido y las tiradas de dualidad a la vista de todos.
-            </p>
+            <h1 className="login-art-headline">{t('login.headlineArt')}</h1>
+            <p className="muted">{t('login.subtitleArt')}</p>
           </div>
 
           <div className="login-form">
             <div>
-              <p className="login-overline">Entrar</p>
-              <h2 className="login-headline">Volvé a la campaña</h2>
+              <p className="login-overline">{t('login.overline')}</p>
+              <h2 className="login-headline">{t('login.headline')}</h2>
             </div>
 
-            <label htmlFor="login-username">Usuario</label>
+            <label htmlFor="login-username">{t('common.username')}</label>
             <input
               id="login-username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="usuario"
+              placeholder={t('common.usernamePlaceholder')}
             />
             <label htmlFor="login-password" className="mt-3">
-              Contraseña
+              {t('login.password')}
             </label>
             <input
               id="login-password"
@@ -63,7 +63,7 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
               disabled={pending || username.trim() === '' || password === ''}
               onClick={submit}
             >
-              {pending ? 'Entrando…' : 'Entrar a la mesa'}
+              {pending ? t('login.submitting') : t('login.submit')}
             </button>
           </div>
         </div>

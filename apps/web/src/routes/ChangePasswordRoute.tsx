@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { t } from '../i18n/index.js';
+
 interface ChangePasswordRouteProps {
   error: string | null;
   pending: boolean;
@@ -15,13 +17,11 @@ export function ChangePasswordRoute({ error, pending, onChange }: ChangePassword
     <div className="auth-shell">
       <section className="auth-card">
         <div className="panel">
-          <h1>Cambia tu contraseña</h1>
-          <p className="muted mt-3">
-            Tu DJ creó esta cuenta con una contraseña inicial. Elige una nueva.
-          </p>
+          <h1>{t('changePassword.title')}</h1>
+          <p className="muted mt-3">{t('changePassword.description')}</p>
 
           <label htmlFor="current-password" className="mt-4">
-            Contraseña actual
+            {t('changePassword.current')}
           </label>
           <input
             id="current-password"
@@ -30,7 +30,7 @@ export function ChangePasswordRoute({ error, pending, onChange }: ChangePassword
             onChange={(event) => setCurrentPassword(event.target.value)}
           />
           <label htmlFor="new-password" className="mt-3">
-            Contraseña nueva
+            {t('changePassword.new')}
           </label>
           <input
             id="new-password"
@@ -44,7 +44,7 @@ export function ChangePasswordRoute({ error, pending, onChange }: ChangePassword
               disabled={pending || currentPassword === '' || newPassword === ''}
               onClick={() => onChange(currentPassword, newPassword)}
             >
-              {pending ? 'Guardando…' : 'Guardar contraseña'}
+              {pending ? t('changePassword.saving') : t('changePassword.save')}
             </button>
           </div>
           {error !== null ? <div className="errors">{error}</div> : null}

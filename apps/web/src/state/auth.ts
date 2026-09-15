@@ -1,6 +1,7 @@
 import { UserSchema, type User } from '@daggerheart/protocol';
 import { useCallback, useEffect, useState } from 'react';
 
+import { t } from '../i18n/index.js';
 import { SERVER_URL } from './useCampaign.js';
 
 /**
@@ -108,13 +109,13 @@ export function useAuth(storage: StorageLike): AuthConnection {
           body: JSON.stringify({ username, password }),
         });
         if (!response.ok) {
-          setError('Usuario o contraseña incorrectos.');
+          setError(t('auth.invalidCredentials'));
           return;
         }
         const body = (await response.json()) as { token: string; user: unknown };
         const parsedUser = UserSchema.safeParse(body.user);
         if (!parsedUser.success) {
-          setError('El servidor respondió algo inesperado.');
+          setError(t('auth.unexpectedResponse'));
           return;
         }
         const next: StoredAuth = { token: body.token, user: parsedUser.data };
@@ -153,7 +154,7 @@ export function useAuth(storage: StorageLike): AuthConnection {
           body: JSON.stringify({ currentPassword, newPassword }),
         });
         if (!response.ok) {
-          setError('La contraseña actual no es correcta.');
+          setError(t('auth.wrongCurrentPassword'));
           return;
         }
         const next: StoredAuth = { token: auth.token, user: { ...auth.user, mustChangePassword: false } };
