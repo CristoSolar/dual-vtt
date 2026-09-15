@@ -240,7 +240,7 @@ function AdversaryDetail({ e }: { e: Adversary }) {
           {formatAttackModifier(e.attackModifier)} — {e.standardAttack.name} ·{' '}
           {t(`range.${e.standardAttack.range}` as MessageKey)} · {formatStatBlockDamage(e.standardAttack.damage)}{' '}
           {t(`damageType.${e.standardAttack.damageType}` as MessageKey)}
-          {e.standardAttack.direct ? ' · direct' : ''}
+          {e.standardAttack.direct ? ` · ${t('compendium.field.direct')}` : ''}
         </Field>
         <Field label="compendium.field.motives">
           <p className="card-text">{e.motivesAndTactics}</p>
@@ -327,7 +327,7 @@ export function EntryDetail({
   onNavigate: Nav;
 }) {
   const entry = (srd()[collection] as readonly { id: string; name: string }[]).find((e) => e.id === id);
-  if (entry === undefined) return <p className="muted">{t('compendium.empty')}</p>;
+  if (entry === undefined) return <p className="muted">{t('compendium.notFound')}</p>;
   return (
     <article className="compendium-entry">
       <h2>{entry.name}</h2>

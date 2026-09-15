@@ -695,7 +695,7 @@ export const es = {
   'guide.gm.2.title': 'Añade jugadores',
   'guide.gm.2.body': 'En Jugadores creas cuentas con contraseña inicial. Luego, en la tarjeta de la campaña, los añades por nombre de usuario.',
   'guide.gm.3.title': 'Panel del DJ',
-  'guide.gm.3.body': 'Miedo, foco, cuentas regresivas, adversarios y entornos. Todo lo que cambias se emite a la mesa al instante.',
+  'guide.gm.3.body': 'Miedo, foco, cuentas atrás, adversarios y entornos. Todo lo que cambias se emite a la mesa al instante.',
   'guide.gm.4.title': 'Mapa táctico',
   'guide.gm.4.body': 'Sube una imagen, crea escenas, coloca fichas y revela niebla. Los jugadores solo ven la escena activa y lo revelado.',
   'guide.gm.5.title': 'Comparte la mesa',
@@ -703,7 +703,7 @@ export const es = {
   'guide.player.1.title': 'Entra a tu campaña',
   'guide.player.1.body': 'El DJ te añadió a una campaña; ábrela desde Inicio.',
   'guide.player.2.title': 'Crea tu personaje',
-  'guide.player.2.body': 'Nueve pasos guiados: clase, linaje, comunidad, rasgos, equipo, trasfondo, experiencias, cartas y conexiones. Se guarda al final.',
+  'guide.player.2.body': 'Nueve pasos guiados: clase y subclase, herencia, rasgos, estadísticas derivadas, equipo, trasfondo, experiencias, cartas de dominio y conexiones. Se guarda al final.',
   'guide.player.3.title': 'Tu hoja',
   'guide.player.3.body': 'Marca daño, gasta Esperanza, gestiona Estrés y armadura, mueve cartas entre equipo activo y bóveda. Las tiradas las hace el servidor.',
   'guide.player.4.title': 'El mapa',
@@ -727,7 +727,7 @@ export const es = {
     'Crear personaje recorre nueve pasos en orden: Clase y Subclase, Herencia, Rasgos, Estadísticas derivadas, Equipo, Trasfondo, Experiencias, Cartas de Dominio y Conexiones. El borrador se guarda solo en el navegador de ese dispositivo, uno por campaña, así que cerrar la pestaña o recargar no pierde el progreso. Al terminar el último paso el personaje queda reclamado en la campaña y sustituye el borrador por la ficha real.',
   'help.app.sheet.title': 'La hoja de personaje',
   'help.app.sheet.body':
-    'El botón "Recibir daño" abre un diálogo que compara el golpe con los umbrales del personaje para calcular cuántos PV marcar, con casillas de armadura opcionales para reducir el impacto. La Esperanza se gana con tiradas favorables y se gasta en habilidades de clase; el Estrés se marca por esfuerzo y, al llenarse, deja al personaje Vulnerable. Las cartas activas viven en el equipo y las demás en la bóveda; recuperar una desde la bóveda cuesta Esperanza según su nivel. "Subir de nivel" aplica las mejoras del siguiente nivel, y si los PV llegan a marcarse por completo se activa la tirada de Movimiento de Muerte. "Exportar PDF" genera una ficha imprimible con los mismos datos.',
+    'El botón "Recibir daño" abre un diálogo que compara el golpe con los umbrales del personaje para calcular cuántos PV marcar, con casillas de armadura opcionales para reducir el impacto. La Esperanza se gana con tiradas favorables y se gasta en habilidades de clase; el Estrés se marca por esfuerzo y, al llenarse, deja al personaje Vulnerable. Las cartas activas viven en el equipo activo y las demás en la bóveda; recuperar una desde la bóveda cuesta Estrés igual a su Costo de Recuperación, y es gratis durante un descanso. "Subir de nivel" aplica las mejoras del siguiente nivel, y si los PV llegan a marcarse por completo se activa la tirada de Movimiento de Muerte. "Exportar PDF" genera una ficha imprimible con los mismos datos.',
   'help.app.gm.title': 'Panel del DJ',
   'help.app.gm.body':
     'El Panel del DJ reúne el Miedo del DJ, el Grupo con quién tiene el foco de la escena, las Cuentas atrás para tensión narrativa, los Adversarios y Entornos añadidos desde la lista del SRD, y quién está conectado en "En la mesa". El registro de tiradas se comparte con los jugadores para que toda la mesa vea los mismos resultados. Solo el DJ puede cambiar el Miedo, el foco, las cuentas atrás o los adversarios; un jugador nunca ve este panel.',
@@ -793,10 +793,11 @@ export const es = {
   'compendium.collection.beastforms': 'Formas bestiales',
 
   'compendium.filterPlaceholder': 'Buscar en el compendio…',
-  'compendium.results': '{n} resultados',
   'compendium.tooMany': 'Mostrando 100 de {n} resultados.',
   'compendium.empty': 'Sin resultados.',
+  'compendium.notFound': 'No se encontró esa entrada.',
   'compendium.pick': 'Elige una entrada de la lista.',
+  'compendium.collectionLabel': 'Colección',
 
   'compendium.field.tier': 'Tier',
   'compendium.field.level': 'Nivel',
@@ -835,6 +836,7 @@ export const es = {
   'compendium.field.advantages': 'Ventajas',
   'compendium.field.roll': 'Tirada',
   'compendium.field.fear': 'Miedo',
+  'compendium.field.direct': 'directo',
 
   'compendium.adversaryType.bruiser': 'Bruto',
   'compendium.adversaryType.horde': 'Horda',

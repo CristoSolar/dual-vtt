@@ -16,11 +16,19 @@ function haystack(entry: SrdData[CollectionKey][number]): string {
   if ('text' in entry) parts.push(entry.text);
   if ('description' in entry) parts.push(entry.description);
   if ('features' in entry) for (const f of entry.features) parts.push(f.name, f.text);
+  if ('feature' in entry && entry.feature !== null) parts.push(entry.feature.name, entry.feature.text);
+  if ('hopeFeature' in entry) parts.push(entry.hopeFeature.name, entry.hopeFeature.text);
   return parts.join(' ').toLowerCase();
 }
 
 /** One line under a result's name: the field that best distinguishes entries in that collection. */
 function metaLine(collection: CollectionKey, entry: SrdData[CollectionKey][number]): string {
+  if (collection === 'subclasses' && 'classId' in entry) {
+    return srd().classes.find((c) => c.id === entry.classId)?.name ?? '';
+  }
+  if (collection === 'classes' || collection === 'ancestries' || collection === 'communities' || collection === 'domains') {
+    return '';
+  }
   if ('level' in entry && 'domain' in entry) return `${t('compendium.field.level')} ${entry.level} · ${entry.domain}`;
   if ('tier' in entry) return `${t('compendium.field.tier')} ${entry.tier}`;
   if ('roll' in entry) return `${t('compendium.field.roll')} ${entry.roll}`;
@@ -35,7 +43,7 @@ export function Compendium({
   onNavigate: (c: CollectionKey, id: string | null) => void;
 }) {
   const collection: CollectionKey = isCollection(path[0]) ? path[0] : 'classes';
-  const selectedId = path[1] ?? null;
+  const selectedId = (path[1] ?? '') || null;
   const [filter, setFilter] = useState('');
   const needle = filter.trim().toLowerCase();
 
@@ -49,7 +57,7 @@ export function Compendium({
         <select
           value={collection}
           onChange={(event) => onNavigate(event.target.value as CollectionKey, null)}
-          aria-label={t('help.tab.compendium')}
+          aria-label={t('compendium.collectionLabel')}
         >
           {COLLECTIONS.map((key) => (
             <option key={key} value={key}>
@@ -75,7 +83,9 @@ export function Compendium({
                 onClick={() => onNavigate(collection, entry.id)}
               >
                 <strong>{entry.name}</strong>
-                <span className="muted">{metaLine(collection, entry)}</span>
+                {metaLine(collection, entry) !== '' ? (
+                  <span className="muted">{metaLine(collection, entry)}</span>
+                ) : null}
               </button>
             </li>
           ))}

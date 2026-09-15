@@ -32,14 +32,19 @@ export function parseHelpHash(hash: string): { tab: HelpTab; rest: string[] } {
   return { tab, rest };
 }
 
+/** True when the filter is empty, or when it matches the title or body (case-insensitive). */
+export function matchesFilter(title: string, body: string, filter: string): boolean {
+  const needle = filter.trim().toLowerCase();
+  return needle === '' || `${title} ${body}`.toLowerCase().includes(needle);
+}
+
 /** A collapsible section that hides itself when the filter matches neither title nor body. */
 export function Section({ title, body, filter }: { title: MessageKey; body: MessageKey; filter: string }) {
   const heading = t(title);
   const text = t(body);
-  const needle = filter.trim().toLowerCase();
-  if (needle !== '' && !`${heading} ${text}`.toLowerCase().includes(needle)) return null;
+  if (!matchesFilter(heading, text, filter)) return null;
   return (
-    <details open={needle !== ''}>
+    <details open={filter.trim() !== ''}>
       <summary>{heading}</summary>
       <p className="card-text">{text}</p>
     </details>
@@ -53,13 +58,13 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
   const [filter, setFilter] = useState('');
   const [guideOpen, setGuideOpen] = useState(false);
 
-  const visibleCount = APP_SECTIONS.filter((key) => {
-    const needle = filter.trim().toLowerCase();
-    if (needle === '') return true;
-    const heading = t(`help.app.${key}.title` as MessageKey);
-    const text = t(`help.app.${key}.body` as MessageKey);
-    return `${heading} ${text}`.toLowerCase().includes(needle);
-  }).length;
+  const visibleAppCount = APP_SECTIONS.filter((key) =>
+    matchesFilter(t(`help.app.${key}.title` as MessageKey), t(`help.app.${key}.body` as MessageKey), filter),
+  ).length;
+
+  const visibleRuleCount = RULE_SECTIONS.filter((key) =>
+    matchesFilter(t(`help.rules.${key}.title` as MessageKey), t(`help.rules.${key}.body` as MessageKey), filter),
+  ).length;
 
   return (
     <section className="help">
@@ -70,15 +75,9 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
         </button>
       ) : null}
       {guideOpen && role !== undefined ? <GuideDialog role={role} onClose={() => setGuideOpen(false)} /> : null}
-      <div className="help-tabs" role="tablist">
+      <div className="help-tabs">
         {TABS.map((id) => (
-          <button
-            key={id}
-            type="button"
-            role="tab"
-            aria-selected={tab === id}
-            onClick={() => navigate(`/help#${id}`)}
-          >
+          <button key={id} type="button" aria-pressed={tab === id} onClick={() => navigate(`/help#${id}`)}>
             {t(`help.tab.${id}` as MessageKey)}
           </button>
         ))}
@@ -97,7 +96,7 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
 
       {tab === 'app' ? (
         <div className="help-sections">
-          {visibleCount === 0 ? <p className="muted">{t('help.noMatches')}</p> : null}
+          {visibleAppCount === 0 ? <p className="muted">{t('help.noMatches')}</p> : null}
           {APP_SECTIONS.map((key) => (
             <Section
               key={key}
@@ -111,6 +110,7 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
 
       {tab === 'rules' ? (
         <div className="help-sections">
+          {visibleRuleCount === 0 ? <p className="muted">{t('help.noMatches')}</p> : null}
           {RULE_SECTIONS.map((key) => (
             <Section
               key={key}

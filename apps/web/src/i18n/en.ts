@@ -689,7 +689,7 @@ export const en: Record<keyof typeof es, string> = {
   'guide.player.1.title': 'Join your campaign',
   'guide.player.1.body': 'Your GM added you to a campaign; open it from Home.',
   'guide.player.2.title': 'Create your character',
-  'guide.player.2.body': 'Nine guided steps: class, heritage, community, traits, loadout, background, experiences, cards, and connections. It saves at the end.',
+  'guide.player.2.body': 'Nine guided steps: class and subclass, heritage, traits, derived stats, equipment, background, experiences, domain cards, and connections. It saves at the end.',
   'guide.player.3.title': 'Your sheet',
   'guide.player.3.body': 'Mark damage, spend Hope, manage Stress and armor, and move cards between loadout and vault. Rolls happen on the server.',
   'guide.player.4.title': 'The map',
@@ -713,7 +713,7 @@ export const en: Record<keyof typeof es, string> = {
     'Creating a character walks through nine steps in order: Class and Subclass, Heritage, Traits, Derived Stats, Equipment, Background, Experiences, Domain Cards, and Connections. The draft is saved only in that device\'s browser, one per campaign, so closing the tab or reloading never loses progress. Finishing the last step claims the character into the campaign and replaces the draft with the real sheet.',
   'help.app.sheet.title': 'The character sheet',
   'help.app.sheet.body':
-    'The "Take damage" button opens a dialog that checks the hit against the character\'s thresholds to work out how many HP to mark, with optional armor slots to soften the blow. Hope is gained from favorable rolls and spent on class features; Stress is marked from strain and, once full, leaves the character Vulnerable. Active cards live in the loadout and the rest sit in the vault; recalling one from the vault costs Hope based on its level. "Level up" applies the next level\'s advancements, and if HP ends up fully marked the death move roll kicks in. "Export PDF" produces a printable sheet with the same data.',
+    'The "Take damage" button opens a dialog that checks the hit against the character\'s thresholds to work out how many HP to mark, with optional armor slots to soften the blow. Hope is gained from favorable rolls and spent on class features; Stress is marked from strain and, once full, leaves the character Vulnerable. Active cards live in the loadout and the rest sit in the vault; recalling one from the vault costs Stress equal to its Recall Cost, and is free during a rest. "Level up" applies the next level\'s advancements, and if HP ends up fully marked the death move roll kicks in. "Export PDF" produces a printable sheet with the same data.',
   'help.app.gm.title': 'The GM panel',
   'help.app.gm.body':
     'The GM panel brings together the GM\'s Fear track, the party with who currently holds the spotlight, countdowns for building tension, adversaries and environments added from the SRD list, and who is connected under "At the table". The roll log is shared with players so the whole table sees the same results. Only the GM can change Fear, the spotlight, countdowns, or adversaries; a player never sees this panel.',
@@ -779,10 +779,11 @@ export const en: Record<keyof typeof es, string> = {
   'compendium.collection.beastforms': 'Beastforms',
 
   'compendium.filterPlaceholder': 'Search the compendium…',
-  'compendium.results': '{n} results',
   'compendium.tooMany': 'Showing 100 of {n} results.',
   'compendium.empty': 'No results.',
+  'compendium.notFound': 'That entry was not found.',
   'compendium.pick': 'Pick an entry from the list.',
+  'compendium.collectionLabel': 'Collection',
 
   'compendium.field.tier': 'Tier',
   'compendium.field.level': 'Level',
@@ -821,6 +822,7 @@ export const en: Record<keyof typeof es, string> = {
   'compendium.field.advantages': 'Advantages',
   'compendium.field.roll': 'Roll',
   'compendium.field.fear': 'Fear',
+  'compendium.field.direct': 'direct',
 
   'compendium.adversaryType.bruiser': 'Bruiser',
   'compendium.adversaryType.horde': 'Horde',

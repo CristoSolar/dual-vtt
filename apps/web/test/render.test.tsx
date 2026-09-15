@@ -9,9 +9,10 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { EntryDetail } from '../src/components/help/details.js';
 import { COLLECTIONS } from '../src/components/help/Compendium.js';
 import { GMPanel } from '../src/components/gm/GMPanel.js';
+import { GuideDialog } from '../src/components/GuideDialog.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { setLocale, t } from '../src/i18n/index.js';
-import { HelpRoute } from '../src/routes/HelpRoute.js';
+import { HelpRoute, parseHelpHash } from '../src/routes/HelpRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
 import {
@@ -312,6 +313,27 @@ describe('GM panel renders', () => {
   });
 });
 
+describe('parseHelpHash', () => {
+  it('parses each shape into a tab and a rest path', () => {
+    expect(parseHelpHash('')).toEqual({ tab: 'app', rest: [] });
+    expect(parseHelpHash('#')).toEqual({ tab: 'app', rest: [] });
+    expect(parseHelpHash('#compendium')).toEqual({ tab: 'compendium', rest: [] });
+    expect(parseHelpHash('#compendium/')).toEqual({ tab: 'compendium', rest: [''] });
+    expect(parseHelpHash('#compendium/adversaries/')).toEqual({
+      tab: 'compendium',
+      rest: ['adversaries', ''],
+    });
+    expect(parseHelpHash('#nope')).toEqual({ tab: 'app', rest: [] });
+  });
+});
+
+describe('GuideDialog', () => {
+  it('renders the first GM step', () => {
+    const html = renderToStaticMarkup(<GuideDialog role="gm" onClose={() => {}} />);
+    expect(html).toContain(t('guide.gm.1.title'));
+  });
+});
+
 describe('HelpRoute', () => {
   it('renders the three tabs and the app-guide sections', () => {
     const html = render(<HelpRoute />, '/help#app');
@@ -339,9 +361,18 @@ describe('Compendium', () => {
   });
 
   it('falls back to the default collection on an unknown deep link', () => {
+    setLocale('es');
     const html = render(<HelpRoute />, '/help#compendium/nope/nothing');
-    expect(html).toContain(t('compendium.collection.classes'));
+    expect(html).toMatch(/<option[^>]*value="classes"[^>]*selected=""[^>]*>/);
+    expect(html).toContain('Bardo');
     expect(html).not.toContain('Excavador');
+  });
+
+  it('shows the pick prompt, not empty/notFound, for a collection with a trailing slash and no id', () => {
+    const html = render(<HelpRoute />, '/help#compendium/adversaries/');
+    expect(html).toContain(t('compendium.pick'));
+    expect(html).not.toContain(t('compendium.empty'));
+    expect(html).not.toContain(t('compendium.notFound'));
   });
 
   it('renders every entry of every collection without crashing', () => {

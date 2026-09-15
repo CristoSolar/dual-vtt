@@ -474,7 +474,7 @@ legend {
   margin-bottom: 1rem;
 }
 
-.help-tabs [aria-selected='true'] {
+.help-tabs [aria-pressed='true'] {
   border-color: var(--c-brass);
   color: var(--c-brass-bright);
   background: linear-gradient(180deg, #3a2e14, #251c0f);
