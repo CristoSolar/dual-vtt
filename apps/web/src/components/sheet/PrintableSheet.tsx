@@ -50,7 +50,7 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
       <div className="print-sheet">
         <div className="ps-header">
           <div className="ps-header-title">
-            <h1>DAGGERHEART</h1>
+            <h1>DUAL VTT</h1>
             <p>{t('sheet.print.subtitle')}</p>
           </div>
           <div className="ps-header-fields">

@@ -25,7 +25,7 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
           <div className="login-art">
             <div className="row">
               <span className="ornament-diamond" aria-hidden="true" />
-              <span className="login-art-overline">Daggerheart VTT</span>
+              <span className="login-art-overline">Dual VTT</span>
             </div>
             <h1 className="login-art-headline">{t('login.headlineArt')}</h1>
             <p className="muted">{t('login.subtitleArt')}</p>

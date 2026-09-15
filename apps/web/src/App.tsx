@@ -109,7 +109,7 @@ function Shell() {
     <div className={isMapRoute ? 'app app--map' : 'app'}>
       <header className={isMapRoute ? 'topbar topbar--overlay' : 'topbar'}>
         <Link to="/" className="brand">
-          DAGGERHEART VTT
+          DUAL VTT
         </Link>
         <nav>
           <Link to="/">
