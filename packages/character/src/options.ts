@@ -1,11 +1,5 @@
 import {
-  ancestries,
-  armor,
-  classes,
-  communities,
-  domainCards,
-  subclasses,
-  weapons,
+  srd,
   type Ancestry,
   type Armor,
   type CharacterClass,
@@ -115,19 +109,19 @@ export function availableOptions(state: CreationState, step: Step): StepOptions[
   switch (step) {
     case 1:
       return {
-        classes,
+        classes: srd().classes,
         subclasses:
           characterClass === null
             ? []
-            : subclasses.filter((s) => s.classId === characterClass.id),
+            : srd().subclasses.filter((s) => s.classId === characterClass.id),
       };
 
     case 2:
       return {
-        ancestries,
-        communities,
-        mixedFirstSlot: ancestries.filter((a) => a.features.some((f) => f.slot === 'first')),
-        mixedSecondSlot: ancestries.filter((a) => a.features.some((f) => f.slot === 'second')),
+        ancestries: srd().ancestries,
+        communities: srd().communities,
+        mixedFirstSlot: srd().ancestries.filter((a) => a.features.some((f) => f.slot === 'first')),
+        mixedSecondSlot: srd().ancestries.filter((a) => a.features.some((f) => f.slot === 'second')),
       };
 
     case 3:
@@ -150,7 +144,7 @@ export function availableOptions(state: CreationState, step: Step): StepOptions[
 
     case 5: {
       const magicAllowed = canUseMagicWeapons(state);
-      const tier1 = weapons.filter((w) => w.tier === STARTING_TIER);
+      const tier1 = srd().weapons.filter((w) => w.tier === STARTING_TIER);
       const usable = tier1.filter((w) => magicAllowed || !requiresSpellcast(w));
       const primary = usable.filter((w) => w.category === 'primary');
       const chosenPrimary = findWeapon(state.equipment?.primaryWeaponId ?? null);
@@ -162,7 +156,7 @@ export function availableOptions(state: CreationState, step: Step): StepOptions[
           chosenPrimary !== null && chosenPrimary.burden === 'twoHanded'
             ? []
             : usable.filter((w) => w.category === 'secondary'),
-        armor: armor.filter((a) => a.tier === STARTING_TIER),
+        armor: srd().armor.filter((a) => a.tier === STARTING_TIER),
         potions: ['health', 'stamina'],
         classItems: characterClass === null ? [] : classItemOptions(characterClass),
         needsSpellCarrier: magicAllowed,
@@ -180,7 +174,7 @@ export function availableOptions(state: CreationState, step: Step): StepOptions[
         cards:
           characterClass === null
             ? []
-            : domainCards.filter(
+            : srd().domainCards.filter(
                 (c) => c.level === 1 && characterClass.domains.includes(c.domain),
               ),
         count: 2,

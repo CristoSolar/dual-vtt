@@ -1,4 +1,4 @@
-import { classes, domainCards, weapons, type ClassId } from '@daggerheart/srd-data';
+import { srd, type ClassId, type Weapon } from '@daggerheart/srd-data';
 
 import {
   applyChoice,
@@ -24,7 +24,7 @@ export const VALID_TRAITS: Record<Trait, number> = {
  * option at each one. Returns the state, so tests can assert on it or finalize it.
  */
 export function buildCharacter(classId: ClassId, overrides: { subclassIndex?: 0 | 1 } = {}) {
-  const characterClass = classes.find((c) => c.id === classId);
+  const characterClass = srd().classes.find((c) => c.id === classId);
   if (!characterClass) throw new Error(`no such class: ${classId}`);
 
   let state: CreationState = createInitialState();
@@ -85,12 +85,12 @@ export function buildCharacter(classId: ClassId, overrides: { subclassIndex?: 0 
 }
 
 /** The first Tier 1 weapon matching a predicate, for equipment tests. */
-export function tier1Weapon(predicate: (w: (typeof weapons)[number]) => boolean) {
-  const found = weapons.find((w) => w.tier === 1 && predicate(w));
+export function tier1Weapon(predicate: (w: Weapon) => boolean) {
+  const found = srd().weapons.find((w) => w.tier === 1 && predicate(w));
   if (!found) throw new Error('no matching Tier 1 weapon');
   return found;
 }
 
 /** All level-1 cards in a domain. */
 export const level1CardsIn = (domain: string) =>
-  domainCards.filter((c) => c.level === 1 && c.domain === domain);
+  srd().domainCards.filter((c) => c.level === 1 && c.domain === domain);

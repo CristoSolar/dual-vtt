@@ -1,4 +1,4 @@
-import { classes, subclasses } from '@daggerheart/srd-data';
+import { setLocale, srd } from '@daggerheart/srd-data';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -12,6 +12,7 @@ import {
   validateStep,
   type CreationState,
 } from '../src/index.js';
+import { classItemOptions } from '../src/lookup.js';
 import { buildCharacter, tier1Weapon, VALID_TRAITS } from './helpers.js';
 
 describe('createInitialState', () => {
@@ -28,8 +29,8 @@ describe('createInitialState', () => {
 
 describe('full creation', () => {
   it('builds and finalizes a valid PC for all 9 classes', () => {
-    expect(classes).toHaveLength(9);
-    for (const characterClass of classes) {
+    expect(srd().classes).toHaveLength(9);
+    for (const characterClass of srd().classes) {
       const state = buildCharacter(characterClass.id);
       expect(isComplete(state), `${characterClass.id} incomplete`).toBe(true);
 
@@ -48,7 +49,7 @@ describe('full creation', () => {
   });
 
   it('builds both subclasses of every class', () => {
-    for (const characterClass of classes) {
+    for (const characterClass of srd().classes) {
       for (const index of [0, 1] as const) {
         const state = buildCharacter(characterClass.id, { subclassIndex: index });
         expect(isComplete(state), `${characterClass.id}[${index}]`).toBe(true);
@@ -273,7 +274,7 @@ describe('step 5 — equipment', () => {
   });
 
   it('makes magic weapons unavailable to a subclass with spellcastTrait null', () => {
-    const guardianSubclasses = subclasses.filter((s) => s.classId === 'guardian');
+    const guardianSubclasses = srd().subclasses.filter((s) => s.classId === 'guardian');
     expect(guardianSubclasses.every((s) => s.spellcastTrait === null)).toBe(true);
 
     const state = buildCharacter('guardian');
@@ -428,5 +429,18 @@ describe('finalize', () => {
         expect(error.errors.map((e) => e.step)).toContain(1);
       }
     }
+  });
+});
+
+describe('classItemOptions across locales', () => {
+  it('splits the two-way class item in both languages', () => {
+    const bard = () => srd().classes.find((c) => c.id === 'bard');
+    setLocale('en');
+    const en = classItemOptions(bard()!);
+    setLocale('es');
+    const es = classItemOptions(bard()!);
+    expect(en).toHaveLength(2);
+    expect(es).toHaveLength(2);
+    expect(en).not.toEqual(es);
   });
 });

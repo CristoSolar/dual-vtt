@@ -1,11 +1,5 @@
 import {
-  ancestries,
-  armor,
-  classes,
-  communities,
-  domainCards,
-  subclasses,
-  weapons,
+  srd,
   type Ancestry,
   type Armor,
   type CharacterClass,
@@ -21,25 +15,25 @@ import type { CreationState } from './types.js';
 export const STARTING_TIER = 1;
 
 export const findClass = (id: string | null): CharacterClass | null =>
-  classes.find((c) => c.id === id) ?? null;
+  srd().classes.find((c) => c.id === id) ?? null;
 
 export const findSubclass = (id: string | null): Subclass | null =>
-  subclasses.find((s) => s.id === id) ?? null;
+  srd().subclasses.find((s) => s.id === id) ?? null;
 
 export const findAncestry = (id: string | null): Ancestry | null =>
-  ancestries.find((a) => a.id === id) ?? null;
+  srd().ancestries.find((a) => a.id === id) ?? null;
 
 export const findCommunity = (id: string | null): Community | null =>
-  communities.find((c) => c.id === id) ?? null;
+  srd().communities.find((c) => c.id === id) ?? null;
 
 export const findWeapon = (id: string | null): Weapon | null =>
-  weapons.find((w) => w.id === id) ?? null;
+  srd().weapons.find((w) => w.id === id) ?? null;
 
 export const findArmor = (id: string | null): Armor | null =>
-  armor.find((a) => a.id === id) ?? null;
+  srd().armor.find((a) => a.id === id) ?? null;
 
 export const findDomainCard = (id: string | null): DomainCard | null =>
-  domainCards.find((c) => c.id === id) ?? null;
+  srd().domainCards.find((c) => c.id === id) ?? null;
 
 /**
  * The Spellcast trait comes from the subclass, and is null for every Guardian and
