@@ -176,6 +176,8 @@ export interface ValidationError {
   message: string;
   /** The state field the error is about, when it maps to one. */
   field: string | null;
+  /** Values the message interpolates, for localized rendering. */
+  params?: Record<string, string | number>;
 }
 
 export type ValidationResult =

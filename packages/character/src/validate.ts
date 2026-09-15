@@ -20,7 +20,9 @@ const err = (
   code: string,
   message: string,
   field: string | null = null,
-): ValidationError => ({ step, code, message, field });
+  params?: Record<string, string | number>,
+): ValidationError =>
+  params !== undefined ? { step, code, message, field, params } : { step, code, message, field };
 
 const result = (errors: readonly ValidationError[]): ValidationResult =>
   errors.length === 0 ? { ok: true, errors: [] } : { ok: false, errors };
@@ -51,6 +53,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'subclassMismatch',
             `${subclass.name} is not a ${characterClass.name} subclass`,
             'subclassId',
+            { subclassName: subclass.name, className: characterClass.name },
           ),
         );
       }
@@ -64,7 +67,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
       } else if (heritage.kind === 'single') {
         if (findAncestry(heritage.ancestryId) === null) {
           errors.push(
-            err(2, 'unknownAncestry', `unknown ancestry: ${heritage.ancestryId}`, 'heritage'),
+            err(2, 'unknownAncestry', `unknown ancestry: ${heritage.ancestryId}`, 'heritage', {
+              id: heritage.ancestryId,
+            }),
           );
         }
       } else {
@@ -72,7 +77,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
         const second = findAncestry(heritage.second.ancestryId);
         if (first === null) {
           errors.push(
-            err(2, 'unknownAncestry', `unknown ancestry: ${heritage.first.ancestryId}`, 'heritage'),
+            err(2, 'unknownAncestry', `unknown ancestry: ${heritage.first.ancestryId}`, 'heritage', {
+              id: heritage.first.ancestryId,
+            }),
           );
         }
         if (second === null) {
@@ -82,6 +89,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'unknownAncestry',
               `unknown ancestry: ${heritage.second.ancestryId}`,
               'heritage',
+              { id: heritage.second.ancestryId },
             ),
           );
         }
@@ -97,6 +105,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'duplicateAncestrySlot',
               `a mixed ancestry takes one first-listed and one second-listed feature, not two ${heritage.first.slot}-listed ones`,
               'heritage',
+              { slot: heritage.first.slot },
             ),
           );
         }
@@ -107,7 +116,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             heritage.first.slot === 'first' ? [first, second] : [second, first];
           const mixed = validateMixedAncestry(firstSlotAncestry, secondSlotAncestry);
           if (!mixed.ok) {
-            errors.push(err(2, 'invalidMixedAncestry', mixed.error, 'heritage'));
+            errors.push(err(2, 'invalidMixedAncestry', mixed.error, 'heritage', { detail: mixed.error }));
           }
         }
       }
@@ -116,7 +125,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
         errors.push(err(2, 'communityRequired', 'choose a community', 'communityId'));
       } else if (findCommunity(state.communityId) === null) {
         errors.push(
-          err(2, 'unknownCommunity', `unknown community: ${state.communityId}`, 'communityId'),
+          err(2, 'unknownCommunity', `unknown community: ${state.communityId}`, 'communityId', {
+            id: state.communityId,
+          }),
         );
       }
       break;
@@ -128,7 +139,8 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
         break;
       }
       const assigned = assignTraits(state.traits);
-      if (!assigned.ok) errors.push(err(3, 'invalidTraitArray', assigned.error, 'traits'));
+      if (!assigned.ok)
+        errors.push(err(3, 'invalidTraitArray', assigned.error, 'traits', { detail: assigned.error }));
       break;
     }
 
@@ -154,6 +166,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'unknownWeapon',
             `unknown weapon: ${equipment.primaryWeaponId}`,
             'equipment.primaryWeaponId',
+            { id: equipment.primaryWeaponId },
           ),
         );
       } else {
@@ -164,6 +177,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'notPrimaryWeapon',
               `${primary.name} is a secondary weapon`,
               'equipment.primaryWeaponId',
+              { name: primary.name },
             ),
           );
         }
@@ -174,6 +188,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'weaponTierTooHigh',
               `${primary.name} is Tier ${primary.tier}; characters start at Tier ${STARTING_TIER}`,
               'equipment.primaryWeaponId',
+              { name: primary.name, tier: primary.tier, startingTier: STARTING_TIER },
             ),
           );
         }
@@ -184,6 +199,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'spellcastRequired',
               `${primary.name} requires a Spellcast trait`,
               'equipment.primaryWeaponId',
+              { name: primary.name },
             ),
           );
         }
@@ -197,6 +213,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'unknownWeapon',
             `unknown weapon: ${equipment.secondaryWeaponId}`,
             'equipment.secondaryWeaponId',
+            { id: equipment.secondaryWeaponId },
           ),
         );
       }
@@ -208,6 +225,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'notSecondaryWeapon',
               `${secondary.name} is a primary weapon`,
               'equipment.secondaryWeaponId',
+              { name: secondary.name },
             ),
           );
         }
@@ -218,6 +236,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'weaponTierTooHigh',
               `${secondary.name} is Tier ${secondary.tier}; characters start at Tier ${STARTING_TIER}`,
               'equipment.secondaryWeaponId',
+              { name: secondary.name, tier: secondary.tier, startingTier: STARTING_TIER },
             ),
           );
         }
@@ -228,6 +247,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'spellcastRequired',
               `${secondary.name} requires a Spellcast trait`,
               'equipment.secondaryWeaponId',
+              { name: secondary.name },
             ),
           );
         }
@@ -242,6 +262,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'burdenExceeded',
             `${primary.name} is two-handed, leaving no hand for ${secondary.name}`,
             'equipment.secondaryWeaponId',
+            { twoHanded: primary.name, other: secondary.name },
           ),
         );
       }
@@ -252,6 +273,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'burdenExceeded',
             `${secondary.name} is two-handed and can't be held alongside a primary weapon`,
             'equipment.secondaryWeaponId',
+            { twoHanded: secondary.name, other: primary.name },
           ),
         );
       }
@@ -259,7 +281,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
       const armorPiece = findArmor(equipment.armorId);
       if (armorPiece === null) {
         errors.push(
-          err(5, 'unknownArmor', `unknown armor: ${equipment.armorId}`, 'equipment.armorId'),
+          err(5, 'unknownArmor', `unknown armor: ${equipment.armorId}`, 'equipment.armorId', {
+            id: equipment.armorId,
+          }),
         );
       } else if (armorPiece.tier !== STARTING_TIER) {
         errors.push(
@@ -268,6 +292,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'armorTierTooHigh',
             `${armorPiece.name} is Tier ${armorPiece.tier}; characters start at Tier ${STARTING_TIER}`,
             'equipment.armorId',
+            { name: armorPiece.name, tier: armorPiece.tier, startingTier: STARTING_TIER },
           ),
         );
       }
@@ -281,6 +306,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'invalidClassItem',
               `class item must be one of: ${allowed.join(' / ')}`,
               'equipment.classItem',
+              { allowed: allowed.join(' / ') },
             ),
           );
         }
@@ -325,6 +351,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'experienceCount',
             `choose exactly ${REQUIRED_EXPERIENCES} Experiences (got ${experiences.length})`,
             'experiences',
+            { required: REQUIRED_EXPERIENCES, got: experiences.length },
           ),
         );
       }
@@ -339,6 +366,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'experienceModifier',
               `starting Experiences are +${EXPERIENCE_MODIFIER} (got ${experience.modifier})`,
               'experiences',
+              { required: EXPERIENCE_MODIFIER, got: experience.modifier },
             ),
           );
         }
@@ -359,6 +387,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
             'domainCardCount',
             `choose exactly ${REQUIRED_DOMAIN_CARDS} domain cards (got ${domainCardIds.length})`,
             'domainCardIds',
+            { required: REQUIRED_DOMAIN_CARDS, got: domainCardIds.length },
           ),
         );
       }
@@ -368,7 +397,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
       for (const id of domainCardIds) {
         const card = findDomainCard(id);
         if (card === null) {
-          errors.push(err(8, 'unknownDomainCard', `unknown domain card: ${id}`, 'domainCardIds'));
+          errors.push(
+            err(8, 'unknownDomainCard', `unknown domain card: ${id}`, 'domainCardIds', { id }),
+          );
           continue;
         }
         if (card.level !== 1) {
@@ -378,6 +409,7 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'domainCardLevel',
               `${card.name} is level ${card.level}; a new character takes level 1 cards`,
               'domainCardIds',
+              { name: card.name, level: card.level },
             ),
           );
         }
@@ -388,6 +420,12 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
               'domainCardOutOfDomain',
               `${card.name} is a ${card.domain} card; ${characterClass.name} has ${characterClass.domains.join(' and ')}`,
               'domainCardIds',
+              {
+                name: card.name,
+                domain: card.domain,
+                className: characterClass.name,
+                classDomains: characterClass.domains.join(' and '),
+              },
             ),
           );
         }
