@@ -30,6 +30,35 @@ pnpm validate    # parse every JSON against its schema; fails the build on misma
 
 Requires Node 20+ and pnpm.
 
+## Run it on your machine
+
+```sh
+git clone https://github.com/CristoSolar/dual-vtt.git
+cd dual-vtt
+pnpm install
+pnpm dev
+```
+
+Open http://localhost:5173 and sign in as `gm` / `gm` (set `GM_USERNAME` /
+`GM_PASSWORD` to change the first account; you are asked to change the password on
+first login anyway). Create a campaign, then create player accounts from
+**Players** and add them to the campaign. Everything is saved under `.data/` next to
+the server — back that folder up if you care about the campaign.
+
+To play with people who are not on your network:
+
+```sh
+pnpm -F @daggerheart/server host   # builds the web app and serves it from :4000
+```
+
+Then, from a campaign card, click **Generate link for players**. The server opens a Cloudflare
+quick tunnel and shows a public URL your players can open. The tunnel lives only
+while the server runs. Anyone with the URL reaches the login screen, so use real
+passwords.
+
+The app is bilingual; the flag in the top bar switches between English and Spanish.
+`?` opens the help: an app guide, a rules primer, and a compendium of the SRD.
+
 ## Notes
 
 - Every rules function takes an injectable `rng: () => number`, so tests are
@@ -74,6 +103,11 @@ Requires Node 20+ and pnpm.
 
 ## Licensing
 
-Game content is from the Daggerheart System Reference Document, © 2025 Critical
-Role LLC, used under the Darrington Press Community Gaming License. The SRD PDF
-itself is not committed. This project is personal, non-commercial use.
+Source code: MIT (see `LICENSE`).
+
+Game content: this product includes materials from the Daggerheart System Reference
+Document 1.0, © Critical Role, LLC, under the terms of the Darrington Press Community
+Gaming (DPCG) License — https://www.darringtonpress.com/license/. The Spanish data is
+an unofficial translation. The SRD PDF itself is not committed. Dual VTT is an
+independent fan-made tool, not affiliated with or endorsed by Darrington Press or
+Critical Role. Full notice in `NOTICE.md`.
