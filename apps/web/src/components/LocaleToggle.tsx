@@ -14,7 +14,8 @@ export function LocaleToggle({ floating = false }: { floating?: boolean }) {
       onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
       aria-label={t('locale.switchTo')}
     >
-      {locale === 'es' ? 'EN' : 'ES'}
+      {/* Flag of the language you switch TO; aria-label carries the text. */}
+      <span aria-hidden="true">{locale === 'es' ? '🇬🇧' : '🇪🇸'}</span>
     </button>
   );
 }
