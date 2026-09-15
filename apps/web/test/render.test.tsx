@@ -317,4 +317,11 @@ describe('HelpRoute', () => {
     expect(html).toContain(t('help.app.start.title'));
     expect(html).toContain(t('help.app.faq.title'));
   });
+
+  it('renders the rules primer sections and the SRD attribution', () => {
+    const html = render(<HelpRoute />, '/help#rules');
+    expect(html).toContain(t('help.rules.duality.title'));
+    expect(html).toContain(t('help.rules.levelUp.title'));
+    expect(html).toContain(t('sheet.print.footer'));
+  });
 });

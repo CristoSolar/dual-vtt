@@ -9,6 +9,21 @@ const TABS: readonly HelpTab[] = ['app', 'rules', 'compendium'];
 
 const APP_SECTIONS = ['start', 'campaigns', 'creation', 'sheet', 'gm', 'map', 'rolls', 'faq'] as const;
 
+const RULE_SECTIONS = [
+  'duality',
+  'hope',
+  'fear',
+  'stress',
+  'damage',
+  'armor',
+  'rests',
+  'death',
+  'conditions',
+  'ranges',
+  'cards',
+  'levelUp',
+] as const;
+
 /** Parses `#<tab>[/rest]`; anything unknown falls back to the app guide. */
 export function parseHelpHash(hash: string): { tab: HelpTab; rest: string[] } {
   const [head = '', ...rest] = hash.replace(/^#/, '').split('/');
@@ -93,7 +108,19 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
         </div>
       ) : null}
 
-      {tab === 'rules' ? <p className="muted">{t('help.tab.rules')}</p> : null}
+      {tab === 'rules' ? (
+        <div className="help-sections">
+          {RULE_SECTIONS.map((key) => (
+            <Section
+              key={key}
+              title={`help.rules.${key}.title` as MessageKey}
+              body={`help.rules.${key}.body` as MessageKey}
+              filter={filter}
+            />
+          ))}
+          <p className="muted">{t('sheet.print.footer')}</p>
+        </div>
+      ) : null}
       {tab === 'compendium' ? <p className="muted">{t('help.tab.compendium')}</p> : null}
     </section>
   );
