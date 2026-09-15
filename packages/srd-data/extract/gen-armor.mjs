@@ -81,7 +81,7 @@ for (const a of armor) {
 }
 
 fs.writeFileSync(
-  new URL('../data/armor.json', import.meta.url),
+  new URL('../data/en/armor.json', import.meta.url),
   JSON.stringify(armor, null, 2) + '\n',
 );
 console.log('armor:', armor.length);

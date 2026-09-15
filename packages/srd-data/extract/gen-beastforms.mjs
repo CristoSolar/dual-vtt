@@ -224,6 +224,6 @@ console.log('problems:', problems.length);
 problems.slice(0, 20).forEach((p) => console.log('  !', p));
 
 fs.writeFileSync(
-  new URL('../data/beastforms.json', import.meta.url),
+  new URL('../data/en/beastforms.json', import.meta.url),
   JSON.stringify(beastforms, null, 2) + '\n',
 );

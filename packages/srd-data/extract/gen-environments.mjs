@@ -179,6 +179,6 @@ console.log('problems:', problems.length);
 problems.slice(0, 30).forEach((p) => console.log('  !', p));
 
 fs.writeFileSync(
-  new URL('../data/environments.json', import.meta.url),
+  new URL('../data/en/environments.json', import.meta.url),
   JSON.stringify(environments, null, 2) + '\n',
 );

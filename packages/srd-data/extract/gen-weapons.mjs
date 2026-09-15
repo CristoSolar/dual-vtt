@@ -275,7 +275,7 @@ for (const w of weapons) {
 }
 
 fs.writeFileSync(
-  new URL('../data/weapons.json', import.meta.url),
+  new URL('../data/en/weapons.json', import.meta.url),
   JSON.stringify(weapons, null, 2) + '\n',
 );
 console.log('weapons:', weapons.length);

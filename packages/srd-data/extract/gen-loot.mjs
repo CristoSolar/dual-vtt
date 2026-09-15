@@ -123,6 +123,6 @@ console.log('loot:', loot.length, '| consumables:', consumables.length);
 console.log('problems:', problems.length);
 problems.slice(0, 20).forEach((p) => console.log('  !', p));
 
-const out = new URL('../data/', import.meta.url);
+const out = new URL('../data/en/', import.meta.url);
 fs.writeFileSync(new URL('loot.json', out), JSON.stringify(loot, null, 2) + '\n');
 fs.writeFileSync(new URL('consumables.json', out), JSON.stringify(consumables, null, 2) + '\n');

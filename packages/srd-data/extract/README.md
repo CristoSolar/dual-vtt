@@ -45,3 +45,9 @@ Two properties of this PDF break naive extraction, and both are handled here:
   extract as Private Use Area codepoints. `glyphs.mjs` maps them back. Every mapping
   was confirmed against a rendered page image, and `assertNoPua` throws on any
   unmapped PUA character so a new glyph can never silently corrupt a number.
+
+## Locales
+
+The scripts write English (the SRD's language) to `../data/en/`. `../data/es/` is a
+hand-maintained translation with the same files, ids, and order; the test suite
+asserts id parity between the two.

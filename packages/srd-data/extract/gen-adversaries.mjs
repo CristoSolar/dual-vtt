@@ -256,6 +256,6 @@ console.log('problems:', problems.length);
 problems.slice(0, 40).forEach((p) => console.log('  !', p));
 
 fs.writeFileSync(
-  new URL('../data/adversaries.json', import.meta.url),
+  new URL('../data/en/adversaries.json', import.meta.url),
   JSON.stringify(adversaries, null, 2) + '\n',
 );

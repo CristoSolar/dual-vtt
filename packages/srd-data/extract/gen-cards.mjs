@@ -124,6 +124,6 @@ console.log('problems:', problems.length);
 problems.slice(0, 40).forEach((p) => console.log('  !', p));
 
 fs.writeFileSync(
-  new URL('../data/domain-cards.json', import.meta.url),
+  new URL('../data/en/domain-cards.json', import.meta.url),
   JSON.stringify(cards, null, 2) + '\n',
 );
