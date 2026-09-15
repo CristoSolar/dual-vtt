@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { Compendium } from '../components/help/Compendium.js';
 import { GuideDialog } from '../components/GuideDialog.js';
 import { t, type MessageKey } from '../i18n/index.js';
 
@@ -48,7 +49,7 @@ export function Section({ title, body, filter }: { title: MessageKey; body: Mess
 export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { tab } = parseHelpHash(location.hash);
+  const { tab, rest } = parseHelpHash(location.hash);
   const [filter, setFilter] = useState('');
   const [guideOpen, setGuideOpen] = useState(false);
 
@@ -121,7 +122,12 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
           <p className="muted">{t('sheet.print.footer')}</p>
         </div>
       ) : null}
-      {tab === 'compendium' ? <p className="muted">{t('help.tab.compendium')}</p> : null}
+      {tab === 'compendium' ? (
+        <Compendium
+          path={rest}
+          onNavigate={(collection, id) => navigate(`/help#compendium/${collection}${id === null ? '' : `/${id}`}`)}
+        />
+      ) : null}
     </section>
   );
 }

@@ -4,11 +4,13 @@ import { srd } from '@daggerheart/srd-data';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Route, Routes } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
+import { EntryDetail } from '../src/components/help/details.js';
+import { COLLECTIONS } from '../src/components/help/Compendium.js';
 import { GMPanel } from '../src/components/gm/GMPanel.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
-import { t } from '../src/i18n/index.js';
+import { setLocale, t } from '../src/i18n/index.js';
 import { HelpRoute } from '../src/routes/HelpRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
@@ -29,6 +31,8 @@ import { buildCharacter, buildCreationState } from './helpers.js';
  */
 const render = (element: JSX.Element, path = '/') =>
   renderToStaticMarkup(<StaticRouter location={path}>{element}</StaticRouter>);
+
+afterEach(() => setLocale('es'));
 
 const noopUpdate = (
   transition: (sheet: SheetState) => { sheet: SheetState; effect: SheetEffect },
@@ -323,5 +327,32 @@ describe('HelpRoute', () => {
     expect(html).toContain(t('help.rules.duality.title'));
     expect(html).toContain(t('help.rules.levelUp.title'));
     expect(html).toContain(t('sheet.print.footer'));
+  });
+});
+
+describe('Compendium', () => {
+  it('deep-links to an adversary and follows the locale', () => {
+    setLocale('es');
+    expect(render(<HelpRoute />, '/help#compendium/adversaries/acid-burrower')).toContain('Excavador Ácido');
+    setLocale('en');
+    expect(render(<HelpRoute />, '/help#compendium/adversaries/acid-burrower')).toContain('Acid Burrower');
+  });
+
+  it('falls back to the default collection on an unknown deep link', () => {
+    const html = render(<HelpRoute />, '/help#compendium/nope/nothing');
+    expect(html).toContain(t('compendium.collection.classes'));
+    expect(html).not.toContain('Excavador');
+  });
+
+  it('renders every entry of every collection without crashing', () => {
+    for (const collection of COLLECTIONS) {
+      for (const entry of srd()[collection]) {
+        expect(() =>
+          renderToStaticMarkup(
+            <EntryDetail collection={collection} id={entry.id} onNavigate={() => {}} />,
+          ),
+        ).not.toThrow();
+      }
+    }
   });
 });
