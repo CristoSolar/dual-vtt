@@ -47,6 +47,9 @@ Requires Node 20+ and pnpm.
   `localStorage`, and applies to UI text and SRD content alike. SRD data ships in
   both languages under `packages/srd-data/data/{en,es}` with identical ids; the web
   reads it through `srd()`, which follows the active locale.
+- Help lives at `/help`: an app guide, a short rules primer (hand-written, with
+  SRD page references), and a compendium that browses the bundled SRD data in
+  the active language. A first-run guide opens once per account per device.
 - Characters and in-progress creations are saved to `localStorage`, and the sheet
   works with the server stopped. A campaign is opt-in.
 - In a campaign the **server is authoritative**: clients send intents, never results.

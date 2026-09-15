@@ -79,7 +79,9 @@ srd-data  →  rules  →  character  →  protocol  →  server
   reopens the campaign socket, so a mid-session toggle briefly reconnects; nothing is
   lost because room state is server-authoritative. Switching locale mid-creation makes
   step 5 report `invalidClassItem` until the class item is re-picked, because the
-  chosen item is stored as SRD text (see the spec's non-goals).
+  chosen item is stored as SRD text (see the spec's non-goals). `/help` renders help
+  text from the dictionaries and the compendium straight from `srd()`; there is no
+  separate help data file.
 
 ## Invariants worth knowing before editing
 
