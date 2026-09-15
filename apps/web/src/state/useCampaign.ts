@@ -118,13 +118,13 @@ export function useCampaign(
     socket.on('disconnect', () => setStatus('connecting'));
     socket.on('connect_error', () => {
       setStatus('error');
-      setError('No se pudo conectar con el servidor.');
+      setError(t('campaign.connectFailed'));
     });
 
     socket.on(CHANNEL.roomState, (payload: unknown) => {
       const parsed = RoomStateSchema.safeParse(payload);
       if (!parsed.success) {
-        setError('El servidor envió un estado que este cliente no puede leer.');
+        setError(t('campaign.unreadableState'));
         return;
       }
       setRoom(parsed.data);

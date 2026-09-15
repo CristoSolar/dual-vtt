@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from 'react';
 
+import { t } from '../../i18n/index.js';
 import { clampPanelPosition, type PanelLayout } from '../../state/floatingPanel.js';
 
 interface FloatingPanelProps {
@@ -75,7 +76,7 @@ export function FloatingPanel({
           // to the header instead, so the browser never synthesizes a click on it.
           onPointerDown={(event) => event.stopPropagation()}
           onClick={onClose}
-          aria-label={`Cerrar ${title}`}
+          aria-label={t('map.panel.closeAria', { title })}
         >
           ×
         </button>

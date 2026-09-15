@@ -2,6 +2,7 @@ import { srd } from '@daggerheart/srd-data';
 import type { RoomEvent, RoomState, Token } from '@daggerheart/protocol';
 import { useState } from 'react';
 
+import { t } from '../../i18n/index.js';
 import { SERVER_URL } from '../../state/useCampaign.js';
 
 interface TokenPopoverProps {
@@ -53,9 +54,9 @@ export function TokenPopover({
   const hasStats = characterSheet !== null || (adversaryInstance !== null && adversaryStat !== null);
 
   const tabs: { id: TabId; label: string }[] = [
-    ...(hasStats ? [{ id: 'stats' as const, label: 'Estado' }] : []),
-    { id: 'settings' as const, label: 'Ajustes' },
-    { id: 'image' as const, label: 'Imagen' },
+    ...(hasStats ? [{ id: 'stats' as const, label: t('map.token.tabState') }] : []),
+    { id: 'settings' as const, label: t('map.token.tabSettings') },
+    { id: 'image' as const, label: t('map.token.tabImage') },
   ];
   const [tab, setTab] = useState<TabId>(hasStats ? 'stats' : 'settings');
   const active = tabs.some((t) => t.id === tab) ? tab : tabs[0]?.id ?? 'settings';
@@ -65,7 +66,7 @@ export function TokenPopover({
       <div className="token-popover-head">
         <span className="token-popover-swatch" style={{ background: token.color }} aria-hidden="true" />
         <strong className="token-popover-name">{token.name}</strong>
-        <button type="button" onClick={onClose} aria-label="Cerrar">
+        <button type="button" onClick={onClose} aria-label={t('common.close')}>
           ×
         </button>
       </div>
@@ -91,19 +92,19 @@ export function TokenPopover({
             {characterSheet !== null ? (
               <dl className="token-popover-stats">
                 <div>
-                  <dt>PV</dt>
+                  <dt>{t('sheet.print.hpAbbrev')}</dt>
                   <dd>
                     {characterSheet.hpMarked}/{characterSheet.character.hpSlots}
                   </dd>
                 </div>
                 <div>
-                  <dt>Estrés</dt>
+                  <dt>{t('sheet.route.stress')}</dt>
                   <dd>
                     {characterSheet.stressMarked}/{characterSheet.character.stressSlots}
                   </dd>
                 </div>
                 <div>
-                  <dt>Evasión</dt>
+                  <dt>{t('sheet.route.evasion')}</dt>
                   <dd>{characterSheet.character.evasion}</dd>
                 </div>
               </dl>
@@ -112,7 +113,7 @@ export function TokenPopover({
             {adversaryInstance !== null && adversaryStat !== null ? (
               <>
                 <div className="token-popover-stat-row">
-                  <span className="token-popover-stat-label">PV</span>
+                  <span className="token-popover-stat-label">{t('sheet.print.hpAbbrev')}</span>
                   <span className="token-popover-stat-value">
                     {adversaryInstance.hpMarked}/{adversaryStat.hp}
                   </span>
@@ -144,7 +145,7 @@ export function TokenPopover({
                   </button>
                 </div>
                 <div className="token-popover-stat-row">
-                  <span className="token-popover-stat-label">Estrés</span>
+                  <span className="token-popover-stat-label">{t('sheet.route.stress')}</span>
                   <span className="token-popover-stat-value">
                     {adversaryInstance.stressMarked}/{adversaryStat.stress}
                   </span>
@@ -175,7 +176,9 @@ export function TokenPopover({
                     +
                   </button>
                 </div>
-                <p className="token-popover-stat-footnote">Dificultad {adversaryStat.difficulty}</p>
+                <p className="token-popover-stat-footnote">
+                  {t('map.token.difficulty', { difficulty: adversaryStat.difficulty })}
+                </p>
               </>
             ) : null}
           </>
@@ -185,7 +188,7 @@ export function TokenPopover({
           <>
             <div className="grid cols-2">
               <div>
-                <label htmlFor="popover-token-size">Tamaño</label>
+                <label htmlFor="popover-token-size">{t('map.token.sizeLabel')}</label>
                 <input
                   id="popover-token-size"
                   type="number"
@@ -199,7 +202,7 @@ export function TokenPopover({
                 />
               </div>
               <div>
-                <label htmlFor="popover-token-rotation">Rotación</label>
+                <label htmlFor="popover-token-rotation">{t('map.token.rotationLabel')}</label>
                 <input
                   id="popover-token-rotation"
                   type="number"
@@ -213,7 +216,7 @@ export function TokenPopover({
 
             {token.kind === 'pc' ? (
               <div className="mt-3">
-                <label htmlFor="popover-token-vision-radius">Radio de visión (px)</label>
+                <label htmlFor="popover-token-vision-radius">{t('map.token.visionRadiusLabel')}</label>
                 <input
                   id="popover-token-vision-radius"
                   type="number"
@@ -226,7 +229,7 @@ export function TokenPopover({
             ) : null}
 
             <div className="mt-3">
-              <label htmlFor="popover-token-color">Color</label>
+              <label htmlFor="popover-token-color">{t('map.colorLabel')}</label>
               <input
                 id="popover-token-color"
                 type="color"
@@ -241,18 +244,18 @@ export function TokenPopover({
                   aria-pressed={token.colorFrame}
                   onClick={() => onUpdate({ colorFrame: !token.colorFrame })}
                 >
-                  {token.colorFrame ? 'Marco de color activo' : 'Marco de color desactivado'}
+                  {token.colorFrame ? t('map.token.colorFrameOn') : t('map.token.colorFrameOff')}
                 </button>
               </div>
             ) : null}
 
             <div className="row mt-3">
               <button type="button" aria-pressed={token.hidden} onClick={() => onUpdate({ hidden: !token.hidden })}>
-                {token.hidden ? 'Solo DJ' : 'Visible para jugadores'}
+                {token.hidden ? t('map.token.gmOnly') : t('map.token.visibleToPlayers')}
               </button>
             </div>
             <button type="button" className="mt-2 token-popover-danger" onClick={onRemove}>
-              Eliminar ficha
+              {t('map.token.remove')}
             </button>
           </>
         ) : null}
@@ -266,9 +269,9 @@ export function TokenPopover({
                 alt=""
               />
             ) : (
-              <p className="muted">Sin imagen — se ve el color liso.</p>
+              <p className="muted">{t('map.token.noImage')}</p>
             )}
-            <label htmlFor="popover-token-image">Subir imagen</label>
+            <label htmlFor="popover-token-image">{t('map.token.uploadImage')}</label>
             <input
               id="popover-token-image"
               type="file"
@@ -279,11 +282,11 @@ export function TokenPopover({
                 if (file !== undefined) onUploadImage(file);
               }}
             />
-            {uploadingImage ? <p className="muted">Subiendo…</p> : null}
+            {uploadingImage ? <p className="muted">{t('map.uploading')}</p> : null}
             {imageError !== null ? <p className="field-error">{imageError}</p> : null}
             {token.image !== null ? (
               <button type="button" className="mt-2" onClick={() => onUpdate({ image: null })}>
-                Quitar imagen
+                {t('map.token.removeImage')}
               </button>
             ) : null}
           </>

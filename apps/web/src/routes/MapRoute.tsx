@@ -14,6 +14,7 @@ import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
+import { t } from '../i18n/index.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
@@ -34,15 +35,25 @@ const nextId = (prefix: string) => {
 
 type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet' | 'walls';
 
-const PANEL_TITLES: Record<PanelId, string> = {
-  scenes: 'Escenas',
-  battlemap: 'Mapa de batalla',
-  grid: 'Cuadrícula y escala',
-  tokens: 'Fichas',
-  fog: 'Niebla de guerra',
-  sheet: 'Hoja de personaje',
-  walls: 'Muros y puertas',
-};
+/** Panel titles, resolved at call time so a locale switch is reflected immediately. */
+function panelTitle(id: PanelId): string {
+  switch (id) {
+    case 'scenes':
+      return t('map.panel.scenes');
+    case 'battlemap':
+      return t('map.panel.battlemap');
+    case 'grid':
+      return t('map.panel.grid');
+    case 'tokens':
+      return t('map.panel.tokens');
+    case 'fog':
+      return t('map.panel.fog');
+    case 'sheet':
+      return t('app.characterSheet');
+    case 'walls':
+      return t('map.panel.walls');
+  }
+}
 
 const PANELS_KEY = 'daggerheart-vtt:map-panels';
 
@@ -164,7 +175,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       const image = await uploadImage(file);
       updateSelected({ image });
     } catch (error) {
-      setTokenImageError(error instanceof Error ? error.message : 'Falló la subida');
+      setTokenImageError(error instanceof Error ? error.message : t('map.uploadFailed'));
     } finally {
       setUploadingTokenImage(false);
     }
@@ -188,7 +199,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         id: nextId('tok'),
         kind: 'pc',
         refId: viewerId,
-        name: mySheet.character.name ?? 'PJ',
+        name: mySheet.character.name ?? t('map.tokenTools.pcFallback'),
         x: 200,
         y: 200,
         width: 50,
@@ -213,7 +224,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       const image = await uploadImage(file);
       send({ type: 'setSceneImage', sceneId: scene.id, image });
     } catch (error) {
-      setUploadError(error instanceof Error ? error.message : 'Falló la subida');
+      setUploadError(error instanceof Error ? error.message : t('map.uploadFailed'));
     } finally {
       setUploading(false);
     }
@@ -238,26 +249,26 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       <div className="map-scene-bar">
         <span className="map-scene-name">
           <span className="ornament-diamond" aria-hidden="true" />
-          <span className="map-scene-title">{scene === null ? 'Todavía no hay escena' : scene.name}</span>
+          <span className="map-scene-title">{scene === null ? t('map.noScene') : scene.name}</span>
           {scene === null ? null : (
             <span className="map-scene-meta">
               {scene.grid.mode === 'square'
-                ? `cuadrícula ${scene.grid.feetPerInch} pies`
-                : 'sin cuadrícula'}
+                ? t('map.gridFeetMeta', { feet: scene.grid.feetPerInch })
+                : t('map.noGridMeta')}
             </span>
           )}
         </span>
         {isGameMaster ? (
           <button
             type="button"
-            onClick={() => send({ type: 'addScene', id: nextId('scene'), name: 'Nueva escena' })}
+            onClick={() => send({ type: 'addScene', id: nextId('scene'), name: t('map.newScene') })}
           >
-            Nueva escena
+            {t('map.newScene')}
           </button>
         ) : null}
         {!isGameMaster && !hasOwnToken && mySheet !== null && scene !== null ? (
           <button type="button" onClick={placeMyToken}>
-            Colocar mi ficha
+            {t('map.placeMyToken')}
           </button>
         ) : null}
       </div>
@@ -266,25 +277,25 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         <div className="map-rail">
           {isGameMaster ? (
             <>
-              {toolButton('scenes', 'map', 'Escenas')}
-              {toolButton('battlemap', 'scene', 'Mapa de batalla')}
-              {toolButton('grid', 'select', 'Cuadrícula y escala')}
-              {toolButton('tokens', 'group', 'Fichas')}
-              {toolButton('fog', 'fog', 'Niebla de guerra')}
-              {toolButton('walls', 'door', 'Muros y puertas')}
+              {toolButton('scenes', 'map', t('map.panel.scenes'))}
+              {toolButton('battlemap', 'scene', t('map.panel.battlemap'))}
+              {toolButton('grid', 'select', t('map.panel.grid'))}
+              {toolButton('tokens', 'group', t('map.panel.tokens'))}
+              {toolButton('fog', 'fog', t('map.panel.fog'))}
+              {toolButton('walls', 'door', t('map.panel.walls'))}
               <button
                 type="button"
                 className="map-rail-button"
                 aria-pressed={measuring}
-                aria-label="Medir distancia"
-                title="Medir distancia"
+                aria-label={t('map.measureDistance')}
+                title={t('map.measureDistance')}
                 onClick={() => setMeasuring((m) => !m)}
               >
                 <Icon name="measure" size={20} />
               </button>
             </>
           ) : (
-            toolButton('sheet', 'shield', 'Hoja de personaje')
+            toolButton('sheet', 'shield', t('app.characterSheet'))
           )}
         </div>
       ) : null}
@@ -293,9 +304,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         {scene === null ? (
           <div className="panel map-empty-notice">
             <p className="muted">
-              {isGameMaster
-                ? 'Crea una escena para empezar a armar el mapa.'
-                : 'El DJ todavía no ha compartido una escena.'}
+              {isGameMaster ? t('map.gmNoSceneHint') : t('map.playerNoSceneHint')}
             </p>
           </div>
         ) : stageSize.width > 0 ? (
@@ -354,7 +363,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             aria-pressed={selected.showRings}
             onClick={() => updateSelected({ showRings: !selected.showRings })}
           >
-            {selected.showRings ? 'Ocultar anillos de alcance' : 'Mostrar anillos de alcance'}
+            {selected.showRings ? t('map.hideRings') : t('map.showRings')}
           </button>
         </div>
       ) : null}
@@ -363,11 +372,11 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           belongs where the scene is, not one panel away. */}
       {isGameMaster ? (
         <div className="map-fear-bar">
-          <span className="map-fear-label">Miedo</span>
+          <span className="map-fear-label">{t('sheet.roll.fearLabel')}</span>
           <ul className="pips">
             {Array.from({ length: MAX_FEAR }, (_, index) => {
               const filled = index < room.fear;
-              const description = `Miedo ${index + 1} de ${MAX_FEAR}`;
+              const description = t('gm.fearAriaLabel', { n: index + 1, max: MAX_FEAR });
               return (
                 <li key={index}>
                   <button
@@ -395,7 +404,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         <button
           type="button"
           className="map-zoom-button"
-          aria-label="Alejar"
+          aria-label={t('map.zoomOut')}
           onClick={() => zoomApi.current?.(-1)}
         >
           −
@@ -404,7 +413,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         <button
           type="button"
           className="map-zoom-button"
-          aria-label="Acercar"
+          aria-label={t('map.zoomIn')}
           onClick={() => zoomApi.current?.(1)}
         >
           +
@@ -413,7 +422,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {!isGameMaster && viewerId !== null && mySheet !== null && panels.sheet.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.sheet}
+          title={panelTitle('sheet')}
           layout={panels.sheet}
           onLayoutChange={(l) => movePanel('sheet', l)}
           onFocus={() => focusPanel('sheet')}
@@ -426,7 +435,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {isGameMaster && scene !== null && panels.scenes.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.scenes}
+          title={panelTitle('scenes')}
           layout={panels.scenes}
           onLayoutChange={(l) => movePanel('scenes', l)}
           onFocus={() => focusPanel('scenes')}
@@ -438,7 +447,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {isGameMaster && scene !== null && panels.battlemap.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.battlemap}
+          title={panelTitle('battlemap')}
           layout={panels.battlemap}
           onLayoutChange={(l) => movePanel('battlemap', l)}
           onFocus={() => focusPanel('battlemap')}
@@ -454,10 +463,10 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
               if (file !== undefined) void onUpload(file);
             }}
           />
-          {uploading ? <p className="muted">Subiendo…</p> : null}
+          {uploading ? <p className="muted">{t('map.uploading')}</p> : null}
           {uploadError !== null ? <p className="field-error">{uploadError}</p> : null}
           {scene.image === null ? (
-            <p className="muted">Todavía no hay imagen.</p>
+            <p className="muted">{t('map.noImageYet')}</p>
           ) : (
             <p className="muted">
               {scene.image.width}×{scene.image.height}
@@ -468,7 +477,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {isGameMaster && scene !== null && panels.grid.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.grid}
+          title={panelTitle('grid')}
           layout={panels.grid}
           onLayoutChange={(l) => movePanel('grid', l)}
           onFocus={() => focusPanel('grid')}
@@ -483,7 +492,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {isGameMaster && scene !== null && panels.tokens.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.tokens}
+          title={panelTitle('tokens')}
           layout={panels.tokens}
           onLayoutChange={(l) => movePanel('tokens', l)}
           onFocus={() => focusPanel('tokens')}
@@ -499,7 +508,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 
       {isGameMaster && scene !== null && panels.fog.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.fog}
+          title={panelTitle('fog')}
           layout={panels.fog}
           onLayoutChange={(l) => movePanel('fog', l)}
           onFocus={() => focusPanel('fog')}
@@ -512,7 +521,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                 aria-pressed={scene.fog.enabled}
                 onClick={() => send({ type: 'setFogEnabled', sceneId: scene.id, enabled: !scene.fog.enabled })}
               >
-                {scene.fog.enabled ? 'Niebla activada' : 'Niebla desactivada'}
+                {scene.fog.enabled ? t('map.fog.enabled') : t('map.fog.disabled')}
               </button>
               <div className="row mt-3">
                 <button
@@ -520,30 +529,27 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                   aria-pressed={fogBrush?.reveal === true}
                   onClick={() => setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })}
                 >
-                  Pincel de revelar
+                  {t('map.fog.revealBrush')}
                 </button>
                 <button
                   type="button"
                   aria-pressed={fogBrush?.reveal === false}
                   onClick={() => setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })}
                 >
-                  Pincel de ocultar
+                  {t('map.fog.hideBrush')}
                 </button>
               </div>
-              <p className="muted">Los jugadores solo ven las áreas reveladas — el resto nunca se les envía.</p>
+              <p className="muted">{t('map.fog.playersOnlySeeRevealed')}</p>
             </>
           ) : (
-            <p className="muted">
-              Visión automática activa (panel "Muros y puertas") — el pincel manual está desactivado para esta
-              escena.
-            </p>
+            <p className="muted">{t('map.fog.autoVisionActiveHint')}</p>
           )}
         </FloatingPanel>
       ) : null}
 
       {isGameMaster && scene !== null && panels.walls.open ? (
         <FloatingPanel
-          title={PANEL_TITLES.walls}
+          title={panelTitle('walls')}
           layout={panels.walls}
           onLayoutChange={(l) => movePanel('walls', l)}
           onFocus={() => focusPanel('walls')}
@@ -553,12 +559,10 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           }}
         >
           <button type="button" aria-pressed={drawingWall} onClick={() => setDrawingWall((d) => !d)}>
-            {drawingWall ? 'Dibujando muro…' : 'Dibujar muro'}
+            {drawingWall ? t('map.walls.drawing') : t('map.walls.draw')}
           </button>
           <p className="muted mt-2">
-            {scene.visionMode === 'auto'
-              ? 'Visión automática: la niebla se revela sola según lo que cada PJ puede ver.'
-              : 'Niebla manual: usa el pincel del panel de niebla.'}
+            {scene.visionMode === 'auto' ? t('map.walls.autoVisionHint') : t('map.walls.manualFogHint')}
           </p>
           <button
             type="button"
@@ -571,17 +575,19 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
               })
             }
           >
-            Cambiar a {scene.visionMode === 'auto' ? 'manual' : 'automática'}
+            {t('map.walls.switchTo', {
+              mode: scene.visionMode === 'auto' ? t('map.walls.modeManual') : t('map.walls.modeAutomatic'),
+            })}
           </button>
 
           {scene.walls.length === 0 ? (
-            <p className="muted mt-3">Todavía no hay muros en esta escena.</p>
+            <p className="muted mt-3">{t('map.walls.empty')}</p>
           ) : (
             <ul className="log mt-3">
               {scene.walls.map((wall) => (
                 <li key={wall.id}>
                   <div className="row spread">
-                    <span>{wall.kind === 'door' ? 'Puerta' : 'Muro'}</span>
+                    <span>{wall.kind === 'door' ? t('map.walls.kindDoor') : t('map.walls.kindWall')}</span>
                     <div className="row">
                       {wall.kind === 'door' ? (
                         <button
@@ -590,7 +596,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                             send({ type: 'updateWall', sceneId: scene.id, wall: { ...wall, open: !wall.open } })
                           }
                         >
-                          {wall.open ? 'Abierta' : 'Cerrada'}
+                          {wall.open ? t('map.walls.open') : t('map.walls.closed')}
                         </button>
                       ) : (
                         <button
@@ -599,14 +605,14 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
                             send({ type: 'updateWall', sceneId: scene.id, wall: { ...wall, kind: 'door' } })
                           }
                         >
-                          Convertir en puerta
+                          {t('map.walls.convertToDoor')}
                         </button>
                       )}
                       <button
                         type="button"
                         onClick={() => send({ type: 'removeWall', sceneId: scene.id, wallId: wall.id })}
                       >
-                        Eliminar
+                        {t('common.remove')}
                       </button>
                     </div>
                   </div>
@@ -623,29 +629,30 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
 function SceneList({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   return (
     <div className="panel">
-      <h2>Escenas</h2>
+      <h2>{t('map.panel.scenes')}</h2>
       {room.map.scenes.map((scene) => (
         <div className="card" key={scene.id}>
           <div className="card-head">
             <strong>{scene.name}</strong>
             <div className="row">
               {room.map.activeSceneId === scene.id ? (
-                <span className="badge">Activa</span>
+                <span className="badge">{t('map.sceneActive')}</span>
               ) : (
                 <button
                   type="button"
                   onClick={() => send({ type: 'setActiveScene', id: scene.id })}
                 >
-                  Mostrar a jugadores
+                  {t('map.showToPlayers')}
                 </button>
               )}
               <button type="button" onClick={() => send({ type: 'removeScene', id: scene.id })}>
-                Eliminar
+                {t('common.remove')}
               </button>
             </div>
           </div>
           <span className="option-meta">
-            {scene.tokens.length} fichas{scene.image === null ? ' · sin imagen' : ''}
+            {t('map.scene.tokenCount', { count: scene.tokens.length })}
+            {scene.image === null ? ` · ${t('map.scene.noImageShort')}` : ''}
           </span>
         </div>
       ))}
@@ -656,8 +663,8 @@ function SceneList({ room, send }: { room: RoomState; send: (event: RoomEvent) =
 function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) => void }) {
   return (
     <div className="panel">
-      <h2>Cuadrícula y escala</h2>
-      <label htmlFor="grid-mode">Modo</label>
+      <h2>{t('map.panel.grid')}</h2>
+      <label htmlFor="grid-mode">{t('map.grid.modeLabel')}</label>
       <select
         id="grid-mode"
         value={grid.mode}
@@ -665,13 +672,15 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           onChange({ ...grid, mode: event.target.value === 'square' ? 'square' : 'none' })
         }
       >
-        <option value="none">Sin cuadrícula (teatro de la mente)</option>
-        <option value="square">Cuadrícula cuadrada</option>
+        <option value="none">{t('map.grid.modeNone')}</option>
+        <option value="square">{t('map.grid.modeSquare')}</option>
       </select>
 
       <div className="grid cols-2 mt-3">
         <div>
-          <label htmlFor="grid-size">{grid.mode === 'square' ? 'Tamaño de casilla (px)' : 'Píxeles por pulgada'}</label>
+          <label htmlFor="grid-size">
+            {grid.mode === 'square' ? t('map.grid.cellSizeLabel') : t('map.grid.pixelsPerInchLabel')}
+          </label>
           <input
             id="grid-size"
             type="number"
@@ -684,7 +693,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-feet">Pies por pulgada</label>
+          <label htmlFor="grid-feet">{t('map.grid.feetPerInchLabel')}</label>
           <input
             id="grid-feet"
             type="number"
@@ -697,7 +706,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-x">Desplazamiento X</label>
+          <label htmlFor="grid-x">{t('map.grid.offsetXLabel')}</label>
           <input
             id="grid-x"
             type="number"
@@ -706,7 +715,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-y">Desplazamiento Y</label>
+          <label htmlFor="grid-y">{t('map.grid.offsetYLabel')}</label>
           <input
             id="grid-y"
             type="number"
@@ -715,7 +724,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-color">Color</label>
+          <label htmlFor="grid-color">{t('map.colorLabel')}</label>
           <input
             id="grid-color"
             type="color"
@@ -724,7 +733,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
           />
         </div>
         <div>
-          <label htmlFor="grid-line-width">Grosor (px)</label>
+          <label htmlFor="grid-line-width">{t('map.grid.lineWidthLabel')}</label>
           <input
             id="grid-line-width"
             type="number"
@@ -738,7 +747,7 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
         </div>
       </div>
       <button type="button" onClick={() => onChange(DEFAULT_GRID)}>
-        Restablecer cuadrícula
+        {t('map.grid.reset')}
       </button>
     </div>
   );
@@ -789,20 +798,21 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
 
   return (
     <div className="panel">
-      <h2>Fichas</h2>
+      <h2>{t('map.panel.tokens')}</h2>
 
-      <h3>Agregar un PJ</h3>
-      {characters.length === 0 ? <p className="muted">Todavía no se ha reclamado ningún personaje.</p> : null}
+      <h3>{t('map.tokenTools.addPc')}</h3>
+      {characters.length === 0 ? <p className="muted">{t('map.tokenTools.noCharacters')}</p> : null}
       <div className="row">
         {characters.map(([id, sheet], index) => {
           const owner = room.players.find((p) => p.characterId === id) ?? null;
+          const name = sheet.character.name ?? t('map.tokenTools.pcFallback');
           return (
             <button
               key={id}
               type="button"
               onClick={() =>
                 onAdd({
-                  ...base(sheet.character.name ?? 'PJ', tokenColorAt(index)),
+                  ...base(name, tokenColorAt(index)),
                   kind: 'pc',
                   refId: id,
                   // The controlling player may drag their own token.
@@ -810,15 +820,15 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
                 })
               }
             >
-              {sheet.character.name ?? 'PJ'}
+              {name}
             </button>
           );
         })}
       </div>
 
-      <h3 className="mt-4">Agregar un adversario</h3>
+      <h3 className="mt-4">{t('map.tokenTools.addAdversary')}</h3>
       {room.adversaryInstances.length === 0 ? (
-        <p className="muted">Primero despliega adversarios desde el panel del DJ.</p>
+        <p className="muted">{t('map.tokenTools.noAdversaries')}</p>
       ) : null}
       <div className="row">
         {room.adversaryInstances.map((instance) => (
@@ -839,13 +849,13 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
         ))}
       </div>
 
-      <h3 className="mt-4">Agregar desde el bestiario</h3>
-      <label htmlFor="token-adversary-search">Buscar</label>
+      <h3 className="mt-4">{t('map.tokenTools.addFromBestiary')}</h3>
+      <label htmlFor="token-adversary-search">{t('map.tokenTools.searchLabel')}</label>
       <input
         id="token-adversary-search"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="limo, matón, dragón…"
+        placeholder={t('gm.adversaries.searchPlaceholder')}
       />
       <div className="row">
         {matches.map((adversary) => (
@@ -863,7 +873,7 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
         ))}
       </div>
 
-      <p className="muted mt-4">Selecciona una ficha en el mapa para editarla ahí mismo.</p>
+      <p className="muted mt-4">{t('map.tokenTools.selectHint')}</p>
     </div>
   );
 }

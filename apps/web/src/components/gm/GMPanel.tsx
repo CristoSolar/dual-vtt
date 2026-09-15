@@ -33,11 +33,11 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
     <section className="gm-scope">
       <p className="gm-banner">
         <GmMark />
-        Vista del Director de Juego
+        {t('gm.viewerBanner')}
       </p>
       <div className="card-head">
         <div>
-          <h1>Panel del DJ</h1>
+          <h1>{t('app.gmPanel')}</h1>
           <p className="muted">{campaignName}</p>
         </div>
       </div>
@@ -79,9 +79,9 @@ function GmMark() {
 function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => void }) {
   return (
     <div className="panel">
-      <SectionHead>Miedo</SectionHead>
+      <SectionHead>{t('sheet.roll.fearLabel')}</SectionHead>
       <div className="tracker-head">
-        <span className="muted">La reserva del DJ</span>
+        <span className="muted">{t('gm.fearPool')}</span>
         <span className="muted">
           {fear} / {MAX_FEAR}
         </span>
@@ -89,6 +89,7 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
       <ul className="pips">
         {Array.from({ length: MAX_FEAR }, (_, index) => {
           const filled = index < fear;
+          const description = t('gm.fearAriaLabel', { n: index + 1, max: MAX_FEAR });
           return (
             <li key={index}>
               <button
@@ -96,8 +97,8 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
                 className="pip fear"
                 data-filled={filled}
                 aria-pressed={filled}
-                aria-label={`Miedo ${index + 1} de ${MAX_FEAR}`}
-                title={`Miedo ${index + 1} de ${MAX_FEAR}`}
+                aria-label={description}
+                title={description}
                 onClick={() =>
                   send(filled ? { type: 'spendFear', amount: 1 } : { type: 'gainFear', amount: 1 })
                 }
@@ -106,7 +107,7 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
           );
         })}
       </ul>
-      <p className="muted">Clic en una ficha vacía para ganar Miedo, en una llena para gastarlo.</p>
+      <p className="muted">{t('gm.fearHint')}</p>
     </div>
   );
 }
@@ -122,9 +123,9 @@ function PartyOverview({
 
   return (
     <div className="panel">
-      <SectionHead>Grupo</SectionHead>
+      <SectionHead>{t('gm.party.title')}</SectionHead>
       {entries.length === 0 ? (
-        <p className="muted">Todavía no hay personajes reclamados.</p>
+        <p className="muted">{t('gm.party.none')}</p>
       ) : (
         <div className="grid cols-2">
           {entries.map(([id, sheet]) => {
@@ -133,7 +134,7 @@ function PartyOverview({
             return (
               <div className="card" key={id}>
                 <div className="card-head">
-                  <strong>{sheet.character.name ?? 'Sin nombre'}</strong>
+                  <strong>{sheet.character.name ?? t('gm.party.unnamed')}</strong>
                   <button
                     type="button"
                     aria-pressed={spotlit}
@@ -141,19 +142,31 @@ function PartyOverview({
                       send({ type: 'setSpotlight', spotlight: spotlit ? null : player?.id ?? id })
                     }
                   >
-                    {spotlit ? 'En el foco' : 'Dar foco'}
+                    {spotlit ? t('gm.party.spotlit') : t('gm.party.giveSpotlight')}
                   </button>
                 </div>
                 <span className="option-meta">
-                  {player?.name ?? 'sin reclamar'} · Nivel {sheet.character.level}
+                  {t('gm.party.meta', {
+                    name: player?.name ?? t('gm.party.unclaimed'),
+                    level: sheet.character.level,
+                  })}
                 </span>
                 <p className="card-text">
-                  PV {sheet.hpMarked}/{sheet.character.hpSlots} · Estrés {sheet.stressMarked}/
-                  {sheet.character.stressSlots} · Esperanza {sheet.hope} · Armadura{' '}
-                  {sheet.armorSlotsMarked}/{sheet.character.armorScore}
+                  {t('gm.party.stats1', {
+                    hpMarked: sheet.hpMarked,
+                    hpSlots: sheet.character.hpSlots,
+                    stressMarked: sheet.stressMarked,
+                    stressSlots: sheet.character.stressSlots,
+                    hope: sheet.hope,
+                    armorMarked: sheet.armorSlotsMarked,
+                    armorScore: sheet.character.armorScore,
+                  })}
                   <br />
-                  Evasión {sheet.character.evasion} · Umbrales {sheet.character.major}/
-                  {sheet.character.severe}
+                  {t('gm.party.stats2', {
+                    evasion: sheet.character.evasion,
+                    major: sheet.character.major,
+                    severe: sheet.character.severe,
+                  })}
                 </p>
               </div>
             );
@@ -178,9 +191,9 @@ function Countdowns({
 
   return (
     <div className="panel">
-      <SectionHead>Cuentas atrás</SectionHead>
+      <SectionHead>{t('gm.countdowns.title')}</SectionHead>
 
-      {countdowns.length === 0 ? <p className="muted">No hay cuentas atrás en marcha.</p> : null}
+      {countdowns.length === 0 ? <p className="muted">{t('gm.countdowns.none')}</p> : null}
       {countdowns.map((countdown) => (
         <div className="card" key={countdown.id}>
           <div className="card-head">
@@ -195,7 +208,7 @@ function Countdowns({
               <span className="stat-value">{countdown.value}</span>
               <button
                 type="button"
-                aria-label={`Avanzar ${countdown.name}`}
+                aria-label={t('gm.countdowns.advanceAria', { name: countdown.name })}
                 onClick={() => send({ type: 'advanceCountdown', id: countdown.id, amount: 1 })}
               >
                 −1
@@ -204,31 +217,29 @@ function Countdowns({
                 type="button"
                 onClick={() => send({ type: 'removeCountdown', id: countdown.id })}
               >
-                Quitar
+                {t('gm.remove')}
               </button>
             </div>
           </div>
-          {countdown.triggered ? <span className="badge warn">Activada</span> : null}
+          {countdown.triggered ? <span className="badge warn">{t('gm.countdowns.triggered')}</span> : null}
           {countdown.kind === 'progress' || countdown.kind === 'consequence' ? (
-            <p className="card-text">
-              Avanza automáticamente con las tiradas de acción, según la tabla de cuentas atrás dinámicas.
-            </p>
+            <p className="card-text">{t('gm.countdowns.autoAdvanceHint')}</p>
           ) : null}
           {countdown.kind === 'longTerm' ? (
-            <p className="card-text">Avanza con los descansos, no con las tiradas de acción.</p>
+            <p className="card-text">{t('gm.countdowns.longTermHint')}</p>
           ) : null}
         </div>
       ))}
 
       <fieldset>
-        <legend>Nueva cuenta atrás</legend>
+        <legend>{t('gm.countdowns.newLegend')}</legend>
         <div className="grid cols-2">
           <div>
-            <label htmlFor="cd-name">Nombre</label>
+            <label htmlFor="cd-name">{t('gm.countdowns.nameLabel')}</label>
             <input id="cd-name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label htmlFor="cd-start">Valor inicial</label>
+            <label htmlFor="cd-start">{t('gm.countdowns.startingValueLabel')}</label>
             <input
               id="cd-start"
               type="number"
@@ -238,29 +249,29 @@ function Countdowns({
             />
           </div>
           <div>
-            <label htmlFor="cd-kind">Tipo</label>
+            <label htmlFor="cd-kind">{t('gm.countdowns.kindLabel')}</label>
             <select
               id="cd-kind"
               value={kind}
               onChange={(e) => setKind(e.target.value as Countdown['kind'])}
             >
-              <option value="standard">Estándar</option>
-              <option value="progress">Progreso (dinámica)</option>
-              <option value="consequence">Consecuencia (dinámica)</option>
-              <option value="longTerm">Largo plazo</option>
+              <option value="standard">{t('gm.countdowns.kindStandard')}</option>
+              <option value="progress">{t('gm.countdowns.kindProgress')}</option>
+              <option value="consequence">{t('gm.countdowns.kindConsequence')}</option>
+              <option value="longTerm">{t('gm.countdowns.kindLongTerm')}</option>
             </select>
           </div>
           <div>
-            <label htmlFor="cd-loop">Al activarse</label>
+            <label htmlFor="cd-loop">{t('gm.countdowns.loopLabel')}</label>
             <select
               id="cd-loop"
               value={loop}
               onChange={(e) => setLoop(e.target.value as Countdown['loop'])}
             >
-              <option value="none">Detener</option>
-              <option value="loop">Reiniciar</option>
-              <option value="increasing">Reiniciar, aumentando</option>
-              <option value="decreasing">Reiniciar, disminuyendo</option>
+              <option value="none">{t('gm.countdowns.loopNone')}</option>
+              <option value="loop">{t('gm.countdowns.loopLoop')}</option>
+              <option value="increasing">{t('gm.countdowns.loopIncreasing')}</option>
+              <option value="decreasing">{t('gm.countdowns.loopDecreasing')}</option>
             </select>
           </div>
         </div>
@@ -279,12 +290,12 @@ function Countdowns({
             setName('');
           }}
         >
-          Añadir cuenta atrás
+          {t('gm.countdowns.add')}
         </button>
       </fieldset>
 
       <button type="button" onClick={() => send({ type: 'advanceCountdownsForRest', amount: 1 })}>
-        Avanzar cuentas atrás de largo plazo (descanso)
+        {t('gm.countdowns.advanceLongTerm')}
       </button>
     </div>
   );
@@ -311,14 +322,14 @@ function Adversaries({
 
   return (
     <div className="panel">
-      <SectionHead>Adversarios</SectionHead>
+      <SectionHead>{t('gm.adversaries.title')}</SectionHead>
 
-      <label htmlFor="adversary-search">Buscar en el SRD</label>
+      <label htmlFor="adversary-search">{t('gm.adversaries.searchLabel')}</label>
       <input
         id="adversary-search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="limo, matón, dragón…"
+        placeholder={t('gm.adversaries.searchPlaceholder')}
       />
 
       {matches.map((adversary) => (
@@ -336,19 +347,24 @@ function Adversaries({
                 })
               }
             >
-              Añadir al encuentro
+              {t('gm.adversaries.addToEncounter')}
             </button>
           </div>
           <span className="option-meta">
-            Nivel {adversary.tier} · {prettify(adversary.type)} · Dificultad{' '}
-            {adversary.difficulty} · PV {adversary.hp} · Estrés {adversary.stress}
+            {t('gm.adversaries.meta', {
+              tier: adversary.tier,
+              type: prettify(adversary.type),
+              difficulty: adversary.difficulty,
+              hp: adversary.hp,
+              stress: adversary.stress,
+            })}
           </span>
         </div>
       ))}
 
-      <h3 className="mt-5">En el encuentro</h3>
+      <h3 className="mt-5">{t('gm.adversaries.inEncounter')}</h3>
       {room.adversaryInstances.length === 0 ? (
-        <p className="muted">Todavía no hay nada en la mesa.</p>
+        <p className="muted">{t('gm.adversaries.empty')}</p>
       ) : null}
 
       {room.adversaryInstances.map((instance) => {
@@ -361,25 +377,28 @@ function Adversaries({
                 type="button"
                 onClick={() => send({ type: 'removeAdversary', instanceId: instance.instanceId })}
               >
-                Quitar
+                {t('gm.remove')}
               </button>
             </div>
             {stat === undefined ? null : (
               <>
                 <span className="option-meta">
-                  Dificultad {stat.difficulty} · Umbrales{' '}
-                  {stat.thresholds === null
-                    ? 'ninguno'
-                    : `${stat.thresholds.major}/${stat.thresholds.severe ?? '—'}`}{' '}
-                  · ATQ{' '}
-                  {stat.attackModifier.flat === null
-                    ? `${stat.attackModifier.roll?.count}d${stat.attackModifier.roll?.die}`
-                    : stat.attackModifier.flat}
+                  {t('gm.adversaries.meta2', {
+                    difficulty: stat.difficulty,
+                    thresholds:
+                      stat.thresholds === null
+                        ? t('gm.adversaries.thresholdsNone')
+                        : `${stat.thresholds.major}/${stat.thresholds.severe ?? '—'}`,
+                    atk:
+                      stat.attackModifier.flat === null
+                        ? `${stat.attackModifier.roll?.count}d${stat.attackModifier.roll?.die}`
+                        : stat.attackModifier.flat,
+                  })}
                 </span>
 
                 <div className="row mt-2">
                   <span className="muted">
-                    PV {instance.hpMarked}/{stat.hp}
+                    {t('gm.adversaries.hpLine', { marked: instance.hpMarked, total: stat.hp })}
                   </span>
                   <button
                     type="button"
@@ -392,7 +411,7 @@ function Adversaries({
                       })
                     }
                   >
-                    +PV
+                    {t('gm.adversaries.plusHp')}
                   </button>
                   <button
                     type="button"
@@ -405,10 +424,10 @@ function Adversaries({
                       })
                     }
                   >
-                    −PV
+                    {t('gm.adversaries.minusHp')}
                   </button>
                   <span className="muted">
-                    Estrés {instance.stressMarked}/{stat.stress}
+                    {t('gm.adversaries.stressLine', { marked: instance.stressMarked, total: stat.stress })}
                   </span>
                   <button
                     type="button"
@@ -421,7 +440,7 @@ function Adversaries({
                       })
                     }
                   >
-                    +Estrés
+                    {t('gm.adversaries.plusStress')}
                   </button>
                   <button
                     type="button"
@@ -434,12 +453,12 @@ function Adversaries({
                       })
                     }
                   >
-                    −Estrés
+                    {t('gm.adversaries.minusStress')}
                   </button>
                 </div>
 
                 <details>
-                  <summary>Rasgos y ataque</summary>
+                  <summary>{t('gm.adversaries.featuresSummary')}</summary>
                   <p className="card-text">
                     <strong>{stat.standardAttack.name}</strong> · {prettify(stat.standardAttack.range)}{' '}
                     ·{' '}
@@ -452,7 +471,7 @@ function Adversaries({
                     <p className="card-text" key={feature.name}>
                       <strong>
                         {feature.name} — {prettify(feature.type)}
-                        {feature.costsFear ? ' (Miedo)' : ''}:
+                        {feature.costsFear ? t('gm.fearSuffix') : ''}:
                       </strong>{' '}
                       {feature.text}
                     </p>
@@ -478,8 +497,8 @@ function EnvironmentPicker({
 
   return (
     <div className="panel">
-      <SectionHead>Entorno</SectionHead>
-      <label htmlFor="environment">Entorno activo</label>
+      <SectionHead>{t('gm.environment.title')}</SectionHead>
+      <label htmlFor="environment">{t('gm.environment.activeLabel')}</label>
       <select
         id="environment"
         value={activeEnvironment ?? ''}
@@ -490,10 +509,10 @@ function EnvironmentPicker({
           })
         }
       >
-        <option value="">Ninguno</option>
+        <option value="">{t('gm.environment.none')}</option>
         {srd().environments.map((environment) => (
           <option key={environment.id} value={environment.id}>
-            Nivel {environment.tier} — {environment.name}
+            {t('gm.environment.optionLabel', { tier: environment.tier, name: environment.name })}
           </option>
         ))}
       </select>
@@ -503,20 +522,24 @@ function EnvironmentPicker({
           <strong>{active.name}</strong>
           <span className="option-meta">
             {' '}
-            Nivel {active.tier} · {prettify(active.type)} · Dificultad {active.difficulty}
+            {t('gm.environment.meta', {
+              tier: active.tier,
+              type: prettify(active.type),
+              difficulty: active.difficulty,
+            })}
           </span>
           <p className="card-text">{active.description}</p>
           <p className="card-text">
-            <strong>Impulsos:</strong> {active.impulses}
+            <strong>{t('gm.environment.impulses')}</strong> {active.impulses}
           </p>
           <p className="card-text">
-            <strong>Posibles adversarios:</strong> {active.potentialAdversaries}
+            <strong>{t('gm.environment.potentialAdversaries')}</strong> {active.potentialAdversaries}
           </p>
           {active.features.map((feature) => (
             <p className="card-text" key={feature.name}>
               <strong>
                 {feature.name} — {prettify(feature.type)}
-                {feature.costsFear ? ' (Miedo)' : ''}:
+                {feature.costsFear ? t('gm.fearSuffix') : ''}:
               </strong>{' '}
               {feature.text}
             </p>
@@ -530,23 +553,23 @@ function EnvironmentPicker({
 function Presence({ room }: { room: RoomState }) {
   return (
     <div className="panel">
-      <SectionHead>En la mesa</SectionHead>
+      <SectionHead>{t('gm.presence.title')}</SectionHead>
       <ul className="log">
         <li>
           <span className={room.gm.connected ? 'badge' : 'badge warn'}>
-            {room.gm.connected ? 'conectado' : 'desconectado'}
+            {room.gm.connected ? t('gm.presence.connected') : t('gm.presence.disconnected')}
           </span>{' '}
-          {room.gm.name} <span className="muted">(DJ)</span>
+          {room.gm.name} <span className="muted">({t('campaigns.gmChip')})</span>
         </li>
         {room.players.map((player) => (
           <li key={player.id}>
             <span className={player.connected ? 'badge' : 'badge warn'}>
-              {player.connected ? 'conectado' : 'desconectado'}
+              {player.connected ? t('gm.presence.connected') : t('gm.presence.disconnected')}
             </span>{' '}
             {player.name}{' '}
             <span className="muted">
               {player.characterId === null
-                ? 'sin personaje todavía'
+                ? t('gm.presence.noCharacterYet')
                 : room.characters[player.characterId]?.character.name ?? ''}
             </span>
           </li>
@@ -559,8 +582,8 @@ function Presence({ room }: { room: RoomState }) {
 function SharedRollLog({ room }: { room: RoomState }) {
   return (
     <div className="panel">
-      <SectionHead>Registro de tiradas</SectionHead>
-      {room.rollLog.length === 0 ? <p className="muted">Todavía no hay tiradas.</p> : null}
+      <SectionHead>{t('sheet.log.title')}</SectionHead>
+      {room.rollLog.length === 0 ? <p className="muted">{t('gm.rollLog.empty')}</p> : null}
       <ul className="log">
         {room.rollLog.map((entry) => (
           <li key={entry.id}>
@@ -573,13 +596,26 @@ function SharedRollLog({ room }: { room: RoomState }) {
                   {t(`roll.outcome.${entry.outcome}` as MessageKey)}
                 </span>
               ) : (
-                <span>{entry.roll.total} de daño</span>
+                <span>
+                  {entry.roll.total}
+                  {t('gm.rollLog.damageSuffix')}
+                </span>
               )}
             </div>
             <span className="muted">
               {entry.kind === 'duality'
-                ? `Esperanza ${entry.roll.hope} · Miedo ${entry.roll.fear} · total ${entry.roll.total} vs ${entry.difficulty}`
-                : `Dados ${entry.roll.rolls.join(', ')}${entry.critical ? ` · crítico +${entry.roll.criticalBonus}` : ''}`}
+                ? t('gm.rollLog.dualityMeta', {
+                    hope: entry.roll.hope,
+                    fear: entry.roll.fear,
+                    total: entry.roll.total,
+                    difficulty: entry.difficulty,
+                  })
+                : t('gm.rollLog.damageMeta', {
+                    rolls: entry.roll.rolls.join(', '),
+                    critical: entry.critical
+                      ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
+                      : '',
+                  })}
             </span>
           </li>
         ))}

@@ -1,5 +1,4 @@
 import {
-  RANGE_LABELS,
   measure,
   ringRadii,
   type Fog,
@@ -12,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Circle, Group, Image as KonvaImage, Layer, Line, Rect, Stage, Text } from 'react-konva';
 import type Konva from 'konva';
 
+import { t, type MessageKey } from '../../i18n/index.js';
 import { DragThrottle } from '../../state/dragCommit.js';
 import { snapToGrid } from '../../state/gridSnap.js';
 import { canvasPalette, rangeRingColor } from '../../styles/canvasTokens.js';
@@ -307,8 +307,14 @@ export function MapCanvas({
               y={measureLine.to.y}
               text={
                 measurement.squares === null
-                  ? `${RANGE_LABELS[measurement.band]} · ${Math.round(measurement.feet ?? 0)} pies`
-                  : `${RANGE_LABELS[measurement.band]} · ${measurement.squares} casillas`
+                  ? t('map.measure.feet', {
+                      label: t(`range.${measurement.band}` as MessageKey),
+                      feet: Math.round(measurement.feet ?? 0),
+                    })
+                  : t('map.measure.squares', {
+                      label: t(`range.${measurement.band}` as MessageKey),
+                      squares: measurement.squares,
+                    })
               }
               fill={canvasPalette.measureText()}
               fontSize={16 / view.scale}
@@ -560,7 +566,7 @@ function TokenShape({
       {token.hidden ? (
         <Text
           y={-18}
-          text="Solo DJ"
+          text={t('map.token.gmOnly')}
           fill={canvasPalette.tokenLabelMuted()}
           fontSize={11}
           listening={false}

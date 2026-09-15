@@ -115,8 +115,8 @@ describe('compact sheet renders', () => {
     // The level shield, the two defence hexagons and the threshold ribbon are
     // the pieces that make it read as a sheet rather than a form.
     expect(html).toContain(t('sheet.furniture.level'));
-    expect(html).toContain('Evasión');
-    expect(html).toContain('Armadura');
+    expect(html).toContain(t('sheet.route.evasion'));
+    expect(html).toContain(t('sheet.route.armor'));
     expect(html).toContain(t('sheet.furniture.thresholdsTitle'));
     expect(html).toContain(`>${sheet.character.major}<`);
     expect(html).toContain(`>${sheet.character.severe}<`);
@@ -126,7 +126,12 @@ describe('compact sheet renders', () => {
     expect(html).toContain(t('trait.instinctUses').split(' · ')[0]);
     expect(html).toContain(t('trait.instinctUses').split(' · ')[2]);
 
-    for (const track of ['Puntos de Vida', 'Estrés', 'Esperanza', 'Ranuras de armadura']) {
+    for (const track of [
+      t('sheet.route.hp'),
+      t('sheet.route.stress'),
+      t('sheet.roll.hopeLabel'),
+      t('sheet.route.armorSlots'),
+    ]) {
       expect(html, track).toContain(track);
     }
   });
@@ -136,11 +141,11 @@ describe('compact sheet renders', () => {
     const stressed: SheetState = { ...sheet, stressMarked: sheet.character.stressSlots };
 
     expect(render(<MapSheetPanel sheet={sheet} characterId="pc1" send={() => {}} sharedLog={[]} />)).toContain(
-      'ninguna activa',
+      t('map.sheet.noConditions'),
     );
     expect(
       render(<MapSheetPanel sheet={stressed} characterId="pc1" send={() => {}} sharedLog={[]} />),
-    ).toContain('Vulnerable');
+    ).toContain(t('sheet.route.vulnerable'));
   });
 });
 
@@ -289,15 +294,15 @@ describe('GM panel renders', () => {
 
     const html = render(<GMPanel room={room} campaignName="Grupo Martes" send={() => {}} />);
 
-    expect(html).toContain('Panel del DJ');
+    expect(html).toContain(t('app.gmPanel'));
     expect(html).toContain('Grupo Martes');
-    expect(html).toContain('Miedo');
+    expect(html).toContain(t('sheet.roll.fearLabel'));
     expect(html).toContain('The Siege');
     expect(html).toContain('Courtier');
-    expect(html).toContain('Entorno');
-    expect(html).toContain('En la mesa');
-    expect(html).toContain('desconectado');
+    expect(html).toContain(t('gm.environment.title'));
+    expect(html).toContain(t('gm.presence.title'));
+    expect(html).toContain(t('gm.presence.disconnected'));
     expect(html).toContain('Alice');
-    expect(html).toContain('Success with Hope');
+    expect(html).toContain(t('roll.outcome.successHope'));
   });
 });

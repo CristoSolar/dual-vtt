@@ -2,6 +2,7 @@ import { MAX_HOPE } from '@daggerheart/rules';
 import type { RoomEvent } from '@daggerheart/protocol';
 import { useMemo, useState } from 'react';
 
+import { t } from '../../i18n/index.js';
 import { DamageDialog } from '../sheet/DamageDialog.js';
 import { RollDialog, type RollDialogSpec } from '../sheet/RollDialog.js';
 import {
@@ -31,12 +32,6 @@ interface PendingRoll extends RollDialogSpec {
 
 type Tab = 'hoja' | 'cartas' | 'bio';
 
-const TABS: readonly { id: Tab; label: string }[] = [
-  { id: 'hoja', label: 'Hoja' },
-  { id: 'cartas', label: 'Cartas de dominio' },
-  { id: 'bio', label: 'Bio e historia' },
-];
-
 /**
  * The compact sheet for the map's floating window: everything you need to
  * fight, in one 640px-tall pane over the map, laid out as the design
@@ -53,6 +48,12 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
   const [showDamage, setShowDamage] = useState(false);
   const [tab, setTab] = useState<Tab>('hoja');
 
+  const tabs: readonly { id: Tab; label: string }[] = [
+    { id: 'hoja', label: t('app.sheet') },
+    { id: 'cartas', label: t('map.sheet.tabCards') },
+    { id: 'bio', label: t('map.sheet.tabBio') },
+  ];
+
   const forMe = <T extends Record<string, unknown>>(event: T) =>
     ({ ...event, characterId }) as unknown as RoomEvent;
 
@@ -64,18 +65,32 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
   const vulnerable = sheet.stressMarked >= character.stressSlots;
 
   const openTraitRoll = (traitLabel: string, modifier: number) =>
-    setPending({ title: `Tirada de ${traitLabel}`, modifiers: modifier, modifierLabel: traitLabel, damage: null });
+    setPending({
+      title: t('sheet.roll.traitRollTitle', { trait: traitLabel }),
+      modifiers: modifier,
+      modifierLabel: traitLabel,
+      damage: null,
+    });
 
   const openAttackRoll = (weaponName: string, trait: string, modifier: number, damage: PendingRoll['damage']) =>
     setPending({
-      title: `Ataque — ${weaponName}`,
+      title: t('sheet.roll.attackTitle', { weapon: weaponName }),
       modifiers: modifier,
-      modifierLabel: `Ataque de ${prettify(trait)}`,
+      modifierLabel: t('sheet.roll.attackModifierLabel', { trait: prettify(trait) }),
       damage,
     });
 
   const rollLooseDamage = (weaponName: string, damage: NonNullable<PendingRoll['damage']>) =>
-    send(forMe({ type: 'rollDamage', label: `${weaponName} — daño`, dice: damage.dice, proficiency: damage.proficiency, modifier: damage.modifier, critical: false }));
+    send(
+      forMe({
+        type: 'rollDamage',
+        label: t('sheet.roll.damageLabel', { title: weaponName }),
+        dice: damage.dice,
+        proficiency: damage.proficiency,
+        modifier: damage.modifier,
+        critical: false,
+      }),
+    );
 
   const submitRoll = (request: Omit<DualityRollRequest, 'label'>) => {
     if (pending === null) return;
@@ -84,7 +99,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
       send(
         forMe({
           type: 'rollDamage',
-          label: `${pending.title} — daño`,
+          label: t('sheet.roll.damageLabel', { title: pending.title }),
           dice: pending.damage.dice,
           proficiency: pending.damage.proficiency,
           modifier: pending.damage.modifier,
@@ -97,8 +112,8 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
 
   return (
     <div className="sheet-compact">
-      <nav className="sheet-tabs" aria-label="Secciones de la hoja">
-        {TABS.map((entry) => (
+      <nav className="sheet-tabs" aria-label={t('map.sheet.tabsAria')}>
+        {tabs.map((entry) => (
           <button
             key={entry.id}
             type="button"
@@ -119,7 +134,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
           <div className="sheet-identity-main">
             <span className="sheet-portrait" aria-hidden="true" />
             <div>
-              <h2 className="sheet-name">{character.name ?? 'Personaje sin nombre'}</h2>
+              <h2 className="sheet-name">{character.name ?? t('sheet.route.unnamedCharacter')}</h2>
               <p className="sheet-subtitle">
                 {view.heritageLabel} · {view.className}{' '}
                 <span className="sheet-subtitle-dim">({view.subclassName})</span>
@@ -128,11 +143,11 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
           </div>
           <div className="sheet-identity-aside">
             <div className="sheet-conditions">
-              <span className="sheet-conditions-label">Condiciones</span>
+              <span className="sheet-conditions-label">{t('map.sheet.conditionsLabel')}</span>
               {vulnerable ? (
-                <span className="condition-chip">Vulnerable</span>
+                <span className="condition-chip">{t('sheet.route.vulnerable')}</span>
               ) : (
-                <span className="sheet-conditions-empty">ninguna activa</span>
+                <span className="sheet-conditions-empty">{t('map.sheet.noConditions')}</span>
               )}
             </div>
             <LevelShield level={character.level} />
@@ -143,14 +158,14 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
           <>
             <div className="sheet-defense-row">
               <div className="sheet-defense-hexes">
-                <DefenseHex value={character.evasion} label="Evasión" />
-                <DefenseHex value={character.armorScore} label="Armadura" />
+                <DefenseHex value={character.evasion} label={t('sheet.route.evasion')} />
+                <DefenseHex value={character.armorScore} label={t('sheet.route.armor')} />
               </div>
               <ArmorSlots
-                label="Ranuras de armadura"
+                label={t('sheet.route.armorSlots')}
                 marked={sheet.armorSlotsMarked}
                 total={character.armorScore}
-                fillLabel="marcadas"
+                fillLabel={t('sheet.route.markedFem')}
                 onMark={() => send(forMe({ type: 'markArmorSlot', amount: 1 }))}
                 onClear={() => send(forMe({ type: 'clearArmorSlot', amount: 1 }))}
               />
@@ -176,31 +191,31 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
             />
 
             <SegmentTracker
-              label="Puntos de Vida"
+              label={t('sheet.route.hp')}
               marked={sheet.hpMarked}
               total={character.hpSlots}
               tone="hp"
-              fillLabel="marcados"
+              fillLabel={t('sheet.route.markedMasc')}
               onMark={() => send(forMe({ type: 'markHP', amount: 1 }))}
               onClear={() => send(forMe({ type: 'clearHP', amount: 1 }))}
             />
             <SegmentTracker
-              label="Estrés"
+              label={t('sheet.route.stress')}
               marked={sheet.stressMarked}
               total={character.stressSlots}
               tone="stress"
-              fillLabel="marcados"
-              note={vulnerable ? 'Vulnerable' : undefined}
+              fillLabel={t('sheet.route.markedMasc')}
+              note={vulnerable ? t('sheet.route.vulnerable') : undefined}
               onMark={() => send(forMe({ type: 'markStress', amount: 1 }))}
               onClear={() => send(forMe({ type: 'clearStress', amount: 1 }))}
             />
 
             <div className="sheet-compact-footer">
               <HopeRow
-                label="Esperanza"
+                label={t('sheet.roll.hopeLabel')}
                 marked={sheet.hope}
                 total={MAX_HOPE}
-                fillLabel="en reserva"
+                fillLabel={t('sheet.route.hopeFill')}
                 onMark={() => send(forMe({ type: 'gainHope', amount: 1 }))}
                 onClear={() => send(forMe({ type: 'spendHope', amount: 1 }))}
               />
@@ -208,10 +223,15 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
                 type="button"
                 className="btn-primary"
                 onClick={() =>
-                  setPending({ title: 'Tirada de dualidad', modifiers: 0, modifierLabel: 'Sin rasgo', damage: null })
+                  setPending({
+                    title: t('map.sheet.dualityRollTitle'),
+                    modifiers: 0,
+                    modifierLabel: t('map.sheet.noTraitLabel'),
+                    damage: null,
+                  })
                 }
               >
-                Tirar dualidad
+                {t('map.sheet.rollDualityButton')}
               </button>
             </div>
 
@@ -222,7 +242,8 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
                     <strong>{weapon.name}</strong>
                     <span className="muted">
                       {prettify(weapon.trait)} · {describeWeaponDamage(weapon, character)}{' '}
-                      {prettify(weapon.damageType)} · {index === 0 ? 'primaria' : 'secundaria'}
+                      {prettify(weapon.damageType)} ·{' '}
+                      {index === 0 ? t('map.sheet.primaryTag') : t('map.sheet.secondaryTag')}
                     </span>
                   </div>
                   <div className="row">
@@ -241,14 +262,14 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
                         )
                       }
                     >
-                      Atacar
+                      {t('sheet.route.attackButton')}
                     </button>
                     <button
                       type="button"
                       className="btn-ghost"
                       onClick={() => rollLooseDamage(weapon.name, weaponDamage(weapon, character))}
                     >
-                      Daño
+                      {t('sheet.route.damageButton')}
                     </button>
                   </div>
                 </div>
@@ -260,7 +281,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
         {tab === 'cartas' ? (
           <div className="domain-card-grid">
             {view.loadout.length === 0 ? (
-              <p className="muted">No hay cartas en juego.</p>
+              <p className="muted">{t('map.sheet.noCards')}</p>
             ) : (
               view.loadout.map((card) => (
                 <article className="domain-mini" key={card.id} style={{ ['--domain-color' as string]: `var(--c-domain-${card.domain})` }}>
@@ -273,33 +294,33 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
                   </span>
                   <p className="domain-mini-text">{card.text}</p>
                   <div className="domain-mini-cost">
-                    <span className="domain-mini-cost-label">Coste</span>
-                    <span className="muted">{card.recallCost} de Estrés al recuperar</span>
+                    <span className="domain-mini-cost-label">{t('map.sheet.costLabel')}</span>
+                    <span className="muted">{t('map.sheet.recallCostLine', { cost: card.recallCost })}</span>
                   </div>
                 </article>
               ))
             )}
-            <p className="muted">{view.vault.length} carta(s) en la Bóveda.</p>
+            <p className="muted">{t('map.sheet.vaultCount', { count: view.vault.length })}</p>
           </div>
         ) : null}
 
         {tab === 'bio' ? (
           <div className="sheet-bio">
             <dl className="sheet-bio-list">
-              <dt>Herencia</dt>
+              <dt>{t('map.sheet.heritageLabel')}</dt>
               <dd>{view.heritageLabel}</dd>
-              <dt>Comunidad</dt>
+              <dt>{t('wizard.step2.communityLegend')}</dt>
               <dd>{view.communityName}</dd>
-              <dt>Clase</dt>
+              <dt>{t('map.sheet.classLabel')}</dt>
               <dd>
                 {view.className} · {view.subclassName}
               </dd>
-              <dt>Competencia</dt>
+              <dt>{t('sheet.route.proficiency')}</dt>
               <dd>{character.proficiency}</dd>
             </dl>
-            <h3 className="sheet-bio-head">Experiencias</h3>
+            <h3 className="sheet-bio-head">{t('sheet.route.experiencesTitle')}</h3>
             {experiences.length === 0 ? (
-              <p className="muted">Sin experiencias.</p>
+              <p className="muted">{t('map.sheet.noExperiences')}</p>
             ) : (
               <ul className="sheet-bio-experiences">
                 {experiences.map((experience) => (
@@ -313,7 +334,9 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
         ) : null}
 
         {sharedLog !== undefined && sharedLog.length > 0 ? (
-          <p className="muted sheet-last-roll">Última tirada: {sharedLog[sharedLog.length - 1]?.label}</p>
+          <p className="muted sheet-last-roll">
+            {t('map.sheet.lastRoll', { label: sharedLog[sharedLog.length - 1]?.label ?? '' })}
+          </p>
         ) : null}
       </div>
 
