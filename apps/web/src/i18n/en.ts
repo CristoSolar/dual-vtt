@@ -1,0 +1,48 @@
+import type { es } from './es.js';
+
+/** Same keys as `es`; the annotation makes a missing or extra key a type error. */
+export const en: Record<keyof typeof es, string> = {
+  'locale.switchTo': 'Español',
+
+  'effect.stressBecameHP': 'No Stress left — marked 1 Hit Point instead.',
+  'effect.vulnerable': 'All Stress marked — you are Vulnerable.',
+  'effect.deathMoveRequired': 'Last Hit Point marked — make a death move.',
+  'effect.damageApplied': '{severity} damage — marked {hpMarked} HP.',
+  'effect.recalled': 'Recalled outside a rest — marked {stressCost} Stress.',
+  'effect.notEnoughHope': 'Not enough Hope (need {amount}).',
+  'effect.noArmorSlots': 'No Armor Slots available.',
+  'effect.notEnoughGold': 'Not enough gold (need {amount} {unit}).',
+  'effect.loadoutFull': 'Loadout is full — choose a card to move to the vault.',
+  'effect.notEnoughStress': 'Not enough unmarked Stress to pay this card’s Recall Cost.',
+  'effect.cardNotInVault': 'That card is not in the vault.',
+  'effect.cardNotInLoadout': 'That card is not in the loadout.',
+  'effect.swapNotAllowed': 'That swap is not allowed.',
+  'effect.levelUpRejected': 'Level-up rejected: {message}',
+  'effect.unknownMulticlass': 'That multiclass names an unknown class or domain.',
+  'effect.levelledUp': 'Levelled up to {level}.',
+
+  'reject.notGameMaster': 'Only the GM can do that.',
+  'reject.notYourCharacter': 'That character is not yours.',
+  'reject.unknownCharacter': 'Unknown character.',
+  'reject.unknownCountdown': 'Unknown countdown.',
+  'reject.unknownAdversary': 'Unknown adversary.',
+  'reject.notEnoughFear': 'Not enough Fear.',
+  'reject.unknownScene': 'Unknown scene.',
+  'reject.unknownToken': 'Unknown token.',
+  'reject.notYourToken': 'That token is not yours.',
+  'reject.tokenExists': 'A token with that id already exists.',
+  'reject.tooManyWalls': 'Too many walls on this scene.',
+  'reject.badRequest': 'The server did not understand that action.',
+  'reject.forbidden': 'You are no longer a member of this campaign.',
+  'reject.noSeat': 'Join a campaign first.',
+  'reject.rejected': 'The server rejected that action.',
+  'reject.unknown': 'The server rejected that action ({code}).',
+
+  'roll.outcome.criticalSuccess': 'Critical Success',
+  'roll.outcome.successHope': 'Success with Hope',
+  'roll.outcome.successFear': 'Success with Fear',
+  'roll.outcome.failureHope': 'Failure with Hope',
+  'roll.outcome.failureFear': 'Failure with Fear',
+  'roll.dualityLine': '{by}: {label} — {outcome} (total {total})',
+  'roll.damageLine': '{by}: {label} — {total} damage',
+};
