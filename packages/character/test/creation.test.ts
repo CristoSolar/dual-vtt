@@ -1,5 +1,5 @@
 import { setLocale, srd } from '@daggerheart/srd-data';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   applyChoice,
@@ -433,6 +433,8 @@ describe('finalize', () => {
 });
 
 describe('classItemOptions across locales', () => {
+  afterEach(() => setLocale('es'));
+
   it('splits the two-way class item in both languages', () => {
     const bard = () => srd().classes.find((c) => c.id === 'bard');
     setLocale('en');
