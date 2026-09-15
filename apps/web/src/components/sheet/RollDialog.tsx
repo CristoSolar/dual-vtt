@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { OUTCOME_LABELS, outcomeTone } from '../../state/rollLog.js';
+import { t, type MessageKey } from '../../i18n/index.js';
+import { outcomeTone } from '../../state/rollLog.js';
 import type { DualityRollOutcome, DualityRollRequest } from '../../state/sheet.js';
 import { formatSigned } from '../../state/selectors.js';
 import { Dialog } from '../Dialog.js';
@@ -179,7 +180,7 @@ function RollOutcome({
       </div>
 
       <p className="outcome" data-tone={outcomeTone(result.outcome)}>
-        {OUTCOME_LABELS[result.outcome]}
+        {t(`roll.outcome.${result.outcome}` as MessageKey)}
       </p>
       <p className="muted">
         vs Dificultad {difficulty}

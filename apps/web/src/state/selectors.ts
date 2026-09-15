@@ -1,14 +1,8 @@
 import type { Character } from '@daggerheart/character';
 import {
-  ancestries,
-  armor as allArmor,
-  classes,
-  communities,
-  domainCards,
   formatDice,
   formatModifier,
-  subclasses,
-  weapons,
+  srd,
   type Armor,
   type DomainCard,
   type Feature,
@@ -68,23 +62,23 @@ const TRAIT_LABELS: Record<Trait, string> = {
 /** Assembles the display model for a sheet. Pure; no component does its own lookups. */
 export function selectSheetView(sheet: SheetState): SheetView {
   const character = sheet.character;
-  const characterClass = classes.find((c) => c.id === character.classId);
-  const subclass = subclasses.find((s) => s.id === character.subclassId);
-  const community = communities.find((c) => c.id === character.communityId);
+  const characterClass = srd().classes.find((c) => c.id === character.classId);
+  const subclass = srd().subclasses.find((s) => s.id === character.subclassId);
+  const community = srd().communities.find((c) => c.id === character.communityId);
 
   const heritage = character.heritage;
   const ancestryFeatures: Feature[] = [];
   let heritageLabel = '';
 
   if (heritage.kind === 'single') {
-    const ancestry = ancestries.find((a) => a.id === heritage.ancestryId);
+    const ancestry = srd().ancestries.find((a) => a.id === heritage.ancestryId);
     heritageLabel = ancestry?.name ?? heritage.ancestryId;
     for (const feature of ancestry?.features ?? []) {
       ancestryFeatures.push({ name: feature.name, text: feature.text });
     }
   } else {
-    const first = ancestries.find((a) => a.id === heritage.first.ancestryId);
-    const second = ancestries.find((a) => a.id === heritage.second.ancestryId);
+    const first = srd().ancestries.find((a) => a.id === heritage.first.ancestryId);
+    const second = srd().ancestries.find((a) => a.id === heritage.second.ancestryId);
     heritageLabel = `${first?.name ?? heritage.first.ancestryId} / ${
       second?.name ?? heritage.second.ancestryId
     }`;
@@ -96,7 +90,7 @@ export function selectSheetView(sheet: SheetState): SheetView {
 
   const byId = (ids: readonly string[]): DomainCard[] =>
     ids
-      .map((id) => domainCards.find((c) => c.id === id))
+      .map((id) => srd().domainCards.find((c) => c.id === id))
       .filter((c): c is DomainCard => c !== undefined);
 
   return {
@@ -110,12 +104,12 @@ export function selectSheetView(sheet: SheetState): SheetView {
     subclassFeatures: subclass?.foundation ?? [],
     ancestryFeatures,
     communityFeature: community?.feature ?? { name: '', text: '' },
-    primaryWeapon: weapons.find((w) => w.id === character.equipment.primaryWeaponId) ?? null,
+    primaryWeapon: srd().weapons.find((w) => w.id === character.equipment.primaryWeaponId) ?? null,
     secondaryWeapon:
       character.equipment.secondaryWeaponId === null
         ? null
-        : weapons.find((w) => w.id === character.equipment.secondaryWeaponId) ?? null,
-    armor: allArmor.find((a) => a.id === character.equipment.armorId) ?? null,
+        : srd().weapons.find((w) => w.id === character.equipment.secondaryWeaponId) ?? null,
+    armor: srd().armor.find((a) => a.id === character.equipment.armorId) ?? null,
     loadout: byId(sheet.loadout),
     vault: byId(sheet.vault),
     traits: TRAITS.map((trait) => ({
@@ -129,7 +123,7 @@ export function selectSheetView(sheet: SheetState): SheetView {
 
 /** The Recall Cost of a vaulted card, needed to price a swap outside a rest. */
 export function recallCostOf(cardId: string): number {
-  return domainCards.find((c) => c.id === cardId)?.recallCost ?? 0;
+  return srd().domainCards.find((c) => c.id === cardId)?.recallCost ?? 0;
 }
 
 /**

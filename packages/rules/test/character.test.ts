@@ -1,4 +1,4 @@
-import { ancestries, classes } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -74,7 +74,7 @@ describe('assignTraits', () => {
 
 describe('startingStats', () => {
   it('takes Evasion and HP from the class and fixes Hope at 2 and Stress at 6', () => {
-    const bard = classes.find((c) => c.id === 'bard');
+    const bard = srd().classes.find((c) => c.id === 'bard');
     expect(bard).toBeDefined();
     if (!bard) return;
     const stats = startingStats(bard);
@@ -88,8 +88,8 @@ describe('startingStats', () => {
 });
 
 describe('validateMixedAncestry', () => {
-  const goblin = ancestries.find((a) => a.id === 'goblin');
-  const orc = ancestries.find((a) => a.id === 'orc');
+  const goblin = srd().ancestries.find((a) => a.id === 'goblin');
+  const orc = srd().ancestries.find((a) => a.id === 'orc');
 
   it('takes the first-slot feature from one ancestry and the second from another', () => {
     expect(goblin && orc).toBeTruthy();

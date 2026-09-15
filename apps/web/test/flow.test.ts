@@ -1,4 +1,4 @@
-import { classes } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { describe, expect, it } from 'vitest';
 
 import { appendRoll, MAX_LOG_ENTRIES, OUTCOME_LABELS, outcomeTone } from '../src/state/rollLog.js';
@@ -13,7 +13,7 @@ import { buildCharacter } from './helpers.js';
 
 describe('wizard produces a usable sheet', () => {
   it('creates a populated sheet for every class', () => {
-    for (const characterClass of classes) {
+    for (const characterClass of srd().classes) {
       const sheet = createSheet(buildCharacter(characterClass.id));
       const view = selectSheetView(sheet);
 

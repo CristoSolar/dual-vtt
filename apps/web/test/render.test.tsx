@@ -1,6 +1,6 @@
 import { createMapState, type RoomState } from '@daggerheart/protocol';
 import { scriptedRng } from '@daggerheart/rules';
-import { classes } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Route, Routes } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
@@ -179,7 +179,7 @@ describe('wizard renders', () => {
 
   it('lists class options sourced from the SRD data, not hardcoded', () => {
     const html = wizardAt('/create/1');
-    for (const characterClass of classes) {
+    for (const characterClass of srd().classes) {
       expect(html, characterClass.name).toContain(characterClass.name);
     }
     expect(html).toContain('Paso 1');

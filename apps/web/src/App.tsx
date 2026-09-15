@@ -3,6 +3,7 @@ import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } f
 
 import { GMPanel } from './components/gm/GMPanel.js';
 import { Toast } from './components/Toast.js';
+import { setLocale, t, useLocale } from './i18n/index.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
@@ -23,6 +24,7 @@ const rng = () => Math.random();
 function Shell() {
   const storage = window.localStorage;
   const navigate = useNavigate();
+  const locale = useLocale();
   // The map is a Foundry-style fullscreen stage: it owns the whole viewport
   // and draws its own thin scene bar instead of sharing the page chrome.
   const isMapRoute = useLocation().pathname === '/map';
@@ -122,6 +124,13 @@ function Shell() {
               ) : null}
             </>
           ) : null}
+          <button
+            type="button"
+            onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
+            aria-label={t('locale.switchTo')}
+          >
+            {locale === 'es' ? 'EN' : 'ES'}
+          </button>
           <button type="button" onClick={auth.logout}>
             Cerrar sesión
           </button>

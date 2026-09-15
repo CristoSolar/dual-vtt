@@ -11,6 +11,7 @@ import {
   type RoomState,
   type SheetState,
 } from '@daggerheart/protocol';
+import { describeRejection, t } from '../i18n/index.js';
 import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
@@ -146,7 +147,7 @@ export function useCampaign(
 
     socket.on(CHANNEL.rejected, (payload: unknown) => {
       const parsed = RejectedSchema.safeParse(payload);
-      setError(parsed.success ? parsed.data.message : 'El servidor rechazó esa acción.');
+      setError(parsed.success ? describeRejection(parsed.data.error) : t('reject.rejected'));
     });
 
     return socket;

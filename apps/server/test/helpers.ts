@@ -10,7 +10,7 @@ import {
   type Character,
 } from '@daggerheart/character';
 import { CHANNEL, createSheet, type RoomPatch, type RoomState, type SheetState } from '@daggerheart/protocol';
-import { classes, type ClassId } from '@daggerheart/srd-data';
+import { srd, type ClassId } from '@daggerheart/srd-data';
 import { Server } from 'socket.io';
 import { io as connect, type Socket } from 'socket.io-client';
 
@@ -21,7 +21,7 @@ import { UserStore } from '../src/users.js';
 
 /** Builds a finished character through the real creation reducer. */
 export function buildCharacter(classId: ClassId = 'guardian'): Character {
-  const characterClass = classes.find((c) => c.id === classId);
+  const characterClass = srd().classes.find((c) => c.id === classId);
   if (!characterClass) throw new Error(`no such class: ${classId}`);
 
   let state = createInitialState();

@@ -1,4 +1,4 @@
-import { adversaries } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import type { RoomEvent, RoomState, Token } from '@daggerheart/protocol';
 import { useState } from 'react';
 
@@ -45,7 +45,7 @@ export function TokenPopover({
       ? room.adversaryInstances.find((a) => a.instanceId === token.refId) ?? null
       : null;
   const adversaryStat =
-    adversaryInstance === null ? null : adversaries.find((a) => a.id === adversaryInstance.adversaryId) ?? null;
+    adversaryInstance === null ? null : srd().adversaries.find((a) => a.id === adversaryInstance.adversaryId) ?? null;
 
   const characterSheet =
     token.kind === 'pc' && token.refId !== null ? room.characters[token.refId] ?? null : null;

@@ -1,4 +1,5 @@
-import { OUTCOME_LABELS, outcomeTone, type RollEntry } from '../../state/rollLog.js';
+import { t, type MessageKey } from '../../i18n/index.js';
+import { outcomeTone, type RollEntry } from '../../state/rollLog.js';
 import { SectionHead } from '../SectionHead.js';
 
 interface RollLogPanelProps {
@@ -27,7 +28,7 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
                 <div className="row spread">
                   <strong>{entry.label}</strong>
                   <span className="outcome" data-tone={outcomeTone(entry.outcome)}>
-                    {OUTCOME_LABELS[entry.outcome]}
+                    {t(`roll.outcome.${entry.outcome}` as MessageKey)}
                   </span>
                 </div>
                 <span className="muted">

@@ -2,6 +2,7 @@ import { MAX_HOPE, type Advancement, type Rng } from '@daggerheart/rules';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { describeEffect } from '../i18n/index.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -116,7 +117,8 @@ export function SheetRoute({
     }
     const effect = update(transition);
     if (effect === null) return;
-    if (effect.message !== null) setToast(effect.message);
+    const text = describeEffect(effect);
+    if (text !== null) setToast(text);
     if (effect.deathMoveRequired) setShowDeathMove(true);
   };
 
@@ -158,7 +160,8 @@ export function SheetRoute({
 
     const transition = makeDualityRoll(sheet, request, rng);
     if (transition.outcome === null) {
-      if (transition.effect.message !== null) setToast(transition.effect.message);
+      const text = describeEffect(transition.effect);
+      if (text !== null) setToast(text);
       return;
     }
 

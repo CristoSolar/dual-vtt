@@ -1,14 +1,14 @@
 import {
-  OUTCOME_LABELS,
   outcomeTone,
   type Countdown,
   type RoomEvent,
   type RoomState,
 } from '@daggerheart/protocol';
 import { MAX_FEAR } from '@daggerheart/rules';
-import { adversaries, environments } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { useMemo, useState } from 'react';
 
+import { t, type MessageKey } from '../../i18n/index.js';
 import { label as prettify } from '../../state/selectors.js';
 import { SectionHead } from '../SectionHead.js';
 
@@ -302,8 +302,8 @@ function Adversaries({
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (needle === '') return [];
-    return adversaries
-      .filter(
+    return srd()
+      .adversaries.filter(
         (a) => a.name.toLowerCase().includes(needle) || a.type.toLowerCase().includes(needle),
       )
       .slice(0, 12);
@@ -352,7 +352,7 @@ function Adversaries({
       ) : null}
 
       {room.adversaryInstances.map((instance) => {
-        const stat = adversaries.find((a) => a.id === instance.adversaryId);
+        const stat = srd().adversaries.find((a) => a.id === instance.adversaryId);
         return (
           <div className="card" key={instance.instanceId}>
             <div className="card-head">
@@ -474,7 +474,7 @@ function EnvironmentPicker({
   activeEnvironment: string | null;
   send: (event: RoomEvent) => void;
 }) {
-  const active = environments.find((e) => e.id === activeEnvironment) ?? null;
+  const active = srd().environments.find((e) => e.id === activeEnvironment) ?? null;
 
   return (
     <div className="panel">
@@ -491,7 +491,7 @@ function EnvironmentPicker({
         }
       >
         <option value="">Ninguno</option>
-        {environments.map((environment) => (
+        {srd().environments.map((environment) => (
           <option key={environment.id} value={environment.id}>
             Nivel {environment.tier} — {environment.name}
           </option>
@@ -570,7 +570,7 @@ function SharedRollLog({ room }: { room: RoomState }) {
               </strong>
               {entry.kind === 'duality' ? (
                 <span className="outcome" data-tone={outcomeTone(entry.outcome)}>
-                  {OUTCOME_LABELS[entry.outcome]}
+                  {t(`roll.outcome.${entry.outcome}` as MessageKey)}
                 </span>
               ) : (
                 <span>{entry.roll.total} de daño</span>

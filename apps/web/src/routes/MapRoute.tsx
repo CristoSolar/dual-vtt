@@ -6,7 +6,7 @@ import {
   type Token,
 } from '@daggerheart/protocol';
 import { MAX_FEAR } from '@daggerheart/rules';
-import { adversaries } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Icon, type IconName } from '../components/icons/Icon.js';
@@ -125,7 +125,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         continue;
       }
       const instance = room.adversaryInstances.find((a) => a.instanceId === token.refId);
-      const stats = adversaries.find((a) => a.id === instance?.adversaryId);
+      const stats = srd().adversaries.find((a) => a.id === instance?.adversaryId);
       if (instance !== undefined && stats !== undefined) {
         byToken[token.id] = { marked: instance.hpMarked, total: stats.hp };
       }
@@ -764,8 +764,10 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (needle === '') return [];
-    return adversaries
-      .filter((a) => a.name.toLowerCase().includes(needle) || a.type.toLowerCase().includes(needle))
+    return srd()
+      .adversaries.filter(
+        (a) => a.name.toLowerCase().includes(needle) || a.type.toLowerCase().includes(needle),
+      )
       .slice(0, 8);
   }, [query]);
 

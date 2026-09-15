@@ -6,7 +6,7 @@ import {
   type Trait,
   type ValidationError,
 } from '@daggerheart/character';
-import { subclasses } from '@daggerheart/srd-data';
+import { srd } from '@daggerheart/srd-data';
 import { useState } from 'react';
 
 import { fieldErrors } from '../../state/useCreation.js';
@@ -169,7 +169,7 @@ const NO_SPELLCAST_PRIMARY: Partial<Record<string, Trait>> = {
 
 /** The trait a class leans on hardest, used only to pre-fill a suggestion. */
 function primaryTraitFor(classId: string | null, subclassId: string | null): Trait | null {
-  const subclass = subclasses.find((s) => s.id === subclassId);
+  const subclass = srd().subclasses.find((s) => s.id === subclassId);
   if (subclass?.spellcastTrait != null) return subclass.spellcastTrait;
   if (classId !== null) return NO_SPELLCAST_PRIMARY[classId] ?? null;
   return null;

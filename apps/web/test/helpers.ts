@@ -8,7 +8,7 @@ import {
   type CreationState,
   type Trait,
 } from '@daggerheart/character';
-import { classes, type ClassId } from '@daggerheart/srd-data';
+import { srd, type ClassId } from '@daggerheart/srd-data';
 
 import type { StorageLike } from '../src/state/storage.js';
 
@@ -23,7 +23,7 @@ const TRAITS: Record<Trait, number> = {
 
 /** Runs the creation reducer end to end, exactly as the wizard does. */
 export function buildCreationState(classId: ClassId = 'guardian'): CreationState {
-  const characterClass = classes.find((c) => c.id === classId);
+  const characterClass = srd().classes.find((c) => c.id === classId);
   if (!characterClass) throw new Error(`no such class: ${classId}`);
 
   let state = createInitialState();
