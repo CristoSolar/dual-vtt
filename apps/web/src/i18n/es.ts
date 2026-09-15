@@ -708,4 +708,35 @@ export const es = {
   'guide.player.4.title': 'El mapa',
   'guide.player.4.body': 'Mueve tu ficha, mide distancias en rangos y sigue la escena que el DJ tiene activa.',
   'help.open': 'Ayuda',
+  'help.title': 'Ayuda',
+  'help.tab.app': 'La app',
+  'help.tab.rules': 'Reglas',
+  'help.tab.compendium': 'Compendio',
+  'help.filterPlaceholder': 'Buscar en esta sección…',
+  'help.noMatches': 'Ninguna sección coincide con la búsqueda.',
+  'help.quickGuide': 'Guía rápida',
+  'help.app.start.title': 'Primeros pasos',
+  'help.app.start.body':
+    'La app tiene dos audiencias: el DJ crea la campaña y todo su contenido, y los jugadores solo se unen a una campaña que ya existe. La bandera de la esquina cambia el idioma de toda la interfaz y del contenido del SRD en cualquier momento. El botón "?" de la barra superior abre esta ayuda desde cualquier pantalla. Si es la primera vez que entras, una guía rápida con pasos según tu rol aparece automáticamente y puedes volver a abrirla desde aquí.',
+  'help.app.campaigns.title': 'Campañas y jugadores',
+  'help.app.campaigns.body':
+    'Desde Inicio, el DJ usa "Crear campaña" para abrir una partida y "Agregar jugador" en el panel de Jugadores para dar de alta cada cuenta con una contraseña inicial que el jugador debe cambiar en su primer ingreso. Añadir un miembro a la campaña le permite verla en su lista y unirse. "Generar enlace para jugadores" abre un túnel público para que la gente se conecte desde fuera de tu red sin configurar nada más. Cada jugador solo ve las campañas a las que pertenece, nunca las de otra mesa.',
+  'help.app.creation.title': 'Creación de personaje',
+  'help.app.creation.body':
+    'Crear personaje recorre nueve pasos en orden: Clase y Subclase, Herencia, Rasgos, Estadísticas derivadas, Equipo, Trasfondo, Experiencias, Cartas de Dominio y Conexiones. El borrador se guarda solo en el navegador de ese dispositivo, uno por campaña, así que cerrar la pestaña o recargar no pierde el progreso. Al terminar el último paso el personaje queda reclamado en la campaña y sustituye el borrador por la ficha real.',
+  'help.app.sheet.title': 'La hoja de personaje',
+  'help.app.sheet.body':
+    'El botón "Recibir daño" abre un diálogo que compara el golpe con los umbrales del personaje para calcular cuántos PV marcar, con casillas de armadura opcionales para reducir el impacto. La Esperanza se gana con tiradas favorables y se gasta en habilidades de clase; el Estrés se marca por esfuerzo y, al llenarse, deja al personaje Vulnerable. Las cartas activas viven en el equipo y las demás en la bóveda; recuperar una desde la bóveda cuesta Esperanza según su nivel. "Subir de nivel" aplica las mejoras del siguiente nivel, y si los PV llegan a marcarse por completo se activa la tirada de Movimiento de Muerte. "Exportar PDF" genera una ficha imprimible con los mismos datos.',
+  'help.app.gm.title': 'Panel del DJ',
+  'help.app.gm.body':
+    'El Panel del DJ reúne el Miedo del DJ, el Grupo con quién tiene el foco de la escena, las Cuentas atrás para tensión narrativa, los Adversarios y Entornos añadidos desde la lista del SRD, y quién está conectado en "En la mesa". El registro de tiradas se comparte con los jugadores para que toda la mesa vea los mismos resultados. Solo el DJ puede cambiar el Miedo, el foco, las cuentas atrás o los adversarios; un jugador nunca ve este panel.',
+  'help.app.map.title': 'El mapa',
+  'help.app.map.body':
+    'Cada campaña puede tener varias escenas, pero solo la escena activa se muestra a los jugadores. El DJ sube la imagen de fondo (validada por su contenido real, no por la extensión) y coloca fichas de personaje y de adversario sobre ella. La Niebla de guerra se revela con un pincel, y Muros y puertas bloquean la visión automática cuando ese modo está activo. La Cuadrícula y escala se puede activar o apagar y define las bandas de rango (Cuerpo a cuerpo, Muy cerca, Cerca, Lejos, Muy lejos); "Medir distancia" mide sobre el mapa usando esas bandas. Los jugadores nunca reciben fichas ocultas ni la niebla sin revelar: el servidor las filtra antes de enviarlas.',
+  'help.app.rolls.title': 'Tiradas de dualidad',
+  'help.app.rolls.body':
+    'Una tirada de dualidad lanza el Dado de Esperanza contra el Dado de Miedo y da uno de cinco resultados: Éxito Crítico, Éxito con Esperanza, Éxito con Miedo, Fallo con Esperanza o Fallo con Miedo. El servidor es quien tira los dados, con una semilla propia de cada campaña, para que el resultado sea auditable y nadie pueda alterarlo desde su navegador. Todas las tiradas quedan en un registro compartido visible para toda la mesa, incluidas las tiradas de daño, que suman la Competencia del arma o adversario.',
+  'help.app.faq.title': 'Preguntas frecuentes',
+  'help.app.faq.body':
+    '¿Funciona sin conexión? Solo a medias: el borrador de creación y el idioma viven en el navegador de este dispositivo, pero unirte a una campaña y jugar necesita el servidor encendido. ¿Dónde viven los datos? La partida y las cuentas se guardan en ".data/" en el servidor, mientras que tu idioma y tus borradores quedan en el almacenamiento del navegador de cada dispositivo. ¿Cómo cambio el idioma? Con la bandera junto al botón de salir. ¿Por qué no puedo editar la ficha de otro jugador? El servidor solo acepta cambios del dueño de cada personaje. ¿Qué significa "no oficial"? El contenido del juego viene del SRD de Daggerheart bajo la licencia DPCGL de Darrington Press; esta app es un proyecto personal sin relación oficial con Darrington Press.',
 } as const;

@@ -694,4 +694,35 @@ export const en: Record<keyof typeof es, string> = {
   'guide.player.4.title': 'The map',
   'guide.player.4.body': 'Move your token, measure distance in range bands, and follow the scene your GM has active.',
   'help.open': 'Help',
+  'help.title': 'Help',
+  'help.tab.app': 'The app',
+  'help.tab.rules': 'Rules',
+  'help.tab.compendium': 'Compendium',
+  'help.filterPlaceholder': 'Search this section…',
+  'help.noMatches': 'No section matches your search.',
+  'help.quickGuide': 'Quick guide',
+  'help.app.start.title': 'Getting started',
+  'help.app.start.body':
+    'The app has two audiences: the GM creates the campaign and all of its content, while players only join a campaign that already exists. The flag in the corner switches the whole interface and the SRD content into the other language at any time. The "?" button in the top bar opens this help from any screen. The first time you sign in, a quick guide tailored to your role opens automatically, and you can reopen it from here.',
+  'help.app.campaigns.title': 'Campaigns and players',
+  'help.app.campaigns.body':
+    'From Home, the GM uses "Create campaign" to open a game and "Create player" on the Players panel to set up each account with an initial password the player must change on first sign-in. Adding a member to the campaign lets them see it in their list and join. "Generate link for players" opens a public tunnel so people can connect from outside your network without any extra setup. Each player only ever sees the campaigns they belong to, never another table\'s.',
+  'help.app.creation.title': 'Character creation',
+  'help.app.creation.body':
+    'Creating a character walks through nine steps in order: Class and Subclass, Heritage, Traits, Derived Stats, Equipment, Background, Experiences, Domain Cards, and Connections. The draft is saved only in that device\'s browser, one per campaign, so closing the tab or reloading never loses progress. Finishing the last step claims the character into the campaign and replaces the draft with the real sheet.',
+  'help.app.sheet.title': 'The character sheet',
+  'help.app.sheet.body':
+    'The "Take damage" button opens a dialog that checks the hit against the character\'s thresholds to work out how many HP to mark, with optional armor slots to soften the blow. Hope is gained from favorable rolls and spent on class features; Stress is marked from strain and, once full, leaves the character Vulnerable. Active cards live in the loadout and the rest sit in the vault; recalling one from the vault costs Hope based on its level. "Level up" applies the next level\'s advancements, and if HP ends up fully marked the death move roll kicks in. "Export PDF" produces a printable sheet with the same data.',
+  'help.app.gm.title': 'The GM panel',
+  'help.app.gm.body':
+    'The GM panel brings together the GM\'s Fear track, the party with who currently holds the spotlight, countdowns for building tension, adversaries and environments added from the SRD list, and who is connected under "At the table". The roll log is shared with players so the whole table sees the same results. Only the GM can change Fear, the spotlight, countdowns, or adversaries; a player never sees this panel.',
+  'help.app.map.title': 'The map',
+  'help.app.map.body':
+    'A campaign can hold several scenes, but only the active scene is shown to players. The GM uploads the background image (validated by its actual content, not its file extension) and places PC and adversary tokens on it. Fog of war is revealed with a brush, and walls and doors block automatic vision when that mode is on. The grid toggle can be switched on or off and defines the range bands (Melee, Very Close, Close, Far, Very Far); "Measure distance" measures across the map using those same bands. Players never receive hidden tokens or unrevealed fog: the server filters them out before sending anything.',
+  'help.app.rolls.title': 'Duality rolls',
+  'help.app.rolls.body':
+    'A duality roll throws the Hope Die against the Fear Die and produces one of five outcomes: Critical Success, Success with Hope, Success with Fear, Failure with Hope, or Failure with Fear. The server is the one that rolls the dice, using a seed unique to each campaign, so the result is auditable and no one can change it from their own browser. Every roll lands in a shared log visible to the whole table, including damage rolls, which add the weapon\'s or adversary\'s Proficiency.',
+  'help.app.faq.title': 'Frequently asked questions',
+  'help.app.faq.body':
+    'Does it work offline? Only partly: the creation draft and your language choice live in this device\'s browser, but joining a campaign and playing needs the server running. Where does the data live? The game and accounts are stored in ".data/" on the server, while your language and drafts stay in each device\'s browser storage. How do I change the language? With the flag next to the logout button. Why can\'t I edit another player\'s sheet? The server only accepts changes from each character\'s own owner. What does "unofficial" mean? The game content comes from the Daggerheart SRD under Darrington Press\'s DPCGL license; this app is a personal project with no official tie to Darrington Press.',
 };

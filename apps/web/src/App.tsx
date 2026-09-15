@@ -10,6 +10,7 @@ import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
 import { MapRoute } from './routes/MapRoute.js';
+import { HelpRoute } from './routes/HelpRoute.js';
 import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
@@ -311,7 +312,7 @@ function Shell() {
             )
           }
         />
-        <Route path="/help" element={<section><h1>{t('help.open')}</h1></section>} />
+        <Route path="/help" element={<HelpRoute role={account.role} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

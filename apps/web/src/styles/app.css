@@ -466,6 +466,30 @@ legend {
   color: var(--c-crimson-bright);
 }
 
+/* ====================================================================== help */
+
+.help-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.help-tabs [aria-selected='true'] {
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+  background: linear-gradient(180deg, #3a2e14, #251c0f);
+  box-shadow: var(--shadow-inset-gold), var(--glow-gold);
+}
+
+.help-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.help-sections details {
+  margin-bottom: 0.5rem;
+}
+
 /* ===================================================================== hero */
 
 .hero {

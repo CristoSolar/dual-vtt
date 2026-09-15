@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 import { GMPanel } from '../src/components/gm/GMPanel.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { t } from '../src/i18n/index.js';
+import { HelpRoute } from '../src/routes/HelpRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
 import {
@@ -304,5 +305,16 @@ describe('GM panel renders', () => {
     expect(html).toContain(t('gm.presence.disconnected'));
     expect(html).toContain('Alice');
     expect(html).toContain(t('roll.outcome.successHope'));
+  });
+});
+
+describe('HelpRoute', () => {
+  it('renders the three tabs and the app-guide sections', () => {
+    const html = render(<HelpRoute />, '/help#app');
+    expect(html).toContain(t('help.tab.app'));
+    expect(html).toContain(t('help.tab.rules'));
+    expect(html).toContain(t('help.tab.compendium'));
+    expect(html).toContain(t('help.app.start.title'));
+    expect(html).toContain(t('help.app.faq.title'));
   });
 });
