@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { t } from '../i18n/index.js';
+
 interface ToastProps {
   message: string;
   onDismiss: () => void;
@@ -17,7 +19,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
       <div className="row spread">
         <span>{message}</span>
         <button type="button" onClick={onDismiss}>
-          Descartar
+          {t('common.dismiss')}
         </button>
       </div>
     </div>

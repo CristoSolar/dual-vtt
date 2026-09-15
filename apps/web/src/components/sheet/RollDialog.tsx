@@ -57,7 +57,7 @@ export function RollDialog({
 
           <div className="grid cols-3">
             <div>
-              <label htmlFor="difficulty">Dificultad</label>
+              <label htmlFor="difficulty">{t('sheet.roll.difficulty')}</label>
               <input
                 id="difficulty"
                 type="number"
@@ -67,7 +67,7 @@ export function RollDialog({
               />
             </div>
             <div>
-              <label htmlFor="advantage">Dados de Ventaja</label>
+              <label htmlFor="advantage">{t('sheet.roll.advantageDice')}</label>
               <input
                 id="advantage"
                 type="number"
@@ -77,7 +77,7 @@ export function RollDialog({
               />
             </div>
             <div>
-              <label htmlFor="disadvantage">Dados de Desventaja</label>
+              <label htmlFor="disadvantage">{t('sheet.roll.disadvantageDice')}</label>
               <input
                 id="disadvantage"
                 type="number"
@@ -90,7 +90,7 @@ export function RollDialog({
 
           {experiences.length > 0 ? (
             <fieldset>
-              <legend>Usar una Experiencia (1 Esperanza cada una)</legend>
+              <legend>{t('sheet.roll.useExperience')}</legend>
               <div className="row">
                 {experiences.map((experience) => (
                   <button
@@ -105,8 +105,8 @@ export function RollDialog({
                 ))}
               </div>
               <p className="muted">
-                Gastando {hopeCost} de Esperanza de {hope}.
-                {canAfford ? '' : ' No tienes suficiente Esperanza.'}
+                {t('sheet.roll.spendingHope', { cost: hopeCost, hope })}
+                {canAfford ? '' : ` ${t('sheet.roll.notEnoughHopeInline')}`}
               </p>
             </fieldset>
           ) : null}
@@ -124,7 +124,7 @@ export function RollDialog({
               })
             }
           >
-            Tirar
+            {t('sheet.roll.rollButton')}
           </button>
         </>
       ) : (
@@ -149,33 +149,33 @@ function RollOutcome({
       <div className="roll-result">
         <div className="die hope">
           <span className="die-value">{roll.hope}</span>
-          <span className="die-label">Esperanza</span>
+          <span className="die-label">{t('sheet.roll.hopeLabel')}</span>
         </div>
         <div className="die fear">
           <span className="die-value">{roll.fear}</span>
-          <span className="die-label">Miedo</span>
+          <span className="die-label">{t('sheet.roll.fearLabel')}</span>
         </div>
         {roll.advantageRoll !== null ? (
           <div className="die">
             <span className="die-value">+{roll.advantageRoll}</span>
-            <span className="die-label">Ventaja</span>
+            <span className="die-label">{t('sheet.roll.advantageLabel')}</span>
           </div>
         ) : null}
         {roll.disadvantageRoll !== null ? (
           <div className="die">
             <span className="die-value">−{roll.disadvantageRoll}</span>
-            <span className="die-label">Desventaja</span>
+            <span className="die-label">{t('sheet.roll.disadvantageLabel')}</span>
           </div>
         ) : null}
         {roll.modifiers !== 0 ? (
           <div className="die">
             <span className="die-value">{formatSigned(roll.modifiers)}</span>
-            <span className="die-label">Modificador</span>
+            <span className="die-label">{t('sheet.roll.modifierLabel')}</span>
           </div>
         ) : null}
         <div className="die">
           <span className="die-value">{roll.total}</span>
-          <span className="die-label">Total</span>
+          <span className="die-label">{t('sheet.roll.totalLabel')}</span>
         </div>
       </div>
 
@@ -183,15 +183,17 @@ function RollOutcome({
         {t(`roll.outcome.${result.outcome}` as MessageKey)}
       </p>
       <p className="muted">
-        vs Dificultad {difficulty}
-        {result.criticalDamage ? ' · daño crítico en este ataque' : ''}
-        {result.hopeGained > 0 ? ` · +${result.hopeGained} Esperanza` : ''}
-        {result.fearGained > 0 ? ` · +${result.fearGained} Miedo para el DJ` : ''}
-        {result.stressCleared > 0 ? ` · ${result.stressCleared} de Estrés liberado` : ''}
+        {t('sheet.roll.vsDifficulty', { difficulty })}
+        {result.criticalDamage ? t('sheet.roll.criticalDamage') : ''}
+        {result.hopeGained > 0 ? t('sheet.roll.hopeGained', { amount: result.hopeGained }) : ''}
+        {result.fearGained > 0 ? t('sheet.roll.fearGained', { amount: result.fearGained }) : ''}
+        {result.stressCleared > 0
+          ? t('sheet.roll.stressCleared', { amount: result.stressCleared })
+          : ''}
       </p>
 
       <button type="button" onClick={onClose}>
-        Listo
+        {t('sheet.roll.done')}
       </button>
     </>
   );

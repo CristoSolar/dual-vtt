@@ -11,15 +11,15 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
   if (entries.length === 0) {
     return (
       <div className="panel">
-        <SectionHead>Registro de tiradas</SectionHead>
-        <p className="muted">Todavía no hay tiradas en esta sesión.</p>
+        <SectionHead>{t('sheet.log.title')}</SectionHead>
+        <p className="muted">{t('sheet.log.empty')}</p>
       </div>
     );
   }
 
   return (
     <div className="panel">
-      <SectionHead>Registro de tiradas</SectionHead>
+      <SectionHead>{t('sheet.log.title')}</SectionHead>
       <ul className="log">
         {entries.map((entry) => (
           <li key={entry.id}>
@@ -32,9 +32,11 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
                   </span>
                 </div>
                 <span className="muted">
-                  Esperanza {entry.roll.hope} · Miedo {entry.roll.fear}
-                  {entry.roll.modifiers !== 0 ? ` · modificador ${entry.roll.modifiers}` : ''} · total{' '}
-                  {entry.roll.total} vs {entry.difficulty}
+                  {t('sheet.log.dualityMeta', { hope: entry.roll.hope, fear: entry.roll.fear })}
+                  {entry.roll.modifiers !== 0
+                    ? t('sheet.log.modifier', { mod: entry.roll.modifiers })
+                    : ''}
+                  {t('sheet.log.totalVs', { total: entry.roll.total, difficulty: entry.difficulty })}
                   {entry.experiences.length > 0 ? ` · ${entry.experiences.join(', ')}` : ''}
                 </span>
               </>
@@ -42,12 +44,16 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
               <>
                 <div className="row spread">
                   <strong>{entry.label}</strong>
-                  <span>{entry.roll.total} de daño</span>
+                  <span>{t('sheet.log.damageTotal', { total: entry.roll.total })}</span>
                 </div>
                 <span className="muted">
-                  Dados {entry.roll.rolls.join(', ')}
-                  {entry.roll.modifier !== 0 ? ` · modificador ${entry.roll.modifier}` : ''}
-                  {entry.critical ? ` · crítico +${entry.roll.criticalBonus}` : ''}
+                  {t('sheet.log.dice', { rolls: entry.roll.rolls.join(', ') })}
+                  {entry.roll.modifier !== 0
+                    ? t('sheet.log.modifier', { mod: entry.roll.modifier })
+                    : ''}
+                  {entry.critical
+                    ? t('sheet.log.criticalBonus', { bonus: entry.roll.criticalBonus })
+                    : ''}
                 </span>
               </>
             )}

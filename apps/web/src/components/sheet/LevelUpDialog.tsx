@@ -7,6 +7,7 @@ import {
 } from '@daggerheart/rules';
 import { useState } from 'react';
 
+import { t, type MessageKey } from '../../i18n/index.js';
 import { Dialog } from '../Dialog.js';
 
 interface LevelUpDialogProps {
@@ -22,16 +23,16 @@ interface LevelUpDialogProps {
   onClose: () => void;
 }
 
-const ADVANCEMENT_LABELS: Record<Advancement, string> = {
-  traits: 'Aumenta dos Rasgos',
-  hitPoint: 'Añade una ranura de Punto de Vida',
-  stress: 'Añade una ranura de Estrés',
-  experience: 'Aumenta dos Experiencias',
-  domainCard: 'Toma una carta de Dominio extra',
-  evasion: 'Aumenta Evasión',
-  subclass: 'Mejora la Subclase',
-  proficiency: 'Aumenta Competencia',
-  multiclass: 'Multiclase',
+const ADVANCEMENT_LABEL_KEYS: Record<Advancement, MessageKey> = {
+  traits: 'sheet.levelUp.advancement.traits',
+  hitPoint: 'sheet.levelUp.advancement.hitPoint',
+  stress: 'sheet.levelUp.advancement.stress',
+  experience: 'sheet.levelUp.advancement.experience',
+  domainCard: 'sheet.levelUp.advancement.domainCard',
+  evasion: 'sheet.levelUp.advancement.evasion',
+  subclass: 'sheet.levelUp.advancement.subclass',
+  proficiency: 'sheet.levelUp.advancement.proficiency',
+  multiclass: 'sheet.levelUp.advancement.multiclass',
 };
 
 /** Collects the two advancement slots and passes them to the rules engine. */
@@ -63,18 +64,18 @@ export function LevelUpDialog({
       : [...list, value].slice(-limit);
 
   // Multiclassing isn't representable by the character model yet, so it isn't offered.
-  const offered = (Object.keys(ADVANCEMENT_LABELS) as Advancement[]).filter(
+  const offered = (Object.keys(ADVANCEMENT_LABEL_KEYS) as Advancement[]).filter(
     (a) => a !== 'multiclass',
   );
 
   return (
-    <Dialog title={`Subir al nivel ${level + 1}`} onClose={onClose}>
+    <Dialog title={t('sheet.levelUp.title', { level: level + 1 })} onClose={onClose}>
       <p className="muted">
-        Gasta exactamente {SLOTS_PER_LEVEL} ranuras de mejora — llevas {spent} elegidas.
+        {t('sheet.levelUp.spendHint', { slots: SLOTS_PER_LEVEL, spent })}
       </p>
 
       <fieldset>
-        <legend>Mejoras</legend>
+        <legend>{t('sheet.levelUp.advancementsLegend')}</legend>
         <div className="grid cols-2">
           {offered.map((advancement) => (
             <button
@@ -84,10 +85,9 @@ export function LevelUpDialog({
               aria-pressed={advancements.includes(advancement)}
               onClick={() => toggle(advancement)}
             >
-              <span className="option-name">{ADVANCEMENT_LABELS[advancement]}</span>
+              <span className="option-name">{t(ADVANCEMENT_LABEL_KEYS[advancement])}</span>
               <span className="option-meta">
-                {ADVANCEMENT_SLOT_COST[advancement]} ranura
-                {ADVANCEMENT_SLOT_COST[advancement] > 1 ? 's' : ''}
+                {t('sheet.levelUp.slotCost', { count: ADVANCEMENT_SLOT_COST[advancement] })}
               </span>
             </button>
           ))}
@@ -96,7 +96,7 @@ export function LevelUpDialog({
 
       {advancements.includes('traits') ? (
         <fieldset>
-          <legend>Rasgos a aumentar (elige dos)</legend>
+          <legend>{t('sheet.levelUp.traitsLegend')}</legend>
           <div className="row">
             {traitNames.map((trait) => (
               <button
@@ -115,7 +115,7 @@ export function LevelUpDialog({
 
       {advancements.includes('experience') ? (
         <fieldset>
-          <legend>Experiencias a aumentar (elige dos)</legend>
+          <legend>{t('sheet.levelUp.experiencesLegend')}</legend>
           <div className="row">
             {experienceNames.map((name) => (
               <button
@@ -134,8 +134,10 @@ export function LevelUpDialog({
 
       <div className="mb-4">
         <label htmlFor="new-experience">
-          Nueva Experiencia (los niveles {TIER_ACHIEVEMENT_LEVELS.join(', ')} otorgan una a +
-          {STARTING_EXPERIENCE_MODIFIER})
+          {t('sheet.levelUp.newExperienceLabel', {
+            levels: TIER_ACHIEVEMENT_LEVELS.join(', '),
+            modifier: STARTING_EXPERIENCE_MODIFIER,
+          })}
         </label>
         <input
           id="new-experience"
@@ -157,7 +159,7 @@ export function LevelUpDialog({
           })
         }
       >
-        Confirmar subida de nivel
+        {t('sheet.levelUp.confirm')}
       </button>
     </Dialog>
   );

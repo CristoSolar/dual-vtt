@@ -1,6 +1,7 @@
 import type { IncomingDamageType } from '@daggerheart/rules';
 import { useState } from 'react';
 
+import { t } from '../../i18n/index.js';
 import type { TakeDamageOptions } from '../../state/sheet.js';
 import { Dialog } from '../Dialog.js';
 
@@ -27,14 +28,17 @@ export function DamageDialog({
   const maxSlots = direct ? 0 : armorSlotsAvailable;
 
   return (
-    <Dialog title="Recibir daño" onClose={onClose}>
+    <Dialog title={t('sheet.damage.title')} onClose={onClose}>
       <p className="muted">
-        Daño Mayor {thresholds.major} · Daño Grave {thresholds.severe}
+        {t('sheet.damage.thresholdsLine', {
+          major: thresholds.major,
+          severe: thresholds.severe,
+        })}
       </p>
 
       <div className="grid cols-2">
         <div>
-          <label htmlFor="incoming">Daño recibido</label>
+          <label htmlFor="incoming">{t('sheet.damage.incomingLabel')}</label>
           <input
             id="incoming"
             type="number"
@@ -44,21 +48,21 @@ export function DamageDialog({
           />
         </div>
         <div>
-          <label htmlFor="damage-type">Tipo de daño</label>
+          <label htmlFor="damage-type">{t('sheet.damage.typeLabel')}</label>
           <select
             id="damage-type"
             value={damageType}
             onChange={(event) => setDamageType(event.target.value as IncomingDamageType)}
           >
-            <option value="physical">Físico</option>
-            <option value="magic">Mágico</option>
-            <option value="both">Físico y mágico</option>
+            <option value="physical">{t('damageType.physical')}</option>
+            <option value="magic">{t('damageType.magic')}</option>
+            <option value="both">{t('sheet.damage.bothTypes')}</option>
           </select>
         </div>
       </div>
 
       <fieldset>
-        <legend>Reducción</legend>
+        <legend>{t('sheet.damage.reductionLegend')}</legend>
         <div className="row">
           <button
             type="button"
@@ -69,13 +73,13 @@ export function DamageDialog({
               if (next) setArmorSlots(0);
             }}
           >
-            {direct ? 'Daño directo (ignora la armadura)' : 'Daño normal'}
+            {direct ? t('sheet.damage.directOn') : t('sheet.damage.directOff')}
           </button>
         </div>
 
         <div className="mt-3">
           <label htmlFor="armor-slots">
-            Ranuras de Armadura a marcar ({armorSlotsAvailable} disponibles)
+            {t('sheet.damage.armorSlotsLabel', { available: armorSlotsAvailable })}
           </label>
           <input
             id="armor-slots"
@@ -89,9 +93,7 @@ export function DamageDialog({
             }
           />
           {direct ? (
-            <p className="field-error">
-              El daño directo no se puede reducir marcando Ranuras de Armadura.
-            </p>
+            <p className="field-error">{t('sheet.damage.directError')}</p>
           ) : null}
         </div>
       </fieldset>
@@ -100,7 +102,7 @@ export function DamageDialog({
         type="button"
         onClick={() => onApply({ incoming, damageType, direct, armorSlotsToMark })}
       >
-        Aplicar daño
+        {t('sheet.damage.apply')}
       </button>
     </Dialog>
   );

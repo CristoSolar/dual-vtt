@@ -11,6 +11,7 @@ import {
 } from '@daggerheart/srd-data';
 import { TRAITS } from '@daggerheart/rules';
 
+import { t, type MessageKey } from '../i18n/index.js';
 import type { SheetState } from './sheet.js';
 
 /** Everything the sheet needs to render, resolved from ids once. */
@@ -36,27 +37,28 @@ export interface SheetView {
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
- * The three example uses the SRD prints under each trait. They belong on the
- * sheet, not just in the rulebook: the plaque tells you what the trait is for
- * without a lookup, which is the whole point of a sheet you read mid-session.
+ * The three example uses the SRD prints under each trait, as a single key per
+ * trait (`t()` joined by ` · `). They belong on the sheet, not just in the
+ * rulebook: the plaque tells you what the trait is for without a lookup,
+ * which is the whole point of a sheet you read mid-session.
  */
-const TRAIT_USES: Record<Trait, readonly string[]> = {
-  agility: ['Correr', 'Esquivar', 'Saltar'],
-  strength: ['Alzar', 'Golpear', 'Forcejear'],
-  finesse: ['Controlar', 'Ocultar', 'Trastear'],
-  instinct: ['Percibir', 'Sentir', 'Rastrear'],
-  presence: ['Encantar', 'Actuar', 'Engañar'],
-  knowledge: ['Recordar', 'Analizar', 'Comprender'],
+const TRAIT_USE_KEYS: Record<Trait, MessageKey> = {
+  agility: 'trait.agilityUses',
+  strength: 'trait.strengthUses',
+  finesse: 'trait.finesseUses',
+  instinct: 'trait.instinctUses',
+  presence: 'trait.presenceUses',
+  knowledge: 'trait.knowledgeUses',
 };
 
-/** Trait names, spelled out in Spanish rather than title-cased from the English id. */
-const TRAIT_LABELS: Record<Trait, string> = {
-  agility: 'Agilidad',
-  strength: 'Fuerza',
-  finesse: 'Destreza',
-  instinct: 'Instinto',
-  presence: 'Presencia',
-  knowledge: 'Conocimiento',
+/** Trait names, spelled out rather than title-cased from the English id. */
+const TRAIT_LABEL_KEYS: Record<Trait, MessageKey> = {
+  agility: 'trait.agility',
+  strength: 'trait.strength',
+  finesse: 'trait.finesse',
+  instinct: 'trait.instinct',
+  presence: 'trait.presence',
+  knowledge: 'trait.knowledge',
 };
 
 /** Assembles the display model for a sheet. Pure; no component does its own lookups. */
@@ -114,9 +116,9 @@ export function selectSheetView(sheet: SheetState): SheetView {
     vault: byId(sheet.vault),
     traits: TRAITS.map((trait) => ({
       trait,
-      label: TRAIT_LABELS[trait],
+      label: t(TRAIT_LABEL_KEYS[trait]),
       modifier: character.traits[trait],
-      uses: TRAIT_USES[trait],
+      uses: t(TRAIT_USE_KEYS[trait]).split(' · '),
     })),
   };
 }
@@ -149,19 +151,24 @@ export function describeWeaponDamage(weapon: Weapon, character: Character): stri
 
 export const formatSigned = formatModifier;
 
-/** Range and burden read better spaced out than camel-cased. */
-const SPACED: Record<string, string> = {
-  melee: 'Cuerpo a cuerpo',
-  veryClose: 'Muy cerca',
-  close: 'Cerca',
-  far: 'Lejos',
-  veryFar: 'Muy lejos',
-  oneHanded: 'Una mano',
-  twoHanded: 'Dos manos',
-  physical: 'Físico',
-  magic: 'Mágico',
-  physicalOrMagic: 'Físico o mágico',
+/** Range, burden, and damage-type ids, mapped to their localized label keys. */
+const SPACED_KEYS: Record<string, MessageKey> = {
+  melee: 'range.melee',
+  veryClose: 'range.veryClose',
+  close: 'range.close',
+  far: 'range.far',
+  veryFar: 'range.veryFar',
+  oneHanded: 'burden.oneHanded',
+  twoHanded: 'burden.twoHanded',
+  physical: 'damageType.physical',
+  magic: 'damageType.magic',
+  physicalOrMagic: 'damageType.physicalOrMagic',
 };
 
-export const label = (value: string): string =>
-  TRAIT_LABELS[value as Trait] ?? SPACED[value] ?? titleCase(value);
+export const label = (value: string): string => {
+  const traitKey = TRAIT_LABEL_KEYS[value as Trait];
+  if (traitKey !== undefined) return t(traitKey);
+  const spacedKey = SPACED_KEYS[value];
+  if (spacedKey !== undefined) return t(spacedKey);
+  return titleCase(value);
+};

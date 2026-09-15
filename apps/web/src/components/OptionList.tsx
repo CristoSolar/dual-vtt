@@ -1,3 +1,5 @@
+import { t } from '../i18n/index.js';
+
 interface Option {
   id: string;
   name: string;
@@ -23,7 +25,7 @@ export function OptionList({
   options,
   selectedId,
   onSelect,
-  emptyMessage = 'Todavía no hay opciones disponibles.',
+  emptyMessage = t('common.noOptionsAvailable'),
 }: OptionListProps) {
   if (options.length === 0) {
     return (

@@ -41,20 +41,20 @@ describe('sheet renders', () => {
     expect(html).toContain('Test Character');
     expect(html).toContain('Bard');
     for (const heading of [
-      'Rasgos',
-      'Defensas',
-      'Puntos de Vida',
-      'Estrés',
-      'Esperanza',
-      'Ranuras de Armadura',
-      'Oro',
-      'Armas y armadura activas',
-      'Experiencias',
-      'Rasgos de clase',
-      'Inventario',
-      'Cartas activas',
-      'Bóveda',
-      'Registro de tiradas',
+      t('sheet.route.traitsTitle'),
+      t('sheet.route.defensesTitle'),
+      t('sheet.route.hp'),
+      t('sheet.route.stress'),
+      t('sheet.roll.hopeLabel'),
+      t('sheet.route.armorSlots'),
+      t('sheet.route.gold'),
+      t('sheet.route.weaponsArmorTitle'),
+      t('sheet.route.experiencesTitle'),
+      t('sheet.route.classFeaturesTitle'),
+      t('sheet.route.inventoryTitle'),
+      t('sheet.loadout.title').split('{')[0]?.trim() ?? '',
+      t('sheet.loadout.vaultTitle'),
+      t('sheet.log.title'),
     ]) {
       expect(html, heading).toContain(heading);
     }
@@ -89,11 +89,11 @@ describe('sheet renders', () => {
     const nonCaster = createSheet(buildCharacter('guardian'));
 
     expect(render(<SheetRoute sheet={caster} update={noopUpdate} rng={() => 0.5} />)).toContain(
-      'Tirada de Conjuro',
+      t('sheet.route.spellRollButton'),
     );
     expect(
       render(<SheetRoute sheet={nonCaster} update={noopUpdate} rng={() => 0.5} />),
-    ).not.toContain('Tirada de Conjuro');
+    ).not.toContain(t('sheet.route.spellRollButton'));
   });
 
   it('marks a Vulnerable character on the sheet', () => {
@@ -114,17 +114,17 @@ describe('compact sheet renders', () => {
 
     // The level shield, the two defence hexagons and the threshold ribbon are
     // the pieces that make it read as a sheet rather than a form.
-    expect(html).toContain('Nivel');
+    expect(html).toContain(t('sheet.furniture.level'));
     expect(html).toContain('Evasión');
     expect(html).toContain('Armadura');
-    expect(html).toContain('Umbrales de daño');
+    expect(html).toContain(t('sheet.furniture.thresholdsTitle'));
     expect(html).toContain(`>${sheet.character.major}<`);
     expect(html).toContain(`>${sheet.character.severe}<`);
 
     // Every trait plaque carries its name and its three SRD uses.
-    expect(html).toContain('Instinto');
-    expect(html).toContain('Percibir');
-    expect(html).toContain('Rastrear');
+    expect(html).toContain(t('trait.instinct'));
+    expect(html).toContain(t('trait.instinctUses').split(' · ')[0]);
+    expect(html).toContain(t('trait.instinctUses').split(' · ')[2]);
 
     for (const track of ['Puntos de Vida', 'Estrés', 'Esperanza', 'Ranuras de armadura']) {
       expect(html, track).toContain(track);

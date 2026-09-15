@@ -1,3 +1,5 @@
+import { t } from '../../i18n/index.js';
+
 /**
  * The sheet's "rulebook" furniture, straight from the design direction's §05:
  * shields, plaques and ribbons drawn as CSS geometry (`clip-path` + a double
@@ -15,7 +17,7 @@ export function LevelShield({ level }: LevelShieldProps) {
   return (
     <div className="level-shield">
       <span className="level-shield-value">{level}</span>
-      <span className="level-shield-label">Nivel</span>
+      <span className="level-shield-label">{t('sheet.furniture.level')}</span>
     </div>
   );
 }
@@ -67,7 +69,7 @@ export function TraitPlaque({ label, modifier, uses, active = false, onClick }: 
           type="button"
           className="trait-plaque"
           data-active={active}
-          aria-label={`Tirada de ${label} ${signed(modifier)}`}
+          aria-label={t('sheet.furniture.traitRollLabel', { label, modifier: signed(modifier) })}
           onClick={onClick}
         >
           {body}
@@ -101,25 +103,25 @@ export function ThresholdRibbon({ major, severe, onCalculate }: ThresholdRibbonP
       <div className="threshold-ribbon-head">
         {onCalculate === undefined ? null : (
           <button type="button" className="threshold-calc" onClick={onCalculate}>
-            Calcular
+            {t('sheet.furniture.calculate')}
             <br />
-            daño
+            {t('sheet.furniture.damageWord')}
           </button>
         )}
-        <span className="threshold-ribbon-title">Umbrales de daño</span>
+        <span className="threshold-ribbon-title">{t('sheet.furniture.thresholdsTitle')}</span>
       </div>
       <div className="threshold-bands">
         <div className="threshold-band minor">
-          <span className="threshold-band-label">Menor</span>
-          <span className="threshold-band-note">marca 1 PV</span>
+          <span className="threshold-band-label">{t('sheet.furniture.minor')}</span>
+          <span className="threshold-band-note">{t('sheet.furniture.mark1')}</span>
         </div>
         <div className="threshold-band major">
-          <span className="threshold-band-label">Mayor</span>
-          <span className="threshold-band-note">marca 2 PV</span>
+          <span className="threshold-band-label">{t('sheet.furniture.major')}</span>
+          <span className="threshold-band-note">{t('sheet.furniture.mark2')}</span>
         </div>
         <div className="threshold-band severe">
-          <span className="threshold-band-label">Severo</span>
-          <span className="threshold-band-note">marca 3 PV</span>
+          <span className="threshold-band-label">{t('sheet.furniture.severe')}</span>
+          <span className="threshold-band-note">{t('sheet.furniture.mark3')}</span>
         </div>
         <span className="threshold-badge at-major">{major}</span>
         <span className="threshold-badge at-severe">{severe}</span>
@@ -167,7 +169,7 @@ export function SegmentTracker({
         <button
           type="button"
           className="round-step"
-          aria-label={`Quitar 1 de ${label}`}
+          aria-label={t('sheet.furniture.removeOne', { label })}
           disabled={marked === 0}
           onClick={onClear}
         >
@@ -176,7 +178,14 @@ export function SegmentTracker({
         <div className="segment-tracker-bars">
           {Array.from({ length: total }, (_, index) => {
             const filled = index < marked;
-            const description = `${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`;
+            const description = filled
+              ? t('sheet.furniture.segmentDescriptionFilled', {
+                  label,
+                  index: index + 1,
+                  total,
+                  fillLabel,
+                })
+              : t('sheet.furniture.segmentDescription', { label, index: index + 1, total });
             return (
               <button
                 key={index}
@@ -194,14 +203,14 @@ export function SegmentTracker({
         <button
           type="button"
           className="round-step accent"
-          aria-label={`Sumar 1 a ${label}`}
+          aria-label={t('sheet.furniture.addOne', { label })}
           disabled={marked === total}
           onClick={onMark}
         >
           +
         </button>
       </div>
-      {total === 0 ? <p className="muted">No hay disponibles.</p> : null}
+      {total === 0 ? <p className="muted">{t('sheet.furniture.noneAvailable')}</p> : null}
     </div>
   );
 }
@@ -223,7 +232,14 @@ export function HopeRow({ label, marked, total, fillLabel, onMark, onClear }: Pi
       <div className="hope-pips">
         {Array.from({ length: total }, (_, index) => {
           const filled = index < marked;
-          const description = `${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`;
+          const description = filled
+            ? t('sheet.furniture.segmentDescriptionFilled', {
+                label,
+                index: index + 1,
+                total,
+                fillLabel,
+              })
+            : t('sheet.furniture.segmentDescription', { label, index: index + 1, total });
           return (
             <button
               key={index}
@@ -260,7 +276,7 @@ export function ArmorSlots({ label, marked, total, fillLabel, onMark, onClear }:
         <button
           type="button"
           className="round-step"
-          aria-label={`Quitar 1 de ${label}`}
+          aria-label={t('sheet.furniture.removeOne', { label })}
           disabled={marked === 0}
           onClick={onClear}
         >
@@ -268,7 +284,14 @@ export function ArmorSlots({ label, marked, total, fillLabel, onMark, onClear }:
         </button>
         {Array.from({ length: total }, (_, index) => {
           const filled = index < marked;
-          const description = `${label} ${index + 1} de ${total}${filled ? ` (${fillLabel})` : ''}`;
+          const description = filled
+            ? t('sheet.furniture.segmentDescriptionFilled', {
+                label,
+                index: index + 1,
+                total,
+                fillLabel,
+              })
+            : t('sheet.furniture.segmentDescription', { label, index: index + 1, total });
           return (
             <button
               key={index}
@@ -285,14 +308,14 @@ export function ArmorSlots({ label, marked, total, fillLabel, onMark, onClear }:
         <button
           type="button"
           className="round-step violet"
-          aria-label={`Sumar 1 a ${label}`}
+          aria-label={t('sheet.furniture.addOne', { label })}
           disabled={marked === total}
           onClick={onMark}
         >
           +
         </button>
       </div>
-      {total === 0 ? <p className="muted">Sin armadura equipada.</p> : null}
+      {total === 0 ? <p className="muted">{t('sheet.furniture.noArmorEquipped')}</p> : null}
     </div>
   );
 }

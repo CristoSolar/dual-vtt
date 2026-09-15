@@ -1,3 +1,4 @@
+import { t } from '../../i18n/index.js';
 import { Dialog } from '../Dialog.js';
 
 interface DeathMoveDialogProps {
@@ -10,16 +11,16 @@ interface DeathMoveDialogProps {
  */
 export function DeathMoveDialog({ onClose }: DeathMoveDialogProps) {
   return (
-    <Dialog title="Movimiento de Muerte requerido" onClose={onClose}>
-      <p>Marcaste tu último Punto de Vida. Elige un Movimiento de Muerte:</p>
+    <Dialog title={t('sheet.deathMove.title')} onClose={onClose}>
+      <p>{t('sheet.deathMove.prompt')}</p>
       <ul>
-        <li>Última Gloria</li>
-        <li>Evitar la Muerte</li>
-        <li>Arriesgarlo Todo</li>
+        <li>{t('sheet.deathMove.blazeOfGlory')}</li>
+        <li>{t('sheet.deathMove.avoidDeath')}</li>
+        <li>{t('sheet.deathMove.riskItAll')}</li>
       </ul>
-      <p className="muted">Resuélvelo en la mesa.</p>
+      <p className="muted">{t('sheet.deathMove.resolveHint')}</p>
       <button type="button" onClick={onClose}>
-        Cerrar
+        {t('common.close')}
       </button>
     </Dialog>
   );

@@ -2,6 +2,7 @@ import type { DomainCard } from '@daggerheart/srd-data';
 import { MAX_LOADOUT } from '@daggerheart/rules';
 import { useState, type CSSProperties } from 'react';
 
+import { t } from '../../i18n/index.js';
 import { label as prettify } from '../../state/selectors.js';
 import { SectionHead } from '../SectionHead.js';
 
@@ -34,20 +35,20 @@ export function LoadoutPanel({
   return (
     <div className="panel">
       <SectionHead>
-        Cartas activas {loadout.length}/{MAX_LOADOUT}
+        {t('sheet.loadout.title', { count: loadout.length, max: MAX_LOADOUT })}
       </SectionHead>
       <div className="card-head">
         <button type="button" aria-pressed={duringRest} onClick={onToggleRest}>
-          {duringRest ? 'Descansando — los cambios son gratis' : 'Sin descansar'}
+          {duringRest ? t('sheet.loadout.resting') : t('sheet.loadout.notResting')}
         </button>
       </div>
 
       {loadout.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level domain-hex" title="Nivel de la carta">
+          <span className="domain-corner level domain-hex" title={t('sheet.loadout.cardLevelTitle')}>
             {card.level}
           </span>
-          <span className="domain-corner recall" title="Coste de Recuperación">
+          <span className="domain-corner recall" title={t('sheet.loadout.recallCostTitle')}>
             ⚡{card.recallCost}
           </span>
           <div className="card-head">
@@ -59,25 +60,25 @@ export function LoadoutPanel({
               <span className="domain-title">{card.name}</span>
             </span>
             <button type="button" onClick={() => onVault(card.id)}>
-              Enviar a la Bóveda
+              {t('sheet.loadout.sendToVault')}
             </button>
           </div>
           <p className="card-text">{card.text}</p>
         </div>
       ))}
 
-      <SectionHead>Bóveda</SectionHead>
-      {vault.length === 0 ? <p className="muted">No hay nada en la Bóveda.</p> : null}
+      <SectionHead>{t('sheet.loadout.vaultTitle')}</SectionHead>
+      {vault.length === 0 ? <p className="muted">{t('sheet.loadout.vaultEmpty')}</p> : null}
 
       {full && vault.length > 0 ? (
         <div className="mb-3">
-          <label htmlFor="vaulting">Cartas activas al máximo — elige carta a retirar</label>
+          <label htmlFor="vaulting">{t('sheet.loadout.chooseToVault')}</label>
           <select
             id="vaulting"
             value={vaulting}
             onChange={(event) => setVaulting(event.target.value)}
           >
-            <option value="">Elige una carta…</option>
+            <option value="">{t('sheet.loadout.chooseCardPlaceholder')}</option>
             {loadout.map((card) => (
               <option key={card.id} value={card.id}>
                 {card.name}
@@ -89,10 +90,10 @@ export function LoadoutPanel({
 
       {vault.map((card) => (
         <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
-          <span className="domain-corner level domain-hex" title="Nivel de la carta">
+          <span className="domain-corner level domain-hex" title={t('sheet.loadout.cardLevelTitle')}>
             {card.level}
           </span>
-          <span className="domain-corner recall" title="Coste de Recuperación">
+          <span className="domain-corner recall" title={t('sheet.loadout.recallCostTitle')}>
             ⚡{card.recallCost}
           </span>
           <div className="card-head">
@@ -102,7 +103,9 @@ export function LoadoutPanel({
               disabled={full && vaulting === ''}
               onClick={() => onRecall(card.id, vaulting === '' ? undefined : vaulting)}
             >
-              Recuperar{duringRest ? '' : ` (${card.recallCost} de Estrés)`}
+              {duringRest
+                ? t('sheet.loadout.recall')
+                : t('sheet.loadout.recallWithCost', { cost: card.recallCost })}
             </button>
           </div>
           <span className="domain-type">{prettify(card.domain)}</span>

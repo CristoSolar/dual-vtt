@@ -1,5 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 
+import { t } from '../i18n/index.js';
+
 interface DialogProps {
   title: string;
   onClose: () => void;
@@ -32,7 +34,7 @@ export function Dialog({ title, onClose, children }: DialogProps) {
       >
         <div className="card-head">
           <h2>{title}</h2>
-          <button type="button" onClick={onClose} aria-label="Cerrar">
+          <button type="button" onClick={onClose} aria-label={t('common.close')}>
             ✕
           </button>
         </div>
