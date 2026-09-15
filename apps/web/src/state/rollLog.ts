@@ -5,7 +5,6 @@
 export {
   appendRoll,
   MAX_LOG_ENTRIES,
-  OUTCOME_LABELS,
   outcomeTone,
   type RollEntry,
 } from '@daggerheart/protocol';

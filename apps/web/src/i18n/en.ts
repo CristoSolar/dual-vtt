@@ -2,7 +2,7 @@ import type { es } from './es.js';
 
 /** Same keys as `es`; the annotation makes a missing or extra key a type error. */
 export const en: Record<keyof typeof es, string> = {
-  'locale.switchTo': 'Español',
+  'locale.switchTo': 'Switch to Spanish',
 
   'effect.stressBecameHP': 'No Stress left — marked 1 Hit Point instead.',
   'effect.vulnerable': 'All Stress marked — you are Vulnerable.',
@@ -17,6 +17,15 @@ export const en: Record<keyof typeof es, string> = {
   'effect.cardNotInVault': 'That card is not in the vault.',
   'effect.cardNotInLoadout': 'That card is not in the loadout.',
   'effect.swapNotAllowed': 'That swap is not allowed.',
+
+  // damage severity (rules DamageSeverity, interpolated into effect.damageApplied)
+  'damage.severity.minor': 'minor',
+  'damage.severity.major': 'major',
+  'damage.severity.severe': 'severe',
+
+  // ancestry slot ordinals (interpolated into validation.duplicateAncestrySlot)
+  'slot.first': 'first',
+  'slot.second': 'second',
   'effect.levelUpRejected': 'Level-up rejected: {message}',
   'effect.unknownMulticlass': 'That multiclass names an unknown class or domain.',
   'effect.levelledUp': 'Levelled up to {level}.',
@@ -362,7 +371,7 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.print.baseScore': 'Base score {score}',
   'sheet.print.classFeature': 'CLASS FEATURE',
   'sheet.print.inventory': 'INVENTORY',
-  'sheet.print.footer': 'Daggerheart © Darrington Press 2025 · Unofficial translation',
+  'sheet.print.footer': 'Daggerheart © Darrington Press 2025 · Unofficial fan-made sheet',
   'sheet.print.traitExamples.agility': 'Run · Jump · Maneuver',
   'sheet.print.traitExamples.strength': 'Lift · Smash · Grapple',
   'sheet.print.traitExamples.finesse': 'Control · Hide · Manipulate',

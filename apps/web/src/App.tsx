@@ -2,8 +2,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
+import { LocaleToggle } from './components/LocaleToggle.js';
 import { Toast } from './components/Toast.js';
-import { setLocale, t, useLocale } from './i18n/index.js';
+import { t } from './i18n/index.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
@@ -24,7 +25,6 @@ const rng = () => Math.random();
 function Shell() {
   const storage = window.localStorage;
   const navigate = useNavigate();
-  const locale = useLocale();
   // The map is a Foundry-style fullscreen stage: it owns the whole viewport
   // and draws its own thin scene bar instead of sharing the page chrome.
   const isMapRoute = useLocation().pathname === '/map';
@@ -71,26 +71,38 @@ function Shell() {
   if (auth.status === 'loading') {
     return (
       <div className="app">
+        <LocaleToggle floating />
         <p className="muted">{t('common.loading')}</p>
       </div>
     );
   }
 
   if (auth.status === 'signedOut') {
-    return <LoginRoute error={auth.error} pending={auth.pending} onLogin={auth.login} />;
+    return (
+      <>
+        <LocaleToggle floating />
+        <LoginRoute error={auth.error} pending={auth.pending} onLogin={auth.login} />
+      </>
+    );
   }
 
   const account = auth.user;
   if (account === null) {
     return (
       <div className="app">
+        <LocaleToggle floating />
         <p className="muted">{t('common.loading')}</p>
       </div>
     );
   }
 
   if (account.mustChangePassword === true) {
-    return <ChangePasswordRoute error={auth.error} pending={auth.pending} onChange={auth.changePassword} />;
+    return (
+      <>
+        <LocaleToggle floating />
+        <ChangePasswordRoute error={auth.error} pending={auth.pending} onChange={auth.changePassword} />
+      </>
+    );
   }
 
   return (
@@ -124,13 +136,7 @@ function Shell() {
               ) : null}
             </>
           ) : null}
-          <button
-            type="button"
-            onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
-            aria-label={t('locale.switchTo')}
-          >
-            {locale === 'es' ? 'EN' : 'ES'}
-          </button>
+          <LocaleToggle />
           <button type="button" onClick={auth.logout}>
             {t('app.logout')}
           </button>

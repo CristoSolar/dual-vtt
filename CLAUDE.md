@@ -75,7 +75,11 @@ srd-data  →  rules  →  character  →  protocol  →  server
   `apps/web/src/state` as pure functions. Routing is `HashRouter`, so the static
   server never sees app paths. UI text goes through `t()` from `apps/web/src/i18n`;
   `es.ts` is the source of keys and `en.ts` is typed against it. The tree remounts on
-  locale switch (`key={locale}` in `main.tsx`).
+  locale switch (`key={locale}` in `main.tsx`). The remount also tears down and
+  reopens the campaign socket, so a mid-session toggle briefly reconnects; nothing is
+  lost because room state is server-authoritative. Switching locale mid-creation makes
+  step 5 report `invalidClassItem` until the class item is re-picked, because the
+  chosen item is stored as SRD text (see the spec's non-goals).
 
 ## Invariants worth knowing before editing
 

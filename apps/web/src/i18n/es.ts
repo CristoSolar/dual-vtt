@@ -2,7 +2,7 @@
  * here without an English twin fails typecheck. Keys are `area.name`. */
 export const es = {
   // locale toggle
-  'locale.switchTo': 'English',
+  'locale.switchTo': 'Cambiar a inglés',
 
   // sheet effects (protocol SheetEffect booleans + codes)
   'effect.stressBecameHP': 'No queda Estrés — marcaste 1 Punto de Vida en su lugar.',
@@ -18,6 +18,15 @@ export const es = {
   'effect.cardNotInVault': 'Esa carta no está en la bóveda.',
   'effect.cardNotInLoadout': 'Esa carta no está en el equipo activo.',
   'effect.swapNotAllowed': 'Ese intercambio no está permitido.',
+
+  // damage severity (rules DamageSeverity, interpolated into effect.damageApplied)
+  'damage.severity.minor': 'menor',
+  'damage.severity.major': 'mayor',
+  'damage.severity.severe': 'grave',
+
+  // ancestry slot ordinals (interpolated into validation.duplicateAncestrySlot)
+  'slot.first': 'primera',
+  'slot.second': 'segunda',
   'effect.levelUpRejected': 'Subida de nivel rechazada: {message}',
   'effect.unknownMulticlass': 'Ese multiclase nombra una clase o dominio desconocido.',
   'effect.levelledUp': 'Subiste al nivel {level}.',
@@ -191,8 +200,8 @@ export const es = {
   'wizard.step1.classLegend': 'Clase',
   'wizard.step1.classMeta': 'Evasión {evasion} · PV {hp} · {domains}',
   'wizard.step1.subclassLegend': 'Subclase',
-  'wizard.step1.noSpellcastTrait': 'Sin Rasgo de Conjuro',
-  'wizard.step1.spellcastTrait': 'Conjuro: {trait}',
+  'wizard.step1.noSpellcastTrait': 'Sin rasgo de Lanzamiento de Conjuros',
+  'wizard.step1.spellcastTrait': 'Lanzamiento de Conjuros: {trait}',
   'wizard.step1.chooseClassFirst': 'Elige primero una clase.',
 
   'wizard.step2.singleAncestry': 'Ascendencia única',
@@ -257,7 +266,7 @@ export const es = {
   'validation.ancestryRequired': 'Elige una ascendencia.',
   'validation.unknownAncestry': 'Ascendencia desconocida: {id}',
   'validation.duplicateAncestrySlot':
-    'Una ascendencia mixta toma un rasgo de primera posición y uno de segunda, no dos de posición {slot}.',
+    'Una ascendencia mixta toma un rasgo de primera posición y uno de segunda, no dos con la {slot} posición.',
   'validation.invalidMixedAncestry': 'Ascendencia mixta inválida: {detail}',
   'validation.communityRequired': 'Elige una comunidad.',
   'validation.unknownCommunity': 'Comunidad desconocida: {id}',

@@ -74,6 +74,9 @@ export function t(key: MessageKey, params?: Record<string, string | number>): st
   });
 }
 
+const KNOWN_SEVERITIES = new Set(['minor', 'major', 'severe']);
+const KNOWN_GOLD_UNITS = new Set(['handfuls', 'bags', 'chests']);
+
 /** Localized text for a sheet transition, or null when there is nothing to say. */
 export function describeEffect(effect: SheetEffect): string | null {
   const parts: string[] = [];
@@ -81,7 +84,15 @@ export function describeEffect(effect: SheetEffect): string | null {
   if (effect.vulnerable) parts.push(t('effect.vulnerable'));
   if (effect.deathMoveRequired) parts.push(t('effect.deathMoveRequired'));
   if (effect.code !== null) {
-    const params = { ...(effect.params ?? {}), message: effect.message ?? '' };
+    const params: Record<string, string | number> = { ...(effect.params ?? {}), message: effect.message ?? '' };
+    const severity = params.severity;
+    if (typeof severity === 'string' && KNOWN_SEVERITIES.has(severity)) {
+      params.severity = t(`damage.severity.${severity}` as MessageKey);
+    }
+    const unit = params.unit;
+    if (typeof unit === 'string' && KNOWN_GOLD_UNITS.has(unit)) {
+      params.unit = t(`sheet.route.unit.${unit}` as MessageKey);
+    }
     parts.push(t(`effect.${effect.code}` as MessageKey, params));
   }
   if (parts.length > 0) return parts.join(' ');
@@ -97,7 +108,13 @@ export function describeRejection(code: string): string {
 /** Localized text for a wizard validation error; unknown codes fall back to the English message. */
 export function describeValidation(error: ValidationError): string {
   const key = `validation.${error.code}` as MessageKey;
-  return key in es ? t(key, error.params ?? {}) : error.message;
+  if (!(key in es)) return error.message;
+  const params: Record<string, string | number> = { ...(error.params ?? {}) };
+  const slot = params.slot;
+  if (slot === 'first' || slot === 'second') {
+    params.slot = t(`slot.${slot}` as MessageKey);
+  }
+  return t(key, params);
 }
 
 /** One line for a live "someone just rolled" notification. */

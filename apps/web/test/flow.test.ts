@@ -1,7 +1,8 @@
+import { OUTCOME_LABELS } from '@daggerheart/protocol';
 import { srd } from '@daggerheart/srd-data';
 import { describe, expect, it } from 'vitest';
 
-import { appendRoll, MAX_LOG_ENTRIES, OUTCOME_LABELS, outcomeTone } from '../src/state/rollLog.js';
+import { appendRoll, MAX_LOG_ENTRIES, outcomeTone } from '../src/state/rollLog.js';
 import { selectSheetView } from '../src/state/selectors.js';
 import {
   applyLevelUp,

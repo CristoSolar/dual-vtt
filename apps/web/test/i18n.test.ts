@@ -1,9 +1,13 @@
 import type { ValidationError } from '@daggerheart/character';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import { en } from '../src/i18n/en.js';
 import { es } from '../src/i18n/es.js';
 import { describeEffect, describeValidation, resolveInitialLocale, setLocale, t } from '../src/i18n/index.js';
+
+// Several tests below call setLocale to check both dictionaries; reset after
+// each so a locale switch never leaks into an unrelated test.
+afterEach(() => setLocale('es'));
 
 describe('resolveInitialLocale', () => {
   it('prefers a valid stored value', () => {
@@ -50,6 +54,28 @@ describe('describeEffect', () => {
   it('falls back to message when there is no code', () => {
     expect(describeEffect({ ...base, message: 'raw' })).toBe('raw');
   });
+
+  it('translates the damage severity instead of leaking the English enum value', () => {
+    setLocale('es');
+    const esText = describeEffect({ ...base, code: 'damageApplied', params: { severity: 'severe', hpMarked: 3 } });
+    expect(esText).toContain('grave');
+    expect(esText).not.toContain('severe');
+
+    setLocale('en');
+    const enText = describeEffect({ ...base, code: 'damageApplied', params: { severity: 'severe', hpMarked: 3 } });
+    expect(enText).toContain('severe');
+  });
+
+  it('translates the gold unit instead of leaking the English enum value', () => {
+    setLocale('es');
+    const esText = describeEffect({ ...base, code: 'notEnoughGold', params: { amount: 2, unit: 'handfuls' } });
+    expect(esText).toContain('puñado');
+    expect(esText).not.toContain('handfuls');
+
+    setLocale('en');
+    const enText = describeEffect({ ...base, code: 'notEnoughGold', params: { amount: 2, unit: 'handfuls' } });
+    expect(enText).toContain('handful');
+  });
 });
 
 describe('describeValidation', () => {
@@ -80,5 +106,25 @@ describe('describeValidation', () => {
       field: null,
     };
     expect(describeValidation(unknown)).toBe('a message no dictionary knows about');
+  });
+});
+
+describe('placeholder parity', () => {
+  const placeholders = (text: string): string[] =>
+    Array.from(text.matchAll(/\{(\w+)\}/g))
+      .map((match) => match[1])
+      .filter((name): name is string => name !== undefined)
+      .sort();
+
+  it('every key has the same {placeholders} in both locales', () => {
+    const mismatches: string[] = [];
+    for (const key of Object.keys(es) as (keyof typeof es)[]) {
+      const esPlaceholders = placeholders(es[key]);
+      const enPlaceholders = placeholders(en[key]);
+      if (JSON.stringify(esPlaceholders) !== JSON.stringify(enPlaceholders)) {
+        mismatches.push(`${key}: es=[${esPlaceholders.join(',')}] en=[${enPlaceholders.join(',')}]`);
+      }
+    }
+    expect(mismatches).toEqual([]);
   });
 });

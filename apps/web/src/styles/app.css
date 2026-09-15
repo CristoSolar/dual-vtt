@@ -299,6 +299,15 @@ legend {
   flex-wrap: wrap;
 }
 
+/* Locale toggle on screens with no topbar (loading, login, change-password):
+   pinned so it stays reachable before sign-in. */
+.locale-toggle--floating {
+  position: fixed;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 10;
+}
+
 /* Wordmark: styled text only — no brand asset ships in this repo. */
 .brand {
   font-family: var(--font-display);
