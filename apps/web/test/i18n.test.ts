@@ -1,8 +1,9 @@
+import type { ValidationError } from '@daggerheart/character';
 import { describe, expect, it } from 'vitest';
 
 import { en } from '../src/i18n/en.js';
 import { es } from '../src/i18n/es.js';
-import { describeEffect, resolveInitialLocale, setLocale, t } from '../src/i18n/index.js';
+import { describeEffect, describeValidation, resolveInitialLocale, setLocale, t } from '../src/i18n/index.js';
 
 describe('resolveInitialLocale', () => {
   it('prefers a valid stored value', () => {
@@ -48,5 +49,36 @@ describe('describeEffect', () => {
   });
   it('falls back to message when there is no code', () => {
     expect(describeEffect({ ...base, message: 'raw' })).toBe('raw');
+  });
+});
+
+describe('describeValidation', () => {
+  const knownError: ValidationError = {
+    step: 5,
+    code: 'weaponTierTooHigh',
+    message: 'Longsword is Tier 2; characters start at Tier 1',
+    field: 'equipment.primaryWeaponId',
+    params: { name: 'Longsword', tier: 2, startingTier: 1 },
+  };
+
+  it('renders a known code with params in English', () => {
+    setLocale('en');
+    expect(describeValidation(knownError)).toBe('Longsword is Tier 2; characters start at Tier 1.');
+  });
+
+  it('renders the same known code with params in Spanish', () => {
+    setLocale('es');
+    expect(describeValidation(knownError)).toBe('Longsword es de Tier 2; los personajes empiezan en Tier 1.');
+  });
+
+  it('falls back to the raw message for an unknown code', () => {
+    setLocale('en');
+    const unknown: ValidationError = {
+      step: 1,
+      code: 'somethingMadeUp',
+      message: 'a message no dictionary knows about',
+      field: null,
+    };
+    expect(describeValidation(unknown)).toBe('a message no dictionary knows about');
   });
 });

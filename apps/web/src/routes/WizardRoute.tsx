@@ -15,19 +15,20 @@ import {
   type StepProps,
 } from '../components/wizard/Steps.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
+import { t, type MessageKey } from '../i18n/index.js';
 import { createSheet } from '../state/sheet.js';
 import { useCreation } from '../state/useCreation.js';
 
-const STEP_TITLES: Record<Step, string> = {
-  1: 'Clase y Subclase',
-  2: 'Herencia',
-  3: 'Rasgos',
-  4: 'Estadísticas derivadas',
-  5: 'Equipo',
-  6: 'Trasfondo',
-  7: 'Experiencias',
-  8: 'Cartas de Dominio',
-  9: 'Conexiones',
+const STEP_TITLE_KEYS: Record<Step, MessageKey> = {
+  1: 'wizard.stepTitle.1',
+  2: 'wizard.stepTitle.2',
+  3: 'wizard.stepTitle.3',
+  4: 'wizard.stepTitle.4',
+  5: 'wizard.stepTitle.5',
+  6: 'wizard.stepTitle.6',
+  7: 'wizard.stepTitle.7',
+  8: 'wizard.stepTitle.8',
+  9: 'wizard.stepTitle.9',
 };
 
 const STEP_COMPONENTS: Record<Step, (props: StepProps) => JSX.Element> = {
@@ -53,7 +54,7 @@ interface WizardRouteProps {
    * in the room state) — not just that we asked. */
   claimed: boolean;
   /** Set when the server rejects something — including our claim — so the button
-   * can re-enable instead of being stuck on "Guardando…" forever. */
+   * can re-enable instead of being stuck on the saving label forever. */
   error: string | null;
 }
 
@@ -62,7 +63,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
   const { step: stepParam } = useParams();
   const navigate = useNavigate();
   const { state, dispatch, discard, reset } = useCreation(storage, campaignId);
-  // Set once "Terminar" is clicked; stays true until the server confirms (or the
+  // Set once the finish button is clicked; stays true until the server confirms (or the
   // player navigates away and back). Only while true does a later `claimed` flip
   // mean "the claim we just sent" rather than some pre-existing state.
   const [submitting, setSubmitting] = useState(false);
@@ -79,7 +80,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
     }
   }, [submitting, claimed, discard, onFinish]);
 
-  // A rejection re-enables the button instead of leaving it stuck on "Guardando…"
+  // A rejection re-enables the button instead of leaving it stuck on the saving label
   // with no way to retry.
   useEffect(() => {
     if (submitting && !claimed && error !== null) setSubmitting(false);
@@ -107,9 +108,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
   return (
     <section>
       <div className="card-head">
-        <h1>
-          Paso {step} — {STEP_TITLES[step]}
-        </h1>
+        <h1>{t('wizard.stepHeading', { step, title: t(STEP_TITLE_KEYS[step]) })}</h1>
         <button
           type="button"
           onClick={() => {
@@ -117,11 +116,11 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
             navigate('/create/1');
           }}
         >
-          Empezar de nuevo
+          {t('wizard.startOver')}
         </button>
       </div>
 
-      <ol className="steps" aria-label="Progreso de la creación">
+      <ol className="steps" aria-label={t('wizard.progressLabel')}>
         {STEPS.map((s) => {
           const done = validateStep(state, s).ok;
           return (
@@ -131,13 +130,17 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
                 className="step-pip"
                 data-state={s === step ? 'current' : done ? 'done' : 'todo'}
                 aria-current={s === step ? 'step' : undefined}
-                aria-label={`Paso ${s}: ${STEP_TITLES[s]}${done ? ' (completo)' : ''}`}
+                aria-label={t('wizard.stepPipLabel', {
+                  step: s,
+                  title: t(STEP_TITLE_KEYS[s]),
+                  done: done ? t('wizard.stepPipDoneSuffix') : '',
+                })}
                 onClick={() => goTo(s)}
               >
                 <span className="step-pip-diamond">
                   <span className="step-pip-num">{done && s !== step ? '✓' : s}</span>
                 </span>
-                <span className="step-pip-label">{STEP_TITLES[s]}</span>
+                <span className="step-pip-label">{t(STEP_TITLE_KEYS[s])}</span>
               </button>
             </li>
           );
@@ -148,7 +151,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
         {step === 1 ? (
           <TextField
             id="character-name"
-            label="Nombre (puedes completarlo en cualquier momento)"
+            label={t('wizard.nameLabel')}
             value={state.name ?? ''}
             onChange={(name) => dispatch({ type: 'setName', name })}
           />
@@ -161,12 +164,12 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
 
       <div className="row spread">
         <button type="button" disabled={step === 1} onClick={() => goTo((step - 1) as Step)}>
-          ← Atrás
+          {t('wizard.back')}
         </button>
 
         {isLast ? (
           <button type="button" className="btn-primary" disabled={!allValid || submitting} onClick={finish}>
-            {submitting ? 'Guardando…' : 'Terminar y abrir hoja'}
+            {submitting ? t('wizard.saving') : t('wizard.finish')}
           </button>
         ) : (
           <button
@@ -175,16 +178,12 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
             disabled={!validation.ok}
             onClick={() => goTo((step + 1) as Step)}
           >
-            Siguiente →
+            {t('wizard.next')}
           </button>
         )}
       </div>
 
-      {isLast && !allValid ? (
-        <p className="muted mt-3">
-          Todavía hay pasos anteriores incompletos — los botones numerados de arriba indican cuáles.
-        </p>
-      ) : null}
+      {isLast && !allValid ? <p className="muted mt-3">{t('wizard.incompleteStepsHint')}</p> : null}
     </section>
   );
 }

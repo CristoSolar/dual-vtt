@@ -1,3 +1,4 @@
+import type { ValidationError } from '@daggerheart/character';
 import type { RollEntry, SheetEffect } from '@daggerheart/protocol';
 import { LOCALES, setLocale as setSrdLocale, type Locale } from '@daggerheart/srd-data';
 import { useSyncExternalStore } from 'react';
@@ -91,6 +92,12 @@ export function describeEffect(effect: SheetEffect): string | null {
 export function describeRejection(code: string): string {
   const key = `reject.${code}` as MessageKey;
   return key in es ? t(key) : t('reject.unknown', { code });
+}
+
+/** Localized text for a wizard validation error; unknown codes fall back to the English message. */
+export function describeValidation(error: ValidationError): string {
+  const key = `validation.${error.code}` as MessageKey;
+  return key in es ? t(key, error.params ?? {}) : error.message;
 }
 
 /** One line for a live "someone just rolled" notification. */

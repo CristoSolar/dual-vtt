@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { GMPanel } from '../src/components/gm/GMPanel.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
+import { t } from '../src/i18n/index.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
 import { SheetRoute } from '../src/routes/SheetRoute.js';
 import {
@@ -182,13 +183,14 @@ describe('wizard renders', () => {
     for (const characterClass of srd().classes) {
       expect(html, characterClass.name).toContain(characterClass.name);
     }
-    expect(html).toContain('Paso 1');
-    expect(html).toContain('Clase y Subclase');
+    expect(html).toContain(t('wizard.stepHeading', { step: 1, title: t('wizard.stepTitle.1') }));
+    expect(html).toContain(t('wizard.stepTitle.1'));
   });
 
   it('disables Next until the step validates', () => {
     const html = wizardAt('/create/1');
-    expect(html).toMatch(/<button[^>]*disabled[^>]*>Siguiente/);
+    const nextLabel = t('wizard.next').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    expect(html).toMatch(new RegExp(`<button[^>]*disabled[^>]*>${nextLabel}`));
   });
 
   it('resumes a saved creation at its step with choices intact', () => {
@@ -196,7 +198,7 @@ describe('wizard renders', () => {
     saveCreation(store, 'campaign-1', buildCreationState('sorcerer'));
     const html = wizardAt('/create/8', store);
 
-    expect(html).toContain('Paso 8');
+    expect(html).toContain(t('wizard.stepHeading', { step: 8, title: t('wizard.stepTitle.8') }));
     // A Sorcerer's domains are Arcana and Midnight, so only those cards are offered.
     expect(html).toContain('Arcana');
     expect(html).toContain('Midnight');

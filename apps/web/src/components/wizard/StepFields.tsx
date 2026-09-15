@@ -1,5 +1,7 @@
 import type { ValidationError } from '@daggerheart/character';
 
+import { describeValidation, t } from '../../i18n/index.js';
+
 interface FieldErrorsProps {
   errors: readonly ValidationError[];
 }
@@ -10,7 +12,7 @@ export function FieldErrors({ errors }: FieldErrorsProps) {
   return (
     <div className="field-error" role="alert">
       {errors.map((error) => (
-        <div key={error.code}>{error.message}</div>
+        <div key={error.code}>{describeValidation(error)}</div>
       ))}
     </div>
   );
@@ -25,10 +27,10 @@ export function ErrorSummary({ errors }: ErrorSummaryProps) {
   if (errors.length === 0) return null;
   return (
     <div className="errors" role="alert">
-      <strong>Todavía falta terminar</strong>
+      <strong>{t('wizard.errorSummary.title')}</strong>
       <ul>
         {errors.map((error) => (
-          <li key={`${error.code}-${error.field ?? ''}`}>{error.message}</li>
+          <li key={`${error.code}-${error.field ?? ''}`}>{describeValidation(error)}</li>
         ))}
       </ul>
     </div>
