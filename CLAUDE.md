@@ -19,6 +19,7 @@ pnpm -F @daggerheart/rules exec vitest    # watch mode
 pnpm -F @daggerheart/protocol typecheck   # one package's tsc
 pnpm -F @daggerheart/srd-data validate    # re-parse the JSON against the schemas
 pnpm -F @daggerheart/server start         # server without watch
+pnpm -F @daggerheart/server host          # build web same-origin, then serve app + API from :4000
 ```
 
 Package names: `@daggerheart/srd-data`, `rules`, `character`, `protocol`, `server`, `web`.
@@ -27,8 +28,10 @@ There is no linter or formatter — `typecheck` under a strict tsconfig is the o
 static gate. Do not add one unasked.
 
 Server env vars (all optional, defaults in `apps/server/src/main.ts`): `PORT`,
-`SNAPSHOT_PATH`, `SNAPSHOT_INTERVAL_MS`, `UPLOAD_DIR`, `ALLOWED_ORIGINS`. Web reads
-`VITE_SERVER_URL`. `/health` on the server reports room count.
+`CAMPAIGNS_SNAPSHOT_PATH`, `CAMPAIGNS_SNAPSHOT_INTERVAL_MS`, `USERS_SNAPSHOT_PATH`,
+`UPLOAD_DIR`, `WEB_DIST_DIR`, `GM_USERNAME` / `GM_PASSWORD` (first GM account, created
+on boot), `ALLOWED_ORIGINS`. Web reads `VITE_SERVER_URL`; `host` sets it empty so the
+app talks to its own origin. `/health` on the server reports campaign count.
 
 ## Layering
 
@@ -52,27 +55,46 @@ srd-data  →  rules  →  character  →  protocol  →  server
   `src/room.ts` is the single choke point where room state changes, permissions
   included; the server calls it, and the client calls the same sheet reducers
   underneath for its optimistic echo. New room behaviour goes here, not in the server.
-- **server** — transport only. `gateway.ts` validates messages and resolves the actor
-  from the socket's session (never from a client-supplied field); `rooms.ts` owns the
-  in-memory store, seat tokens, and the per-room dice seed. Neither contains game logic.
+  `auth.ts` and `campaign.ts` hold the HTTP request/response schemas for accounts and
+  campaign membership — no `RoomState` travels over HTTP, only over the socket.
+- **server** — transport only. Two layers:
+  - HTTP (`auth-http.ts`, `campaigns-http.ts`, `uploads.ts`, `tunnel-http.ts`,
+    `static.ts`): login issues a token (`sessions.ts`, in-memory — restart signs
+    everyone out, by design); GM creates player accounts and campaigns, adds members.
+  - Socket (`gateway.ts`): authenticates once at connect with that same token, then
+    `joinCampaign` seats the socket after a membership check. Membership is re-checked
+    on every message, so a removed player is cut off mid-session.
+  - `campaigns.ts` owns the in-memory store, ownership (`ownerId` is GM, `memberIds`
+    are players), and the per-campaign dice seed. `users.ts` holds accounts with
+    password hashes that never leave the server. Neither contains game logic.
+  - `tunnel.ts` opens at most one Cloudflare quick tunnel for the whole server,
+    triggered by the GM from the UI.
 - **web** — renders and dispatches. No game logic; state transitions live in
-  `apps/web/src/state` as pure functions.
+  `apps/web/src/state` as pure functions. Routing is `HashRouter`, so the static
+  server never sees app paths.
 
 ## Invariants worth knowing before editing
 
-- **Two audiences, two payloads.** The gateway broadcasts to `room:<code>:gm` and
-  `room:<code>:players` separately. `roomForRole` / `mapForPlayer` strip inactive
+- **Two audiences, two payloads.** After each event the server diffs before/after with
+  `roomPatch` twice — once raw for `campaign:<id>:gm`, once through `roomForRole(…,
+  'player')` for `campaign:<id>:players`. `roomForRole` / `mapForPlayer` strip inactive
   scenes, GM-only tokens, and unrevealed fog *before* the send — a player's browser
   never receives them. Any new GM-only state must be filtered there too.
 - **Intents, not results.** A client sends `takeDamage { incoming }`; the server
   computes HP. Adding an event that carries a computed outcome breaks the model.
-- **Rolls are server-side** from the room's seed (`rooms.ts`), which never leaves the
-  process — this is what makes the log auditable.
+- **Rolls are server-side** from the campaign's seed plus `rollCount`
+  (`rngForRoll` in `campaigns.ts`); the seed never leaves the process — this is what
+  makes the log auditable.
+- **Actor comes from the socket**, never a client field: `gateway.ts` resolves account
+  from the connect-time token and role from campaign membership.
 - **Room state is plain JSON**, no Maps or class instances, because it is broadcast and
   snapshotted as-is. Slices in `RoomStateSchema` are top-level and independent.
 - **Trust boundaries stay validated**: `localStorage` reads
-  (`apps/web/src/state/storage.ts`), every socket message, and map uploads (checked by
-  magic bytes, not the browser's content type).
+  (`apps/web/src/state/storage.ts`), every HTTP body and socket message (Zod schemas
+  from `protocol`), and map uploads (checked by magic bytes, not the browser's content
+  type).
+- **Snapshots are disposable state, not the source of characters.** Campaigns and
+  users snapshot to `.data/`; characters live in each player's `localStorage`.
 
 ## tsconfig friction
 
