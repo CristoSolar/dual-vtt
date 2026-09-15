@@ -39,3 +39,22 @@ export function loadCreation(storage: StorageLike, campaignId: string): Creation
 export function clearCreation(storage: StorageLike, campaignId: string): void {
   storage.removeItem(inProgressKey(campaignId));
 }
+
+const guideSeenKey = (accountId: string): string => `${KEY_PREFIX}:guide-seen:${accountId}`;
+
+/** True once this account has closed the first-run guide on this device. */
+export function hasSeenGuide(storage: StorageLike, accountId: string): boolean {
+  try {
+    return storage.getItem(guideSeenKey(accountId)) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function markGuideSeen(storage: StorageLike, accountId: string): void {
+  try {
+    storage.setItem(guideSeenKey(accountId), '1');
+  } catch {
+    // Private mode or quota: the guide will simply show again next time.
+  }
+}

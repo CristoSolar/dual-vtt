@@ -1,7 +1,14 @@
 import { applyChoice, validateStep } from '@daggerheart/character';
 import { describe, expect, it } from 'vitest';
 
-import { clearCreation, loadCreation, saveCreation } from '../src/state/storage.js';
+import {
+  clearCreation,
+  hasSeenGuide,
+  loadCreation,
+  markGuideSeen,
+  saveCreation,
+  type StorageLike,
+} from '../src/state/storage.js';
 import { buildCreationState, fakeStorage } from './helpers.js';
 
 describe('creation persistence', () => {
@@ -51,5 +58,25 @@ describe('creation persistence', () => {
     expect(loadCreation(storage, 'campaign-1')).not.toBeNull();
     clearCreation(storage, 'campaign-1');
     expect(loadCreation(storage, 'campaign-1')).toBeNull();
+  });
+});
+
+describe('guide seen flag', () => {
+  it('is false until marked, then true, per account', () => {
+    const storage = fakeStorage();
+    expect(hasSeenGuide(storage, 'u1')).toBe(false);
+    markGuideSeen(storage, 'u1');
+    expect(hasSeenGuide(storage, 'u1')).toBe(true);
+    expect(hasSeenGuide(storage, 'u2')).toBe(false);
+  });
+
+  it('treats a throwing storage as not seen and does not throw on write', () => {
+    const broken: StorageLike = {
+      getItem: () => { throw new Error('nope'); },
+      setItem: () => { throw new Error('nope'); },
+      removeItem: () => {},
+    };
+    expect(hasSeenGuide(broken, 'u1')).toBe(false);
+    expect(() => markGuideSeen(broken, 'u1')).not.toThrow();
   });
 });

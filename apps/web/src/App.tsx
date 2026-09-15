@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
+import { GuideDialog } from './components/GuideDialog.js';
 import { LocaleToggle } from './components/LocaleToggle.js';
 import { Toast } from './components/Toast.js';
 import { t } from './i18n/index.js';
@@ -13,6 +14,7 @@ import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
+import { hasSeenGuide, markGuideSeen } from './state/storage.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 
 /**
@@ -30,6 +32,16 @@ function Shell() {
   const isMapRoute = useLocation().pathname === '/map';
   const auth = useAuth(storage);
   const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null);
+
+  const accountId = auth.user?.id ?? null;
+  const [guideOpen, setGuideOpen] = useState(false);
+  useEffect(() => {
+    if (accountId !== null && !hasSeenGuide(storage, accountId)) setGuideOpen(true);
+  }, [accountId, storage]);
+  const closeGuide = useCallback(() => {
+    if (accountId !== null) markGuideSeen(storage, accountId);
+    setGuideOpen(false);
+  }, [accountId, storage]);
 
   // The tunnel is one per server, not per campaign — GM-only, checked via `GET
   // /tunnel` on the campaigns list and started on demand from a campaign card.
@@ -136,12 +148,17 @@ function Shell() {
               ) : null}
             </>
           ) : null}
+          <Link to="/help">
+            <button type="button" aria-label={t('help.open')}>?</button>
+          </Link>
           <LocaleToggle />
           <button type="button" onClick={auth.logout}>
             {t('app.logout')}
           </button>
         </nav>
       </header>
+
+      {guideOpen ? <GuideDialog role={account.role} onClose={closeGuide} /> : null}
 
       {campaign.error !== null ? (
         <Toast message={campaign.error} onDismiss={campaign.dismissError} />
@@ -294,6 +311,7 @@ function Shell() {
             )
           }
         />
+        <Route path="/help" element={<section><h1>{t('help.open')}</h1></section>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

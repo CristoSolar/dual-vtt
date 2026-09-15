@@ -1892,6 +1892,17 @@ legend {
   color: var(--c-brass);
 }
 
+.guide-steps h3 {
+  margin: 0.5rem 0;
+}
+
+.guide-steps .row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
 /* ============================================================= duality dice */
 
 .roll-result {
