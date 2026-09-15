@@ -42,6 +42,10 @@ Requires Node 20+ and pnpm.
 - The web app holds no game logic: components render state and dispatch actions,
   while every rule lives in `rules` or `character`. State transitions are pure
   functions in `apps/web/src/state`, so they can later be replayed over a socket.
+- The app is bilingual (English / Spanish). The choice is per device, stored in
+  `localStorage`, and applies to UI text and SRD content alike. SRD data ships in
+  both languages under `packages/srd-data/data/{en,es}` with identical ids; the web
+  reads it through `srd()`, which follows the active locale.
 - Characters and in-progress creations are saved to `localStorage`, and the sheet
   works with the server stopped. A campaign is opt-in.
 - In a campaign the **server is authoritative**: clients send intents, never results.

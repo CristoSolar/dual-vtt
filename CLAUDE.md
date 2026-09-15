@@ -44,8 +44,10 @@ srd-data  →  rules  →  character  →  protocol  →  server
 
 - **srd-data** — JSON plus Zod schemas, nothing else. `src/index.ts` parses every file
   at import time, so a malformed JSON fails the process rather than surfacing later.
-  Adding a data file means three edits in that one file: the JSON import, an entry in
-  the `datasets` array (which `validate` walks), and the typed export.
+  Data lives in `data/en` and `data/es` with identical ids. Adding a file means two
+  JSON imports, one entry in `schemas`, one in `fileNames`, and the same key in both
+  `raw` maps in `src/index.ts`. Consumers never import arrays; they call `srd()` at
+  use time, which follows `setLocale`.
 - **rules** — pure functions over that data. Every function that randomizes takes an
   injectable `rng: () => number`; nothing reads a clock or a global.
 - **character** — the 9-step creation reducer. `applyChoice` never throws or coerces:
@@ -71,7 +73,9 @@ srd-data  →  rules  →  character  →  protocol  →  server
     triggered by the GM from the UI.
 - **web** — renders and dispatches. No game logic; state transitions live in
   `apps/web/src/state` as pure functions. Routing is `HashRouter`, so the static
-  server never sees app paths.
+  server never sees app paths. UI text goes through `t()` from `apps/web/src/i18n`;
+  `es.ts` is the source of keys and `en.ts` is typed against it. The tree remounts on
+  locale switch (`key={locale}` in `main.tsx`).
 
 ## Invariants worth knowing before editing
 
