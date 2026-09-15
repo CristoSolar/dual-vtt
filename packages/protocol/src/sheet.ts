@@ -90,6 +90,21 @@ const pools = (sheet: SheetState) => ({
   stressSlots: sheet.character.stressSlots,
 });
 
+export type SheetEffectCode =
+  | 'damageApplied'
+  | 'recalled'
+  | 'notEnoughHope'
+  | 'noArmorSlots'
+  | 'notEnoughGold'
+  | 'loadoutFull'
+  | 'notEnoughStress'
+  | 'cardNotInVault'
+  | 'cardNotInLoadout'
+  | 'swapNotAllowed'
+  | 'levelUpRejected'
+  | 'unknownMulticlass'
+  | 'levelledUp';
+
 /** What a mutation wants the UI to say about it, beyond the new state. */
 export interface SheetEffect {
   /** Marking the last Stress makes a character Vulnerable (SRD p.39). */
@@ -98,7 +113,10 @@ export interface SheetEffect {
   deathMoveRequired: boolean;
   /** Set when Stress had to be marked but couldn't, costing 1 HP instead. */
   stressBecameHP: boolean;
+  /** English developer text; the web renders from the booleans, then `code`. */
   message: string | null;
+  code: SheetEffectCode | null;
+  params?: Record<string, string | number>;
 }
 
 const noEffect: SheetEffect = {
@@ -106,7 +124,19 @@ const noEffect: SheetEffect = {
   deathMoveRequired: false,
   stressBecameHP: false,
   message: null,
+  code: null,
 };
+
+/** Builds a coded effect; `params` is only attached when given (exactOptionalPropertyTypes). */
+function coded(
+  code: SheetEffectCode,
+  message: string,
+  params?: Record<string, string | number>,
+): SheetEffect {
+  return params === undefined
+    ? { ...noEffect, code, message }
+    : { ...noEffect, code, message, params };
+}
 
 export interface SheetTransition {
   sheet: SheetState;
@@ -148,6 +178,7 @@ export function markSheetStress(sheet: SheetState, amount = 1): SheetTransition 
       deathMoveRequired: result.deathMoveRequired,
       stressBecameHP: result.hpMarkedInstead > 0,
       message: messages.length > 0 ? messages.join(' ') : null,
+      code: null,
     },
   };
 }
@@ -166,7 +197,10 @@ export function gainSheetHope(sheet: SheetState, amount = 1): SheetTransition {
 export function spendSheetHope(sheet: SheetState, amount = 1): SheetTransition {
   const hope = spendHope(sheet.hope, amount);
   if (hope === null) {
-    return { sheet, effect: { ...noEffect, message: `Not enough Hope (need ${amount}).` } };
+    return {
+      sheet,
+      effect: coded('notEnoughHope', `Not enough Hope (need ${amount}).`, { amount }),
+    };
   }
   return { sheet: { ...sheet, hope }, effect: noEffect };
 }
@@ -182,7 +216,7 @@ export function markSheetArmorSlot(sheet: SheetState, amount = 1): SheetTransiti
     sheet: { ...sheet, armorSlotsMarked: result.marked },
     effect:
       result.markedNow === 0
-        ? { ...noEffect, message: 'No Armor Slots available.' }
+        ? coded('noArmorSlots', 'No Armor Slots available.')
         : noEffect,
   };
 }
@@ -205,7 +239,13 @@ export function spendSheetGold(
 ): SheetTransition {
   const gold = spendGold(sheet.gold, amount, unit);
   if (gold === null) {
-    return { sheet, effect: { ...noEffect, message: `Not enough gold (need ${amount} ${unit}).` } };
+    return {
+      sheet,
+      effect: coded('notEnoughGold', `Not enough gold (need ${amount} ${unit}).`, {
+        amount,
+        unit,
+      }),
+    };
   }
   return { sheet: { ...sheet, gold }, effect: noEffect };
 }
@@ -251,6 +291,8 @@ export function takeDamage(sheet: SheetState, options: TakeDamageOptions): TakeD
       message:
         marked.effect.message ??
         `${applied.severity} damage — marked ${applied.hpMarked} HP.`,
+      code: marked.effect.code ?? 'damageApplied',
+      params: { severity: applied.severity, hpMarked: applied.hpMarked },
     },
   };
 }
@@ -280,7 +322,7 @@ export function recallFromVault(
   });
 
   if (!result.ok) {
-    return { sheet, ok: false, effect: { ...noEffect, message: recallErrorMessage(result.error) } };
+    return { sheet, ok: false, effect: recallError(result.error) };
   }
 
   // The rules package returns readonly arrays; the wire shape is plain JSON arrays.
@@ -302,22 +344,24 @@ export function recallFromVault(
       message:
         stressed.effect.message ??
         `Recalled outside a rest — marked ${result.result.stressCost} Stress.`,
+      code: stressed.effect.code ?? 'recalled',
+      params: { stressCost: result.result.stressCost },
     },
   };
 }
 
-function recallErrorMessage(error: string): string {
+function recallError(error: string): SheetEffect {
   switch (error) {
     case 'loadoutFull':
-      return 'Loadout is full — choose a card to move to the vault.';
+      return coded('loadoutFull', 'Loadout is full — choose a card to move to the vault.');
     case 'notEnoughStress':
-      return 'Not enough unmarked Stress to pay this card’s Recall Cost.';
+      return coded('notEnoughStress', 'Not enough unmarked Stress to pay this card’s Recall Cost.');
     case 'cardNotInVault':
-      return 'That card is not in the vault.';
+      return coded('cardNotInVault', 'That card is not in the vault.');
     case 'cardNotInLoadout':
-      return 'That card is not in the loadout.';
+      return coded('cardNotInLoadout', 'That card is not in the loadout.');
     default:
-      return 'That swap is not allowed.';
+      return coded('swapNotAllowed', 'That swap is not allowed.');
   }
 }
 
@@ -325,7 +369,7 @@ function recallErrorMessage(error: string): string {
 export function sendToVault(sheet: SheetState, cardId: string): RecallResult {
   const result = vaultCard({ loadout: sheet.loadout, vault: sheet.vault }, cardId);
   if (!result.ok) {
-    return { sheet, ok: false, effect: { ...noEffect, message: recallErrorMessage(result.error) } };
+    return { sheet, ok: false, effect: recallError(result.error) };
   }
   return {
     sheet: { ...sheet, loadout: [...result.result.loadout], vault: [...result.result.vault] },
@@ -408,7 +452,7 @@ export interface LevelUpTransition extends SheetTransition {
 export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelUpTransition {
   const result = levelUp(sheet.character, choices);
   if (!result.ok) {
-    return { sheet, ok: false, effect: { ...noEffect, message: result.error } };
+    return { sheet, ok: false, effect: coded('levelUpRejected', result.error) };
   }
 
   const leveled = result.character;
@@ -422,7 +466,7 @@ export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelU
       return {
         sheet,
         ok: false,
-        effect: { ...noEffect, message: 'That multiclass names an unknown class or domain.' },
+        effect: coded('unknownMulticlass', 'That multiclass names an unknown class or domain.'),
       };
     }
     multiclass = parsed.data;
@@ -447,6 +491,6 @@ export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelU
   return {
     sheet: { ...sheet, character },
     ok: true,
-    effect: { ...noEffect, message: `Levelled up to ${leveled.level}.` },
+    effect: coded('levelledUp', `Levelled up to ${leveled.level}.`, { level: leveled.level }),
   };
 }
