@@ -5,6 +5,24 @@ affiliated with or endorsed by Darrington Press. Create a character through
 the SRD's nine steps, play off an interactive sheet, run a live campaign room with a
 GM panel, and fight over a synced tactical map. Works fully offline too.
 
+## Screenshots
+
+| Login | Character creation |
+|---|---|
+| ![Login](docs/screenshots/login.png) | ![Wizard](docs/screenshots/wizard.png) |
+
+| Character sheet | GM panel |
+|---|---|
+| ![Sheet](docs/screenshots/sheet.png) | ![GM panel](docs/screenshots/gm-panel.png) |
+
+| Tactical map | Help & compendium |
+|---|---|
+| ![Map](docs/screenshots/map.png) | ![Help](docs/screenshots/help.png) |
+
+Regenerate with `pnpm dev` running: copy `docs/screenshots/shots.mts` into
+`apps/server/` and run `pnpm -F @daggerheart/server exec tsx shots.mts` (needs
+`playwright-core` on `NODE_PATH` and a system chromium).
+
 ## Packages
 
 | Package | What it is |
