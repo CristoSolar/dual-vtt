@@ -29,6 +29,14 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
             </div>
             <h1 className="login-art-headline">{t('login.headlineArt')}</h1>
             <p className="muted">{t('login.subtitleArt')}</p>
+            {/* The community-content lockup. It sits beside the product name, never
+                as it: the licence keeps "Daggerheart" out of a work's own title. */}
+            <img
+              className="brand-lockup"
+              src="images/brand/daggerheart-compatible.svg"
+              alt={t('brand.logoAlt')}
+              width={220}
+            />
           </div>
 
           <div className="login-form">

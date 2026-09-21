@@ -5,8 +5,8 @@ import { Compendium } from '../components/help/Compendium.js';
 import { GuideDialog } from '../components/GuideDialog.js';
 import { t, type MessageKey } from '../i18n/index.js';
 
-export type HelpTab = 'app' | 'rules' | 'compendium';
-const TABS: readonly HelpTab[] = ['app', 'rules', 'compendium'];
+export type HelpTab = 'app' | 'rules' | 'compendium' | 'about';
+const TABS: readonly HelpTab[] = ['app', 'rules', 'compendium', 'about'];
 
 const APP_SECTIONS = ['start', 'campaigns', 'creation', 'sheet', 'gm', 'map', 'rolls', 'faq'] as const;
 
@@ -83,7 +83,7 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
         ))}
       </div>
 
-      {tab !== 'compendium' ? (
+      {tab !== 'compendium' && tab !== 'about' ? (
         <input
           className="help-filter"
           type="search"
@@ -119,7 +119,7 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
               filter={filter}
             />
           ))}
-          <p className="muted">{t('sheet.print.footer')}</p>
+          <p className="muted">{t('brand.compatibleShort')}</p>
         </div>
       ) : null}
       {tab === 'compendium' ? (
@@ -128,6 +128,43 @@ export function HelpRoute({ role }: { role?: 'gm' | 'player' } = {}) {
           onNavigate={(collection, id) => navigate(`/help#compendium/${collection}${id === null ? '' : `/${id}`}`)}
         />
       ) : null}
+      {tab === 'about' ? <About /> : null}
     </section>
+  );
+}
+
+/**
+ * The licence notice the Darrington Press Community Gaming License asks for, kept
+ * on a page of its own rather than in a footer nobody reads: the copyright line,
+ * where the material came from, the licence itself, and the fact that the Spanish
+ * data is this project's own translation of it.
+ */
+function About() {
+  return (
+    <div className="help-sections">
+      <section className="panel about">
+        <img
+          className="about-logo"
+          src="images/brand/daggerheart-compatible.svg"
+          alt={t('brand.logoAlt')}
+          width={320}
+        />
+        <p>{t('brand.notice')}</p>
+        <ul>
+          <li>
+            <a href="https://www.daggerheart.com" target="_blank" rel="noreferrer noopener">
+              daggerheart.com
+            </a>
+          </li>
+          <li>
+            <a href="https://www.darringtonpress.com/license/" target="_blank" rel="noreferrer noopener">
+              {t('brand.licenseLink')}
+            </a>
+          </li>
+        </ul>
+        <p className="muted">{t('brand.modifications')}</p>
+        <p className="muted">{t('brand.notAffiliated')}</p>
+      </section>
+    </div>
   );
 }

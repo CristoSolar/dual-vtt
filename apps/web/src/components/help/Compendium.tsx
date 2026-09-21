@@ -102,7 +102,7 @@ export function Compendium({
           )}
         </div>
       </div>
-      <p className="muted">{t('sheet.print.footer')}</p>
+      <p className="muted">{t('brand.compatibleShort')}</p>
     </div>
   );
 }

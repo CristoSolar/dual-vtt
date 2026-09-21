@@ -1,6 +1,6 @@
 # Dual VTT
 
-Self-hosted VTT, compatible with Daggerheart, for running games at my own table. Not
+Self-hosted VTT, Daggerheart™ Compatible, for running games at my own table. Not
 affiliated with or endorsed by Darrington Press. Create a character through
 the SRD's nine steps, play off an interactive sheet, run a live campaign room with a
 GM panel, and fight over a synced tactical map. Works fully offline too.
@@ -125,7 +125,16 @@ Source code: MIT (see `LICENSE`).
 
 Game content: this product includes materials from the Daggerheart System Reference
 Document 1.0, © Critical Role, LLC, under the terms of the Darrington Press Community
-Gaming (DPCG) License — https://www.darringtonpress.com/license/. The Spanish data is
-an unofficial translation. The SRD PDF itself is not committed. Dual VTT is an
-independent fan-made tool, not affiliated with or endorsed by Darrington Press or
-Critical Role. Full notice in `NOTICE.md`.
+Gaming (DPCGL) License — https://www.darringtonpress.com/license/. More information
+at https://www.daggerheart.com.
+
+The English data reproduces the SRD text as printed. The Spanish data is an unofficial
+translation made for this project, and is the only modification of the licensed
+material; there are no previous modifications by others. The SRD PDF itself is not
+committed, and Campaign Frames are not reproduced, since the licence allows sharing
+those only as actual play.
+
+Dual VTT is an independent fan-made tool for private play, not sold or monetized, and
+not affiliated with or endorsed by Darrington Press or Critical Role. Daggerheart is a
+trademark of Critical Role, LLC. The same notice is shown in the app under **Help →
+Licence**. Full text in `NOTICE.md`.

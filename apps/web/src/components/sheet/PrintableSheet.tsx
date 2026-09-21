@@ -286,7 +286,7 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
           </div>
         </div>
 
-        <p className="ps-footer">{t('sheet.print.footer')}</p>
+        <p className="ps-footer">{t('brand.compatibleShort')}</p>
       </div>
     </div>,
     document.body,

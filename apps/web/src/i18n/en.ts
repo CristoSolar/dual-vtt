@@ -379,7 +379,23 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.print.baseScore': 'Base score {score}',
   'sheet.print.classFeature': 'CLASS FEATURE',
   'sheet.print.inventory': 'INVENTORY',
-  'sheet.print.footer': 'Daggerheart © Darrington Press 2025 · Unofficial fan-made sheet',
+
+  // licence notice (help 'about' tab, login footer, printable sheet)
+  'brand.logoAlt': 'Daggerheart Compatible',
+  'brand.notice':
+    'This product includes materials from the Daggerheart System Reference Document 1.0, ' +
+    '© Critical Role, LLC, under the terms of the Darrington Press Community Gaming ' +
+    '(DPCGL) License.',
+  'brand.licenseLink': 'Darrington Press Community Gaming License',
+  'brand.modifications':
+    'The English data reproduces the SRD text as printed. The Spanish data is an ' +
+    'unofficial translation made for this project, which is the only modification. ' +
+    'There are no previous modifications by others.',
+  'brand.notAffiliated':
+    'Dual VTT is an independent, fan-made tool. It is not affiliated with, endorsed by, ' +
+    'or sponsored by Darrington Press or Critical Role. Daggerheart is a trademark of ' +
+    'Critical Role, LLC.',
+  'brand.compatibleShort': 'Daggerheart™ Compatible. Terms at Daggerheart.com',
   'sheet.print.traitExamples.agility': 'Run · Jump · Maneuver',
   'sheet.print.traitExamples.strength': 'Lift · Smash · Grapple',
   'sheet.print.traitExamples.finesse': 'Control · Hide · Manipulate',
@@ -712,6 +728,7 @@ export const en: Record<keyof typeof es, string> = {
   'help.tab.app': 'The app',
   'help.tab.rules': 'Rules',
   'help.tab.compendium': 'Compendium',
+  'help.tab.about': 'Licence',
   'help.filterPlaceholder': 'Search this section…',
   'help.noMatches': 'No section matches your search.',
   'help.quickGuide': 'Quick guide',

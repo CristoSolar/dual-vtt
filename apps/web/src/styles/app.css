@@ -870,6 +870,36 @@ button.link {
   color: var(--c-text-faint);
 }
 
+/* ============================================================ brand lockup */
+
+/* The Darrington community-content mark. Always subordinate to the product's own
+   name: the licence keeps "Daggerheart" out of a work's title and off its cover. */
+.brand-lockup {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin-top: var(--sp-5);
+  opacity: 0.75;
+}
+
+.about-logo {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin-bottom: var(--sp-4);
+}
+
+.about p {
+  margin-bottom: var(--sp-3);
+}
+
+.about ul {
+  margin: 0 0 var(--sp-4);
+  padding-left: var(--sp-5);
+}
+
 /* ======================================================= connection banner */
 
 /* Sits under the top bar and stays for as long as the room is out of reach, so a

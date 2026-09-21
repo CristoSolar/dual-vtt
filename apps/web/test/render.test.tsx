@@ -348,7 +348,16 @@ describe('HelpRoute', () => {
     const html = render(<HelpRoute />, '/help#rules');
     expect(html).toContain(t('help.rules.duality.title'));
     expect(html).toContain(t('help.rules.levelUp.title'));
-    expect(html).toContain(t('sheet.print.footer'));
+    expect(html).toContain(t('brand.compatibleShort'));
+  });
+
+  it('carries the licence notice the DPCGL asks for, with its links', () => {
+    const html = render(<HelpRoute />, '/help#about');
+    expect(html).toContain(t('brand.notice'));
+    expect(html).toContain(t('brand.modifications'));
+    expect(html).toContain(t('brand.notAffiliated'));
+    expect(html).toContain('darringtonpress.com/license');
+    expect(html).toContain('images/brand/daggerheart-compatible.svg');
   });
 });
 
