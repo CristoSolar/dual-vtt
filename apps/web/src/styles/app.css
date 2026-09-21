@@ -3029,3 +3029,11 @@ details summary {
     width: calc(100vw - var(--sp-5));
   }
 }
+
+/* The GPU fog sits over the Konva stage and never takes a pointer: every click,
+   drag and brush stroke still belongs to the canvas underneath. */
+.map-fog-gl {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

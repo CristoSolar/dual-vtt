@@ -15,6 +15,7 @@ import { t, type MessageKey } from '../../i18n/index.js';
 import { DragThrottle } from '../../state/dragCommit.js';
 import { snapToGrid } from '../../state/gridSnap.js';
 import { canvasPalette, rangeRingColor } from '../../styles/canvasTokens.js';
+import { FogGl } from './FogGl.js';
 
 export interface MapCanvasProps {
   scene: Scene;
@@ -100,6 +101,14 @@ export function MapCanvas({
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
   useEffect(() => onViewChange?.(view), [view, onViewChange]);
+  /**
+   * Fog runs on the GPU unless this browser has no WebGL2, in which case the
+   * Konva cover below takes over. It has to fail closed: the map image is
+   * already on the client, and fog is the only thing keeping it hidden.
+   */
+  const [fogOnGpu, setFogOnGpu] = useState(true);
+  const fogUnavailable = useCallback(() => setFogOnGpu(false), []);
+
   const [measureLine, setMeasureLine] = useState<{
     from: { x: number; y: number };
     to: { x: number; y: number };
@@ -287,6 +296,7 @@ export function MapCanvas({
   const selected = scene.tokens.find((token) => token.id === selectedTokenId) ?? null;
 
   return (
+    <>
     <Stage
       ref={stageRef}
       width={width}
@@ -396,8 +406,9 @@ export function MapCanvas({
         ))}
       </Layer>
 
-      {/* Fog last, so it covers everything beneath it. */}
-      {scene.fog.enabled && scene.image !== null ? (
+      {/* Fog last, so it covers everything beneath it. Only drawn here when the
+          GPU layer could not start; see FogGl. */}
+      {scene.fog.enabled && scene.image !== null && !fogOnGpu ? (
         <Layer listening={false}>
           <FogLayer
             fog={scene.fog}
@@ -448,6 +459,17 @@ export function MapCanvas({
         ) : null}
       </Layer>
     </Stage>
+    {scene.fog.enabled && scene.image !== null && fogOnGpu ? (
+      <FogGl
+        fog={scene.fog}
+        view={view}
+        width={width}
+        height={height}
+        isGameMaster={isGameMaster}
+        onUnavailable={fogUnavailable}
+      />
+    ) : null}
+    </>
   );
 }
 
