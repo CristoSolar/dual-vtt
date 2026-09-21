@@ -380,6 +380,13 @@ export const MapRoomEventSchema = z.discriminatedUnion('type', [
     /** True reveals the brushed area, false hides it again. */
     reveal: z.boolean(),
   }),
+  z.object({
+    /** Fog painted as a closed shape — the pen tool, as opposed to the round brush. */
+    type: z.literal('fillFog'),
+    sceneId,
+    points: z.array(z.object({ x: z.number(), y: z.number() })).min(3).max(200),
+    reveal: z.boolean(),
+  }),
   z.object({ type: z.literal('setFogEnabled'), sceneId, enabled: z.boolean() }),
   z.object({ type: z.literal('addWall'), sceneId, wall: WallSchema }),
   z.object({ type: z.literal('removeWall'), sceneId, wallId: z.string().min(1).max(64) }),

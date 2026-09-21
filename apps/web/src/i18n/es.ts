@@ -881,6 +881,9 @@ export const es = {
   'map.fog.disabled': 'Niebla desactivada',
   'map.fog.revealBrush': 'Pincel de revelar',
   'map.fog.hideBrush': 'Pincel de ocultar',
+  'map.fog.revealPen': 'Pluma de revelar',
+  'map.fog.hidePen': 'Pluma de ocultar',
+  'map.fog.penHint': 'Haz clic para marcar cada esquina del área. Cierra la forma haciendo clic en el primer punto, con doble clic o con Enter. Esc cancela.',
   'map.fog.playersOnlySeeRevealed':
     'Los jugadores solo ven las áreas reveladas — el resto nunca se les envía.',
   'map.fog.autoVisionActiveHint':
@@ -888,6 +891,10 @@ export const es = {
 
   'map.walls.drawing': 'Dibujando muro…',
   'map.walls.draw': 'Dibujar muro',
+  'map.walls.penHint':
+    'Haz clic en cada esquina: cada tramo entre dos clics es un muro. Doble clic o Enter termina la línea, Esc cancela.',
+  'map.walls.doorHint':
+    'Un muro bloquea la visión automática. Una puerta es un muro que puedes abrir: haz clic en ella sobre el mapa (línea gruesa con punto = cerrada, línea punteada tenue = abierta).',
   'map.walls.autoVisionHint':
     'Visión automática: la niebla se revela sola según lo que cada PJ puede ver.',
   'map.walls.manualFogHint': 'Niebla manual: usa el pincel del panel de niebla.',

@@ -33,13 +33,20 @@ export interface MapCanvasProps {
   /** Set while the GM is painting fog; a drag then paints instead of panning. */
   fogBrush: { radius: number; reveal: boolean } | null;
   onPaintFog: (x: number, y: number) => void;
+  /** Set while the GM is outlining fog with the pen: clicks drop corners and the
+   * closed shape is revealed or hidden in one go. Mutually exclusive with the
+   * brush, which the panel enforces. */
+  fogPen: { reveal: boolean } | null;
+  onFillFog: (points: readonly { x: number; y: number }[]) => void;
   measuring: boolean;
   /** Whether a dropped token lands on the grid. Off puts it exactly where it fell. */
   snapping?: boolean;
-  /** Set while the GM is placing a wall; a drag then draws a segment instead
-   * of panning, same interaction shape as `measuring`. */
+  /** Set while the GM is placing walls. Clicks chain corner to corner, like the
+   * fog pen; each leg is its own wall, so one can be deleted without the rest. */
   drawingWall: boolean;
   onAddWall: (x1: number, y1: number, x2: number, y2: number) => void;
+  /** Clicking a door on the map opens or closes it. GM only. */
+  onToggleDoor: (wallId: string) => void;
   /** Reports the current pan/zoom, so the caller can anchor an HTML overlay
    * (e.g. a token popover) to a scene-space point in screen coordinates. */
   onViewChange?: (view: { x: number; y: number; scale: number }) => void;
@@ -89,10 +96,13 @@ export function MapCanvas({
   onMoveToken,
   fogBrush,
   onPaintFog,
+  fogPen,
+  onFillFog,
   measuring,
   snapping = true,
   drawingWall,
   onAddWall,
+  onToggleDoor,
   onViewChange,
   health,
   zoomApi,
@@ -113,10 +123,13 @@ export function MapCanvas({
     from: { x: number; y: number };
     to: { x: number; y: number };
   } | null>(null);
-  const [wallDraft, setWallDraft] = useState<{
-    from: { x: number; y: number };
-    to: { x: number; y: number };
-  } | null>(null);
+  /**
+   * The pen's corners so far, shared by the fog pen and the wall chain — the two
+   * differ only in what happens when the shape is finished. The cursor is tracked
+   * separately so the leg being aimed can be drawn before it is committed.
+   */
+  const [penPoints, setPenPoints] = useState<readonly { x: number; y: number }[]>([]);
+  const [penCursor, setPenCursor] = useState<{ x: number; y: number } | null>(null);
 
   // One throttle per drag; a ref so re-renders don't reset it mid-gesture.
   const throttle = useRef(new DragThrottle());
@@ -202,6 +215,54 @@ export function MapCanvas({
   /** True between pointer-down and pointer-up while the fog brush is active. */
   const paintingStroke = useRef(false);
 
+  const penning = isGameMaster && (fogPen !== null || drawingWall);
+  /** How close to the first corner a click counts as "close the shape", in scene
+   * pixels at the current zoom — so it stays the same size on screen. */
+  const closeRadius = 10 / view.scale;
+
+  const cancelPen = useCallback(() => {
+    setPenPoints([]);
+    setPenCursor(null);
+  }, []);
+
+  /** Commits what the pen has drawn: a filled shape for fog, a run of segments
+   * for walls. Fewer than the minimum corners is a stray click, so it is dropped. */
+  const finishPen = useCallback(
+    (points: readonly { x: number; y: number }[]) => {
+      if (fogPen !== null) {
+        if (points.length >= 3) onFillFog(points);
+      } else {
+        for (let i = 1; i < points.length; i++) {
+          const from = points[i - 1];
+          const to = points[i];
+          if (from === undefined || to === undefined) continue;
+          onAddWall(from.x, from.y, to.x, to.y);
+        }
+      }
+      cancelPen();
+    },
+    [fogPen, onFillFog, onAddWall, cancelPen],
+  );
+
+  // Enter finishes what the pen has drawn, Escape throws it away. Both are what
+  // a drawing tool does everywhere else, and the canvas has no focusable node to
+  // hang them on, so they are read from the window while the pen is out.
+  useEffect(() => {
+    if (!penning) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') cancelPen();
+      if (event.key === 'Enter') finishPen(penPoints);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [penning, penPoints, cancelPen, finishPen]);
+
+  // Putting the pen away mid-shape drops the draft rather than leaving it to
+  // reappear on top of the next one.
+  useEffect(() => {
+    if (!penning) cancelPen();
+  }, [penning, cancelPen]);
+
   const onStagePointerDown = (event: Konva.KonvaEventObject<PointerEvent>) => {
     const stage = stageRef.current;
     const pointer = stage?.getPointerPosition();
@@ -213,8 +274,15 @@ export function MapCanvas({
       onPaintFog(point.x, point.y);
       return;
     }
-    if (drawingWall) {
-      setWallDraft({ from: point, to: point });
+    if (penning) {
+      const first = penPoints[0];
+      // Clicking the first corner again closes the shape, the way a pen tool does.
+      if (first !== undefined && penPoints.length >= 2 && Math.hypot(first.x - point.x, first.y - point.y) <= closeRadius) {
+        finishPen(fogPen !== null ? penPoints : [...penPoints, first]);
+        return;
+      }
+      setPenPoints([...penPoints, point]);
+      setPenCursor(point);
       return;
     }
     if (measuring) {
@@ -238,7 +306,7 @@ export function MapCanvas({
       return;
     }
     if (measureLine !== null) setMeasureLine({ ...measureLine, to: point });
-    if (wallDraft !== null) setWallDraft({ ...wallDraft, to: point });
+    if (penning && penPoints.length > 0) setPenCursor(point);
   };
 
   /**
@@ -324,7 +392,7 @@ export function MapCanvas({
       y={view.y}
       scaleX={view.scale}
       scaleY={view.scale}
-      draggable={!painting && !measuring && !drawingWall}
+      draggable={!painting && !measuring && !penning}
       onWheel={onWheel}
       onTouchMove={onTouchMove}
       onTouchEnd={() => {
@@ -335,16 +403,10 @@ export function MapCanvas({
       onPointerUp={() => {
         paintingStroke.current = false;
         setMeasureLine(null);
-        if (wallDraft !== null) {
-          const dx = wallDraft.to.x - wallDraft.from.x;
-          const dy = wallDraft.to.y - wallDraft.from.y;
-          // A plain click without any drag would otherwise create an invisible
-          // zero-length wall that still occupies a slot in the scene.
-          if (Math.hypot(dx, dy) >= 4) {
-            onAddWall(wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y);
-          }
-          setWallDraft(null);
-        }
+      }}
+      onDblClick={() => {
+        // The other way to finish, for people who never look for a keyboard.
+        if (penning) finishPen(penPoints);
       }}
       onDragMove={(event) => {
         // Reported during the pan, not only at its end: a popover positioned from
@@ -358,7 +420,7 @@ export function MapCanvas({
           setView((current) => ({ ...current, x: event.target.x(), y: event.target.y() }));
         }
       }}
-      style={{ background: canvasPalette.stage(), cursor: painting ? 'crosshair' : 'grab' }}
+      style={{ background: canvasPalette.stage(), cursor: painting || penning ? 'crosshair' : 'grab' }}
     >
       <Layer listening={false}>
         {image === null ? null : <KonvaImage image={image} x={0} y={0} />}
@@ -367,24 +429,85 @@ export function MapCanvas({
         ) : null}
       </Layer>
 
+      {/* Walls listen only for the GM, and only so a door can be clicked open;
+          a player's pointer passes straight through to the tokens below. */}
+      <Layer listening={isGameMaster && !penning}>
+        {scene.walls.map((wall) => {
+          const isDoor = wall.kind === 'door';
+          const open = isDoor && wall.open;
+          return (
+            <Group key={wall.id}>
+              <Line
+                points={[wall.x1, wall.y1, wall.x2, wall.y2]}
+                stroke={isDoor ? canvasPalette.doorLine() : canvasPalette.wallLine()}
+                strokeWidth={open ? 2 : isDoor ? 7 : 3}
+                {...(open ? { dash: [10, 6] } : {})}
+                opacity={open ? 0.45 : 1}
+                // A 3px line is hard to hit; the click target is wider than the ink.
+                hitStrokeWidth={isDoor ? 18 : 0}
+                listening={isDoor}
+                {...(isDoor ? { onPointerClick: () => onToggleDoor(wall.id) } : {})}
+                onMouseEnter={(event) => {
+                  if (isDoor) {
+                    const stage = event.target.getStage();
+                    if (stage !== null) stage.container().style.cursor = 'pointer';
+                  }
+                }}
+                onMouseLeave={(event) => {
+                  const stage = event.target.getStage();
+                  if (stage !== null) stage.container().style.cursor = penning ? 'crosshair' : 'grab';
+                }}
+              />
+              {/* A dot at the hinge marks a door as a door at a glance, and stays
+                  visible once the leaf itself has faded out on opening. */}
+              {isDoor ? (
+                <Circle
+                  x={wall.x1}
+                  y={wall.y1}
+                  radius={5}
+                  fill={canvasPalette.doorLine()}
+                  opacity={open ? 0.5 : 1}
+                  listening={false}
+                />
+              ) : null}
+            </Group>
+          );
+        })}
+      </Layer>
+
+      {/* The pen's draft: committed legs solid, the leg being aimed dashed. */}
       <Layer listening={false}>
-        {scene.walls.map((wall) => (
-          <Line
-            key={wall.id}
-            points={[wall.x1, wall.y1, wall.x2, wall.y2]}
-            stroke={wall.kind === 'door' ? canvasPalette.doorLine() : canvasPalette.wallLine()}
-            strokeWidth={wall.kind === 'door' && wall.open ? 1 : 3}
-            {...(wall.kind === 'door' ? { dash: [10, 6] } : {})}
-            opacity={wall.kind === 'door' && wall.open ? 0.4 : 1}
-          />
-        ))}
-        {wallDraft !== null ? (
-          <Line
-            points={[wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y]}
-            stroke={canvasPalette.wallLine()}
-            strokeWidth={3}
-            dash={[4, 4]}
-          />
+        {penPoints.length > 0 ? (
+          <Group>
+            <Line
+              points={penPoints.flatMap((point) => [point.x, point.y])}
+              stroke={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+              strokeWidth={3}
+              {...(fogPen === null ? {} : { closed: penPoints.length > 2, opacity: 0.8 })}
+            />
+            {penCursor === null ? null : (
+              <Line
+                points={[
+                  penPoints[penPoints.length - 1]?.x ?? 0,
+                  penPoints[penPoints.length - 1]?.y ?? 0,
+                  penCursor.x,
+                  penCursor.y,
+                ]}
+                stroke={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+                strokeWidth={2}
+                dash={[6, 6]}
+              />
+            )}
+            {penPoints.map((point, index) => (
+              <Circle
+                key={`pen-${index}`}
+                x={point.x}
+                y={point.y}
+                radius={index === 0 ? 6 : 4}
+                fill={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+              />
+            ))}
+          </Group>
         ) : null}
       </Layer>
 

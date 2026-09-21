@@ -99,6 +99,9 @@ export function MapRoute({
 }: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
+  /** The pen outlines an area instead of dabbing at it; only one of the two fog
+   * tools is out at a time, so picking one puts the other away. */
+  const [fogPen, setFogPen] = useState<{ reveal: boolean } | null>(null);
   const [measuring, setMeasuring] = useState(false);
   const [snapping, setSnapping] = useState(true);
   const [drawingWall, setDrawingWall] = useState(false);
@@ -198,6 +201,14 @@ export function MapRoute({
       send({ type: 'paintFog', sceneId: scene.id, x, y, radius: fogBrush.radius, reveal: fogBrush.reveal });
     },
     [scene, fogBrush, send],
+  );
+
+  const fillFog = useCallback(
+    (points: readonly { x: number; y: number }[]) => {
+      if (scene === null || fogPen === null) return;
+      send({ type: 'fillFog', sceneId: scene.id, points: [...points], reveal: fogPen.reveal });
+    },
+    [scene, fogPen, send],
   );
 
   const updateSelected = (patch: Partial<Token>) => {
@@ -419,6 +430,8 @@ export function MapRoute({
             onMoveToken={moveToken}
             fogBrush={fogBrush}
             onPaintFog={paintFog}
+            fogPen={fogPen}
+            onFillFog={fillFog}
             measuring={measuring}
             snapping={snapping}
             health={tokenHealth}
@@ -432,6 +445,12 @@ export function MapRoute({
                 sceneId: scene.id,
                 wall: { id: nextId('wall'), x1, y1, x2, y2, kind: 'wall', open: false },
               });
+            }}
+            onToggleDoor={(wallId) => {
+              if (scene === null) return;
+              const wall = scene.walls.find((candidate) => candidate.id === wallId);
+              if (wall === undefined || wall.kind !== 'door') return;
+              send({ type: 'updateWall', sceneId: scene.id, wall: { ...wall, open: !wall.open } });
             }}
           />
         ) : null}
@@ -657,18 +676,49 @@ export function MapRoute({
                 <button
                   type="button"
                   aria-pressed={fogBrush?.reveal === true}
-                  onClick={() => setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true })}
+                  onClick={() => {
+                    setFogPen(null);
+                    setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true });
+                  }}
                 >
                   {t('map.fog.revealBrush')}
                 </button>
                 <button
                   type="button"
                   aria-pressed={fogBrush?.reveal === false}
-                  onClick={() => setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false })}
+                  onClick={() => {
+                    setFogPen(null);
+                    setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false });
+                  }}
                 >
                   {t('map.fog.hideBrush')}
                 </button>
               </div>
+              <div className="row mt-2">
+                <button
+                  type="button"
+                  aria-pressed={fogPen?.reveal === true}
+                  onClick={() => {
+                    setFogBrush(null);
+                    setDrawingWall(false);
+                    setFogPen(fogPen?.reveal === true ? null : { reveal: true });
+                  }}
+                >
+                  {t('map.fog.revealPen')}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={fogPen?.reveal === false}
+                  onClick={() => {
+                    setFogBrush(null);
+                    setDrawingWall(false);
+                    setFogPen(fogPen?.reveal === false ? null : { reveal: false });
+                  }}
+                >
+                  {t('map.fog.hidePen')}
+                </button>
+              </div>
+              {fogPen === null ? null : <p className="muted mt-2">{t('map.fog.penHint')}</p>}
               <p className="muted">{t('map.fog.playersOnlySeeRevealed')}</p>
             </>
           ) : (
@@ -688,9 +738,19 @@ export function MapRoute({
             setDrawingWall(false);
           }}
         >
-          <button type="button" aria-pressed={drawingWall} onClick={() => setDrawingWall((d) => !d)}>
+          <button
+            type="button"
+            aria-pressed={drawingWall}
+            onClick={() => {
+              setFogBrush(null);
+              setFogPen(null);
+              setDrawingWall((d) => !d);
+            }}
+          >
             {drawingWall ? t('map.walls.drawing') : t('map.walls.draw')}
           </button>
+          {drawingWall ? <p className="muted mt-2">{t('map.walls.penHint')}</p> : null}
+          <p className="muted mt-2">{t('map.walls.doorHint')}</p>
           <p className="muted mt-2">
             {scene.visionMode === 'auto' ? t('map.walls.autoVisionHint') : t('map.walls.manualFogHint')}
           </p>

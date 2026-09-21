@@ -865,6 +865,10 @@ export const en: Record<keyof typeof es, string> = {
   'map.fog.disabled': 'Fog off',
   'map.fog.revealBrush': 'Reveal brush',
   'map.fog.hideBrush': 'Hide brush',
+  'map.fog.revealPen': 'Reveal pen',
+  'map.fog.hidePen': 'Hide pen',
+  'map.fog.penHint':
+    'Click each corner of the area. Close the shape by clicking the first point, double-clicking, or pressing Enter. Esc cancels.',
   'map.fog.playersOnlySeeRevealed':
     'Players only see revealed areas — the rest is never sent to them.',
   'map.fog.autoVisionActiveHint':
@@ -872,6 +876,10 @@ export const en: Record<keyof typeof es, string> = {
 
   'map.walls.drawing': 'Drawing wall…',
   'map.walls.draw': 'Draw wall',
+  'map.walls.penHint':
+    'Click each corner: every leg between two clicks becomes a wall. Double-click or Enter ends the run, Esc cancels.',
+  'map.walls.doorHint':
+    'A wall blocks automatic vision. A door is a wall you can open: click it on the map (thick line with a dot = closed, faint dashed = open).',
   'map.walls.autoVisionHint': 'Automatic vision: fog reveals itself based on what each PC can see.',
   'map.walls.manualFogHint': 'Manual fog: use the brush in the fog panel.',
   'map.walls.switchTo': 'Switch to {mode}',

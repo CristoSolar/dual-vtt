@@ -877,6 +877,7 @@ export function applyRoomEvent(
     case 'updateToken':
     case 'removeToken':
     case 'paintFog':
+    case 'fillFog':
     case 'setFogEnabled':
     case 'addWall':
     case 'removeWall':
@@ -1466,6 +1467,14 @@ function applyMapEvent(
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
       const cells = cellsInBrush(scene.fog, { x: event.x, y: event.y }, event.radius);
+      const fog = event.reveal ? reveal(scene.fog, cells) : hide(scene.fog, cells);
+      return ok(withScene(state, scene.id, { ...scene, fog }));
+    }
+
+    case 'fillFog': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      const cells = cellsInPolygon(scene.fog, event.points);
       const fog = event.reveal ? reveal(scene.fog, cells) : hide(scene.fog, cells);
       return ok(withScene(state, scene.id, { ...scene, fog }));
     }

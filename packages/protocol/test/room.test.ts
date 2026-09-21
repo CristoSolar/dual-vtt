@@ -1352,6 +1352,45 @@ describe('map events', () => {
     );
   });
 
+  it('fills a polygon of fog, and hides it again', () => {
+    // A 100x100 square over the top-left corner of a 50px fog grid: four cells.
+    const square = [
+      { x: 0, y: 0 },
+      { x: 100, y: 0 },
+      { x: 100, y: 100 },
+      { x: 0, y: 100 },
+    ];
+    // The fog grid only has cells once it has been fitted to an image.
+    let room = apply(roomWithScene(), GM, {
+      type: 'setSceneImage',
+      sceneId: 's-1',
+      image: { url: '/uploads/a.png', width: 1000, height: 1000 },
+    });
+    room = apply(room, GM, { type: 'setFogEnabled', sceneId: 's-1', enabled: true });
+    room = apply(room, GM, { type: 'fillFog', sceneId: 's-1', points: square, reveal: true });
+    // 50px cells over a 1000px image: the square covers the first two of each of
+    // the first two rows.
+    expect(room.map.scenes[0]?.fog.revealed).toEqual([0, 1, 20, 21]);
+
+    room = apply(room, GM, { type: 'fillFog', sceneId: 's-1', points: square, reveal: false });
+    expect(room.map.scenes[0]?.fog.revealed).toEqual([]);
+  });
+
+  it('refuses a player filling fog', () => {
+    expect(
+      refusal(roomWithScene(), ALEX, {
+        type: 'fillFog',
+        sceneId: 's-1',
+        points: [
+          { x: 0, y: 0 },
+          { x: 10, y: 0 },
+          { x: 10, y: 10 },
+        ],
+        reveal: true,
+      }),
+    ).toBe('notGameMaster');
+  });
+
   it('refuses a player placing a token they would not own', () => {
     const room = roomWithScene();
     expect(
