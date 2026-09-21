@@ -213,6 +213,14 @@ export const RoomStateSchema = z.object({
     })
     .nullable()
     .default(null),
+  /**
+   * Adversary pools (SRD 2.0 p.94): tokens shared by several adversaries rather
+   * than sitting on one stat block. They start a scene empty and are cleared when
+   * it ends, which is the GM's to do.
+   */
+  adversaryPools: z
+    .array(z.object({ name: z.string().min(1).max(60), tokens: z.number().int().min(0).max(99) }))
+    .default([]),
   /** Scenes, tokens, and fog. Players receive only the active scene. */
   map: MapStateSchema,
 });
@@ -238,6 +246,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     groupAction: null,
     tagTeam: null,
     spotlightTokens: null,
+    adversaryPools: [],
     map: createMapState(),
   };
 }
@@ -482,6 +491,22 @@ export function applyRoomEvent(
         return fail('notYourCharacter', 'you do not control that character');
       }
       return applyCharacterEvent(state, actor, event, sheet, rng, now);
+    }
+
+    case 'setAdversaryPool': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const others = state.adversaryPools.filter((pool) => pool.name !== event.name);
+      return ok({
+        ...state,
+        adversaryPools:
+          event.tokens === null ? others : [...others, { name: event.name, tokens: event.tokens }],
+      });
+    }
+    case 'clearAdversaryPools': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      return ok({ ...state, adversaryPools: [] });
     }
 
     case 'setSpotlightTracker': {

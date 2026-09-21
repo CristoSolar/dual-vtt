@@ -225,6 +225,16 @@ export type CharacterRoomEvent = z.infer<typeof CharacterRoomEventSchema>;
 /** Intents only the GM may send. */
 export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   z.object({
+    // Sets a named adversary pool to a number of tokens; null removes the pool.
+    type: z.literal('setAdversaryPool'),
+    name: z.string().min(1).max(60),
+    tokens: z.number().int().min(0).max(99).nullable(),
+  }),
+  z.object({
+    // A scene ending clears every pool (SRD 2.0 p.94).
+    type: z.literal('clearAdversaryPools'),
+  }),
+  z.object({
     // Turns the optional Spotlight Tracker on with this many tokens each, refills
     // it at the same number, or turns it off with null (SRD 2.0 p.47).
     type: z.literal('setSpotlightTracker'),
@@ -445,6 +455,9 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.consecutiveShortRests !== after.consecutiveShortRests) {
     patch.consecutiveShortRests = after.consecutiveShortRests;
   }
+  if (before.adversaryPools !== after.adversaryPools) {
+    patch.adversaryPools = after.adversaryPools;
+  }
   if (before.spotlightTokens !== after.spotlightTokens) {
     patch.spotlightTokens = after.spotlightTokens;
   }
@@ -478,6 +491,7 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.consecutiveShortRests === undefined
       ? {}
       : { consecutiveShortRests: patch.consecutiveShortRests }),
+    ...(patch.adversaryPools === undefined ? {} : { adversaryPools: patch.adversaryPools }),
     ...(patch.spotlightTokens === undefined ? {} : { spotlightTokens: patch.spotlightTokens }),
     ...(patch.groupAction === undefined ? {} : { groupAction: patch.groupAction }),
     ...(patch.tagTeam === undefined ? {} : { tagTeam: patch.tagTeam }),

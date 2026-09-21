@@ -266,6 +266,7 @@ function gmRoom(): RoomState {
     groupAction: null,
     tagTeam: null,
     spotlightTokens: null,
+    adversaryPools: [],
     map: createMapState(),
     rollLog: [],
   };
@@ -365,6 +366,7 @@ describe('GM panel renders', () => {
       groupAction: null,
       tagTeam: null,
       spotlightTokens: null,
+      adversaryPools: [],
       map: createMapState(),
       rollLog: [
         {

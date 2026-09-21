@@ -176,6 +176,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
           <SpotlightTracker room={room} send={send} />
           <Countdowns countdowns={room.countdowns} send={send} />
           <BattlePoints room={room} />
+          <AdversaryPools room={room} send={send} />
           <Adversaries room={room} send={send} />
           <EnvironmentPicker activeEnvironment={room.activeEnvironment} send={send} />
         </div>
@@ -665,6 +666,72 @@ function AttackControls({
  * just a harder one. The two line-up adjustments are derived from what is already
  * on the table; the rest are the GM's to tick.
  */
+/**
+ * Adversary pools (SRD 2.0 p.94): tokens shared by several adversaries instead of
+ * sitting on one stat block. They are empty when a scene begins and cleared when it
+ * ends, so clearing them all is one button.
+ */
+function AdversaryPools({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  const [name, setName] = useState('');
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.pools.title')}</SectionHead>
+      <p className="muted">{t('gm.pools.hint')}</p>
+
+      {room.adversaryPools.map((pool) => (
+        <div className="row" key={pool.name}>
+          <strong>{pool.name}</strong>
+          <span>{pool.tokens}</span>
+          <button
+            type="button"
+            onClick={() =>
+              send({ type: 'setAdversaryPool', name: pool.name, tokens: pool.tokens + 1 })
+            }
+          >
+            +1
+          </button>
+          <button
+            type="button"
+            disabled={pool.tokens === 0}
+            onClick={() =>
+              send({ type: 'setAdversaryPool', name: pool.name, tokens: pool.tokens - 1 })
+            }
+          >
+            −1
+          </button>
+          <button
+            type="button"
+            onClick={() => send({ type: 'setAdversaryPool', name: pool.name, tokens: null })}
+          >
+            {t('gm.pools.remove')}
+          </button>
+        </div>
+      ))}
+
+      <div className="row">
+        <label htmlFor="pool-name">{t('gm.pools.name')}</label>
+        <input id="pool-name" value={name} onChange={(event) => setName(event.target.value)} />
+        <button
+          type="button"
+          disabled={name.trim() === ''}
+          onClick={() => {
+            send({ type: 'setAdversaryPool', name: name.trim(), tokens: 0 });
+            setName('');
+          }}
+        >
+          {t('gm.pools.add')}
+        </button>
+        {room.adversaryPools.length > 0 ? (
+          <button type="button" onClick={() => send({ type: 'clearAdversaryPools' })}>
+            {t('gm.pools.clear')}
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function BattlePoints({ room }: { room: RoomState }) {
   const [adjustments, setAdjustments] = useState<BattlePointAdjustments>({});
 

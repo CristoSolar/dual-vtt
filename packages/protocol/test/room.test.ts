@@ -700,6 +700,25 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('keeps named adversary pools, and clears them all when a scene ends', () => {
+    const room = roomWithPlayers();
+    expect(refusal(room, ALEX, { type: 'setAdversaryPool', name: 'Swarm', tokens: 1 })).toBe(
+      'notGameMaster',
+    );
+
+    const added = apply(room, GM, { type: 'setAdversaryPool', name: 'Swarm', tokens: 0 });
+    const filled = apply(added, GM, { type: 'setAdversaryPool', name: 'Swarm', tokens: 3 });
+    expect(filled.adversaryPools).toEqual([{ name: 'Swarm', tokens: 3 }]);
+
+    const removed = apply(filled, GM, { type: 'setAdversaryPool', name: 'Swarm', tokens: null });
+    expect(removed.adversaryPools).toEqual([]);
+
+    const two = apply(apply(filled, GM, { type: 'setAdversaryPool', name: 'Hive', tokens: 1 }), GM, {
+      type: 'clearAdversaryPools',
+    });
+    expect(two.adversaryPools).toEqual([]);
+  });
+
   it('spends a spotlight token per action roll and refills when everyone is out', () => {
     const room = roomWithPlayers();
     expect(
