@@ -9,6 +9,9 @@ import {
   resolveDowntimeMove,
   restFear,
   rollAdversaryAttack,
+  rollCollisionDamage,
+  rollFallDamage,
+  rollFate,
   rollAdversaryDamage,
   spendFear,
   type DowntimeMove,
@@ -491,6 +494,34 @@ export function applyRoomEvent(
         return fail('notYourCharacter', 'you do not control that character');
       }
       return applyCharacterEvent(state, actor, event, sheet, rng, now);
+    }
+
+    case 'rollFate': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const value =
+        event.kind === 'fate'
+          ? rollFate(rng)
+          : event.kind === 'collision'
+            ? rollCollisionDamage(rng)
+            : rollFallDamage(
+                event.kind === 'fallVeryClose'
+                  ? 'veryClose'
+                  : event.kind === 'fallClose'
+                    ? 'close'
+                    : 'farOrVeryFar',
+                rng,
+              );
+
+      const entry: RollEntry = {
+        kind: 'fate',
+        id: `${now.toString(36)}-fate`,
+        at: now,
+        by: state.gm.name,
+        label: event.label,
+        value,
+      };
+      return ok(appendEntries(state, [entry]), undefined, [entry]);
     }
 
     case 'setAdversaryPool': {

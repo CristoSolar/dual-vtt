@@ -82,6 +82,11 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
                       })}
                 </span>
               </>
+            ) : entry.kind === 'fate' ? (
+              <div className="row spread">
+                <strong>{entry.label}</strong>
+                <span>{entry.value}</span>
+              </div>
             ) : (
               <>
                 <div className="row spread">

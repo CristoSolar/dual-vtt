@@ -700,6 +700,28 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('rolls fate and hazards into the log, and only for the GM', () => {
+    const room = roomWithPlayers();
+    expect(refusal(room, ALEX, { type: 'rollFate', kind: 'fate', label: 'Fire' })).toBe(
+      'notGameMaster',
+    );
+
+    const rolled = applyRoomEvent(
+      room,
+      GM,
+      { type: 'rollFate', kind: 'fallClose', label: 'Off the wall' },
+      rng,
+      NOW,
+    );
+    if (!rolled.ok) throw new Error('the hazard roll was rejected');
+    const entry = rolled.entries[0];
+    if (entry === undefined || entry.kind !== 'fate') throw new Error('no fate entry');
+    // A Close fall is 1d20+5.
+    expect(entry.value).toBeGreaterThanOrEqual(6);
+    expect(entry.value).toBeLessThanOrEqual(25);
+    expect(entry.label).toBe('Off the wall');
+  });
+
   it('keeps named adversary pools, and clears them all when a scene ends', () => {
     const room = roomWithPlayers();
     expect(refusal(room, ALEX, { type: 'setAdversaryPool', name: 'Swarm', tokens: 1 })).toBe(

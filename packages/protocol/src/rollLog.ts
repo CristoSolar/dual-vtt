@@ -70,6 +70,19 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     target: z.string().nullable(),
   }),
   z.object({
+    /**
+     * A fate roll or a hazard the GM rolled: one number and the sentence that goes
+     * with it (SRD 2.0 p.92). Kept apart from damage rolls because nothing here is
+     * applied to anyone automatically.
+     */
+    kind: z.literal('fate'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    label: z.string().min(1),
+    value: z.number().int(),
+  }),
+  z.object({
     kind: z.literal('damage'),
     id: z.string().min(1),
     at: z.number(),

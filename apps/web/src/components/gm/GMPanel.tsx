@@ -177,6 +177,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
           <Countdowns countdowns={room.countdowns} send={send} />
           <BattlePoints room={room} />
           <AdversaryPools room={room} send={send} />
+          <Hazards send={send} />
           <Adversaries room={room} send={send} />
           <EnvironmentPicker activeEnvironment={room.activeEnvironment} send={send} />
         </div>
@@ -671,6 +672,52 @@ function AttackControls({
  * sitting on one stat block. They are empty when a scene begins and cleared when it
  * ends, so clearing them all is one button.
  */
+/**
+ * Fate rolls and the printed hazards (SRD 2.0 p.92), plus the per-scene Fear budget
+ * the SRD suggests. Nothing here is applied to anyone: it rolls a number into the
+ * shared log and leaves the adjudication to the GM, which is how the SRD prints it.
+ */
+function Hazards({ send }: { send: (event: RoomEvent) => void }) {
+  const [label, setLabel] = useState('');
+  const kinds = ['fate', 'fallVeryClose', 'fallClose', 'fallFar', 'collision'] as const;
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.hazards.title')}</SectionHead>
+      <label htmlFor="hazard-label">{t('gm.hazards.label')}</label>
+      <input
+        id="hazard-label"
+        value={label}
+        onChange={(event) => setLabel(event.target.value)}
+        placeholder={t('gm.hazards.placeholder')}
+      />
+      <div className="row">
+        {kinds.map((kind) => (
+          <button
+            key={kind}
+            type="button"
+            onClick={() =>
+              send({
+                type: 'rollFate',
+                kind,
+                label: label.trim() === '' ? t(`gm.hazards.${kind}`) : label.trim(),
+              })
+            }
+          >
+            {t(`gm.hazards.${kind}`)}
+          </button>
+        ))}
+      </div>
+      <details>
+        <summary>{t('gm.hazards.more')}</summary>
+        <p className="card-text">{t('gm.hazards.underwater')}</p>
+        <p className="card-text">{t('gm.hazards.pcVsPc')}</p>
+        <p className="card-text">{t('gm.hazards.fearBudget')}</p>
+      </details>
+    </div>
+  );
+}
+
 function AdversaryPools({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   const [name, setName] = useState('');
 
@@ -1128,6 +1175,8 @@ function SharedRollLog({ room }: { room: RoomState }) {
                       ? t('sheet.log.attackTotal', { total: entry.roll.total })
                       : t(entry.roll.success ? 'sheet.log.attackHit' : 'sheet.log.attackMiss')}
                 </span>
+              ) : entry.kind === 'fate' ? (
+                <span>{entry.value}</span>
               ) : (
                 <span>
                   {entry.roll.total}
@@ -1153,7 +1202,9 @@ function SharedRollLog({ room }: { room: RoomState }) {
                             target: entry.target ?? '',
                           })
                     }`
-                  : t('gm.rollLog.damageMeta', {
+                  : entry.kind === 'fate'
+                    ? t('gm.rollLog.fateMeta')
+                    : t('gm.rollLog.damageMeta', {
                       rolls: entry.roll.rolls.join(', '),
                       critical: entry.critical
                         ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })

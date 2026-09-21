@@ -225,6 +225,13 @@ export type CharacterRoomEvent = z.infer<typeof CharacterRoomEventSchema>;
 /** Intents only the GM may send. */
 export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   z.object({
+    // A fate roll, or one of the printed hazards (SRD 2.0 p.92). The GM says what
+    // it is for; the server rolls it and logs the number.
+    type: z.literal('rollFate'),
+    kind: z.enum(['fate', 'fallVeryClose', 'fallClose', 'fallFar', 'collision']),
+    label: z.string().min(1).max(80),
+  }),
+  z.object({
     // Sets a named adversary pool to a number of tokens; null removes the pool.
     type: z.literal('setAdversaryPool'),
     name: z.string().min(1).max(60),
