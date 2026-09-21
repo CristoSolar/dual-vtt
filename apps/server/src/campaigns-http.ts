@@ -8,6 +8,7 @@ import {
 } from '@daggerheart/protocol';
 
 import type { CampaignRecord, CampaignStore } from './campaigns.js';
+import { actorFor } from './http-auth.js';
 import type { SessionStore } from './sessions.js';
 import { readBody } from './uploads.js';
 import type { UserStore } from './users.js';
@@ -27,20 +28,6 @@ const noContent = (response: ServerResponse): void => {
 async function readJsonBody(request: IncomingMessage): Promise<unknown> {
   const bytes = await readBody(request, MAX_CAMPAIGNS_BODY_BYTES);
   return JSON.parse(new TextDecoder().decode(bytes)) as unknown;
-}
-
-function bearerToken(request: IncomingMessage): string | null {
-  const header = request.headers.authorization;
-  if (header === undefined || !header.startsWith('Bearer ')) return null;
-  return header.slice('Bearer '.length);
-}
-
-function actorFor(request: IncomingMessage, sessions: SessionStore, users: UserStore): User | null {
-  const token = bearerToken(request);
-  if (token === null) return null;
-  const userId = sessions.resolve(token);
-  if (userId === null) return null;
-  return users.findById(userId);
 }
 
 function toSummary(campaign: CampaignRecord, ownerUsername: string): CampaignSummary {

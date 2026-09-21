@@ -9,7 +9,7 @@ import {
   spellcastTrait,
   type Character,
 } from '@daggerheart/character';
-import { CHANNEL, createSheet, type RoomPatch, type RoomState, type SheetState } from '@daggerheart/protocol';
+import { CHANNEL, createSheet, type RoomPatch, type RoomState, type SheetState, type User } from '@daggerheart/protocol';
 import { srd, type ClassId } from '@daggerheart/srd-data';
 import { Server } from 'socket.io';
 import { io as connect, type Socket } from 'socket.io-client';
@@ -184,9 +184,21 @@ export async function accountFor(
   username: string,
   role: 'gm' | 'player' = 'player',
 ): Promise<AccountFixture> {
-  const user = await server.users.createUser(username, 'password', role);
+  const user = await createUserOrFail(server.users, username, 'password', role);
   const token = server.sessions.create(user.id);
   return { id: user.id, username, token };
+}
+
+/** `createUser` returns null on a taken username; in a fixture that is a test bug. */
+export async function createUserOrFail(
+  users: UserStore,
+  username: string,
+  password: string,
+  role: 'gm' | 'player',
+): Promise<User> {
+  const user = await users.createUser(username, password, role);
+  if (user === null) throw new Error(`test fixture: username already taken: ${username}`);
+  return user;
 }
 
 /** Creates a campaign owned by `gm`, connects its socket, and seats it. */

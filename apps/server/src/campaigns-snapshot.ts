@@ -1,8 +1,9 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 import { RoomStateSchema } from '@daggerheart/protocol';
 import { z } from 'zod';
+
+import { writeFileAtomic } from './atomic-write.js';
 
 import type { SerializedCampaign } from './campaigns.js';
 
@@ -29,11 +30,7 @@ export async function writeCampaignsSnapshot(
   path: string,
   campaigns: readonly SerializedCampaign[],
 ): Promise<void> {
-  await mkdir(dirname(path), { recursive: true });
-  const payload = JSON.stringify({ version: CAMPAIGNS_SNAPSHOT_VERSION, campaigns });
-  const temporary = `${path}.tmp`;
-  await writeFile(temporary, payload, 'utf8');
-  await rename(temporary, path);
+  await writeFileAtomic(path, JSON.stringify({ version: CAMPAIGNS_SNAPSHOT_VERSION, campaigns }));
 }
 
 /**

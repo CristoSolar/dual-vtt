@@ -6,3 +6,6 @@ dist
 *.log
 .env
 .env.*
+
+# Darrington logo pack: only the two files the app uses are committed, under apps/web/public
+Darrington-Press-Community-Content-Logos*

@@ -8,11 +8,26 @@ import {
   type User,
 } from '@daggerheart/protocol';
 
+import { actorFor, bearerToken } from './http-auth.js';
+import { RateLimiter } from './rate-limit.js';
 import type { SessionStore } from './sessions.js';
 import { readBody } from './uploads.js';
 import type { UserStore } from './users.js';
 
 const MAX_AUTH_BODY_BYTES = 64 * 1024;
+
+/**
+ * Password guessing is the one thing a public tunnel exposes to the whole internet,
+ * so failed logins are counted per address and username and refused for a while.
+ */
+const LOGIN_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 60_000;
+const loginLimiter = new RateLimiter(LOGIN_ATTEMPTS, LOGIN_WINDOW_MS);
+
+/** Exported for tests, which would otherwise carry a lockout between cases. */
+export function resetLoginLimits(): void {
+  loginLimiter.clear();
+}
 
 const json = (response: ServerResponse, status: number, body: unknown): void => {
   response.writeHead(status, { 'content-type': 'application/json' });
@@ -27,21 +42,6 @@ const noContent = (response: ServerResponse): void => {
 async function readJsonBody(request: IncomingMessage): Promise<unknown> {
   const bytes = await readBody(request, MAX_AUTH_BODY_BYTES);
   return JSON.parse(new TextDecoder().decode(bytes)) as unknown;
-}
-
-function bearerToken(request: IncomingMessage): string | null {
-  const header = request.headers.authorization;
-  if (header === undefined || !header.startsWith('Bearer ')) return null;
-  return header.slice('Bearer '.length);
-}
-
-/** Resolves the caller's account from the request's bearer token. Never from the body. */
-function actorFor(request: IncomingMessage, sessions: SessionStore, users: UserStore): User | null {
-  const token = bearerToken(request);
-  if (token === null) return null;
-  const userId = sessions.resolve(token);
-  if (userId === null) return null;
-  return users.findById(userId);
 }
 
 export interface AuthDeps {
@@ -70,11 +70,18 @@ export async function handleAuth(
       json(response, 400, { error: 'badRequest' });
       return true;
     }
+    const key = `${request.socket.remoteAddress ?? '?'}:${parsed.data.username}`;
+    if (loginLimiter.isLimited(key)) {
+      json(response, 429, { error: 'tooManyAttempts' });
+      return true;
+    }
     const user = await users.verifyLogin(parsed.data.username, parsed.data.password);
     if (user === null) {
+      loginLimiter.fail(key);
       json(response, 401, { error: 'invalidCredentials' });
       return true;
     }
+    loginLimiter.succeed(key);
     const token = sessions.create(user.id);
     json(response, 200, { token, user });
     return true;
@@ -114,6 +121,9 @@ export async function handleAuth(
       return true;
     }
     await users.setPassword(actor.id, parsed.data.newPassword, false);
+    // Every other token for this account dies with the old password; the caller
+    // keeps the one they are holding so they are not signed out mid-change.
+    sessions.destroyAllFor(actor.id, bearerToken(request) ?? undefined);
     persist();
     noContent(response);
     return true;
@@ -153,6 +163,10 @@ export async function handleAuth(
       return true;
     }
     const created = await users.createUser(parsed.data.username, parsed.data.password, 'player');
+    if (created === null) {
+      json(response, 409, { error: 'usernameTaken' });
+      return true;
+    }
     persist();
     json(response, 201, created);
     return true;
@@ -180,6 +194,8 @@ export async function handleAuth(
       json(response, 404, { error: 'notFound' });
       return true;
     }
+    // The old password is gone, so any token issued against it must go too.
+    sessions.destroyAllFor(targetId);
     persist();
     noContent(response);
     return true;

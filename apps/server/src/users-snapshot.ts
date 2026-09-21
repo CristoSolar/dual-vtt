@@ -1,8 +1,9 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 import { UserRoleSchema } from '@daggerheart/protocol';
 import { z } from 'zod';
+
+import { writeFileAtomic } from './atomic-write.js';
 
 import type { StoredUser } from './users.js';
 
@@ -23,11 +24,7 @@ export const USERS_SNAPSHOT_VERSION = 1;
 
 /** Same atomic-write approach as `writeSnapshot`: never leave a truncated file on a crash. */
 export async function writeUsersSnapshot(path: string, users: readonly StoredUser[]): Promise<void> {
-  await mkdir(dirname(path), { recursive: true });
-  const payload = JSON.stringify({ version: USERS_SNAPSHOT_VERSION, users });
-  const temporary = `${path}.tmp`;
-  await writeFile(temporary, payload, 'utf8');
-  await rename(temporary, path);
+  await writeFileAtomic(path, JSON.stringify({ version: USERS_SNAPSHOT_VERSION, users }));
 }
 
 /**

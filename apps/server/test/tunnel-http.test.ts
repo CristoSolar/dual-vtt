@@ -7,6 +7,7 @@ import { SessionStore } from '../src/sessions.js';
 import { handleTunnel } from '../src/tunnel-http.js';
 import { TunnelManager } from '../src/tunnel.js';
 import { UserStore } from '../src/users.js';
+import { createUserOrFail } from './helpers.js';
 
 /**
  * Never opens a real tunnel — `ensure`/`getUrl` are replaced with fakes, the same
@@ -52,9 +53,9 @@ describe('the /tunnel endpoint', () => {
 
   beforeAll(async () => {
     server = await startTunnelServer(fakeTunnel('https://example.trycloudflare.com'));
-    const gm = await server.users.createUser('gm', 'gm-pw', 'gm');
+    const gm = await createUserOrFail(server.users, 'gm', 'gm-pw', 'gm');
     gmToken = server.sessions.create(gm.id);
-    const player = await server.users.createUser('alex', 'player-pw', 'player');
+    const player = await createUserOrFail(server.users, 'alex', 'player-pw', 'player');
     playerToken = server.sessions.create(player.id);
   });
 
@@ -97,7 +98,7 @@ describe('the /tunnel endpoint', () => {
 describe('the /tunnel endpoint when starting fails', () => {
   it('reports 502 with a message, not a crash', async () => {
     const server = await startTunnelServer(fakeTunnel(null));
-    const gm = await server.users.createUser('gm', 'gm-pw', 'gm');
+    const gm = await createUserOrFail(server.users, 'gm', 'gm-pw', 'gm');
     const gmToken = server.sessions.create(gm.id);
 
     try {

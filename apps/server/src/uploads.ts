@@ -4,6 +4,10 @@ import { mkdir, stat, writeFile } from 'node:fs/promises';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize } from 'node:path';
 
+import { actorFor } from './http-auth.js';
+import type { SessionStore } from './sessions.js';
+import type { UserStore } from './users.js';
+
 /**
  * Map image uploads. Images are stored on disk beside the room snapshots and served
  * back over HTTP; there is no cloud storage and no database.
@@ -89,14 +93,26 @@ const json = (response: ServerResponse, status: number, body: unknown): void => 
  *
  * The body is the raw image; there is no multipart parsing to get wrong.
  */
+export interface UploadsDeps {
+  directory: string;
+  users: UserStore;
+  sessions: SessionStore;
+}
+
 export async function handleUploads(
   request: IncomingMessage,
   response: ServerResponse,
-  directory: string,
+  { directory, users, sessions }: UploadsDeps,
 ): Promise<boolean> {
   const url = request.url ?? '';
 
   if (request.method === 'POST' && url === '/uploads') {
+    // Writing to the server's disk is for people with an account. Without this a
+    // public tunnel lets anyone fill it up.
+    if (actorFor(request, sessions, users) === null) {
+      json(response, 401, { error: 'unauthorized' });
+      return true;
+    }
     try {
       const bytes = await readBody(request, MAX_UPLOAD_BYTES);
       const stored = await storeUpload(directory, bytes);
@@ -109,7 +125,20 @@ export async function handleUploads(
   }
 
   if (request.method === 'GET' && url.startsWith('/uploads/')) {
-    const name = url.slice('/uploads/'.length);
+    // ponytail: reads stay open — an <img> tag cannot send an Authorization header,
+    // and the 24-hex random filename is the capability. Gate it behind a signed URL
+    // only if uploads ever hold something worth hiding from a guessed link.
+    //
+    // Decoded before it is checked, so an encoded separator (%2f) is rejected by the
+    // guard below rather than sailing past it, and so a name with a space still
+    // resolves. The query string is not part of the name.
+    let name: string;
+    try {
+      name = decodeURIComponent(url.slice('/uploads/'.length).split('?')[0] ?? '');
+    } catch {
+      json(response, 400, { error: 'bad path' });
+      return true;
+    }
     // Reject anything that could escape the uploads directory.
     if (name === '' || name.includes('/') || name.includes('\\') || normalize(name) !== name) {
       json(response, 400, { error: 'bad path' });

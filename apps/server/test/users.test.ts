@@ -22,10 +22,17 @@ describe('password hashing', () => {
   });
 });
 
+/** The store returns null on a taken username; anywhere else that is a test bug. */
+async function created(store: UserStore, username: string, password: string, role: 'gm' | 'player') {
+  const user = await store.createUser(username, password, role);
+  if (user === null) throw new Error(`username already taken: ${username}`);
+  return user;
+}
+
 describe('UserStore', () => {
   it('creates a user that must change their password, and never returns the hash', async () => {
     const store = new UserStore();
-    const user = await store.createUser('alex', 'initial-pw', 'player');
+    const user = await created(store, 'alex', 'initial-pw', 'player');
     expect(user.mustChangePassword).toBe(true);
     expect(user.role).toBe('player');
     expect(JSON.stringify(user)).not.toContain('initial-pw');
@@ -42,8 +49,8 @@ describe('UserStore', () => {
 
   it('changes the password and clears mustChangePassword', async () => {
     const store = new UserStore();
-    const created = await store.createUser('alex', 'initial-pw', 'player');
-    const ok = await store.setPassword(created.id, 'new-pw', false);
+    const user = await created(store, 'alex', 'initial-pw', 'player');
+    const ok = await store.setPassword(user.id, 'new-pw', false);
     expect(ok).toBe(true);
     expect(await store.verifyLogin('alex', 'new-pw')).not.toBeNull();
     expect(await store.verifyLogin('alex', 'initial-pw')).toBeNull();

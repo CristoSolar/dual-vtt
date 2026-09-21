@@ -118,9 +118,16 @@ export function registerGateway(
       seatOf.set(socket, { campaignId: parsed.data.campaignId, role: seat.role });
       joinChannels(socket, parsed.data.campaignId, seat.role);
       sendFullState(socket, campaigns, parsed.data.campaignId, seat.role);
-      socket
-        .to(channelFor(parsed.data.campaignId))
-        .emit(CHANNEL.roomPatch, { players: campaigns.get(parsed.data.campaignId)?.state.players, gm: campaigns.get(parsed.data.campaignId)?.state.gm });
+      // The roster slices are the same for both roles (`roomForRole` filters only
+      // the map), so one combined channel is right here. Skipped entirely if the
+      // campaign vanished between the seat check and now, rather than broadcasting
+      // a patch of undefined slices.
+      const state = campaigns.get(parsed.data.campaignId)?.state;
+      if (state !== undefined) {
+        socket
+          .to(channelFor(parsed.data.campaignId))
+          .emit(CHANNEL.roomPatch, { players: state.players, gm: state.gm });
+      }
     });
 
     socket.on(CHANNEL.claimCharacter, (payload: unknown) => {

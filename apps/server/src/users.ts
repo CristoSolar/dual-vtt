@@ -4,6 +4,12 @@ import type { User, UserRole } from '@daggerheart/protocol';
 
 import { hashPassword, verifyPasswordHash } from './passwords.js';
 
+/**
+ * Verified against when the username does not exist, so a wrong username costs the
+ * same scrypt work as a wrong password and cannot be told apart by timing.
+ */
+const dummyHash = hashPassword(randomBytes(32).toString('hex'));
+
 /** The server-only shape: everything `User` has, plus the hash. Never sent to a client. */
 export interface StoredUser extends User {
   passwordHash: string;
@@ -47,18 +53,30 @@ export class UserStore {
       .map(toPublic);
   }
 
-  /** New accounts always start `mustChangePassword: true` — a GM-set password is temporary by design. */
-  async createUser(username: string, password: string, role: UserRole): Promise<User> {
+  /**
+   * New accounts always start `mustChangePassword: true` — a GM-set password is
+   * temporary by design. Returns null if the username is already taken.
+   *
+   * The record is inserted before the hash is awaited, so two concurrent creates
+   * cannot both pass the name check and end up with one unreachable duplicate.
+   * The placeholder hash never verifies (`verifyPasswordHash` rejects it), so the
+   * account cannot be logged into during the gap.
+   */
+  async createUser(username: string, password: string, role: UserRole): Promise<User | null> {
+    if (this.findByUsername(username) !== null) return null;
     const id = `u-${randomBytes(8).toString('hex')}`;
-    const passwordHash = await hashPassword(password);
-    const user: StoredUser = { id, username, role, mustChangePassword: true, passwordHash };
+    const user: StoredUser = { id, username, role, mustChangePassword: true, passwordHash: '' };
     this.users.set(id, user);
+    user.passwordHash = await hashPassword(password);
     return toPublic(user);
   }
 
   async verifyLogin(username: string, password: string): Promise<User | null> {
     const stored = this.findByUsername(username);
-    if (stored === null) return null;
+    if (stored === null) {
+      await verifyPasswordHash(password, await dummyHash);
+      return null;
+    }
     const ok = await verifyPasswordHash(password, stored.passwordHash);
     return ok ? toPublic(stored) : null;
   }

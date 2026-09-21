@@ -1,4 +1,4 @@
-import { createServer } from 'node:http';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 
 import { Server } from 'socket.io';
 
@@ -67,9 +67,22 @@ async function main(): Promise<void> {
   const sessions = new SessionStore();
   const tunnel = new TunnelManager(PORT, WEB_DIST_DIR);
 
+  type Route = (request: IncomingMessage, response: ServerResponse) => Promise<boolean>;
+  const routes: readonly Route[] = [
+    (request, response) => handleAuth(request, response, { users, sessions, persist: persistUsers }),
+    (request, response) =>
+      handleCampaigns(request, response, { campaigns, users, sessions, persist: persistCampaigns }),
+    (request, response) => handleTunnel(request, response, { tunnel, users, sessions }),
+    (request, response) => handleUploads(request, response, { directory: UPLOAD_DIR, users, sessions }),
+    (request, response) => handleStatic(request, response, WEB_DIST_DIR),
+  ];
+
   const http = createServer((request, response) => {
     // The web app runs on another origin in development.
     const origin = request.headers.origin;
+    // Any cache between here and the browser must key on the origin, since the
+    // allow-origin header varies with it.
+    response.setHeader('vary', 'origin');
     if (origin !== undefined && ALLOWED_ORIGINS.includes(origin)) {
       response.setHeader('access-control-allow-origin', origin);
       response.setHeader('access-control-allow-headers', 'content-type, authorization');
@@ -88,24 +101,19 @@ async function main(): Promise<void> {
       return;
     }
 
-    void handleAuth(request, response, { users, sessions, persist: persistUsers }).then((handled) => {
-      if (handled) return;
-      void handleCampaigns(request, response, { campaigns, users, sessions, persist: persistCampaigns }).then(
-        (campaignsHandled) => {
-          if (campaignsHandled) return;
-          void handleTunnel(request, response, { tunnel, users, sessions }).then((tunnelHandled) => {
-            if (tunnelHandled) return;
-            void handleUploads(request, response, UPLOAD_DIR).then((uploadHandled) => {
-              if (uploadHandled) return;
-              void handleStatic(request, response, WEB_DIST_DIR).then((staticHandled) => {
-                if (staticHandled) return;
-                response.writeHead(404);
-                response.end();
-              });
-            });
-          });
-        },
-      );
+    // Each route reports whether it handled the request; the first one that did
+    // ends the walk. A throw anywhere lands in the catch below rather than leaving
+    // the socket open with no response.
+    void (async () => {
+      for (const route of routes) {
+        if (await route(request, response)) return;
+      }
+      response.writeHead(404);
+      response.end();
+    })().catch((error: unknown) => {
+      console.error('request failed', request.method, request.url, error);
+      if (!response.headersSent) response.writeHead(500, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({ error: 'internal' }));
     });
   });
 
@@ -115,15 +123,25 @@ async function main(): Promise<void> {
   const stopSnapshots = setInterval(persistCampaigns, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
   stopSnapshots.unref();
 
+  let shuttingDown = false;
   const shutdown = async (): Promise<void> => {
+    // A second Ctrl-C must not start a second flush over the first one.
+    if (shuttingDown) return;
+    shuttingDown = true;
     tunnel.stop();
     clearInterval(stopSnapshots);
-    // One last snapshot so a clean stop never loses the table's progress.
-    await writeCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH, campaigns.serialize()).catch((error: unknown) =>
-      console.error('final campaigns snapshot failed', error),
-    );
+    // One last snapshot so a clean stop never loses the table's progress, accounts
+    // included — a password set seconds before the stop was previously lost.
+    await Promise.all([
+      writeCampaignsSnapshot(CAMPAIGNS_SNAPSHOT_PATH, campaigns.serialize()).catch((error: unknown) =>
+        console.error('final campaigns snapshot failed', error),
+      ),
+      writeUsersSnapshot(USERS_SNAPSHOT_PATH, users.serialize()).catch((error: unknown) =>
+        console.error('final users snapshot failed', error),
+      ),
+    ]);
+    // io.close() closes the http server it is attached to and waits for sockets.
     await io.close();
-    http.close();
   };
 
   process.on('SIGINT', () => void shutdown().then(() => process.exit(0)));

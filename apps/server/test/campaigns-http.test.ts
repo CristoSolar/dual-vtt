@@ -7,6 +7,7 @@ import { CampaignStore } from '../src/campaigns.js';
 import { handleCampaigns } from '../src/campaigns-http.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
+import { createUserOrFail } from './helpers.js';
 
 async function startCampaignsServer() {
   const users = new UserStore();
@@ -40,9 +41,9 @@ describe('campaigns HTTP endpoints', () => {
 
   beforeAll(async () => {
     server = await startCampaignsServer();
-    const gm = await server.users.createUser('gm', 'gm-pw', 'gm');
+    const gm = await createUserOrFail(server.users, 'gm', 'gm-pw', 'gm');
     gmToken = server.sessions.create(gm.id);
-    const player = await server.users.createUser('alex', 'player-pw', 'player');
+    const player = await createUserOrFail(server.users, 'alex', 'player-pw', 'player');
     playerId = player.id;
     playerToken = server.sessions.create(player.id);
   });
