@@ -5,7 +5,15 @@ import {
   type RoomEvent,
   type RoomState,
 } from '@daggerheart/protocol';
-import { MAX_FEAR, MOVES_PER_REST, mustRestLong } from '@daggerheart/rules';
+import {
+  MAX_FEAR,
+  MOVES_PER_REST,
+  battlePointBudget,
+  battlePointsSpent,
+  mustRestLong,
+  type AdversaryType,
+  type BattlePointAdjustments,
+} from '@daggerheart/rules';
 import {
   formatDice,
   formatModifier,
@@ -13,7 +21,7 @@ import {
   type Adversary,
   type StatBlockFeature,
 } from '@daggerheart/srd-data';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ChangeEvent } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
 import { label as prettify } from '../../state/selectors.js';
@@ -166,6 +174,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
           <GroupAction room={room} send={send} />
           <PartyOverview room={room} send={send} />
           <Countdowns countdowns={room.countdowns} send={send} />
+          <BattlePoints room={room} />
           <Adversaries room={room} send={send} />
           <EnvironmentPicker activeEnvironment={room.activeEnvironment} send={send} />
         </div>
@@ -586,6 +595,53 @@ function AttackControls({
           {t('gm.adversaries.rollCriticalDamage')}
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The Battle Points readout for the adversaries on the table (SRD 2.0 p.94).
+ *
+ * It reports rather than refuses: an encounter over budget is a legal encounter,
+ * just a harder one. The two line-up adjustments are derived from what is already
+ * on the table; the rest are the GM's to tick.
+ */
+function BattlePoints({ room }: { room: RoomState }) {
+  const [adjustments, setAdjustments] = useState<BattlePointAdjustments>({});
+
+  const types = useMemo(
+    () =>
+      room.adversaryInstances
+        .map((instance) => srd().adversaries.find((a) => a.id === instance.adversaryId)?.type)
+        .filter((type): type is AdversaryType => type !== undefined),
+    [room.adversaryInstances],
+  );
+  const pcCount = room.players.filter((player) => player.characterId !== null).length;
+  const budget = battlePointBudget(pcCount, types, adjustments);
+  const spent = battlePointsSpent(types, pcCount);
+
+  const toggle = (key: keyof BattlePointAdjustments) => (event: ChangeEvent<HTMLInputElement>) =>
+    setAdjustments((current) => ({ ...current, [key]: event.target.checked }));
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.battlePoints.title')}</SectionHead>
+      <p>
+        {t('gm.battlePoints.spent', { spent, budget })}{' '}
+        {spent > budget ? <strong>{t('gm.battlePoints.over')}</strong> : null}
+      </p>
+      <p className="muted">{t('gm.battlePoints.hint')}</p>
+      {(['easier', 'harder', 'strongerDamage', 'lowerTier'] as const).map((key) => (
+        <label key={key} htmlFor={`bp-${key}`}>
+          <input
+            id={`bp-${key}`}
+            type="checkbox"
+            checked={adjustments[key] === true}
+            onChange={toggle(key)}
+          />{' '}
+          {t(`gm.battlePoints.${key}`)}
+        </label>
+      ))}
     </div>
   );
 }
