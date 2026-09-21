@@ -87,6 +87,21 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
   z.object({
+    // Changing armor rebuilds the Armor Score and the damage thresholds, which the
+    // server does from the SRD rather than trusting a client's arithmetic.
+    type: z.literal('equipArmor'),
+    characterId,
+    armorId: z.string().min(1).max(64).nullable(),
+  }),
+  z.object({
+    // Free during a rest, a Stress otherwise. Which of those applies is the room's
+    // to know, so the client does not say.
+    type: z.literal('equipWeapon'),
+    characterId,
+    slot: z.enum(['primary', 'secondary']),
+    weaponId: z.string().min(1).max(64).nullable(),
+  }),
+  z.object({
     // A character carries at most one transformation; null puts it down.
     type: z.literal('setTransformation'),
     characterId,

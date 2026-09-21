@@ -8,3 +8,4 @@ export * from './levelUp.js';
 export * from './rest.js';
 export * from './death.js';
 export * from './adversary.js';
+export * from './equip.js';

@@ -1,4 +1,4 @@
-import { MAX_HOPE, type Advancement, type Rng } from '@daggerheart/rules';
+import { MAX_HOPE, tierForLevel, type Advancement, type Rng } from '@daggerheart/rules';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ import { describeEffect, t, type MessageKey } from '../i18n/index.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
+import { EquipmentPanel } from '../components/sheet/EquipmentPanel.js';
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -48,6 +49,8 @@ import {
   markSheetHP,
   markSheetStress,
   noEffect,
+  equipArmorOnSheet,
+  equipWeaponOnSheet,
   makeDeathMove,
   recallFromVault,
   sendToVault,
@@ -591,6 +594,31 @@ export function SheetRoute({
         </div>
 
         <aside>
+          <EquipmentPanel
+            primaryWeaponId={character.equipment.primaryWeaponId}
+            secondaryWeaponId={character.equipment.secondaryWeaponId}
+            armorId={character.equipment.armorId}
+            tier={tierForLevel(character.level)}
+            duringRest={duringRest}
+            onEquipWeapon={(slot, weaponId) =>
+              run(
+                (s) => {
+                  const result = equipWeaponOnSheet(s, slot, weaponId, duringRest);
+                  return { sheet: result.sheet, effect: result.effect };
+                },
+                forMe({ type: 'equipWeapon', slot, weaponId }),
+              )
+            }
+            onEquipArmor={(armorId) =>
+              run(
+                (s) => {
+                  const result = equipArmorOnSheet(s, armorId);
+                  return { sheet: result.sheet, effect: result.effect };
+                },
+                forMe({ type: 'equipArmor', armorId }),
+              )
+            }
+          />
           <TransformationPanel
             transformation={sheet.transformation}
             onChange={(transformation) =>

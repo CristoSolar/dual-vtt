@@ -370,6 +370,22 @@ export const es = {
   // character sheet: conditions (SRD 2.0 p.52)
 
   // character sheet: transformations (SRD 2.0 p.42)
+
+  // character sheet: changing equipment in play (SRD 2.0 p.55)
+  'sheet.equipment.title': 'Equipo',
+  'sheet.equipment.primary': 'Arma primaria',
+  'sheet.equipment.secondary': 'Arma secundaria',
+  'sheet.equipment.noSecondary': 'Ninguna',
+  'sheet.equipment.armor': 'Armadura',
+  'sheet.equipment.noArmor': 'Sin armadura',
+  'sheet.equipment.score': 'Puntaje {score}',
+  'sheet.equipment.freeNow': 'Durante el descanso, cambiar de arma es gratis.',
+  'sheet.equipment.costsStress': 'Fuera de un descanso, cambiar de arma cuesta un Estrés.',
+  'effect.unknownArmor': 'Esa armadura no está en el SRD.',
+  'effect.unknownWeapon': 'Esa arma no está en el SRD.',
+  'effect.needsBothHands': 'Esa combinación necesita más manos de las que tienes.',
+  'effect.armorEquipped':
+    'Armadura cambiada: Puntaje {score}, umbrales {major}/{severe}.',
   'sheet.transformation.title': 'Transformación',
   'sheet.transformation.pick': 'Transformación',
   'sheet.transformation.none': 'Ninguna',

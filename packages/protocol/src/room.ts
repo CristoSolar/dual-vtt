@@ -51,6 +51,8 @@ import {
   gainSheetGold,
   gainSheetHope,
   applyDowntime,
+  equipArmorOnSheet,
+  equipWeaponOnSheet,
   makeDeathMove,
   makeDamageRoll,
   makeDualityRoll,
@@ -363,6 +365,8 @@ export function applyRoomEvent(
     case 'recallCard':
     case 'vaultCard':
     case 'setConditions':
+    case 'equipArmor':
+    case 'equipWeapon':
     case 'setTransformation':
     case 'downtimeMove':
     case 'deathMove':
@@ -806,6 +810,18 @@ function applyCharacterEvent(
       // to the same target" (SRD 2.0 p.52).
       const conditions = [...new Set(event.conditions.map((c) => c.trim()).filter((c) => c !== ''))];
       return ok(withCharacter(state, event.characterId, { ...sheet, conditions }));
+    }
+
+    case 'equipArmor': {
+      const t = equipArmorOnSheet(sheet, event.armorId);
+      if (!t.ok) return fail('rejected', t.effect.message ?? 'cannot equip that armor');
+      return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
+    }
+
+    case 'equipWeapon': {
+      const t = equipWeaponOnSheet(sheet, event.slot, event.weaponId, state.rest !== null);
+      if (!t.ok) return fail('rejected', t.effect.message ?? 'cannot equip that weapon');
+      return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
 
     case 'setTransformation': {

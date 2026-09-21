@@ -317,6 +317,106 @@ describe('conditions', () => {
   });
 });
 
+describe('changing equipment in play', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  it('rebuilds the Armor Score and thresholds from the piece worn', () => {
+    const armor = srd().armor.find((a) => a.tier === 2);
+    if (armor === undefined) throw new Error('no tier 2 armor in the SRD data');
+
+    const next = apply(room, ALEX, {
+      type: 'equipArmor',
+      characterId: ALEX.id,
+      armorId: armor.id,
+    });
+    const character = next.characters[ALEX.id]?.character;
+    expect(character?.armorScore).toBe(armor.baseScore);
+    expect(character?.thresholds.major).toBe(armor.baseThresholds.major + (character?.level ?? 1));
+    // The two copies the schema insists agree.
+    expect(character?.major).toBe(character?.thresholds.major);
+  });
+
+  it('leaves no Armor Slots marked, since the slots belong to the piece', () => {
+    let next = apply(room, GM, { type: 'markArmorSlot', characterId: ALEX.id, amount: 2 });
+    expect(next.characters[ALEX.id]?.armorSlotsMarked).toBe(2);
+
+    const armor = srd().armor[1];
+    if (armor === undefined) throw new Error('no second armor in the SRD data');
+    next = apply(next, ALEX, { type: 'equipArmor', characterId: ALEX.id, armorId: armor.id });
+    expect(next.characters[ALEX.id]?.armorSlotsMarked).toBe(0);
+  });
+
+  it('takes armor off, leaving level-based thresholds and no slots', () => {
+    const next = apply(room, ALEX, { type: 'equipArmor', characterId: ALEX.id, armorId: null });
+    const character = next.characters[ALEX.id]?.character;
+    expect(character?.armorScore).toBe(0);
+    expect(character?.thresholds).toEqual({
+      major: character?.level,
+      severe: (character?.level ?? 1) * 2,
+    });
+  });
+
+  it('charges a Stress for a weapon swap outside a rest, and nothing during one', () => {
+    const weapon = srd().weapons.find((w) => w.category === 'primary' && w.burden === 'oneHanded');
+    if (weapon === undefined) throw new Error('no one-handed primary weapon');
+
+    const swapped = apply(room, ALEX, {
+      type: 'equipWeapon',
+      characterId: ALEX.id,
+      slot: 'primary',
+      weaponId: weapon.id,
+    });
+    expect(swapped.characters[ALEX.id]?.stressMarked).toBe(1);
+    expect(swapped.characters[ALEX.id]?.character.equipment.primaryWeaponId).toBe(weapon.id);
+
+    const resting = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    const free = apply(resting, ALEX, {
+      type: 'equipWeapon',
+      characterId: ALEX.id,
+      slot: 'primary',
+      weaponId: weapon.id,
+    });
+    expect(free.characters[ALEX.id]?.stressMarked).toBe(0);
+  });
+
+  it('refuses a second weapon alongside a two-handed one', () => {
+    const twoHanded = srd().weapons.find(
+      (w) => w.category === 'primary' && w.burden === 'twoHanded',
+    );
+    const secondary = srd().weapons.find((w) => w.category === 'secondary');
+    if (twoHanded === undefined || secondary === undefined) throw new Error('missing weapons');
+
+    const armed = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    const withBig = apply(armed, ALEX, {
+      type: 'equipWeapon',
+      characterId: ALEX.id,
+      slot: 'primary',
+      weaponId: twoHanded.id,
+    });
+    expect(
+      refusal(withBig, ALEX, {
+        type: 'equipWeapon',
+        characterId: ALEX.id,
+        slot: 'secondary',
+        weaponId: secondary.id,
+      }),
+    ).toBe('rejected');
+  });
+
+  it('refuses equipment that is not in the SRD, and changes made for somebody else', () => {
+    expect(
+      refusal(room, ALEX, { type: 'equipArmor', characterId: ALEX.id, armorId: 'plot-armor' }),
+    ).toBe('rejected');
+
+    expect(
+      refusal(room, ALEX, { type: 'equipArmor', characterId: SAM.id, armorId: null }),
+    ).toBe('notYourCharacter');
+  });
+});
+
 describe('transformations', () => {
   let room: RoomState;
   beforeEach(() => {

@@ -357,6 +357,21 @@ export const en: Record<keyof typeof es, string> = {
   // character sheet: conditions (SRD 2.0 p.52)
 
   // character sheet: transformations (SRD 2.0 p.42)
+
+  // character sheet: changing equipment in play (SRD 2.0 p.55)
+  'sheet.equipment.title': 'Equipment',
+  'sheet.equipment.primary': 'Primary weapon',
+  'sheet.equipment.secondary': 'Secondary weapon',
+  'sheet.equipment.noSecondary': 'None',
+  'sheet.equipment.armor': 'Armor',
+  'sheet.equipment.noArmor': 'No armor',
+  'sheet.equipment.score': 'Score {score}',
+  'sheet.equipment.freeNow': 'During a rest, swapping a weapon is free.',
+  'sheet.equipment.costsStress': 'Outside a rest, swapping a weapon costs a Stress.',
+  'effect.unknownArmor': 'That armor is not in the SRD.',
+  'effect.unknownWeapon': 'That weapon is not in the SRD.',
+  'effect.needsBothHands': 'That pair needs more hands than you have.',
+  'effect.armorEquipped': 'Armor changed: Score {score}, thresholds {major}/{severe}.',
   'sheet.transformation.title': 'Transformation',
   'sheet.transformation.pick': 'Transformation',
   'sheet.transformation.none': 'None',

@@ -32,6 +32,9 @@ import {
   type Gold,
   type GoldUnit,
   type IncomingDamageType,
+  canHold,
+  equipArmor,
+  weaponSwapCost,
   type DeathMoveChoice,
   type DeathMoveOutcome,
   type LevelUpChoices,
@@ -147,6 +150,10 @@ export type SheetEffectCode =
   | 'levelUpRejected'
   | 'unknownMulticlass'
   | 'unknownExperience'
+  | 'unknownArmor'
+  | 'unknownWeapon'
+  | 'needsBothHands'
+  | 'armorEquipped'
   | 'diedInBlazeOfGlory'
   | 'riskedAndLost'
   | 'riskedAndSurvived'
@@ -432,6 +439,92 @@ export function makeDeathMove(
       stress: split.stress,
     }),
   };
+}
+
+export interface EquipResult extends SheetTransition {
+  ok: boolean;
+}
+
+/**
+ * Puts on a different piece of armor, or takes it off (SRD 2.0 p.55).
+ *
+ * The piece worn sets both the Armor Score and the base damage thresholds, so this
+ * rebuilds the two numbers the sheet had been carrying since character creation.
+ * Marked Armor Slots belong to the piece, so changing armor leaves none marked.
+ */
+export function equipArmorOnSheet(sheet: SheetState, armorId: string | null): EquipResult {
+  const armor = armorId === null ? null : srd().armor.find((a) => a.id === armorId) ?? null;
+  if (armorId !== null && armor === null) {
+    return { sheet, ok: false, effect: coded('unknownArmor', 'No such armor in the SRD.') };
+  }
+
+  const worn = equipArmor(armor, sheet.character.level);
+  return {
+    sheet: {
+      ...sheet,
+      armorSlotsMarked: 0,
+      character: {
+        ...sheet.character,
+        armorScore: worn.armorScore,
+        major: worn.thresholds.major,
+        severe: worn.thresholds.severe,
+        thresholds: worn.thresholds,
+        equipment: { ...sheet.character.equipment, armorId: armorId ?? '' },
+      },
+    },
+    ok: true,
+    effect: coded('armorEquipped', 'Armor changed.', {
+      score: worn.armorScore,
+      major: worn.thresholds.major,
+      severe: worn.thresholds.severe,
+    }),
+  };
+}
+
+/**
+ * Swaps a weapon into an active slot. Free during a rest, a Stress otherwise, and
+ * refused when the two weapons need more hands than a character has.
+ */
+export function equipWeaponOnSheet(
+  sheet: SheetState,
+  slot: 'primary' | 'secondary',
+  weaponId: string | null,
+  duringRest: boolean,
+): EquipResult {
+  const weapon = weaponId === null ? null : srd().weapons.find((w) => w.id === weaponId) ?? null;
+  if (weaponId !== null && weapon === null) {
+    return { sheet, ok: false, effect: coded('unknownWeapon', 'No such weapon in the SRD.') };
+  }
+
+  const equipment = sheet.character.equipment;
+  const other =
+    slot === 'primary'
+      ? equipment.secondaryWeaponId === null
+        ? null
+        : srd().weapons.find((w) => w.id === equipment.secondaryWeaponId) ?? null
+      : srd().weapons.find((w) => w.id === equipment.primaryWeaponId) ?? null;
+
+  const primary = slot === 'primary' ? weapon : other;
+  const secondary = slot === 'primary' ? other : weapon;
+  if (!canHold(primary, secondary)) {
+    return { sheet, ok: false, effect: coded('needsBothHands', 'That pair needs more hands.') };
+  }
+
+  const cost = weaponSwapCost(duringRest);
+  const paid = cost === 0 ? { sheet, effect: noEffect } : markSheetStress(sheet, cost);
+  // Marking Stress can cost a Hit Point instead when the track is full, which the
+  // transition reports; either way the swap happens.
+  const next: SheetState = {
+    ...paid.sheet,
+    character: {
+      ...paid.sheet.character,
+      equipment:
+        slot === 'primary'
+          ? { ...equipment, primaryWeaponId: weaponId ?? equipment.primaryWeaponId }
+          : { ...equipment, secondaryWeaponId: weaponId },
+    },
+  };
+  return { sheet: next, ok: true, effect: cost === 0 ? noEffect : paid.effect };
 }
 
 /** Waking from unconsciousness, which an ally's healing or a long rest does. */
