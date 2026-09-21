@@ -126,6 +126,7 @@ export const en: Record<keyof typeof es, string> = {
   'campaigns.namePlaceholder': 'Tuesday group',
   'campaigns.creating': 'Creating…',
   'campaigns.create': 'Create campaign',
+  'campaigns.noneHint': 'A GM creates a campaign above and adds players to it by username. Ask yours to add you, or make one yourself.',
   'campaigns.none': 'You do not belong to any campaign yet.',
   'campaigns.gmChip': 'GM',
   'campaigns.memberCount': '{count, plural, one{# player} other{# players}}',

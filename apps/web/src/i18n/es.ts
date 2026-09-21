@@ -134,6 +134,7 @@ export const es = {
   'campaigns.namePlaceholder': 'Grupo del martes',
   'campaigns.creating': 'Creando…',
   'campaigns.create': 'Crear campaña',
+  'campaigns.noneHint': 'Un GM crea una campaña arriba y añade jugadores por su nombre de usuario. Pide que te añadan, o crea una tú.',
   'campaigns.none': 'Todavía no perteneces a ninguna campaña.',
   'campaigns.gmChip': 'DJ',
   'campaigns.memberCount': '{count, plural, one{# jugador} other{# jugadores}}',

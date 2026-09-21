@@ -75,6 +75,9 @@ export function CampaignsRoute({
       {campaigns.length === 0 ? (
         <div className="panel">
           <p className="muted">{t('campaigns.none')}</p>
+          {/* An empty list is the first thing a new account sees, so it says what
+              to do next rather than only that there is nothing here. */}
+          <p className="muted">{t('campaigns.noneHint')}</p>
         </div>
       ) : (
         <div className="grid cols-2">

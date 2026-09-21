@@ -7,14 +7,32 @@ Tamaños: **S** < medio día · **M** 1–2 días · **L** 3+ días.
 
 ## Estado al 2026-09-21
 
-Rama `fix/fase-1-criticos`, 33 commits, typecheck limpio y 583 tests verdes (eran 180).
+Rama `fix/fase-1-criticos`, 45 commits, typecheck limpio y 590 tests verdes (eran 180).
 
 - **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4.
 - **Track Marca completo**: B1–B5, y la atribución ya nombra el SRD 2.0.
 - **Track SRD 2.0 completo salvo mecánicas nuevas**: D1–D7 y D10–D11 hechos; de D8 entraron las reglas que rompían.
 - **Fase 3 completa**: M1–M14.
 - **Mecánicas nuevas del 2.0 completas**: N1–N6.
-- **Siguiente**: Fase 2, usabilidad (U1–U21), que se dejó para el final a propósito.
+- **Fase 2 completa**: U1–U21, que se dejó para el final a propósito.
+- **Queda**: Fases 4, 5 y 6 (herramientas nuevas, resto del rediseño visual y operación), que el propio plan sitúa después de una temporada jugando con todo lo anterior.
+
+Lo hecho de Fase 2, en detalle:
+
+| # | Qué entró |
+|---|---|
+| U1–U3 ✅ | La mesa vista desde la hoja de un jugador: reserva de Miedo, aviso cuando el foco está en ti, y PG/Estrés/Esperanza de cada compañero. El token con el foco lleva un anillo cálido en el mapa. |
+| U4, U6, U7 ✅ | Diálogos con foco atrapado, foco devuelto al cerrar y Escape que sólo cierra el de arriba. Confirmación antes de salir de la campaña y de empezar el personaje de cero. Avisos apilados, con pausa al pasar por encima y anuncio asertivo cuando son un rechazo. |
+| U5 ✅ | Seis formularios de verdad, con Enter que envía y pistas de autocompletado. Mínimo de ocho caracteres para las contraseñas, comprobado en el esquema del cable y no sólo en el navegador, más confirmación al cambiarla. |
+| U8 ✅ | La lista de campañas vacía dice qué hacer a continuación. |
+| U9–U12, U18 ✅ | Mapa: ajustar a pantalla, atajos de teclado (Esc, Supr, F, +/−), regla disponible también para jugadores, el token propio aparece donde estás mirando, ajuste a cuadrícula opcional y consciente del tamaño de la ficha, y pellizcar para hacer zoom. |
+| U13, U14 ✅ | Cuentas atrás que se pueden corregir, reiniciar y disparar. Adversarios por cantidad, con letra, y duplicar desde la propia ficha. |
+| U15 ✅ | La pantalla del GM se abre sobre el mapa como un panel flotante más. |
+| U16 ✅ | El log filtra por tipo de tirada y se contrae. |
+| U17 ✅ | Pantallas estrechas: barra superior y pasos que se desplazan en horizontal, cabeceras que se apilan, rejillas de dos columnas a una. El escritorio no cambia. |
+| U19 ✅ | Resumen del personaje antes de terminar la creación. |
+| U20 ✅ | Búsqueda del compendio en todas las listas a la vez, y las cartas de la hoja enlazan a su entrada. |
+| U21 ✅ | Plurales de verdad en los textos, en lugar de «carta(s)». |
 
 Lo hecho de Fase 3, en detalle:
 
