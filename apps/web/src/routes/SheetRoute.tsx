@@ -18,6 +18,7 @@ import { EquipmentPanel } from '../components/sheet/EquipmentPanel.js';
 import { InventoryPanel } from '../components/sheet/InventoryPanel.js';
 import { BeastformPanel } from '../components/sheet/BeastformPanel.js';
 import { TagTeamPanel, type TagTeam } from '../components/sheet/TagTeamPanel.js';
+import { PartyStrip, type PartyMember } from '../components/sheet/PartyStrip.js';
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -102,6 +103,12 @@ interface SheetRouteProps {
   party?: readonly { id: string; name: string }[];
   /** The Tag Team Roll in progress, when a campaign is joined. */
   tagTeam?: TagTeam | null;
+  /** The whole table's sheets, for the party strip. Empty when playing offline. */
+  partyMembers?: readonly PartyMember[];
+  /** The GM's Fear pool, which players are allowed to see. Null offline. */
+  fear?: number | null;
+  /** True while the spotlight is on this character. */
+  spotlit?: boolean;
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -127,6 +134,9 @@ export function SheetRoute({
   rest = null,
   party = [],
   tagTeam = null,
+  partyMembers = [],
+  fear = null,
+  spotlit = false,
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -682,6 +692,12 @@ export function SheetRoute({
                 forMe({ type: 'equipArmor', armorId }),
               )
             }
+          />
+          <PartyStrip
+            members={partyMembers}
+            characterId={characterId ?? null}
+            fear={fear}
+            spotlit={spotlit}
           />
           {characterId !== null && characterId !== undefined && party.length > 1 ? (
             <TagTeamPanel

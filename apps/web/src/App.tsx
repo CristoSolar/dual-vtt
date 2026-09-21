@@ -83,6 +83,18 @@ function Shell() {
     [campaign.room],
   );
 
+  /** Everyone's sheet, for the party strip on a player's own sheet. */
+  const partyMembers = useMemo(
+    () =>
+      (campaign.room?.players ?? []).flatMap((player) => {
+        const sheet =
+          player.characterId === null ? undefined : campaign.room?.characters[player.characterId];
+        if (sheet === undefined || player.characterId === null) return [];
+        return [{ id: player.characterId, name: player.name, sheet }];
+      }),
+    [campaign.room],
+  );
+
   const mySheet = useMemo(() => {
     if (campaign.room === null || auth.user === null) return null;
     return campaign.room.characters[auth.user.id] ?? null;
@@ -318,6 +330,9 @@ function Shell() {
                 rest={campaign.room?.rest ?? null}
                 party={party}
                 tagTeam={campaign.room?.tagTeam ?? null}
+                partyMembers={partyMembers}
+                fear={campaign.room?.fear ?? null}
+                spotlit={campaign.room?.spotlight === account.id}
               />
             )
           }

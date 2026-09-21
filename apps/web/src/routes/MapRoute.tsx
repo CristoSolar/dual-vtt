@@ -330,6 +330,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             scene={drawnScene ?? scene}
             isGameMaster={isGameMaster}
             viewerId={viewerId}
+            spotlightId={room.spotlight}
             width={stageSize.width}
             height={stageSize.height}
             selectedTokenId={selectedTokenId}

@@ -22,6 +22,8 @@ export interface MapCanvasProps {
   isGameMaster: boolean;
   /** Session id of the viewer, used to decide which tokens they may drag. */
   viewerId: string | null;
+  /** The account the spotlight is on, so their token can wear a ring. */
+  spotlightId?: string | null;
   width: number;
   height: number;
   selectedTokenId: string | null;
@@ -64,6 +66,7 @@ export function MapCanvas({
   scene,
   isGameMaster,
   viewerId,
+  spotlightId = null,
   width,
   height,
   selectedTokenId,
@@ -282,6 +285,7 @@ export function MapCanvas({
             key={token.id}
             token={token}
             selected={token.id === selectedTokenId}
+            spotlit={spotlightId !== null && token.ownerId === spotlightId}
             draggable={canDrag(token)}
             health={health?.[token.id]}
             onSelect={() => onSelectToken(token.id)}
@@ -441,6 +445,8 @@ function roundedRectPath(ctx: Konva.Context, width: number, height: number, radi
 interface TokenShapeProps {
   token: Token;
   selected: boolean;
+  /** True while the spotlight is on this token's owner. */
+  spotlit: boolean;
   draggable: boolean;
   health: { marked: number; total: number } | undefined;
   onSelect: () => void;
@@ -457,6 +463,7 @@ const PIP_GAP = 2;
 function TokenShape({
   token,
   selected,
+  spotlit,
   draggable,
   health,
   onSelect,
@@ -529,6 +536,21 @@ function TokenShape({
         strokeWidth={2}
         listening={false}
       />
+      {/* The spotlight is a warm ring further out than selection, so a token can
+          be both spotlit and selected without the two rings merging. */}
+      {spotlit ? (
+        <Rect
+          x={-10}
+          y={-10}
+          width={token.width + 20}
+          height={token.height + 20}
+          fill="transparent"
+          cornerRadius={radius + 10}
+          stroke="#e8b44a"
+          strokeWidth={3}
+          listening={false}
+        />
+      ) : null}
       {/* Selection reads as a brighter, wider ring outside the band, so it
           never has to compete with the band for the same pixels. */}
       {selected ? (

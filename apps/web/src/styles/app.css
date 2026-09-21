@@ -2945,3 +2945,10 @@ details summary {
 .cols-1 {
   grid-template-columns: 1fr;
 }
+
+/* The spotlight cue on a player's own sheet, matching the ring their token wears. */
+.spotlit {
+  border-left: 3px solid #e8b44a;
+  padding-left: 0.6rem;
+  font-weight: 600;
+}
