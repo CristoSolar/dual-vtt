@@ -372,6 +372,7 @@ function Shell() {
                 isGameMaster={isGameMaster}
                 viewerId={account.id}
                 campaignName={activeCampaignName}
+                authToken={auth.token}
                 send={campaign.send}
               />
             )

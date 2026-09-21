@@ -29,8 +29,15 @@ async function readDimensions(file: File): Promise<{ width: number; height: numb
  * The body is the raw file, so there is no multipart parsing on either side. These
  * client-side checks are for a fast error message only — the server validates the
  * bytes itself and is the one that decides.
+ *
+ * Writing to the server's disk needs an account, so the session token travels with
+ * the file the same way it does on every other write.
  */
-export async function uploadImage(file: File): Promise<SceneImage> {
+export async function uploadImage(file: File, token: string | null): Promise<SceneImage> {
+  if (token === null || token === '') {
+    throw new Error('Sign in again before uploading.');
+  }
+
   if (!ACCEPTED_TYPES.includes(file.type)) {
     throw new Error('Maps must be a PNG, JPEG, GIF, or WEBP image.');
   }
@@ -42,7 +49,7 @@ export async function uploadImage(file: File): Promise<SceneImage> {
 
   const response = await fetch(`${SERVER_URL}/uploads`, {
     method: 'POST',
-    headers: { 'content-type': file.type },
+    headers: { 'content-type': file.type, authorization: `Bearer ${token}` },
     body: file,
   });
 

@@ -27,6 +27,8 @@ interface MapRouteProps {
   viewerId: string | null;
   /** Shown in the GM screen's header when it is opened over the map. */
   campaignName?: string;
+  /** The session token, which uploads need: the endpoint writes to disk. */
+  authToken: string | null;
   send: (event: RoomEvent) => void;
 }
 
@@ -92,6 +94,7 @@ export function MapRoute({
   isGameMaster,
   viewerId,
   campaignName = '',
+  authToken,
   send,
 }: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
@@ -206,7 +209,7 @@ export function MapRoute({
     setTokenImageError(null);
     setUploadingTokenImage(true);
     try {
-      const image = await uploadImage(file);
+      const image = await uploadImage(file, authToken);
       updateSelected({ image });
     } catch (error) {
       setTokenImageError(error instanceof Error ? error.message : t('map.uploadFailed'));
@@ -304,7 +307,7 @@ export function MapRoute({
     setUploadError(null);
     setUploading(true);
     try {
-      const image = await uploadImage(file);
+      const image = await uploadImage(file, authToken);
       send({ type: 'setSceneImage', sceneId: scene.id, image });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : t('map.uploadFailed'));
