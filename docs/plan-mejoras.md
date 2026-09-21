@@ -7,16 +7,31 @@ Tamaños: **S** < medio día · **M** 1–2 días · **L** 3+ días.
 
 ## Estado al 2026-09-21
 
-Rama `fix/fase-1-criticos`, 6 commits, typecheck limpio y 478 tests verdes (eran 180).
+Rama `fix/fase-1-criticos`, 10 commits, typecheck limpio y 481 tests verdes (eran 180).
 
-- **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4. Ver detalle en cada tabla, marcado ✅.
-- **Track Marca completo**: B1–B5.
-- **Track SRD 2.0 iniciado**: hechas las dos reglas que rompían sin depender de datos (Miedo inicial por PJ, un solo dado de ventaja con excepción de Ayudar a un Aliado). Pendiente todo lo demás.
+- **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4.
+- **Track Marca completo**: B1–B5, y la atribución ya nombra el SRD 2.0.
+- **Track SRD 2.0 completo salvo mecánicas nuevas**: D1–D7 y D10–D11 hechos; de D8 entraron las dos reglas que rompían sin depender de datos. Quedan N1–N6 y D9 (transformaciones en la hoja), que son Fase 3.
 
-Dos ajustes respecto del plan original, tomados al implementar:
+Contenido migrado, todo por extracción y verificado reproduciendo los datos 1.0:
+
+| Archivo | 1.0 | 2.0 | Reproducen exacto |
+|---|---|---|---|
+| clases / subclases | 9 / 18 | 13 / 26 | 7 de 9 · 16 de 18 |
+| cartas de dominio | 189 | 210 | 186 de 189 |
+| ancestros / comunidades | 18 / 9 | 24 / 15 | 18 de 18 · 9 de 9 |
+| adversarios / entornos | 129 / 19 | 264 / 47 | 129 de 129 · 19 de 19 |
+| armas / armaduras | 204 / 34 | 315 / 69 | 194 de 195 · 34 de 34 |
+| loot / consumibles | 60 / 60 | 120 / 120 | 60 de 60 cada uno |
+
+Las diferencias que quedan están explicadas una por una: texto impreso que los datos escritos a mano omitían, tipografía que el 2.0 cambió, y tres sitios donde el dato viejo se había tragado texto del capítulo siguiente y ahora se corta.
+
+Decisiones tomadas al implementar, distintas del plan original:
 
 - **Estrés como coste** (movimiento bloqueado con el track lleno) no se implementó: hoy no hay ningún movimiento con coste de Estrés salvo recuperar cartas, que ya lo verifica. Entra con M8 (features de Esperanza), que es cuando aparecen los consumidores.
-- **La atribución sigue diciendo SRD 1.0** porque los datos siguen siendo 1.0. Cambia junto con D5–D7.
+- **Armas y armaduras pasaron de transcripción a extracción**: a 315 filas ya no eran transcribibles a mano. `gen-equipment.mjs` y `gen-heritage.mjs` son nuevos; `gen-weapons.mjs` y `gen-armor.mjs` se borraron.
+- **Glosario español normalizado** donde había derivado: «Tirada de Lanzamiento» y no «de Conjuro», «Conocimiento» y no «Saber» para el rasgo Knowledge, «movimiento de muerte» y no «tirada de muerte» porque es lo que dice la interfaz, una sola forma de «downtime move», y «escalón» para *tier* en lugar de «nivel», que se confundía con *level*.
+- **La silla de combate es arma primaria**, no una categoría propia: el SRD dice que se equipa en esa ranura.
 
 ---
 
@@ -99,17 +114,17 @@ Brawler trae tabla de "martial stances" por tier sin análogo actual.
 
 | # | Paso | Notas | Tam. |
 |---|---|---|---|
-| D1 | `pdftotext -bbox-layout` del 2.0 y actualizar `glyphs.mjs` | Añadir U+E547=7, U+E548=8, U+E549=9 (verificados en `Minion (7)`, `Horde (8/HP)`, `Minion (9)`). Sin esto `assertNoPua` lanza. | S |
-| D2 | Reescribir `gen-cards.mjs` contra el apéndice p206–224 | Formato plano: `TITLE / Level N Domain Type / Recall Cost: N / texto`. 10×21. Mucho más fiable que la extracción actual. | S |
-| D3 | `gen-adversaries.mjs`: nuevo rango de páginas, regex `Action\|Reaction\|Passive\|Evolution`, slugs con `:` | Añadir `kind: 'evolution'` al schema. | S |
-| D4 | `gen-environments.mjs`, `gen-loot.mjs` (dos tablas por sección, id con prefijo `core-`/`additional-`) | | S |
-| D5 | Transcribir a mano weapons (+99), wheelchair (+12), armor (+35) | Scripts inline. Tedioso, no técnico. | M |
-| D6 | JSON manuales: 4 clases, 8 subclases, Dread, 4 ancestros, 5 comunidades, 6 transformaciones + `gen-transformations.mjs` o a mano | Añadir `transformations` a `schemas`, `fileNames`, ambos `raw`. Brawler: campo `stances`. | M |
-| D7 | Traducción `es/` de todo lo nuevo con paridad de ids | Test de paridad ya existe y fallará hasta completar. Volumen grande (≈+400 entradas). | L |
+| D1 ✅ | `pdftotext -bbox-layout` del 2.0 y actualizar `glyphs.mjs` | Añadir U+E547=7, U+E548=8, U+E549=9 (verificados en `Minion (7)`, `Horde (8/HP)`, `Minion (9)`). Sin esto `assertNoPua` lanza. | S |
+| D2 ✅ | Reescribir `gen-cards.mjs` contra el apéndice p206–224 | Formato plano: `TITLE / Level N Domain Type / Recall Cost: N / texto`. 10×21. Mucho más fiable que la extracción actual. | S |
+| D3 ✅ | `gen-adversaries.mjs`: nuevo rango de páginas, regex `Action\|Reaction\|Passive\|Evolution`, slugs con `:` | Añadir `kind: 'evolution'` al schema. | S |
+| D4 ✅ | `gen-environments.mjs`, `gen-loot.mjs` (dos tablas por sección, id con prefijo `core-`/`additional-`) | | S |
+| D5 ✅ | Transcribir a mano weapons (+99), wheelchair (+12), armor (+35) | Scripts inline. Tedioso, no técnico. | M |
+| D6 ✅ | JSON manuales: 4 clases, 8 subclases, Dread, 4 ancestros, 5 comunidades, 6 transformaciones + `gen-transformations.mjs` o a mano | Añadir `transformations` a `schemas`, `fileNames`, ambos `raw`. Brawler: campo `stances`. | M |
+| D7 ✅ | Traducción `es/` de todo lo nuevo con paridad de ids | Test de paridad ya existe y fallará hasta completar. Volumen grande (≈+400 entradas). | L |
 | D8 | Reglas: Miedo inicial, un dado de ventaja, Estrés como coste, daño masivo opcional, Spellcast/desarmado | Tests primero en `rules`. | M |
 | D9 | Transformaciones en hoja y wizard (paso opcional del GM) | N1. | M |
-| D10 | Primer de reglas en `en.ts`/`es.ts`: corregir Hidden (desventaja contra el objetivo, p52), descansos (3 cortos → largo, interrupción, Miedo del GM), Miedo inicial, Estrés bloqueante; todas las páginas citadas pasan de 1.0 a 2.0 (47–54, 72). | `help.rules.*` | S |
-| D11 | `NOTICE.md`, README y pantalla de ayuda: aviso de SRD 2.0 con el texto exacto de la licencia (ver Track Marca). | | S |
+| D10 ✅ | Primer de reglas en `en.ts`/`es.ts`: corregir Hidden (desventaja contra el objetivo, p52), descansos (3 cortos → largo, interrupción, Miedo del GM), Miedo inicial, Estrés bloqueante; todas las páginas citadas pasan de 1.0 a 2.0 (47–54, 72). | `help.rules.*` | S |
+| D11 ✅ | `NOTICE.md`, README y pantalla de ayuda: aviso de SRD 2.0 con el texto exacto de la licencia (ver Track Marca). | | S |
 
 **Excluir de la extracción**: el Witherwild Campaign Frame (p184–189). DPCGL §1.9.3: los Campaign Frames solo pueden compartirse en actual play; no se pueden republicar ni adaptar.
 
