@@ -173,6 +173,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
           <Downtime room={room} send={send} />
           <GroupAction room={room} send={send} />
           <PartyOverview room={room} send={send} />
+          <SpotlightTracker room={room} send={send} />
           <Countdowns countdowns={room.countdowns} send={send} />
           <BattlePoints room={room} />
           <Adversaries room={room} send={send} />
@@ -236,6 +237,64 @@ function FearTrack({ fear, send }: { fear: number; send: (event: RoomEvent) => v
         })}
       </ul>
       <p className="muted">{t('gm.fearHint')}</p>
+    </div>
+  );
+}
+
+/**
+ * The optional Spotlight Tracker (SRD 2.0 p.47). Off by default, because the SRD
+ * prints it as a tool for groups that want a more traditional action economy.
+ * Tokens are spent by the reducer on each action roll, not by anything here.
+ */
+function SpotlightTracker({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  const tracker = room.spotlightTokens;
+  const nameOf = (id: string) =>
+    room.players.find((player) => player.characterId === id)?.name ?? id;
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.spotlightTokens.title')}</SectionHead>
+      {tracker === null ? (
+        <>
+          <p className="muted">{t('gm.spotlightTokens.hint')}</p>
+          <button
+            type="button"
+            onClick={() => send({ type: 'setSpotlightTracker', tokensPerPlayer: 3 })}
+          >
+            {t('gm.spotlightTokens.turnOn')}
+          </button>
+        </>
+      ) : (
+        <>
+          <ul>
+            {Object.entries(tracker.left).map(([id, left]) => (
+              <li key={id}>
+                {t('gm.spotlightTokens.left', {
+                  name: nameOf(id),
+                  left,
+                  total: tracker.perPlayer,
+                })}
+              </li>
+            ))}
+          </ul>
+          <div className="row">
+            <button
+              type="button"
+              onClick={() =>
+                send({ type: 'setSpotlightTracker', tokensPerPlayer: tracker.perPlayer })
+              }
+            >
+              {t('gm.spotlightTokens.refill')}
+            </button>
+            <button
+              type="button"
+              onClick={() => send({ type: 'setSpotlightTracker', tokensPerPlayer: null })}
+            >
+              {t('gm.spotlightTokens.turnOff')}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

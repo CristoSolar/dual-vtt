@@ -265,6 +265,7 @@ function gmRoom(): RoomState {
     consecutiveShortRests: 0,
     groupAction: null,
     tagTeam: null,
+    spotlightTokens: null,
     map: createMapState(),
     rollLog: [],
   };
@@ -363,6 +364,7 @@ describe('GM panel renders', () => {
       consecutiveShortRests: 0,
       groupAction: null,
       tagTeam: null,
+      spotlightTokens: null,
       map: createMapState(),
       rollLog: [
         {

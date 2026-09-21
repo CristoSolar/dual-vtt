@@ -700,6 +700,50 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('spends a spotlight token per action roll and refills when everyone is out', () => {
+    const room = roomWithPlayers();
+    expect(
+      refusal(room, ALEX, { type: 'setSpotlightTracker', tokensPerPlayer: 3 }),
+    ).toBe('notGameMaster');
+
+    const on = apply(room, GM, { type: 'setSpotlightTracker', tokensPerPlayer: 1 });
+    expect(on.spotlightTokens?.left).toEqual({ [ALEX.id]: 1, [SAM.id]: 1 });
+
+    const request = {
+      label: 'Act',
+      modifiers: 0,
+      difficulty: 10,
+      advantage: 0,
+      disadvantage: 0,
+      experiences: [],
+      helpDice: 0,
+      reaction: false,
+    };
+
+    const acted = apply(on, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    expect(acted.spotlightTokens?.left[ALEX.id]).toBe(0);
+
+    // The spotlight cannot swing to a player who is out of tokens.
+    expect(refusal(acted, GM, { type: 'setSpotlight', spotlight: ALEX.id })).toBe(
+      'noSpotlightTokens',
+    );
+
+    // The last token spent refills everybody.
+    const refilled = apply(acted, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    expect(refilled.spotlightTokens?.left).toEqual({ [ALEX.id]: 1, [SAM.id]: 1 });
+
+    // A reaction roll is not taking an action, so it costs no token.
+    const reacted = apply(refilled, ALEX, {
+      type: 'rollDuality',
+      characterId: ALEX.id,
+      request: { ...request, reaction: true },
+    });
+    expect(reacted.spotlightTokens?.left[ALEX.id]).toBe(1);
+
+    expect(apply(on, GM, { type: 'setSpotlightTracker', tokensPerPlayer: null }).spotlightTokens)
+      .toBeNull();
+  });
+
   it('carries the group action bonus into the lead roll and then closes it', () => {
     const room = roomWithPlayers();
     const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id });

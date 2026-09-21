@@ -225,6 +225,12 @@ export type CharacterRoomEvent = z.infer<typeof CharacterRoomEventSchema>;
 /** Intents only the GM may send. */
 export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   z.object({
+    // Turns the optional Spotlight Tracker on with this many tokens each, refills
+    // it at the same number, or turns it off with null (SRD 2.0 p.47).
+    type: z.literal('setSpotlightTracker'),
+    tokensPerPlayer: z.number().int().min(1).max(10).nullable(),
+  }),
+  z.object({
     // Opens a group action roll: this character leads, everyone else who rolls
     // while it is open is collaborating (SRD 2.0 p.48).
     type: z.literal('startGroupAction'),
@@ -439,6 +445,9 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.consecutiveShortRests !== after.consecutiveShortRests) {
     patch.consecutiveShortRests = after.consecutiveShortRests;
   }
+  if (before.spotlightTokens !== after.spotlightTokens) {
+    patch.spotlightTokens = after.spotlightTokens;
+  }
   if (before.groupAction !== after.groupAction) patch.groupAction = after.groupAction;
   if (before.tagTeam !== after.tagTeam) patch.tagTeam = after.tagTeam;
   if (before.map !== after.map) patch.map = after.map;
@@ -469,6 +478,7 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.consecutiveShortRests === undefined
       ? {}
       : { consecutiveShortRests: patch.consecutiveShortRests }),
+    ...(patch.spotlightTokens === undefined ? {} : { spotlightTokens: patch.spotlightTokens }),
     ...(patch.groupAction === undefined ? {} : { groupAction: patch.groupAction }),
     ...(patch.tagTeam === undefined ? {} : { tagTeam: patch.tagTeam }),
     ...(patch.map === undefined ? {} : { map: patch.map }),

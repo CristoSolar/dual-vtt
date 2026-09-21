@@ -200,6 +200,19 @@ export const RoomStateSchema = z.object({
     })
     .nullable()
     .default(null),
+  /**
+   * The optional Spotlight Tracker (SRD 2.0 p.47), or null when the table is not
+   * using it. Each player starts a scene with `perPlayer` tokens and spends one per
+   * action roll; when everyone is out, everyone refills.
+   */
+  spotlightTokens: z
+    .object({
+      perPlayer: z.number().int().min(1).max(10),
+      /** Character id -> tokens left. */
+      left: z.record(z.string(), z.number().int().min(0)),
+    })
+    .nullable()
+    .default(null),
   /** Scenes, tokens, and fog. Players receive only the active scene. */
   map: MapStateSchema,
 });
@@ -224,6 +237,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     consecutiveShortRests: 0,
     groupAction: null,
     tagTeam: null,
+    spotlightTokens: null,
     map: createMapState(),
   };
 }
@@ -276,6 +290,7 @@ export type RoomError =
   | 'characterIsGone'
   | 'unknownExperience'
   | 'unknownFeature'
+  | 'noSpotlightTokens'
   | 'noEnvironment'
   | 'featureSpent'
   | 'unknownTransformation'
@@ -370,6 +385,29 @@ function revealVisionForAll(scene: Scene): Scene {
   );
 }
 
+/**
+ * Spends one spotlight token, refilling everybody when that empties the last one:
+ * "Once every player has used all their available tokens, players refill" (SRD 2.0
+ * p.47). Returns the tracker unchanged when the table is not using the tool.
+ */
+function spendSpotlightToken(
+  tracker: RoomState['spotlightTokens'],
+  characterId: string,
+): RoomState['spotlightTokens'] {
+  if (tracker === null) return null;
+  const left = tracker.left[characterId];
+  if (left === undefined) return tracker;
+
+  const spent = { ...tracker.left, [characterId]: Math.max(0, left - 1) };
+  if (Object.values(spent).every((remaining) => remaining === 0)) {
+    const refilled = Object.fromEntries(
+      Object.keys(spent).map((id) => [id, tracker.perPlayer] as const),
+    );
+    return { ...tracker, left: refilled };
+  }
+  return { ...tracker, left: spent };
+}
+
 /** Spending this much Hope opens a Tag Team Roll (SRD 2.0 p.49). */
 export const TAG_TEAM_HOPE_COST = 3;
 
@@ -446,6 +484,24 @@ export function applyRoomEvent(
       return applyCharacterEvent(state, actor, event, sheet, rng, now);
     }
 
+    case 'setSpotlightTracker': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (event.tokensPerPlayer === null) return ok({ ...state, spotlightTokens: null });
+
+      // Turning it on, or refilling, gives every seated character the same number.
+      const left = Object.fromEntries(
+        state.players
+          .map((player) => player.characterId)
+          .filter((id): id is string => id !== null)
+          .map((id) => [id, event.tokensPerPlayer as number] as const),
+      );
+      return ok({
+        ...state,
+        spotlightTokens: { perPlayer: event.tokensPerPlayer, left },
+      });
+    }
+
     // --- group action rolls ---------------------------------------------------
     case 'startGroupAction': {
       const denied = gmOnly();
@@ -482,6 +538,15 @@ export function applyRoomEvent(
     case 'setSpotlight': {
       const denied = gmOnly();
       if (denied) return denied;
+      // "If the spotlight would swing to someone without any tokens, it swings to
+      // someone else instead" (SRD 2.0 p.47).
+      const tracker = state.spotlightTokens;
+      if (tracker !== null && event.spotlight !== null) {
+        const characterId = state.players.find((p) => p.id === event.spotlight)?.characterId;
+        if (characterId !== null && characterId !== undefined && tracker.left[characterId] === 0) {
+          return fail('noSpotlightTokens', 'that player is out of spotlight tokens');
+        }
+      }
       return ok({ ...state, spotlight: event.spotlight });
     }
     case 'setEnvironment': {
@@ -1126,6 +1191,12 @@ function applyCharacterEvent(
       } else if (leading) {
         // The lead roll is the group action: it closes when that roll lands.
         next = { ...next, groupAction: null };
+      }
+
+      // An action roll is taking an action, which is what a spotlight token pays
+      // for; a reaction is not (SRD 2.0 p.47).
+      if (request.reaction !== true) {
+        next = { ...next, spotlightTokens: spendSpotlightToken(next.spotlightTokens, event.characterId) };
       }
 
       return ok(appendEntries(next, [entry]), t.effect, [entry]);
