@@ -2964,3 +2964,17 @@ details summary {
   padding-left: 0.6rem;
   font-weight: 600;
 }
+
+/* A label a screen reader reads and nobody else sees. Used where the visible
+   context already names a field but the markup does not. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

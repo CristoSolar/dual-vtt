@@ -37,12 +37,28 @@ describe('auth schemas', () => {
   });
 
   it('validates create-player, change-password, and reset-password payload shapes', () => {
-    expect(CreatePlayerRequestSchema.safeParse({ username: 'alex', password: 'x' }).success).toBe(true);
+    expect(
+      CreatePlayerRequestSchema.safeParse({ username: 'alex', password: 'a-long-enough-one' })
+        .success,
+    ).toBe(true);
+    // A password under the minimum is refused at the boundary, not in the browser.
+    expect(CreatePlayerRequestSchema.safeParse({ username: 'alex', password: 'x' }).success).toBe(
+      false,
+    );
     expect(CreatePlayerRequestSchema.safeParse({ username: 'alex' }).success).toBe(false);
     expect(
       ChangePasswordRequestSchema.safeParse({ currentPassword: 'a', newPassword: 'b' }).success,
+    ).toBe(false);
+    expect(
+      ChangePasswordRequestSchema.safeParse({
+        currentPassword: 'a',
+        newPassword: 'a-long-enough-one',
+      }).success,
     ).toBe(true);
-    expect(ResetPasswordRequestSchema.safeParse({ newPassword: 'b' }).success).toBe(true);
+    expect(ResetPasswordRequestSchema.safeParse({ newPassword: 'b' }).success).toBe(false);
+    expect(
+      ResetPasswordRequestSchema.safeParse({ newPassword: 'a-long-enough-one' }).success,
+    ).toBe(true);
     expect(ResetPasswordRequestSchema.safeParse({ newPassword: '' }).success).toBe(false);
   });
 });

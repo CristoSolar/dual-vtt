@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 
 import { t } from '../i18n/index.js';
 
@@ -13,7 +13,8 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const submit = () => {
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
     if (pending || username.trim() === '' || password === '') return;
     onLogin(username.trim(), password);
   };
@@ -39,7 +40,9 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
             />
           </div>
 
-          <div className="login-form">
+          {/* A real form, so Enter submits and a password manager can see the
+              fields for what they are. */}
+          <form className="login-form" onSubmit={submit}>
             <div>
               <p className="login-overline">{t('login.overline')}</p>
               <h2 className="login-headline">{t('login.headline')}</h2>
@@ -48,6 +51,8 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
             <label htmlFor="login-username">{t('common.username')}</label>
             <input
               id="login-username"
+              name="username"
+              autoComplete="username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder={t('common.usernamePlaceholder')}
@@ -57,23 +62,25 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
             </label>
             <input
               id="login-password"
+              name="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') submit();
-              }}
             />
-            {error !== null ? <div className="errors mt-3">{error}</div> : null}
+            {error !== null ? (
+              <div className="errors mt-3" role="alert">
+                {error}
+              </div>
+            ) : null}
             <button
-              type="button"
+              type="submit"
               className="btn-primary mt-4"
               disabled={pending || username.trim() === '' || password === ''}
-              onClick={submit}
             >
               {pending ? t('login.submitting') : t('login.submit')}
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </div>

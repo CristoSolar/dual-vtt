@@ -27,19 +27,27 @@ export const LoginResponseSchema = z.object({
 });
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 
+/**
+ * The shortest password the server will store. It is checked here rather than in
+ * the browser alone, because the browser is not a trust boundary. Logging in is
+ * exempt: an account created before this rule still has to be able to sign in and
+ * change its password.
+ */
+export const MIN_PASSWORD_LENGTH = 8;
+
 export const CreatePlayerRequestSchema = z.object({
   username: z.string().min(1),
-  password: z.string().min(1),
+  password: z.string().min(MIN_PASSWORD_LENGTH),
 });
 export type CreatePlayerRequest = z.infer<typeof CreatePlayerRequestSchema>;
 
 export const ChangePasswordRequestSchema = z.object({
   currentPassword: z.string().min(1),
-  newPassword: z.string().min(1),
+  newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
 export type ChangePasswordRequest = z.infer<typeof ChangePasswordRequestSchema>;
 
 export const ResetPasswordRequestSchema = z.object({
-  newPassword: z.string().min(1),
+  newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
 export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>;

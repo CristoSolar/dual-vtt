@@ -75,32 +75,32 @@ describe('auth HTTP endpoints', () => {
   });
 
   it('requires the current password to change it, then the new one works', async () => {
-    await server.users.createUser('alex', 'initial-pw', 'player');
+    await server.users.createUser('alex', 'initial-password', 'player');
     const login = await fetch(`${server.url}/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username: 'alex', password: 'initial-pw' }),
+      body: JSON.stringify({ username: 'alex', password: 'initial-password' }),
     });
     const { token } = (await login.json()) as { token: string };
 
     const wrongCurrent = await fetch(`${server.url}/change-password`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
-      body: JSON.stringify({ currentPassword: 'nope', newPassword: 'new-pw' }),
+      body: JSON.stringify({ currentPassword: 'nope', newPassword: 'new-password' }),
     });
     expect(wrongCurrent.status).toBe(401);
 
     const changed = await fetch(`${server.url}/change-password`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
-      body: JSON.stringify({ currentPassword: 'initial-pw', newPassword: 'new-pw' }),
+      body: JSON.stringify({ currentPassword: 'initial-password', newPassword: 'new-password' }),
     });
     expect(changed.status).toBe(204);
 
     const reLogin = await fetch(`${server.url}/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username: 'alex', password: 'new-pw' }),
+      body: JSON.stringify({ username: 'alex', password: 'new-password' }),
     });
     expect(reLogin.status).toBe(200);
   });
@@ -116,7 +116,7 @@ describe('auth HTTP endpoints', () => {
     const created = await fetch(`${server.url}/users`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'newplayer', password: 'temp-pw' }),
+      body: JSON.stringify({ username: 'newplayer', password: 'temporary-pw' }),
     });
     expect(created.status).toBe(201);
     const createdBody = (await created.json()) as { id: string; mustChangePassword: boolean };
@@ -125,7 +125,7 @@ describe('auth HTTP endpoints', () => {
     const playerLogin = await fetch(`${server.url}/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username: 'newplayer', password: 'temp-pw' }),
+      body: JSON.stringify({ username: 'newplayer', password: 'temporary-pw' }),
     });
     const { token: playerToken } = (await playerLogin.json()) as { token: string };
 
@@ -142,14 +142,14 @@ describe('auth HTTP endpoints', () => {
     const resetOk = await fetch(`${server.url}/users/${createdBody.id}/reset-password`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ newPassword: 'reset-pw' }),
+      body: JSON.stringify({ newPassword: 'reset-password' }),
     });
     expect(resetOk.status).toBe(204);
 
     const loginAfterReset = await fetch(`${server.url}/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username: 'newplayer', password: 'reset-pw' }),
+      body: JSON.stringify({ username: 'newplayer', password: 'reset-password' }),
     });
     expect(loginAfterReset.status).toBe(200);
   });
@@ -165,12 +165,12 @@ describe('auth HTTP endpoints', () => {
     await fetch(`${server.url}/users`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'dupe', password: 'x' }),
+      body: JSON.stringify({ username: 'dupe', password: 'first-password' }),
     });
     const again = await fetch(`${server.url}/users`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'dupe', password: 'y' }),
+      body: JSON.stringify({ username: 'dupe', password: 'second-password' }),
     });
     expect(again.status).toBe(409);
   });

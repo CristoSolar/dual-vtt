@@ -47,29 +47,30 @@ export function CampaignsRoute({
         <p className="muted">{t('campaigns.subtitle')}</p>
       </div>
 
-      <div className="panel">
+      <form
+        className="panel"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (pending || name.trim() === '') return;
+          onCreate(name.trim());
+          setName('');
+        }}
+      >
         <h2>{t('campaigns.createTitle')}</h2>
         <label htmlFor="campaign-name">{t('campaigns.name')}</label>
         <input
           id="campaign-name"
+          name="campaign-name"
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder={t('campaigns.namePlaceholder')}
         />
         <div className="mt-3">
-          <button
-            type="button"
-            className="btn-primary"
-            disabled={pending || name.trim() === ''}
-            onClick={() => {
-              onCreate(name.trim());
-              setName('');
-            }}
-          >
+          <button type="submit" className="btn-primary" disabled={pending || name.trim() === ''}>
             {pending ? t('campaigns.creating') : t('campaigns.create')}
           </button>
         </div>
-      </div>
+      </form>
 
       {campaigns.length === 0 ? (
         <div className="panel">
@@ -106,24 +107,31 @@ export function CampaignsRoute({
                     ) : null}
                   </div>
                   {addingTo === campaign.id ? (
-                    <div className="row mt-3">
+                    <form
+                      className="row mt-3"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if (pending || username.trim() === '') return;
+                        onAddPlayer(campaign.id, username.trim());
+                        setUsername('');
+                        setAddingTo(null);
+                      }}
+                    >
+                      <label className="sr-only" htmlFor={`add-player-${campaign.id}`}>
+                        {t('common.username')}
+                      </label>
                       <input
+                        id={`add-player-${campaign.id}`}
+                        name="username"
+                        autoComplete="off"
                         value={username}
                         onChange={(event) => setUsername(event.target.value)}
                         placeholder={t('common.usernamePlaceholder')}
                       />
-                      <button
-                        type="button"
-                        disabled={pending || username.trim() === ''}
-                        onClick={() => {
-                          onAddPlayer(campaign.id, username.trim());
-                          setUsername('');
-                          setAddingTo(null);
-                        }}
-                      >
+                      <button type="submit" disabled={pending || username.trim() === ''}>
                         {pending ? t('campaigns.adding') : t('campaigns.add')}
                       </button>
-                    </div>
+                    </form>
                   ) : null}
                   {isOwner ? (
                     <div className="row mt-3">

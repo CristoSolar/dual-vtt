@@ -1,3 +1,4 @@
+import { MIN_PASSWORD_LENGTH } from '@daggerheart/protocol';
 import type { User } from '@daggerheart/protocol';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -94,30 +95,56 @@ export function PlayersRoute({ token }: PlayersRouteProps) {
         <p className="muted">{t('players.subtitle')}</p>
       </div>
 
-      <div className="panel">
+      <form
+        className="panel"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (username.trim() === '' || password.length < MIN_PASSWORD_LENGTH) return;
+          createPlayer();
+        }}
+      >
         <h2>{t('players.createPlayer')}</h2>
         <label htmlFor="new-player-username">{t('common.username')}</label>
-        <input id="new-player-username" value={username} onChange={(event) => setUsername(event.target.value)} />
+        <input
+          id="new-player-username"
+          name="new-username"
+          autoComplete="off"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
         <label htmlFor="new-player-password" className="mt-3">
           {t('players.initialPassword')}
         </label>
         <input
           id="new-player-password"
+          name="new-player-password"
+          autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          aria-describedby="new-player-password-hint"
         />
+        <p className="muted" id="new-player-password-hint">
+          {t('changePassword.minLength', { min: MIN_PASSWORD_LENGTH })}
+        </p>
         <div className="mt-3">
           <button
-            type="button"
-            disabled={username.trim() === '' || password === ''}
-            onClick={createPlayer}
+            type="submit"
+            disabled={username.trim() === '' || password.length < MIN_PASSWORD_LENGTH}
           >
             {t('players.createPlayer')}
           </button>
         </div>
-        {error !== null ? <div className="errors">{error}</div> : null}
-        {notice !== null ? <p className="muted">{notice}</p> : null}
-      </div>
+        {error !== null ? (
+          <div className="errors" role="alert">
+            {error}
+          </div>
+        ) : null}
+        {notice !== null ? (
+          <p className="muted" role="status">
+            {notice}
+          </p>
+        ) : null}
+      </form>
 
       <div className="panel">
         <h2>{t('players.existingTitle')}</h2>
@@ -154,25 +181,36 @@ export function PlayersRoute({ token }: PlayersRouteProps) {
           title={t('players.resetTitle', { username: resetting.username })}
           onClose={() => setResetting(null)}
         >
-          <p className="muted">{t('players.resetPrompt')}</p>
-          <label htmlFor="reset-password">{t('players.initialPassword')}</label>
-          <input
-            id="reset-password"
-            type="password"
-            autoComplete="new-password"
-            value={resetPasswordValue}
-            onChange={(event) => setResetPasswordValue(event.target.value)}
-          />
-          <div className="mt-3">
-            <button
-              type="button"
-              className="btn-primary"
-              disabled={resetPasswordValue === ''}
-              onClick={() => void confirmReset()}
-            >
-              {t('players.resetPassword')}
-            </button>
-          </div>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void confirmReset();
+            }}
+          >
+            <p className="muted">{t('players.resetPrompt')}</p>
+            <label htmlFor="reset-password">{t('players.initialPassword')}</label>
+            <input
+              id="reset-password"
+              name="reset-password"
+              type="password"
+              autoComplete="new-password"
+              value={resetPasswordValue}
+              onChange={(event) => setResetPasswordValue(event.target.value)}
+              aria-describedby="reset-password-hint"
+            />
+            <p className="muted" id="reset-password-hint">
+              {t('changePassword.minLength', { min: MIN_PASSWORD_LENGTH })}
+            </p>
+            <div className="mt-3">
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={resetPasswordValue.length < MIN_PASSWORD_LENGTH}
+              >
+                {t('players.resetPassword')}
+              </button>
+            </div>
+          </form>
         </Dialog>
       ) : null}
     </section>
