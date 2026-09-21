@@ -368,6 +368,15 @@ export const es = {
   // character sheet: downtime moves during a rest
 
   // character sheet: conditions (SRD 2.0 p.52)
+
+  // character sheet: transformations (SRD 2.0 p.42)
+  'sheet.transformation.title': 'Transformación',
+  'sheet.transformation.pick': 'Transformación',
+  'sheet.transformation.none': 'Ninguna',
+  'sheet.transformation.hint':
+    'Una transformación es opcional: cambia un beneficio por un inconveniente. Solo ' +
+    'puedes llevar una, y no cuenta para el máximo de tu equipo activo.',
+  'sheet.transformation.questions': 'Preguntas para responder',
   'sheet.conditions.title': 'Condiciones',
   'sheet.conditions.hidden': 'Oculto',
   'sheet.conditions.hidden.hint':
@@ -940,6 +949,7 @@ export const es = {
   'compendium.collection.loot': 'Botín',
   'compendium.collection.consumables': 'Consumibles',
   'compendium.collection.beastforms': 'Formas bestiales',
+  'compendium.collection.transformations': 'Transformaciones',
 
   'compendium.filterPlaceholder': 'Buscar en el compendio…',
   'compendium.tooMany': 'Mostrando 100 de {n} resultados.',

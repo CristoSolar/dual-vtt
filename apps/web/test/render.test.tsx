@@ -268,6 +268,16 @@ function gmRoom(): RoomState {
   };
 }
 
+describe('transformations', () => {
+  it('lists every transformation in the compendium, with its questions', () => {
+    const transformation = srd().transformations[0];
+    if (transformation === undefined) throw new Error('no transformations in the SRD data');
+    const html = render(<HelpRoute />, `/help#compendium/transformations/${transformation.id}`);
+    expect(html).toContain(transformation.name);
+    expect(html).toContain(t('sheet.transformation.questions'));
+  });
+});
+
 describe('the GM rolling for an adversary', () => {
   it('offers an attack and a damage roll on each adversary card', () => {
     const adversary = srd().adversaries[0];

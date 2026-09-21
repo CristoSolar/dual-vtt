@@ -4,6 +4,7 @@ import enAdversaries from '../data/en/adversaries.json' with { type: 'json' };
 import enAncestries from '../data/en/ancestries.json' with { type: 'json' };
 import enArmor from '../data/en/armor.json' with { type: 'json' };
 import enBeastforms from '../data/en/beastforms.json' with { type: 'json' };
+import enTransformations from '../data/en/transformations.json' with { type: 'json' };
 import enClasses from '../data/en/classes.json' with { type: 'json' };
 import enCommunities from '../data/en/communities.json' with { type: 'json' };
 import enConsumables from '../data/en/consumables.json' with { type: 'json' };
@@ -17,6 +18,7 @@ import esAdversaries from '../data/es/adversaries.json' with { type: 'json' };
 import esAncestries from '../data/es/ancestries.json' with { type: 'json' };
 import esArmor from '../data/es/armor.json' with { type: 'json' };
 import esBeastforms from '../data/es/beastforms.json' with { type: 'json' };
+import esTransformations from '../data/es/transformations.json' with { type: 'json' };
 import esClasses from '../data/es/classes.json' with { type: 'json' };
 import esCommunities from '../data/es/communities.json' with { type: 'json' };
 import esConsumables from '../data/es/consumables.json' with { type: 'json' };
@@ -32,6 +34,7 @@ import {
   AncestrySchema,
   ArmorSchema,
   BeastformSchema,
+  TransformationSchema,
   CharacterClassSchema,
   CommunitySchema,
   DomainCardSchema,
@@ -62,6 +65,7 @@ const schemas = {
   loot: z.array(ItemSchema),
   consumables: z.array(ItemSchema),
   beastforms: z.array(BeastformSchema),
+  transformations: z.array(TransformationSchema),
 } as const;
 
 type Raw = Record<keyof typeof schemas, unknown>;
@@ -81,6 +85,7 @@ const raw: Record<Locale, Raw> = {
     loot: enLoot,
     consumables: enConsumables,
     beastforms: enBeastforms,
+    transformations: enTransformations,
   },
   es: {
     domains: esDomains,
@@ -96,6 +101,7 @@ const raw: Record<Locale, Raw> = {
     loot: esLoot,
     consumables: esConsumables,
     beastforms: esBeastforms,
+    transformations: esTransformations,
   },
 };
 
@@ -114,6 +120,7 @@ const fileNames: Record<keyof typeof schemas, string> = {
   loot: 'loot.json',
   consumables: 'consumables.json',
   beastforms: 'beastforms.json',
+  transformations: 'transformations.json',
 };
 
 const datasetKeys = Object.keys(schemas) as (keyof typeof schemas)[];

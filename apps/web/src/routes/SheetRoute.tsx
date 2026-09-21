@@ -6,6 +6,7 @@ import { describeEffect, t, type MessageKey } from '../i18n/index.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
+import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
 import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
@@ -590,6 +591,15 @@ export function SheetRoute({
         </div>
 
         <aside>
+          <TransformationPanel
+            transformation={sheet.transformation}
+            onChange={(transformation) =>
+              run(
+                (s) => ({ sheet: { ...s, transformation }, effect: noEffect }),
+                forMe({ type: 'setTransformation', transformation }),
+              )
+            }
+          />
           <ConditionsPanel
             conditions={sheet.conditions}
             vulnerableFromStress={vulnerable}

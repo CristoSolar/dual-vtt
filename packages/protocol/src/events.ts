@@ -87,6 +87,12 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
   z.object({
+    // A character carries at most one transformation; null puts it down.
+    type: z.literal('setTransformation'),
+    characterId,
+    transformation: z.string().min(1).max(40).nullable(),
+  }),
+  z.object({
     // Replaces the whole list, which is how a chip row edits: the client sends what
     // the character should have, not a diff.
     type: z.literal('setConditions'),

@@ -238,6 +238,7 @@ export type RoomError =
   | 'unknownExperience'
   | 'unknownFeature'
   | 'featureSpent'
+  | 'unknownTransformation'
   | 'rejected';
 
 export type RoomResult =
@@ -362,6 +363,7 @@ export function applyRoomEvent(
     case 'recallCard':
     case 'vaultCard':
     case 'setConditions':
+    case 'setTransformation':
     case 'downtimeMove':
     case 'deathMove':
     case 'levelUp':
@@ -804,6 +806,18 @@ function applyCharacterEvent(
       // to the same target" (SRD 2.0 p.52).
       const conditions = [...new Set(event.conditions.map((c) => c.trim()).filter((c) => c !== ''))];
       return ok(withCharacter(state, event.characterId, { ...sheet, conditions }));
+    }
+
+    case 'setTransformation': {
+      if (
+        event.transformation !== null &&
+        !srd().transformations.some((tr) => tr.id === event.transformation)
+      ) {
+        return fail('unknownTransformation', 'no such transformation in the SRD');
+      }
+      return ok(
+        withCharacter(state, event.characterId, { ...sheet, transformation: event.transformation }),
+      );
     }
 
     case 'deathMove': {

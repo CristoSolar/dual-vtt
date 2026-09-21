@@ -88,6 +88,12 @@ export const SheetStateSchema = z.object({
    * appear here as well without the two disagreeing: the sheet shows their union.
    */
   conditions: z.array(z.string().min(1).max(40)).max(12).default([]),
+  /**
+   * The transformation this character carries, by id, or null (SRD 2.0 p.42).
+   * A character can have only one, and it does not count against the loadout
+   * maximum, which is why it is not a card in `loadout`.
+   */
+  transformation: z.string().min(1).max(40).nullable().default(null),
 });
 
 /**
@@ -112,6 +118,7 @@ export function createSheet(character: Character): SheetState {
     unconscious: false,
     dead: false,
     conditions: [],
+    transformation: null,
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
     loadout: [...character.domainCards],

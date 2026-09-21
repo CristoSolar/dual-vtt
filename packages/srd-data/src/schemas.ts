@@ -237,6 +237,21 @@ export const ItemSchema = z.object({
 });
 export type Item = z.infer<typeof ItemSchema>;
 
+/**
+ * A transformation (SRD 2.0 p.42), an optional card that trades a benefit for a
+ * drawback. A character can carry only one, and it does not count against the
+ * loadout maximum.
+ */
+export const TransformationSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  features: z.array(FeatureSchema).min(1),
+  /** Prompts the player answers when they take it. */
+  questions: z.array(z.string().min(1)).min(1),
+});
+export type Transformation = z.infer<typeof TransformationSchema>;
+
 export const BeastformSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),

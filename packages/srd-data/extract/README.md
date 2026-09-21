@@ -23,7 +23,8 @@ docker run --rm -v "$PWD:/w" -w /w minidocks/poppler:latest \
 Then, from this directory:
 
 ```sh
-for g in gen-equipment gen-classes gen-heritage gen-cards gen-adversaries \
+for g in gen-equipment gen-classes gen-heritage gen-transformations gen-cards \
+         gen-adversaries \
          gen-environments gen-loot gen-beastforms; do node "$g.mjs"; done
 ```
 

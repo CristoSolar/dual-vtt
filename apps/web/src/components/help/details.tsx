@@ -14,6 +14,7 @@ import {
   type Item,
   type StatBlockFeature,
   type Subclass,
+  type Transformation,
   type Weapon,
 } from '@daggerheart/srd-data';
 import type { ReactNode } from 'react';
@@ -53,6 +54,21 @@ function FeatureList({
         </li>
       ))}
     </ul>
+  );
+}
+
+function TransformationDetail({ e }: { e: Transformation }) {
+  return (
+    <>
+      <p className="card-text">{e.description}</p>
+      <FeatureList features={e.features} />
+      <h3>{t('sheet.transformation.questions')}</h3>
+      <ul>
+        {e.questions.map((question) => (
+          <li key={question}>{question}</li>
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -350,6 +366,9 @@ export function EntryDetail({
       {collection === 'loot' ? <ItemDetail e={entry as Item} /> : null}
       {collection === 'consumables' ? <ItemDetail e={entry as Item} /> : null}
       {collection === 'beastforms' ? <BeastformDetail e={entry as Beastform} /> : null}
+      {collection === 'transformations' ? (
+        <TransformationDetail e={entry as Transformation} />
+      ) : null}
     </article>
   );
 }

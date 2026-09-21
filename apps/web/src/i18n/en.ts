@@ -355,6 +355,15 @@ export const en: Record<keyof typeof es, string> = {
   // character sheet: downtime moves during a rest
 
   // character sheet: conditions (SRD 2.0 p.52)
+
+  // character sheet: transformations (SRD 2.0 p.42)
+  'sheet.transformation.title': 'Transformation',
+  'sheet.transformation.pick': 'Transformation',
+  'sheet.transformation.none': 'None',
+  'sheet.transformation.hint':
+    'A transformation is optional: it trades a benefit for a drawback. You can carry ' +
+    'only one, and it does not count against your loadout maximum.',
+  'sheet.transformation.questions': 'Questions to answer',
   'sheet.conditions.title': 'Conditions',
   'sheet.conditions.hidden': 'Hidden',
   'sheet.conditions.hidden.hint':
@@ -923,6 +932,7 @@ export const en: Record<keyof typeof es, string> = {
   'compendium.collection.loot': 'Loot',
   'compendium.collection.consumables': 'Consumables',
   'compendium.collection.beastforms': 'Beastforms',
+  'compendium.collection.transformations': 'Transformations',
 
   'compendium.filterPlaceholder': 'Search the compendium…',
   'compendium.tooMany': 'Showing 100 of {n} results.',

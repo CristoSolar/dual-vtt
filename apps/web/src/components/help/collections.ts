@@ -1,6 +1,6 @@
 import type { SrdData } from '@daggerheart/srd-data';
 
-/** One of the 13 SRD arrays the compendium browses. */
+/** One of the SRD arrays the compendium browses. */
 export type CollectionKey = keyof SrdData;
 
 export const COLLECTIONS: readonly CollectionKey[] = [
@@ -17,6 +17,7 @@ export const COLLECTIONS: readonly CollectionKey[] = [
   'loot',
   'consumables',
   'beastforms',
+  'transformations',
 ];
 
 export const isCollection = (value: string | undefined): value is CollectionKey =>

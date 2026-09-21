@@ -317,6 +317,50 @@ describe('conditions', () => {
   });
 });
 
+describe('transformations', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  it('carries one transformation, and puts it down again', () => {
+    const transformation = srd().transformations[0];
+    if (transformation === undefined) throw new Error('no transformations in the SRD data');
+
+    let next = apply(room, ALEX, {
+      type: 'setTransformation',
+      characterId: ALEX.id,
+      transformation: transformation.id,
+    });
+    expect(next.characters[ALEX.id]?.transformation).toBe(transformation.id);
+
+    next = apply(next, ALEX, {
+      type: 'setTransformation',
+      characterId: ALEX.id,
+      transformation: null,
+    });
+    expect(next.characters[ALEX.id]?.transformation).toBeNull();
+  });
+
+  it('refuses one that is not in the SRD, and one set for somebody else', () => {
+    expect(
+      refusal(room, ALEX, {
+        type: 'setTransformation',
+        characterId: ALEX.id,
+        transformation: 'lich-king',
+      }),
+    ).toBe('unknownTransformation');
+
+    expect(
+      refusal(room, ALEX, {
+        type: 'setTransformation',
+        characterId: SAM.id,
+        transformation: 'ghost',
+      }),
+    ).toBe('notYourCharacter');
+  });
+});
+
 describe('the GM rolling for an adversary', () => {
   let room: RoomState;
   let adversaryId: string;

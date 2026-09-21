@@ -13,7 +13,8 @@ import {
 
 describe('schema validation', () => {
   it('parses every dataset against its schema', () => {
-    expect(datasets).toHaveLength(26);
+    // Fourteen files per locale, both locales.
+    expect(datasets).toHaveLength(28);
     for (const { name, schema, raw } of datasets) {
       const result = schema.safeParse(raw);
       expect(result.success, `${name}: ${JSON.stringify(result.error?.issues)}`).toBe(true);
@@ -254,6 +255,15 @@ describe.each(LOCALES)('tables (%s)', (locale) => {
           Array.from({ length: 60 }, (_, i) => i + 1),
         );
       }
+    }
+  });
+
+  it('has the six transformations, each with features and questions', () => {
+    const { transformations } = srdByLocale[locale];
+    expect(transformations).toHaveLength(6);
+    for (const transformation of transformations) {
+      expect(transformation.features.length, transformation.id).toBeGreaterThan(0);
+      expect(transformation.questions.length, transformation.id).toBeGreaterThan(0);
     }
   });
 
