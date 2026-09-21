@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+
 import { t, type MessageKey } from '../../i18n/index.js';
 import { outcomeTone, type RollEntry } from '../../state/rollLog.js';
 import { SectionHead } from '../SectionHead.js';
@@ -6,8 +8,25 @@ interface RollLogPanelProps {
   entries: readonly RollEntry[];
 }
 
-/** The session's rolls, most recent first. */
+/** What a filter narrows the log to. */
+type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate';
+
+/**
+ * The session's rolls, most recent first.
+ *
+ * A long fight fills this with damage rolls, and the one action roll somebody
+ * wants to look back at scrolls away, so the kinds can be narrowed and the whole
+ * thing collapsed when the table is doing something else.
+ */
 export function RollLogPanel({ entries }: RollLogPanelProps) {
+  const [filter, setFilter] = useState<LogFilter>('all');
+  const [collapsed, setCollapsed] = useState(false);
+
+  const shown = useMemo(
+    () => (filter === 'all' ? entries : entries.filter((entry) => entry.kind === filter)),
+    [entries, filter],
+  );
+
   if (entries.length === 0) {
     return (
       <div className="panel">
@@ -20,8 +39,30 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
   return (
     <div className="panel">
       <SectionHead>{t('sheet.log.title')}</SectionHead>
+      <div className="row">
+        <label className="sr-only" htmlFor="log-filter">
+          {t('sheet.log.filterLabel')}
+        </label>
+        <select
+          id="log-filter"
+          value={filter}
+          onChange={(event) => setFilter(event.target.value as LogFilter)}
+        >
+          {(['all', 'duality', 'attack', 'damage', 'fate'] as const).map((kind) => (
+            <option key={kind} value={kind}>
+              {t(`sheet.log.filter.${kind}` as MessageKey)}
+            </option>
+          ))}
+        </select>
+        <button type="button" aria-expanded={!collapsed} onClick={() => setCollapsed((c) => !c)}>
+          {collapsed ? t('sheet.log.expand') : t('sheet.log.collapse')}
+        </button>
+      </div>
+      {collapsed ? null : shown.length === 0 ? (
+        <p className="muted">{t('sheet.log.noneOfThatKind')}</p>
+      ) : (
       <ul className="log">
-        {entries.map((entry) => (
+        {shown.map((entry) => (
           <li key={entry.id}>
             {entry.kind === 'duality' ? (
               <>
@@ -107,6 +148,7 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
           </li>
         ))}
       </ul>
+      )}
     </div>
   );
 }

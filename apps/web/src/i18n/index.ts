@@ -64,11 +64,28 @@ export function useLocale(): Locale {
   );
 }
 
+/**
+ * Fills the plural forms in a message: `{count, plural, one{a card} other{# cards}}`.
+ *
+ * Both languages here have the same one/other split, so that is all this supports;
+ * `#` stands for the number. A language with more forms would need a real plural
+ * rule set, which is a bigger change than the four strings that needed this.
+ */
+const PLURAL = /\{(\w+),\s*plural,\s*one\{([^{}]*)\}\s*other\{([^{}]*)\}\s*\}/g;
+
+function fillPlurals(text: string, params: Record<string, string | number>): string {
+  return text.replace(PLURAL, (match, name: string, one: string, other: string) => {
+    const value = params[name];
+    if (typeof value !== 'number') return match;
+    return (value === 1 ? one : other).replace(/#/g, String(value));
+  });
+}
+
 /** Looks a key up in the active dictionary and fills `{name}` placeholders. */
 export function t(key: MessageKey, params?: Record<string, string | number>): string {
   const text = dictionaries[locale][key];
   if (params === undefined) return text;
-  return text.replace(/\{(\w+)\}/g, (match, name: string) => {
+  return fillPlurals(text, params).replace(/\{(\w+)\}/g, (match, name: string) => {
     const value = params[name];
     return value === undefined ? match : String(value);
   });

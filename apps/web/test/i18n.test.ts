@@ -128,3 +128,16 @@ describe('placeholder parity', () => {
     expect(mismatches).toEqual([]);
   });
 });
+
+describe('plurals', () => {
+  it('picks the form the count calls for, and puts the number in', () => {
+    setLocale('en');
+    expect(t('map.sheet.vaultCount', { count: 1 })).toBe('1 card in the Vault.');
+    expect(t('map.sheet.vaultCount', { count: 0 })).toBe('0 cards in the Vault.');
+    expect(t('map.sheet.vaultCount', { count: 3 })).toBe('3 cards in the Vault.');
+
+    setLocale('es');
+    expect(t('campaigns.memberCount', { count: 1 })).toBe('1 jugador');
+    expect(t('campaigns.memberCount', { count: 2 })).toBe('2 jugadores');
+  });
+});
