@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { GMPanel } from './components/gm/GMPanel.js';
+import { ConfirmDialog } from './components/ConfirmDialog.js';
 import { GuideDialog } from './components/GuideDialog.js';
 import { LocaleToggle } from './components/LocaleToggle.js';
-import { Toast } from './components/Toast.js';
+import { Toast, ToastStack } from './components/Toast.js';
 import { t } from './i18n/index.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
@@ -36,6 +37,7 @@ function Shell() {
 
   const accountId = auth.user?.id ?? null;
   const [guideOpen, setGuideOpen] = useState(false);
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
   useEffect(() => {
     if (accountId !== null && !hasSeenGuide(storage, accountId)) setGuideOpen(true);
   }, [accountId, storage]);
@@ -194,12 +196,22 @@ function Shell() {
         </div>
       ) : null}
 
-      {campaign.error !== null ? (
-        <Toast message={campaign.error} onDismiss={campaign.dismissError} />
-      ) : campaign.lastRoll !== null ? (
-        // Same fixed slot as the error toast above, so only ever one shows at
-        // once — an error is actionable and takes priority over a roll notice.
-        <Toast key={campaign.lastRoll.id} message={campaign.lastRoll.message} onDismiss={campaign.dismissLastRoll} />
+      {/* Toasts stack rather than replace one another: a rejection and the roll
+          that provoked it are both worth reading, and losing one to the other is
+          how a refusal goes unexplained. */}
+      {campaign.error !== null || campaign.lastRoll !== null ? (
+        <ToastStack>
+          {campaign.error !== null ? (
+            <Toast tone="alert" message={campaign.error} onDismiss={campaign.dismissError} />
+          ) : null}
+          {campaign.lastRoll !== null ? (
+            <Toast
+              key={campaign.lastRoll.id}
+              message={campaign.lastRoll.message}
+              onDismiss={campaign.dismissLastRoll}
+            />
+          ) : null}
+        </ToastStack>
       ) : null}
 
       {!isMapRoute && inCampaign && !isGameMaster && !hasClaimedCharacter ? (
@@ -248,9 +260,21 @@ function Shell() {
                   )}
                 </div>
                 <div className="row mt-4">
-                  <button type="button" onClick={campaign.leave}>
+                  <button type="button" onClick={() => setConfirmingLeave(true)}>
                     {t('app.leaveCampaign')}
                   </button>
+                  {confirmingLeave ? (
+                    <ConfirmDialog
+                      title={t('app.leaveCampaign')}
+                      body={t('app.leaveCampaignConfirm')}
+                      confirmLabel={t('app.leaveCampaign')}
+                      onCancel={() => setConfirmingLeave(false)}
+                      onConfirm={() => {
+                        setConfirmingLeave(false);
+                        campaign.leave();
+                      }}
+                    />
+                  ) : null}
                 </div>
               </section>
             ) : (

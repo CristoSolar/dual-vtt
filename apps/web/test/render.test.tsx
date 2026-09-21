@@ -9,7 +9,10 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { EntryDetail } from '../src/components/help/details.js';
 import { COLLECTIONS } from '../src/components/help/Compendium.js';
 import { GMPanel } from '../src/components/gm/GMPanel.js';
+import { ConfirmDialog } from '../src/components/ConfirmDialog.js';
 import { GuideDialog } from '../src/components/GuideDialog.js';
+import { PartyStrip } from '../src/components/sheet/PartyStrip.js';
+import { Toast } from '../src/components/Toast.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { setLocale, t } from '../src/i18n/index.js';
 import { HelpRoute, parseHelpHash } from '../src/routes/HelpRoute.js';
@@ -489,5 +492,47 @@ describe('Compendium', () => {
         ).not.toThrow();
       }
     }
+  });
+});
+
+describe('usability pieces', () => {
+  it('a confirmation states what will happen and offers a way out', () => {
+    const html = renderToStaticMarkup(
+      <ConfirmDialog
+        title="Leave"
+        body="You will be disconnected."
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+    expect(html).toContain('You will be disconnected.');
+    expect(html).toContain(t('common.cancel'));
+    expect(html).toContain('aria-labelledby');
+  });
+
+  it('a rejection toast is announced assertively, a notice politely', () => {
+    const rejection = renderToStaticMarkup(
+      <Toast tone="alert" message="No Hope left." onDismiss={() => {}} />,
+    );
+    expect(rejection).toContain('role="alert"');
+    expect(rejection).toContain('aria-live="assertive"');
+
+    const notice = renderToStaticMarkup(<Toast message="Rolled a 12." onDismiss={() => {}} />);
+    expect(notice).toContain('role="status"');
+  });
+
+  it('the party strip shows the Fear pool and each character\'s tracks', () => {
+    const sheet = createSheet(buildCharacter());
+    const html = renderToStaticMarkup(
+      <PartyStrip
+        members={[{ id: 'pc1', name: 'Alex', sheet }]}
+        characterId="pc1"
+        fear={4}
+        spotlit
+      />,
+    );
+    expect(html).toContain(t('sheet.party.fear', { fear: 4, max: 12 }));
+    expect(html).toContain(t('sheet.party.yourTurn'));
+    expect(html).toContain(String(sheet.character.hpSlots));
   });
 });

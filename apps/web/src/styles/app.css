@@ -2864,19 +2864,31 @@ button.link {
 
 /* ==================================================================== toast */
 
-.toast {
+.toast-stack {
   position: fixed;
   left: 50%;
   bottom: var(--sp-5);
   transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.toast {
   background: var(--c-surface-3);
   border: var(--size-rule) solid var(--c-brass);
   border-left-width: var(--sp-1);
   color: var(--c-text);
   padding: var(--sp-3) var(--sp-5);
-  z-index: 60;
   max-width: min(640px, 92vw);
   box-shadow: var(--shadow-2);
+}
+
+/* A rejection reads differently from a notice, because it explains a refusal. */
+.toast-alert {
+  border-color: var(--c-danger, #b3453a);
 }
 
 /* ================================================================== details */

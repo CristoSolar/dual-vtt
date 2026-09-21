@@ -36,7 +36,7 @@ import {
   TraitPlaque,
 } from '../components/sheet/SheetFurniture.js';
 import { SectionHead } from '../components/SectionHead.js';
-import { Toast } from '../components/Toast.js';
+import { Toast, ToastStack } from '../components/Toast.js';
 import type { RoomEvent } from '@daggerheart/protocol';
 
 import { appendRoll, type RollEntry } from '../state/rollLog.js';
@@ -847,7 +847,11 @@ export function SheetRoute({
 
       {showPrint ? <PrintableSheet sheet={sheet} onClose={() => setShowPrint(false)} /> : null}
 
-      {toast !== null ? <Toast message={toast} onDismiss={() => setToast(null)} /> : null}
+      {toast !== null ? (
+        <ToastStack>
+          <Toast message={toast} onDismiss={() => setToast(null)} />
+        </ToastStack>
+      ) : null}
     </section>
   );
 }

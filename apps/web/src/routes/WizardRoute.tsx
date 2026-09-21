@@ -14,6 +14,7 @@ import {
   StepTraits,
   type StepProps,
 } from '../components/wizard/Steps.js';
+import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
 import { t, type MessageKey } from '../i18n/index.js';
 import { createSheet } from '../state/sheet.js';
@@ -67,6 +68,7 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
   // player navigates away and back). Only while true does a later `claimed` flip
   // mean "the claim we just sent" rather than some pre-existing state.
   const [submitting, setSubmitting] = useState(false);
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   // Only clear the local draft and leave the wizard once the server has actually
   // confirmed the claim — sending the intent is not the same as it having landed.
@@ -109,16 +111,24 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
     <section>
       <div className="card-head">
         <h1>{t('wizard.stepHeading', { step, title: t(STEP_TITLE_KEYS[step]) })}</h1>
-        <button
-          type="button"
-          onClick={() => {
-            reset();
-            navigate('/create/1');
-          }}
-        >
+        <button type="button" onClick={() => setConfirmingReset(true)}>
           {t('wizard.startOver')}
         </button>
       </div>
+
+      {confirmingReset ? (
+        <ConfirmDialog
+          title={t('wizard.startOver')}
+          body={t('wizard.startOverConfirm')}
+          confirmLabel={t('wizard.startOver')}
+          onCancel={() => setConfirmingReset(false)}
+          onConfirm={() => {
+            setConfirmingReset(false);
+            reset();
+            navigate('/create/1');
+          }}
+        />
+      ) : null}
 
       <ol className="steps" aria-label={t('wizard.progressLabel')}>
         {STEPS.map((s) => {
