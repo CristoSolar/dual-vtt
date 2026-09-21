@@ -4,7 +4,7 @@ import {
   type RoomEvent,
   type RoomState,
 } from '@daggerheart/protocol';
-import { MAX_FEAR } from '@daggerheart/rules';
+import { MAX_FEAR, MOVES_PER_REST, mustRestLong } from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
 import { useMemo, useState } from 'react';
 
@@ -28,6 +28,63 @@ const nextId = (prefix: string) => {
  * The GM's screen. Every control emits an intent; the server validates it, applies
  * it, and broadcasts the result — nothing here changes state directly.
  */
+/**
+ * Downtime is the GM's to open and close: the party rests together, the GM is paid
+ * in Fear for it, and each PC then spends their own two moves from their sheet.
+ */
+function Downtime({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  const resting = room.rest !== null;
+  const owesLong = mustRestLong(room.consecutiveShortRests);
+  const spent = Object.values(room.rest?.movesLeft ?? {}).reduce(
+    (total, left) => total + (MOVES_PER_REST - left),
+    0,
+  );
+  const budget = Object.keys(room.rest?.movesLeft ?? {}).length * MOVES_PER_REST;
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.downtime.title')}</SectionHead>
+      {resting ? (
+        <>
+          <p className="muted">
+            {t(room.rest?.kind === 'long' ? 'gm.downtime.inLong' : 'gm.downtime.inShort', {
+              spent,
+              budget,
+            })}
+          </p>
+          <button type="button" onClick={() => send({ type: 'endRest' })}>
+            {t('gm.downtime.end')}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="muted">
+            {owesLong
+              ? t('gm.downtime.owesLong')
+              : t('gm.downtime.shortsTaken', { count: room.consecutiveShortRests })}
+          </p>
+          <div className="row">
+            <button
+              type="button"
+              disabled={owesLong}
+              onClick={() => send({ type: 'beginRest', kind: 'short' })}
+            >
+              {t('gm.downtime.beginShort')}
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => send({ type: 'beginRest', kind: 'long' })}
+            >
+              {t('gm.downtime.beginLong')}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function GMPanel({ room, campaignName, send }: GMPanelProps) {
   return (
     <section className="gm-scope">
@@ -45,6 +102,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
       <div className="sheet-layout">
         <div>
           <FearTrack fear={room.fear} send={send} />
+          <Downtime room={room} send={send} />
           <PartyOverview room={room} send={send} />
           <Countdowns countdowns={room.countdowns} send={send} />
           <Adversaries room={room} send={send} />

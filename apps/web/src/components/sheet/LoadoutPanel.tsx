@@ -14,7 +14,13 @@ interface LoadoutPanelProps {
   loadout: readonly DomainCard[];
   vault: readonly DomainCard[];
   /** Whether the party is resting, which makes swaps free (SRD p.9). */
+  /** Whether the party is resting, which makes recalling free. */
   duringRest: boolean;
+  /**
+   * Set when the rest is the table's, not this device's: in a campaign the GM
+   * opens downtime, so there is nothing here to toggle.
+   */
+  restIsShared?: boolean;
   onToggleRest: () => void;
   onRecall: (cardId: string, vaulting: string | undefined) => void;
   onVault: (cardId: string) => void;
@@ -25,6 +31,7 @@ export function LoadoutPanel({
   loadout,
   vault,
   duringRest,
+  restIsShared = false,
   onToggleRest,
   onRecall,
   onVault,
@@ -38,9 +45,15 @@ export function LoadoutPanel({
         {t('sheet.loadout.title', { count: loadout.length, max: MAX_LOADOUT })}
       </SectionHead>
       <div className="card-head">
-        <button type="button" aria-pressed={duringRest} onClick={onToggleRest}>
-          {duringRest ? t('sheet.loadout.resting') : t('sheet.loadout.notResting')}
-        </button>
+        {restIsShared ? (
+          <span className="badge">
+            {duringRest ? t('sheet.loadout.resting') : t('sheet.loadout.notResting')}
+          </span>
+        ) : (
+          <button type="button" aria-pressed={duringRest} onClick={onToggleRest}>
+            {duringRest ? t('sheet.loadout.resting') : t('sheet.loadout.notResting')}
+          </button>
+        )}
       </div>
 
       {loadout.map((card) => (

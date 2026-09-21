@@ -20,6 +20,7 @@ import {
   spendHope,
   vaultCard,
   type ActionResult,
+  type DowntimeEffect,
   type AppliedDamage,
   type DamageRoll,
   type DualityRoll,
@@ -305,6 +306,32 @@ export function takeDamage(sheet: SheetState, options: TakeDamageOptions): TakeD
 
 export interface RecallResult extends SheetTransition {
   ok: boolean;
+}
+
+/**
+ * Applies one downtime move to a sheet.
+ *
+ * The rules engine says how much the move restores; this puts it where it belongs.
+ * A null amount means the whole track, which is what a long rest does.
+ */
+export function applyDowntime(sheet: SheetState, effect: DowntimeEffect): SheetTransition {
+  const all = effect.amount === null;
+  const amount = effect.amount ?? 0;
+
+  switch (effect.move) {
+    case 'tendToWounds':
+      return clearSheetHP(sheet, all ? sheet.hpMarked : amount);
+    case 'clearStress':
+      return clearSheetStress(sheet, all ? sheet.stressMarked : amount);
+    case 'repairArmor':
+      return clearSheetArmorSlot(sheet, all ? sheet.armorSlotsMarked : amount);
+    case 'prepare':
+      return gainSheetHope(sheet, amount);
+    case 'workOnProject':
+    default:
+      // The project's progress is a countdown the GM keeps, not a resource here.
+      return { sheet, effect: noEffect };
+  }
 }
 
 /** A domain card's Recall Cost, from the SRD. Ids are the same in every locale. */

@@ -3,7 +3,12 @@ import { z } from 'zod';
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
 import { RollEntrySchema } from './rollLog.js';
-import { RoomStateSchema, type RoomState } from './room.js';
+import {
+  DowntimeMoveSchema,
+  RestKindSchema,
+  RoomStateSchema,
+  type RoomState,
+} from './room.js';
 import { SheetStateSchema } from './sheet.js';
 
 /** Socket.io channel names. Kept in one place so both ends agree. */
@@ -76,10 +81,20 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     type: z.literal('recallCard'),
     characterId,
     cardId: z.string().min(1),
-    duringRest: z.boolean(),
     vaulting: z.string().min(1).optional(),
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
+  z.object({
+    // One of this character's two downtime moves. The rest must be open, and how
+    // much it restores is rolled on the server.
+    type: z.literal('downtimeMove'),
+    characterId,
+    move: DowntimeMoveSchema,
+    /** Tending wounds or repairing armor can be done for an ally instead. */
+    targetId: z.string().min(1).max(64).optional(),
+    /** Preparing alongside the party is worth 2 Hope rather than 1. */
+    withParty: z.boolean().default(false),
+  }),
   z.object({
     type: z.literal('levelUp'),
     characterId,
@@ -161,6 +176,13 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     name: z.string().min(1).max(80),
   }),
   z.object({ type: z.literal('removeAdversary'), instanceId: z.string().min(1) }),
+  z.object({
+    // Opens downtime for the whole party. The server rolls the GM's Fear and,
+    // on a long rest, advances the long-term countdowns.
+    type: z.literal('beginRest'),
+    kind: RestKindSchema,
+  }),
+  z.object({ type: z.literal('endRest') }),
   z.object({
     type: z.literal('updateAdversary'),
     instanceId: z.string().min(1),
@@ -291,6 +313,10 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
     patch.activeEnvironment = after.activeEnvironment;
   }
   if (before.rollLog !== after.rollLog) patch.rollLog = after.rollLog;
+  if (before.rest !== after.rest) patch.rest = after.rest;
+  if (before.consecutiveShortRests !== after.consecutiveShortRests) {
+    patch.consecutiveShortRests = after.consecutiveShortRests;
+  }
   if (before.map !== after.map) patch.map = after.map;
   return patch;
 }
@@ -315,6 +341,10 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
       ? {}
       : { activeEnvironment: patch.activeEnvironment }),
     ...(patch.rollLog === undefined ? {} : { rollLog: patch.rollLog }),
+    ...(patch.rest === undefined ? {} : { rest: patch.rest }),
+    ...(patch.consecutiveShortRests === undefined
+      ? {}
+      : { consecutiveShortRests: patch.consecutiveShortRests }),
     ...(patch.map === undefined ? {} : { map: patch.map }),
   };
 }

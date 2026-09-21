@@ -337,6 +337,30 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.loadout.title': 'Active cards {count}/{max}',
   'sheet.loadout.resting': 'Resting — swaps are free',
   'sheet.loadout.notResting': 'Not resting',
+
+  // character sheet: downtime moves during a rest
+  'sheet.downtime.title': 'Downtime moves',
+  'sheet.downtime.shortRest': 'Short rest · {left} of {max} moves left',
+  'sheet.downtime.longRest': 'Long rest · {left} of {max} moves left',
+  'sheet.downtime.target': 'For whom',
+  'sheet.downtime.self': 'Myself',
+  'sheet.downtime.alone': 'Prepare alone',
+  'sheet.downtime.together': 'Prepare together (2 Hope)',
+  'sheet.downtime.move.tendToWounds': 'Tend to wounds',
+  'sheet.downtime.move.tendToWounds.hint':
+    'Short rest: clear 1d4 + tier Hit Points. Long rest: clear them all.',
+  'sheet.downtime.move.clearStress': 'Clear Stress',
+  'sheet.downtime.move.clearStress.hint':
+    'Short rest: clear 1d4 + tier Stress. Long rest: clear it all.',
+  'sheet.downtime.move.repairArmor': 'Repair armor',
+  'sheet.downtime.move.repairArmor.hint':
+    'Short rest: clear 1d4 + tier Armor Slots. Long rest: clear them all.',
+  'sheet.downtime.move.prepare': 'Prepare',
+  'sheet.downtime.move.prepare.hint':
+    'Gain a Hope, or 2 if you prepare alongside someone else in the party.',
+  'sheet.downtime.move.workOnProject': 'Work on a project',
+  'sheet.downtime.move.workOnProject.hint':
+    'Long rest only. The GM tracks its progress with a countdown.',
   'sheet.loadout.cardLevelTitle': 'Card level',
   'sheet.loadout.recallCostTitle': 'Recall Cost',
   'sheet.loadout.sendToVault': 'Send to Vault',
@@ -540,6 +564,16 @@ export const en: Record<keyof typeof es, string> = {
   'gm.countdowns.loopDecreasing': 'Restart, decreasing',
   'gm.countdowns.add': 'Add countdown',
   'gm.countdowns.advanceLongTerm': 'Advance long-term countdowns (rest)',
+
+  // GM panel: downtime
+  'gm.downtime.title': 'Downtime',
+  'gm.downtime.beginShort': 'Short rest',
+  'gm.downtime.beginLong': 'Long rest',
+  'gm.downtime.end': 'End the rest',
+  'gm.downtime.inShort': 'Short rest under way · {spent} of {budget} moves spent',
+  'gm.downtime.inLong': 'Long rest under way · {spent} of {budget} moves spent',
+  'gm.downtime.shortsTaken': 'Short rests in a row: {count} of 3',
+  'gm.downtime.owesLong': 'Three short rests in a row: the next one must be long.',
 
   'gm.adversaries.title': 'Adversaries',
   'gm.adversaries.searchLabel': 'Search the SRD',
@@ -777,7 +811,17 @@ export const en: Record<keyof typeof es, string> = {
     'An equipped piece of armor\'s Armor Score sets how many Armor Slots the character has available. When damage lands, the player may mark an Armor Slot to reduce the hit\'s severity by one step (Severe to Major, Major to Minor, Minor to nothing), spending that slot until it is repaired during a rest. Direct damage can never be reduced by marking Armor Slots, so that kind of hit always marks Hit Points according to its threshold (SRD p. 56).',
   'help.rules.rests.title': 'Rests',
   'help.rules.rests.body':
-    'Both a short rest and a long rest, typical between sessions, grant exactly two downtime moves, but they differ in which options are on offer: the short rest offers Tend to Wounds, Clear Stress, Repair Armor, or Prepare, while the long rest offers the stronger Tend to All Wounds, Clear All Stress, Repair All Armor, or Work on a Project. During either kind of rest, recalling a card from the vault into the loadout is free, unlike the Stress cost it carries outside a rest. Splitting those two moves well between clearing resources and preparing cards is the main tactical choice of a rest (SRD p. 9, p. 42-43).',
+    'Between conflicts the party rests together, and every character makes up to two ' +
+    'downtime moves — the same one twice, if they like. A short rest offers Tend to ' +
+    'Wounds, Clear Stress and Repair Armor, each restoring 1d4 plus your tier, and ' +
+    'Prepare, worth a Hope or 2 if you prepare alongside someone else. A long rest ' +
+    'offers the same four, except the first three restore the whole track, plus Work ' +
+    'on a Project. Recalling a card from the vault is free during either. ' +
+    'The rest is not free for the party: the GM gains 1d4 Fear for a short rest and ' +
+    '1d4 plus one per PC for a long one, and can advance a long-term countdown. ' +
+    'After three short rests in a row the next rest must be a long one, and a rest ' +
+    'that is interrupted gives nothing — or, if it was a long rest, only what a short ' +
+    'one would have (SRD 2.0 p.52).',
   'help.rules.death.title': 'Death move',
   'help.rules.death.body':
     'When a character marks their last available Hit Point, they fall and their player must immediately choose a death move: Blaze of Glory accepts the character\'s death in exchange for one final, guaranteed-success act, Avoid Death keeps them alive but permanently crosses out one Hope slot — lowering their maximum Hope — and the character retires once every slot is crossed out, and Risk It All rolls the Duality Dice: if the Hope die is higher, clear Hit Points and Stress equal to its result; if the Fear die is higher, the character dies; if they match, clear all Hit Points and all Stress. The choice belongs to the player, not the GM, and it sets the tone for the scene that follows (SRD p. 42).',

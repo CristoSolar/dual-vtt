@@ -248,6 +248,48 @@ describe('offline sheet reducers', () => {
   });
 });
 
+/** A room with one seated player, their sheet, a countdown and an adversary. */
+function gmRoom(): RoomState {
+  const sheet = createSheet(buildCharacter('seraph'));
+  return {
+    id: 'c-abc234',
+    gm: { id: 'gm-1', name: 'The GM', connected: true },
+    players: [{ id: 'p1', name: 'Alice', connected: false, characterId: 'pc1' }],
+    characters: { pc1: sheet },
+    fear: 4,
+    spotlight: 'p1',
+    countdowns: [],
+    adversaryInstances: [],
+    activeEnvironment: null,
+    rest: null,
+    consecutiveShortRests: 0,
+    map: createMapState(),
+    rollLog: [],
+  };
+}
+
+describe('downtime', () => {
+  it('offers the GM a rest, and says when the party owes a long one', () => {
+    const base = gmRoom();
+    expect(render(<GMPanel room={base} campaignName="A" send={() => {}} />, '/gm')).toContain(
+      t('gm.downtime.beginShort'),
+    );
+
+    const owed = { ...base, consecutiveShortRests: 3 };
+    const html = render(<GMPanel room={owed} campaignName="A" send={() => {}} />, '/gm');
+    expect(html).toContain(t('gm.downtime.owesLong'));
+  });
+
+  it('shows the moves left once a rest is open', () => {
+    const resting = {
+      ...gmRoom(),
+      rest: { kind: 'short' as const, movesLeft: { pc1: 2 } },
+    };
+    const html = render(<GMPanel room={resting} campaignName="A" send={() => {}} />, '/gm');
+    expect(html).toContain(t('gm.downtime.end'));
+  });
+});
+
 describe('GM panel renders', () => {
   it('shows Fear, party, countdowns, adversaries, environment, presence and log', () => {
     const sheet = createSheet(buildCharacter('seraph'));
@@ -273,6 +315,8 @@ describe('GM panel renders', () => {
         { instanceId: 'a1', adversaryId: 'courtier', name: 'Courtier', hpMarked: 1, stressMarked: 0 },
       ],
       activeEnvironment: null,
+      rest: null,
+      consecutiveShortRests: 0,
       map: createMapState(),
       rollLog: [
         {

@@ -5,3 +5,4 @@ export * from './resources.js';
 export * from './loadout.js';
 export * from './characterCreation.js';
 export * from './levelUp.js';
+export * from './rest.js';

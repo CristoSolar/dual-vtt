@@ -74,6 +74,15 @@ function Shell() {
   );
 
   /** The current account's own character sheet in the joined campaign, if claimed. */
+  /** Everyone at the table who has claimed a character, for downtime targets. */
+  const party = useMemo(
+    () =>
+      (campaign.room?.players ?? [])
+        .filter((player) => player.characterId !== null)
+        .map((player) => ({ id: player.characterId as string, name: player.name })),
+    [campaign.room],
+  );
+
   const mySheet = useMemo(() => {
     if (campaign.room === null || auth.user === null) return null;
     return campaign.room.characters[auth.user.id] ?? null;
@@ -306,6 +315,8 @@ function Shell() {
                 send={campaign.send}
                 sharedLog={campaign.room?.rollLog}
                 lastEffect={campaign.lastEffect}
+                rest={campaign.room?.rest ?? null}
+                party={party}
               />
             )
           }

@@ -135,22 +135,18 @@ describe('gold, cards and level-up', () => {
     let next = apply(room, ALEX, { type: 'vaultCard', characterId: ALEX.id, cardId });
     expect(next.characters[ALEX.id]?.vault).toContain(cardId);
 
-    next = apply(next, ALEX, {
-      type: 'recallCard',
-      characterId: ALEX.id,
-      cardId,
-      duringRest: false,
-    });
+    next = apply(next, ALEX, { type: 'recallCard', characterId: ALEX.id, cardId });
     // The cost is read from the SRD, never from the intent.
     expect(next.characters[ALEX.id]?.stressMarked).toBe(recallCostOf(cardId));
     expect(next.characters[ALEX.id]?.loadout).toContain(cardId);
   });
 
-  it('recalls for free during a rest', () => {
+  it('recalls for free while the party is resting', () => {
     const cardId = room.characters[ALEX.id]?.loadout[0];
     if (cardId === undefined) throw new Error('no card in the starting loadout');
     let next = apply(room, ALEX, { type: 'vaultCard', characterId: ALEX.id, cardId });
-    next = apply(next, ALEX, { type: 'recallCard', characterId: ALEX.id, cardId, duringRest: true });
+    next = apply(next, GM, { type: 'beginRest', kind: 'short' });
+    next = apply(next, ALEX, { type: 'recallCard', characterId: ALEX.id, cardId });
     expect(next.characters[ALEX.id]?.stressMarked).toBe(0);
   });
 
@@ -278,6 +274,125 @@ describe('what a player is allowed to see', () => {
 
     expect(room.adversaryInstances[0]?.hpMarked).toBe(adversary.hp);
     expect(room.adversaryInstances[0]?.stressMarked).toBe(adversary.stress);
+  });
+});
+
+describe('downtime', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  it('opens a rest, pays the GM in Fear, and gives every PC two moves', () => {
+    const next = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    expect(next.rest?.kind).toBe('short');
+    expect(next.rest?.movesLeft).toEqual({ [ALEX.id]: 2, [SAM.id]: 2 });
+    // 1d4 on a short rest, so somewhere between one and four.
+    expect(next.fear).toBeGreaterThanOrEqual(room.fear + 1);
+    expect(next.fear).toBeLessThanOrEqual(room.fear + 4);
+    expect(next.consecutiveShortRests).toBe(1);
+  });
+
+  it('pays more Fear for a long rest, and resets the short-rest run', () => {
+    let next = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    next = apply(next, GM, { type: 'endRest' });
+    expect(next.consecutiveShortRests).toBe(1);
+
+    const before = next.fear;
+    next = apply(next, GM, { type: 'beginRest', kind: 'long' });
+    // 1d4 plus one per PC, and there are two.
+    expect(next.fear).toBeGreaterThanOrEqual(before + 3);
+    expect(next.consecutiveShortRests).toBe(0);
+  });
+
+  it('refuses a fourth short rest in a row', () => {
+    let next = room;
+    for (let i = 0; i < 3; i += 1) {
+      next = apply(next, GM, { type: 'beginRest', kind: 'short' });
+      next = apply(next, GM, { type: 'endRest' });
+    }
+    expect(refusal(next, GM, { type: 'beginRest', kind: 'short' })).toBe('mustRestLong');
+    // A long rest is still allowed, and clears the run.
+    expect(apply(next, GM, { type: 'beginRest', kind: 'long' }).consecutiveShortRests).toBe(0);
+  });
+
+  it('refuses a rest from a player, and a second rest from the GM', () => {
+    expect(refusal(room, ALEX, { type: 'beginRest', kind: 'short' })).toBe('notGameMaster');
+    const resting = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    expect(refusal(resting, GM, { type: 'beginRest', kind: 'short' })).toBe('alreadyResting');
+    expect(refusal(room, GM, { type: 'endRest' })).toBe('notResting');
+  });
+
+  it('spends a move to clear Hit Points, and runs out after two', () => {
+    let next = apply(room, GM, { type: 'markHP', characterId: ALEX.id, amount: 4 });
+    next = apply(next, GM, { type: 'beginRest', kind: 'short' });
+    const hurt = next.characters[ALEX.id]?.hpMarked ?? 0;
+
+    next = apply(next, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'tendToWounds', withParty: false });
+    expect(next.characters[ALEX.id]?.hpMarked).toBeLessThan(hurt);
+    expect(next.rest?.movesLeft[ALEX.id]).toBe(1);
+
+    next = apply(next, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'prepare', withParty: false });
+    expect(next.rest?.movesLeft[ALEX.id]).toBe(0);
+    expect(
+      refusal(next, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'prepare', withParty: false }),
+    ).toBe('noMovesLeft');
+    // Sam has not spent theirs.
+    expect(next.rest?.movesLeft[SAM.id]).toBe(2);
+  });
+
+  it('clears the whole track on a long rest', () => {
+    let next = apply(room, GM, { type: 'markHP', characterId: ALEX.id, amount: 5 });
+    next = apply(next, GM, { type: 'markStress', characterId: ALEX.id, amount: 5 });
+    next = apply(next, GM, { type: 'beginRest', kind: 'long' });
+    next = apply(next, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'tendToWounds', withParty: false });
+    next = apply(next, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'clearStress', withParty: false });
+    expect(next.characters[ALEX.id]?.hpMarked).toBe(0);
+    expect(next.characters[ALEX.id]?.stressMarked).toBe(0);
+  });
+
+  it('lets a character spend their move on an ally', () => {
+    let next = apply(room, GM, { type: 'markHP', characterId: SAM.id, amount: 4 });
+    next = apply(next, GM, { type: 'beginRest', kind: 'long' });
+    next = apply(next, ALEX, {
+      type: 'downtimeMove',
+      characterId: ALEX.id,
+      move: 'tendToWounds',
+      targetId: SAM.id,
+      withParty: false,
+    });
+    expect(next.characters[SAM.id]?.hpMarked).toBe(0);
+    // The move came out of Alex's budget, not Sam's.
+    expect(next.rest?.movesLeft[ALEX.id]).toBe(1);
+    expect(next.rest?.movesLeft[SAM.id]).toBe(2);
+  });
+
+  it('refuses a downtime move outside a rest, and a project on a short one', () => {
+    expect(
+      refusal(room, ALEX, { type: 'downtimeMove', characterId: ALEX.id, move: 'prepare', withParty: false }),
+    ).toBe('notResting');
+
+    const short = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    expect(
+      refusal(short, ALEX, {
+        type: 'downtimeMove',
+        characterId: ALEX.id,
+        move: 'workOnProject',
+        withParty: false,
+      }),
+    ).toBe('moveNotAvailable');
+  });
+
+  it('refuses a downtime move a player makes for somebody else', () => {
+    const resting = apply(room, GM, { type: 'beginRest', kind: 'short' });
+    expect(
+      refusal(resting, ALEX, {
+        type: 'downtimeMove',
+        characterId: SAM.id,
+        move: 'prepare',
+        withParty: false,
+      }),
+    ).toBe('notYourCharacter');
   });
 });
 

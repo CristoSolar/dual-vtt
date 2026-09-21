@@ -1,9 +1,16 @@
 import { CharacterSchema } from '@daggerheart/character';
 import {
   MAX_FEAR,
+  MOVES_PER_REST,
   gainFear,
+  isMoveAvailable,
+  mustRestLong,
+  resolveDowntimeMove,
+  restFear,
   spendFear,
+  type DowntimeMove,
   type LevelUpChoices,
+  type RestKind,
   type Rng,
 } from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
@@ -41,6 +48,7 @@ import {
   clearSheetStress,
   gainSheetGold,
   gainSheetHope,
+  applyDowntime,
   makeDamageRoll,
   makeDualityRoll,
   markSheetArmorSlot,
@@ -72,6 +80,30 @@ export const GameMasterSchema = z.object({
   connected: z.boolean(),
 });
 export type GameMaster = z.infer<typeof GameMasterSchema>;
+
+/** Which rest the party is taking (SRD 2.0 p.52). */
+export const RestKindSchema = z.enum(['short', 'long']);
+
+/** The downtime moves a character can spend their two on. */
+export const DowntimeMoveSchema = z.enum([
+  'tendToWounds',
+  'clearStress',
+  'repairArmor',
+  'prepare',
+  'workOnProject',
+]);
+
+/**
+ * The rest the party is taking, or null when they are not. It exists for as long as
+ * downtime lasts: it is what limits each character to two moves, and what makes
+ * moving a domain card between loadout and vault free.
+ */
+export const RestSchema = z.object({
+  kind: RestKindSchema,
+  /** Downtime moves each character has left, keyed the way `characters` is. */
+  movesLeft: z.record(z.string(), z.number().int().min(0).max(MOVES_PER_REST)),
+});
+export type Rest = z.infer<typeof RestSchema>;
 
 /** One adversary in play, tracked independently of its stat block. */
 export const AdversaryInstanceSchema = z.object({
@@ -108,6 +140,16 @@ export const RoomStateSchema = z.object({
   /** Id into `srd-data`'s environments, or null. */
   activeEnvironment: z.string().nullable(),
   rollLog: z.array(RollEntrySchema),
+  /**
+   * The rest in progress, or null. Defaulted so a snapshot written before downtime
+   * existed still loads instead of being dropped as unreadable.
+   */
+  rest: RestSchema.nullable().default(null),
+  /**
+   * Short rests taken since the last long one. Three in a row and the next rest
+   * must be a long one (SRD 2.0 p.52).
+   */
+  consecutiveShortRests: z.number().int().min(0).default(0),
   /** Scenes, tokens, and fog. Players receive only the active scene. */
   map: MapStateSchema,
 });
@@ -128,6 +170,8 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     adversaryInstances: [],
     activeEnvironment: null,
     rollLog: [],
+    rest: null,
+    consecutiveShortRests: 0,
     map: createMapState(),
   };
 }
@@ -172,6 +216,11 @@ export type RoomError =
   | 'notYourToken'
   | 'tokenExists'
   | 'tooManyWalls'
+  | 'alreadyResting'
+  | 'notResting'
+  | 'mustRestLong'
+  | 'moveNotAvailable'
+  | 'noMovesLeft'
   | 'rejected';
 
 export type RoomResult =
@@ -295,6 +344,7 @@ export function applyRoomEvent(
     case 'takeDamage':
     case 'recallCard':
     case 'vaultCard':
+    case 'downtimeMove':
     case 'levelUp':
     case 'rollDuality':
     case 'rollDamage': {
@@ -373,6 +423,41 @@ export function applyRoomEvent(
       if (denied) return denied;
       const { countdowns } = advanceOnRest(state.countdowns, event.amount);
       return ok({ ...state, countdowns });
+    }
+
+    // --- GM: downtime --------------------------------------------------------
+    case 'beginRest': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (state.rest !== null) return fail('alreadyResting', 'the party is already resting');
+      if (event.kind === 'short' && mustRestLong(state.consecutiveShortRests)) {
+        return fail('mustRestLong', 'three short rests in a row: the next must be a long rest');
+      }
+
+      // Everyone with a character gets their two moves, the GM gets paid in Fear,
+      // and a long rest also moves the long-term countdowns along.
+      const characterIds = Object.keys(state.characters);
+      const movesLeft: Record<string, number> = {};
+      for (const id of characterIds) movesLeft[id] = MOVES_PER_REST;
+
+      const fear = restFear(event.kind, characterIds.length, rng);
+      const countdowns =
+        event.kind === 'long' ? advanceOnRest(state.countdowns).countdowns : state.countdowns;
+
+      return ok({
+        ...state,
+        rest: { kind: event.kind, movesLeft },
+        consecutiveShortRests: event.kind === 'short' ? state.consecutiveShortRests + 1 : 0,
+        fear: gainFear(state.fear, fear),
+        countdowns,
+      });
+    }
+
+    case 'endRest': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (state.rest === null) return fail('notResting', 'the party is not resting');
+      return ok({ ...state, rest: null });
     }
 
     // --- GM: adversaries -----------------------------------------------------
@@ -555,13 +640,47 @@ function applyCharacterEvent(
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
     case 'recallCard': {
+      // Recalling is free during downtime, and the server is the one that knows
+      // whether the party is resting.
       const t = recallFromVault(sheet, event.cardId, {
-        duringRest: event.duringRest,
+        duringRest: state.rest !== null,
         vaulting: event.vaulting,
       });
       if (!t.ok) return fail('rejected', t.effect.message ?? 'recall rejected');
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
+    case 'downtimeMove': {
+      const rest = state.rest;
+      if (rest === null) return fail('notResting', 'the party is not resting');
+      if (!isMoveAvailable(event.move, rest.kind)) {
+        return fail('moveNotAvailable', 'that move belongs to a long rest');
+      }
+      // The budget is the acting character's, even when the move heals an ally:
+      // the SRD gives each PC two moves to spend, not two to receive.
+      const left = rest.movesLeft[event.characterId] ?? 0;
+      if (left <= 0) return fail('noMovesLeft', 'no downtime moves left');
+
+      // Tending wounds and repairing armor can be done for someone else.
+      const targetId = event.targetId ?? event.characterId;
+      const target = state.characters[targetId];
+      if (target === undefined) return fail('unknownCharacter', 'no such character to help');
+
+      const effect = resolveDowntimeMove({
+        move: event.move,
+        kind: rest.kind,
+        level: target.character.level,
+        withParty: event.withParty,
+        rng,
+      });
+      const t = applyDowntime(target, effect);
+
+      const spent: Rest = {
+        ...rest,
+        movesLeft: { ...rest.movesLeft, [event.characterId]: left - 1 },
+      };
+      return ok({ ...withCharacter(state, targetId, t.sheet), rest: spent }, t.effect);
+    }
+
     case 'vaultCard': {
       const t = sendToVault(sheet, event.cardId);
       if (!t.ok) return fail('rejected', t.effect.message ?? 'vault rejected');

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
+import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
 import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
@@ -51,6 +52,7 @@ import {
   takeDamage,
   type DualityRollOutcome,
   type EffectMessage,
+  type Rest,
   type SheetEffect,
   type SheetState,
   type TakeDamageOptions,
@@ -74,6 +76,10 @@ interface SheetRouteProps {
    * campaign it arrives here, and without it a death move would never be offered.
    */
   lastEffect?: { id: number; effect: EffectMessage } | null;
+  /** The party's rest, when there is one. Null offline and between rests. */
+  rest?: Rest | null;
+  /** Everyone with a character in the room, for aiming a downtime move at an ally. */
+  party?: readonly { id: string; name: string }[];
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -96,6 +102,8 @@ export function SheetRoute({
   send,
   sharedLog,
   lastEffect = null,
+  rest = null,
+  party = [],
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -109,7 +117,10 @@ export function SheetRoute({
   const [showDeathMove, setShowDeathMove] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
-  const [duringRest, setDuringRest] = useState(false);
+  // Offline the player says whether they are resting; in a campaign the GM opens
+  // downtime and the server is the one that knows.
+  const [localRest, setLocalRest] = useState(false);
+  const duringRest = online ? rest !== null : localRest;
 
   /**
    * Applies a change. Offline this runs the pure reducer locally; in a campaign it
@@ -568,18 +579,35 @@ export function SheetRoute({
         </div>
 
         <aside>
+          {rest !== null && characterId !== undefined ? (
+            <DowntimePanel
+              rest={rest}
+              characterId={characterId}
+              party={party}
+              onMove={(move, targetId, withParty) =>
+                send?.(
+                  forMe({
+                    type: 'downtimeMove',
+                    move,
+                    withParty,
+                    ...(targetId === characterId ? {} : { targetId }),
+                  }),
+                )
+              }
+            />
+          ) : null}
           <LoadoutPanel
             loadout={view.loadout}
             vault={view.vault}
             duringRest={duringRest}
-            onToggleRest={() => setDuringRest((current) => !current)}
+            restIsShared={online}
+            onToggleRest={() => setLocalRest((current) => !current)}
             onRecall={(cardId, vaulting) =>
               run(
                 (s) => recallFromVault(s, cardId, { duringRest, vaulting }),
                 forMe({
                   type: 'recallCard',
                   cardId,
-                  duringRest,
                   ...(vaulting === undefined ? {} : { vaulting }),
                 }),
               )

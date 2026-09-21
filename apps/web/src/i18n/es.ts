@@ -350,6 +350,30 @@ export const es = {
   'sheet.loadout.title': 'Cartas activas {count}/{max}',
   'sheet.loadout.resting': 'Descansando — los cambios son gratis',
   'sheet.loadout.notResting': 'Sin descansar',
+
+  // character sheet: downtime moves during a rest
+  'sheet.downtime.title': 'Movimientos de tiempo libre',
+  'sheet.downtime.shortRest': 'Descanso corto · te quedan {left} de {max} movimientos',
+  'sheet.downtime.longRest': 'Descanso largo · te quedan {left} de {max} movimientos',
+  'sheet.downtime.target': 'Para quién',
+  'sheet.downtime.self': 'Para mí',
+  'sheet.downtime.alone': 'Prepararse a solas',
+  'sheet.downtime.together': 'Prepararse en grupo (2 de Esperanza)',
+  'sheet.downtime.move.tendToWounds': 'Atender heridas',
+  'sheet.downtime.move.tendToWounds.hint':
+    'Descanso corto: recupera 1d4 + escalón Puntos de Vida. Descanso largo: todos.',
+  'sheet.downtime.move.clearStress': 'Despejar Estrés',
+  'sheet.downtime.move.clearStress.hint':
+    'Descanso corto: despeja 1d4 + escalón de Estrés. Descanso largo: todo.',
+  'sheet.downtime.move.repairArmor': 'Reparar armadura',
+  'sheet.downtime.move.repairArmor.hint':
+    'Descanso corto: recupera 1d4 + escalón Ranuras de Armadura. Descanso largo: todas.',
+  'sheet.downtime.move.prepare': 'Prepararse',
+  'sheet.downtime.move.prepare.hint':
+    'Obtén una Esperanza, o 2 si te preparas junto a alguien más de la party.',
+  'sheet.downtime.move.workOnProject': 'Trabajar en un proyecto',
+  'sheet.downtime.move.workOnProject.hint':
+    'Solo en descanso largo. El GM lleva el progreso con una cuenta atrás.',
   'sheet.loadout.cardLevelTitle': 'Nivel de la carta',
   'sheet.loadout.recallCostTitle': 'Costo de Recuperación',
   'sheet.loadout.sendToVault': 'Enviar a la Bóveda',
@@ -553,6 +577,16 @@ export const es = {
   'gm.countdowns.loopDecreasing': 'Reiniciar, disminuyendo',
   'gm.countdowns.add': 'Añadir cuenta atrás',
   'gm.countdowns.advanceLongTerm': 'Avanzar cuentas atrás de largo plazo (descanso)',
+
+  // GM panel: downtime
+  'gm.downtime.title': 'Tiempo libre',
+  'gm.downtime.beginShort': 'Descanso corto',
+  'gm.downtime.beginLong': 'Descanso largo',
+  'gm.downtime.end': 'Terminar el descanso',
+  'gm.downtime.inShort': 'Descanso corto en curso · {spent} de {budget} movimientos gastados',
+  'gm.downtime.inLong': 'Descanso largo en curso · {spent} de {budget} movimientos gastados',
+  'gm.downtime.shortsTaken': 'Descansos cortos seguidos: {count} de 3',
+  'gm.downtime.owesLong': 'Tres descansos cortos seguidos: el próximo debe ser largo.',
 
   'gm.adversaries.title': 'Adversarios',
   'gm.adversaries.searchLabel': 'Buscar en el SRD',
@@ -794,7 +828,17 @@ export const es = {
     'La Puntuación de Armadura de una pieza equipada define cuántas casillas de armadura tiene disponibles el personaje. Al recibir daño, el jugador puede marcar una casilla de armadura para reducir la gravedad del golpe un escalón (de Grave a Mayor, de Mayor a Menor, de Menor a nada), gastando esa casilla hasta que la repare en un descanso. El daño directo nunca puede reducirse marcando armadura, así que ese tipo de golpe siempre marca Puntos de Vida según su umbral (SRD p. 56).',
   'help.rules.rests.title': 'Descansos',
   'help.rules.rests.body':
-    'Tanto el descanso corto como el descanso largo, típico entre sesiones, conceden exactamente dos movimientos de descanso, pero difieren en las opciones disponibles: el corto ofrece Atender Heridas, Aliviar Estrés, Reparar Armadura o Prepararse, mientras que el largo ofrece las versiones reforzadas Atender Todas las Heridas, Aliviar Todo el Estrés, Reparar Toda la Armadura o Trabajar en un Proyecto. Durante cualquier descanso, recuperar una carta de la bóveda al equipo activo es gratuito, sin gastar Estrés como fuera de un descanso. Repartir bien esos dos movimientos entre limpiar recursos y preparar cartas es la decisión táctica principal del descanso (SRD p. 9, p. 42-43).',
+    'Entre conflictos la party descansa junta, y cada personaje hace hasta dos ' +
+    'movimientos de tiempo libre, pudiendo repetir el mismo. Un descanso corto ofrece ' +
+    'Atender heridas, Despejar Estrés y Reparar armadura, que recuperan 1d4 más tu ' +
+    'escalón, y Prepararse, que vale una Esperanza o 2 si te preparas junto a alguien ' +
+    'más. Un descanso largo ofrece los mismos cuatro, salvo que los tres primeros ' +
+    'recuperan la pista entera, y añade Trabajar en un proyecto. Recuperar una carta ' +
+    'de la bóveda es gratis durante cualquiera de los dos. ' +
+    'El descanso no sale gratis: el GM obtiene 1d4 de Miedo en uno corto y 1d4 más uno ' +
+    'por PJ en uno largo, y puede avanzar una cuenta atrás a largo plazo. Tras tres ' +
+    'descansos cortos seguidos el siguiente debe ser largo, y un descanso interrumpido ' +
+    'no da nada — o, si era largo, solo lo que habría dado uno corto (SRD 2.0 p.52).',
   'help.rules.death.title': 'Movimiento de Muerte',
   'help.rules.death.body':
     'Cuando un personaje marca su último Punto de Vida disponible, cae y su jugador debe elegir un Movimiento de Muerte de inmediato: Salida Gloriosa acepta la muerte del personaje a cambio de un último acto decisivo con éxito garantizado, Esquivar la Muerte lo mantiene con vida pero tacha permanentemente una casilla de Esperanza —reduciendo su máximo— y el personaje se retira cuando todas quedan tachadas, y Arriesgarlo Todo lanza una tirada de Dualidad: si el Dado de Esperanza es mayor, limpia Puntos de Vida y Estrés igual a su resultado; si el Dado de Miedo es mayor, el personaje muere; si coinciden, limpia todos los Puntos de Vida y todo el Estrés. La elección es del jugador, no del DJ, y define el tono de la escena que sigue (SRD p. 42).',
