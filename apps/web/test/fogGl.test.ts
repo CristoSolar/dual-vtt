@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildFogMask, hexToRgb } from '../src/components/map/FogGl.js';
+import { MAX_LIGHTS, buildFogMask, hexToRgb, pickLights } from '../src/components/map/FogGl.js';
 
 describe('fog mask', () => {
   it('marks revealed cells and leaves the rest covered', () => {
@@ -30,5 +30,24 @@ describe('hexToRgb', () => {
   it('falls back to black on anything it cannot read', () => {
     expect(hexToRgb('rgb(1,2,3)')).toEqual([0, 0, 0]);
     expect(hexToRgb('')).toEqual([0, 0, 0]);
+  });
+});
+
+describe('pickLights', () => {
+  const light = (x: number) => ({ x, y: 0, radius: 100 });
+
+  it('passes every light through while they fit', () => {
+    const lights = [light(0), light(10)];
+    expect(pickLights(lights, { x: 0, y: 0 })).toEqual(lights);
+  });
+
+  it('keeps the ones nearest the middle of the view when there are too many', () => {
+    const lights = [light(500), light(10), light(300), light(20)];
+    expect(pickLights(lights, { x: 0, y: 0 }, 2)).toEqual([light(10), light(20)]);
+  });
+
+  it('carries at most what the shader has room for', () => {
+    const many = Array.from({ length: 20 }, (_, index) => light(index));
+    expect(pickLights(many, { x: 0, y: 0 })).toHaveLength(MAX_LIGHTS);
   });
 });

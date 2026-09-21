@@ -292,6 +292,25 @@ export function MapCanvas({
   const canDrag = (token: Token): boolean =>
     isGameMaster || (viewerId !== null && token.ownerId === viewerId);
 
+  /**
+   * Live vision, for the lighting pass. Only in a scene that computes vision:
+   * in a hand-painted one the GM's brush is the whole truth and dimming would
+   * only argue with it. A token's pool is centred on the token, not its corner.
+   */
+  const lights = useMemo(
+    () =>
+      scene.visionMode === 'auto'
+        ? scene.tokens
+            .filter((token) => token.kind === 'pc' && token.visionRadius > 0 && !token.hidden)
+            .map((token) => ({
+              x: token.x + token.width / 2,
+              y: token.y + token.height / 2,
+              radius: token.visionRadius,
+            }))
+        : [],
+    [scene.visionMode, scene.tokens],
+  );
+
   const measurement = measureLine === null ? null : measure(measureLine.from, measureLine.to, scale);
   const selected = scene.tokens.find((token) => token.id === selectedTokenId) ?? null;
 
@@ -462,6 +481,7 @@ export function MapCanvas({
     {scene.fog.enabled && scene.image !== null && fogOnGpu ? (
       <FogGl
         fog={scene.fog}
+        lights={lights}
         view={view}
         width={width}
         height={height}

@@ -66,6 +66,9 @@ void main() {
  * a texel is a whole cell, so halfway between a seen and an unseen cell centre
  * the sample sits at 0.5 and the cover fades instead of stepping.
  */
+/** How many light sources the shader carries. Beyond this the nearest ones win. */
+export const MAX_LIGHTS = 8;
+
 const FRAGMENT_SHADER = `#version 300 es
 precision highp float;
 
@@ -77,6 +80,9 @@ uniform float uCellSize;
 uniform vec3 uColor;
 uniform float uMaxAlpha;
 uniform sampler2D uMask;
+uniform vec3 uLights[${MAX_LIGHTS}];
+uniform int uLightCount;
+uniform float uShadow;
 
 out vec4 fragColor;
 
@@ -88,7 +94,24 @@ void main() {
   float revealed = texture(uMask, uv).r;
   if (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) revealed = 0.0;
 
-  float alpha = (1.0 - smoothstep(0.35, 0.65, revealed)) * uMaxAlpha;
+  // What the party remembers: explored ground stays on the map.
+  float cover = (1.0 - smoothstep(0.35, 0.65, revealed)) * uMaxAlpha;
+
+  // What anyone can see right now. Each light falls off over its outer half, so
+  // a torch has an edge you can read without a hard circle.
+  float lit = 0.0;
+  for (int i = 0; i < ${MAX_LIGHTS}; i++) {
+    if (i >= uLightCount) break;
+    vec3 light = uLights[i];
+    float distance = length(scene - light.xy);
+    lit = max(lit, 1.0 - smoothstep(light.z * 0.55, light.z, distance));
+  }
+
+  // Remembered but unlit ground is dimmed, never hidden: the party knows the
+  // room is there, they just are not standing in it.
+  float shadow = uLightCount == 0 ? 0.0 : (1.0 - lit) * uShadow;
+
+  float alpha = max(cover, shadow);
   // Premultiplied, to match the blend function the context is set up with.
   fragColor = vec4(uColor * alpha, alpha);
 }`;
@@ -105,8 +128,38 @@ function compile(gl: WebGL2RenderingContext, type: number, source: string): WebG
   return shader;
 }
 
+/** A token's pool of vision, in scene units. */
+export interface Light {
+  x: number;
+  y: number;
+  radius: number;
+}
+
+/**
+ * The lights the shader will carry, nearest the middle of the view first when
+ * there are more than it has room for.
+ */
+export function pickLights(
+  lights: readonly Light[],
+  centre: { x: number; y: number },
+  limit = MAX_LIGHTS,
+): Light[] {
+  if (lights.length <= limit) return [...lights];
+  return [...lights]
+    .sort(
+      (a, b) =>
+        Math.hypot(a.x - centre.x, a.y - centre.y) - Math.hypot(b.x - centre.x, b.y - centre.y),
+    )
+    .slice(0, limit);
+}
+
 interface FogGlProps {
   fog: Fog;
+  /**
+   * Live vision, when the scene computes it. Empty in a hand-painted scene,
+   * where dimming would only fight the GM's brush.
+   */
+  lights?: readonly Light[];
   /** The scene's pan and zoom, in CSS pixels. */
   view: { x: number; y: number; scale: number };
   width: number;
@@ -117,7 +170,15 @@ interface FogGlProps {
   onUnavailable: () => void;
 }
 
-export function FogGl({ fog, view, width, height, isGameMaster, onUnavailable }: FogGlProps) {
+export function FogGl({
+  fog,
+  lights = [],
+  view,
+  width,
+  height,
+  isGameMaster,
+  onUnavailable,
+}: FogGlProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glRef = useRef<{
     gl: WebGL2RenderingContext;
@@ -195,6 +256,9 @@ export function FogGl({ fog, view, width, height, isGameMaster, onUnavailable }:
       'uColor',
       'uMaxAlpha',
       'uMask',
+      'uLights',
+      'uLightCount',
+      'uShadow',
     ];
     const uniforms: Record<string, WebGLUniformLocation | null> = {};
     for (const name of names) uniforms[name] = gl.getUniformLocation(program, name);
@@ -244,10 +308,25 @@ export function FogGl({ fog, view, width, height, isGameMaster, onUnavailable }:
     gl.uniform1f(uniforms.uMaxAlpha ?? null, isGameMaster ? 0.5 : 1);
     gl.uniform1i(uniforms.uMask ?? null, 0);
 
+    const chosen = pickLights(lights, {
+      x: (width / 2 - view.x) / view.scale,
+      y: (height / 2 - view.y) / view.scale,
+    });
+    const packed = new Float32Array(MAX_LIGHTS * 3);
+    chosen.forEach((light, index) => {
+      packed[index * 3] = light.x;
+      packed[index * 3 + 1] = light.y;
+      packed[index * 3 + 2] = light.radius;
+    });
+    gl.uniform3fv(uniforms.uLights ?? null, packed);
+    gl.uniform1i(uniforms.uLightCount ?? null, chosen.length);
+    // The GM keeps more of the room readable than the players do.
+    gl.uniform1f(uniforms.uShadow ?? null, isGameMaster ? 0.3 : 0.62);
+
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-  }, [mask, fog.cols, fog.rows, fog.cellSize, view, width, height, isGameMaster, colour]);
+  }, [mask, fog.cols, fog.rows, fog.cellSize, lights, view, width, height, isGameMaster, colour]);
 
   return (
     <canvas
