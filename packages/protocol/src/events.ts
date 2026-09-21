@@ -1,3 +1,4 @@
+import { MAX_FEAR } from '@daggerheart/rules';
 import { z } from 'zod';
 
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
@@ -216,6 +217,14 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
      * the adversary has it and that the Fear is there to spend.
      */
     experience: z.string().min(1).max(80).optional(),
+  }),
+  z.object({
+    // Uses a feature off the stat block. The text says what it costs, so the GM
+    // states the Fear and the server checks the pool can cover it.
+    type: z.literal('useAdversaryFeature'),
+    instanceId: z.string().min(1),
+    featureName: z.string().min(1).max(80),
+    fearCost: z.number().int().min(0).max(MAX_FEAR).default(0),
   }),
   z.object({
     type: z.literal('rollAdversaryDamage'),

@@ -433,6 +433,83 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('notGameMaster');
   });
 
+  it('spends the Fear a feature costs, and refuses more than the pool holds', () => {
+    const block = srd().adversaries.find((a) => a.id === adversaryId);
+    const feature = block?.features[0];
+    if (feature === undefined) throw new Error('that adversary has no features');
+
+    const withFear = apply(room, GM, { type: 'gainFear', amount: 3 });
+    const used = apply(withFear, GM, {
+      type: 'useAdversaryFeature',
+      instanceId: 'a-1',
+      featureName: feature.name,
+      fearCost: 2,
+    });
+    expect(used.fear).toBe(withFear.fear - 2);
+
+    expect(
+      refusal(room, GM, {
+        type: 'useAdversaryFeature',
+        instanceId: 'a-1',
+        featureName: feature.name,
+        fearCost: 5,
+      }),
+    ).toBe('notEnoughFear');
+  });
+
+  it('lets an Evolution be used once, and refuses it after that', () => {
+    const evolving = srd().adversaries.find((a) =>
+      a.features.some((f) => f.type === 'evolution'),
+    );
+    const evolution = evolving?.features.find((f) => f.type === 'evolution');
+    if (evolving === undefined || evolution === undefined) {
+      throw new Error('no adversary with an Evolution feature');
+    }
+
+    let next = apply(roomWithPlayers(), GM, {
+      type: 'addAdversary',
+      instanceId: 'a-2',
+      adversaryId: evolving.id,
+      name: 'It',
+    });
+    next = apply(next, GM, {
+      type: 'useAdversaryFeature',
+      instanceId: 'a-2',
+      featureName: evolution.name,
+      fearCost: 0,
+    });
+    expect(next.adversaryInstances[0]?.usedFeatures).toEqual([evolution.name]);
+
+    expect(
+      refusal(next, GM, {
+        type: 'useAdversaryFeature',
+        instanceId: 'a-2',
+        featureName: evolution.name,
+        fearCost: 0,
+      }),
+    ).toBe('featureSpent');
+  });
+
+  it('refuses a feature the adversary does not have, and any of this from a player', () => {
+    expect(
+      refusal(room, GM, {
+        type: 'useAdversaryFeature',
+        instanceId: 'a-1',
+        featureName: 'Not A Real Feature',
+        fearCost: 0,
+      }),
+    ).toBe('unknownFeature');
+
+    expect(
+      refusal(room, ALEX, {
+        type: 'useAdversaryFeature',
+        instanceId: 'a-1',
+        featureName: 'Anything',
+        fearCost: 0,
+      }),
+    ).toBe('notGameMaster');
+  });
+
   it('refuses a roll for an adversary that is not in play', () => {
     expect(
       refusal(room, GM, {

@@ -6,7 +6,13 @@ import {
   type RoomState,
 } from '@daggerheart/protocol';
 import { MAX_FEAR, MOVES_PER_REST, mustRestLong } from '@daggerheart/rules';
-import { formatDice, formatModifier, srd, type Adversary } from '@daggerheart/srd-data';
+import {
+  formatDice,
+  formatModifier,
+  srd,
+  type Adversary,
+  type StatBlockFeature,
+} from '@daggerheart/srd-data';
 import { useMemo, useState } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
@@ -361,6 +367,70 @@ function Countdowns({
 }
 
 /**
+ * One feature off a stat block, with the button that uses it.
+ *
+ * A feature's own text says what it costs, so the Fear is typed rather than
+ * guessed; an Evolution is one-shot and the button says so once it is spent.
+ */
+function FeatureRow({
+  feature,
+  instance,
+  send,
+}: {
+  feature: StatBlockFeature;
+  instance: AdversaryInstance;
+  send: (event: RoomEvent) => void;
+}) {
+  const [fearCost, setFearCost] = useState(feature.costsFear ? 1 : 0);
+  const spent = feature.type === 'evolution' && instance.usedFeatures.includes(feature.name);
+
+  return (
+    <div className="card-text">
+      <p>
+        <strong>
+          {feature.name} — {prettify(feature.type)}
+          {feature.costsFear ? t('gm.fearSuffix') : ''}:
+        </strong>{' '}
+        {feature.text}
+      </p>
+      <div className="row">
+        {feature.costsFear ? (
+          <>
+            <label htmlFor={`fear-${instance.instanceId}-${feature.name}`}>
+              {t('gm.adversaries.featureFear')}
+            </label>
+            <input
+              id={`fear-${instance.instanceId}-${feature.name}`}
+              type="number"
+              min={0}
+              max={MAX_FEAR}
+              value={fearCost}
+              onChange={(event) =>
+                setFearCost(Math.max(0, Math.min(MAX_FEAR, Number(event.target.value) || 0)))
+              }
+            />
+          </>
+        ) : null}
+        <button
+          type="button"
+          disabled={spent}
+          onClick={() =>
+            send({
+              type: 'useAdversaryFeature',
+              instanceId: instance.instanceId,
+              featureName: feature.name,
+              fearCost,
+            })
+          }
+        >
+          {spent ? t('gm.adversaries.featureSpent') : t('gm.adversaries.useFeature')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
  * The GM's dice for one adversary. Attacks used to be rolled off-app while every
  * player's roll was audited; these put both sides in the same log.
  */
@@ -635,13 +705,12 @@ function Adversaries({
                     {prettify(stat.standardAttack.damageType)}
                   </p>
                   {stat.features.map((feature) => (
-                    <p className="card-text" key={feature.name}>
-                      <strong>
-                        {feature.name} — {prettify(feature.type)}
-                        {feature.costsFear ? t('gm.fearSuffix') : ''}:
-                      </strong>{' '}
-                      {feature.text}
-                    </p>
+                    <FeatureRow
+                      key={feature.name}
+                      feature={feature}
+                      instance={instance}
+                      send={send}
+                    />
                   ))}
                 </details>
               </>

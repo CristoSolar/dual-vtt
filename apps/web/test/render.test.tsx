@@ -281,6 +281,7 @@ describe('the GM rolling for an adversary', () => {
           name: 'Guard A',
           hpMarked: 0,
           stressMarked: 0,
+          usedFeatures: [],
         },
       ],
     };
@@ -336,7 +337,14 @@ describe('GM panel renders', () => {
         },
       ],
       adversaryInstances: [
-        { instanceId: 'a1', adversaryId: 'courtier', name: 'Courtier', hpMarked: 1, stressMarked: 0 },
+        {
+          instanceId: 'a1',
+          adversaryId: 'courtier',
+          name: 'Courtier',
+          hpMarked: 1,
+          stressMarked: 0,
+          usedFeatures: [],
+        },
       ],
       activeEnvironment: null,
       rest: null,

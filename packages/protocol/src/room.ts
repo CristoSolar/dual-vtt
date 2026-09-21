@@ -121,6 +121,12 @@ export const AdversaryInstanceSchema = z.object({
   name: z.string().min(1),
   hpMarked: z.number().int().nonnegative(),
   stressMarked: z.number().int().nonnegative(),
+  /**
+   * Evolution features this adversary has already used. They are one-shot within a
+   * scene (SRD 2.0 p.94), so using one twice is refused rather than silently
+   * allowed. Defaulted, so a campaign snapshotted before this still loads.
+   */
+  usedFeatures: z.array(z.string().min(1).max(80)).max(12).default([]),
 });
 export type AdversaryInstance = z.infer<typeof AdversaryInstanceSchema>;
 
@@ -230,6 +236,8 @@ export type RoomError =
   | 'noMovesLeft'
   | 'characterIsGone'
   | 'unknownExperience'
+  | 'unknownFeature'
+  | 'featureSpent'
   | 'rejected';
 
 export type RoomResult =
@@ -522,6 +530,43 @@ export function applyRoomEvent(
       return ok(appendEntries({ ...state, fear }, [entry]), null, [entry]);
     }
 
+    case 'useAdversaryFeature': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const instance = state.adversaryInstances.find((a) => a.instanceId === event.instanceId);
+      if (instance === undefined) return fail('unknownAdversary', 'no such adversary');
+      const block = srd().adversaries.find((a) => a.id === instance.adversaryId);
+      if (block === undefined) return fail('unknownAdversary', 'that stat block is not in the SRD');
+
+      const feature = block.features.find((f) => f.name === event.featureName);
+      if (feature === undefined) return fail('unknownFeature', 'that adversary has no such feature');
+
+      // An Evolution is a one-shot: once this adversary has used it, it is spent.
+      if (feature.type === 'evolution' && instance.usedFeatures.includes(feature.name)) {
+        return fail('featureSpent', 'that Evolution has already been used');
+      }
+
+      let fear = state.fear;
+      if (event.fearCost > 0) {
+        const spent = spendFear(fear, event.fearCost);
+        if (spent === null) return fail('notEnoughFear', 'not enough Fear for that feature');
+        fear = spent;
+      }
+
+      const usedFeatures =
+        feature.type === 'evolution'
+          ? [...instance.usedFeatures, feature.name]
+          : instance.usedFeatures;
+
+      return ok({
+        ...state,
+        fear,
+        adversaryInstances: state.adversaryInstances.map((a) =>
+          a.instanceId === event.instanceId ? { ...a, usedFeatures } : a,
+        ),
+      });
+    }
+
     case 'rollAdversaryDamage': {
       const denied = gmOnly();
       if (denied) return denied;
@@ -563,6 +608,7 @@ export function applyRoomEvent(
       const denied = gmOnly();
       if (denied) return denied;
       const instance: AdversaryInstance = {
+        usedFeatures: [],
         instanceId: event.instanceId,
         adversaryId: event.adversaryId,
         name: event.name,
