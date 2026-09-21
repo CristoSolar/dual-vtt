@@ -614,7 +614,13 @@ export const es = {
   'sheet.route.experiencesTitle': 'Experiencias',
   'sheet.route.classFeaturesTitle': 'Rasgos de clase',
   'sheet.route.hopeFeatureHeading': '{className} — Rasgo de Esperanza',
+  'sheet.route.useHopeFeature': 'Usar ({cost} de Esperanza)',
+  'effect.hopeFeatureUsed': 'Usaste tu rasgo de Esperanza por {cost} de Esperanza.',
   'sheet.route.inventoryTitle': 'Inventario',
+  'sheet.inventory.empty': 'No llevás nada anotado todavía.',
+  'sheet.inventory.placeholder': 'Objeto (por ejemplo, Poción de Vida Menor)',
+  'sheet.inventory.add': 'Agregar',
+  'sheet.inventory.drop': 'Soltar {item}',
 
   // GM panel (components/gm/GMPanel.tsx)
   'gm.viewerBanner': 'Vista del Director de Juego',

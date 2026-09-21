@@ -149,6 +149,9 @@ export function clearArmorSlot(slots: ArmorSlots, amount = 1): ArmorSlots {
  * Vulnerable is also derived, not only applied: marking the last Stress makes a
  * character Vulnerable until they clear at least one.
  */
+/** A class Hope feature costs 3 Hope to activate (SRD 2.0 p.49). */
+export const HOPE_FEATURE_COST = 3;
+
 export const STANDARD_CONDITIONS = ['hidden', 'restrained', 'vulnerable'] as const;
 export type StandardCondition = (typeof STANDARD_CONDITIONS)[number];
 

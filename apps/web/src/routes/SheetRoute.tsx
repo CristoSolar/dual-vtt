@@ -1,4 +1,10 @@
-import { MAX_HOPE, tierForLevel, type Advancement, type Rng } from '@daggerheart/rules';
+import {
+  HOPE_FEATURE_COST,
+  MAX_HOPE,
+  tierForLevel,
+  type Advancement,
+  type Rng,
+} from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,6 +14,7 @@ import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
 import { EquipmentPanel } from '../components/sheet/EquipmentPanel.js';
+import { InventoryPanel } from '../components/sheet/InventoryPanel.js';
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -582,6 +589,8 @@ export function SheetRoute({
               {
                 heading: t('sheet.route.hopeFeatureHeading', { className: view.className }),
                 features: [view.hopeFeature],
+                // The Hope feature is the one with a price, so it gets a button.
+                spendsHope: HOPE_FEATURE_COST,
               },
               { heading: `${view.className}`, features: view.classFeatures },
               { heading: view.subclassName, features: view.subclassFeatures },
@@ -596,20 +605,41 @@ export function SheetRoute({
                     <div className="card" key={feature.name}>
                       <strong>{feature.name}</strong>
                       <p className="card-text">{feature.text}</p>
+                      {'spendsHope' in group ? (
+                        <button
+                          type="button"
+                          disabled={sheet.hope < HOPE_FEATURE_COST}
+                          onClick={() =>
+                            run(
+                              (s) => {
+                                const paid = spendSheetHope(s, HOPE_FEATURE_COST);
+                                return { sheet: paid.sheet, effect: paid.effect };
+                              },
+                              forMe({ type: 'useHopeFeature' }),
+                            )
+                          }
+                        >
+                          {t('sheet.route.useHopeFeature', { cost: HOPE_FEATURE_COST })}
+                        </button>
+                      ) : null}
                     </div>
                   ))}
               </div>
             ))}
           </div>
 
-          <div className="panel">
-            <SectionHead>{t('sheet.route.inventoryTitle')}</SectionHead>
-            <ul>
-              {character.inventory.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+          <InventoryPanel
+            inventory={character.inventory}
+            onChange={(inventory) =>
+              run(
+                (s) => ({
+                  sheet: { ...s, character: { ...s.character, inventory } },
+                  effect: noEffect,
+                }),
+                forMe({ type: 'setInventory', inventory }),
+              )
+            }
+          />
         </div>
 
         <aside>

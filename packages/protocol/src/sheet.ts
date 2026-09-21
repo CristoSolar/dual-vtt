@@ -155,6 +155,7 @@ export type SheetEffectCode =
   | 'unknownWeapon'
   | 'needsBothHands'
   | 'armorEquipped'
+  | 'hopeFeatureUsed'
   | 'diedInBlazeOfGlory'
   | 'riskedAndLost'
   | 'riskedAndSurvived'
@@ -187,7 +188,7 @@ export const noEffect: SheetEffect = {
 };
 
 /** Builds a coded effect; `params` is only attached when given (exactOptionalPropertyTypes). */
-function coded(
+export function coded(
   code: SheetEffectCode,
   message: string,
   params?: Record<string, string | number>,

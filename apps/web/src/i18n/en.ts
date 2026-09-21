@@ -598,7 +598,13 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.route.experiencesTitle': 'Experiences',
   'sheet.route.classFeaturesTitle': 'Class features',
   'sheet.route.hopeFeatureHeading': '{className} — Hope Feature',
+  'sheet.route.useHopeFeature': 'Use ({cost} Hope)',
+  'effect.hopeFeatureUsed': 'Used your Hope feature for {cost} Hope.',
   'sheet.route.inventoryTitle': 'Inventory',
+  'sheet.inventory.empty': 'Nothing written down yet.',
+  'sheet.inventory.placeholder': 'Item (for example, Minor Health Potion)',
+  'sheet.inventory.add': 'Add',
+  'sheet.inventory.drop': 'Drop {item}',
 
   // GM panel (components/gm/GMPanel.tsx)
   'gm.viewerBanner': 'Game Master view',

@@ -87,6 +87,19 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
   z.object({
+    // Replaces the whole list. The wizard writes it once at creation; after that it
+    // is the player's to keep, which it had no way to be.
+    type: z.literal('setInventory'),
+    characterId,
+    inventory: z.array(z.string().min(1).max(120)).max(60),
+  }),
+  z.object({
+    // A class Hope feature costs 3 Hope (SRD 2.0 p.49). The server spends it, so a
+    // client cannot activate one it cannot afford.
+    type: z.literal('useHopeFeature'),
+    characterId,
+  }),
+  z.object({
     // Changing armor rebuilds the Armor Score and the damage thresholds, which the
     // server does from the SRD rather than trusting a client's arithmetic.
     type: z.literal('equipArmor'),

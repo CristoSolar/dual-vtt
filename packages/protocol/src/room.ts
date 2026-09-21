@@ -1,5 +1,6 @@
 import { CharacterSchema } from '@daggerheart/character';
 import {
+  HOPE_FEATURE_COST,
   MAX_FEAR,
   MOVES_PER_REST,
   gainFear,
@@ -51,6 +52,7 @@ import {
   gainSheetGold,
   gainSheetHope,
   applyDowntime,
+  coded,
   equipArmorOnSheet,
   equipWeaponOnSheet,
   makeDeathMove,
@@ -365,6 +367,8 @@ export function applyRoomEvent(
     case 'recallCard':
     case 'vaultCard':
     case 'setConditions':
+    case 'setInventory':
+    case 'useHopeFeature':
     case 'equipArmor':
     case 'equipWeapon':
     case 'setTransformation':
@@ -810,6 +814,26 @@ function applyCharacterEvent(
       // to the same target" (SRD 2.0 p.52).
       const conditions = [...new Set(event.conditions.map((c) => c.trim()).filter((c) => c !== ''))];
       return ok(withCharacter(state, event.characterId, { ...sheet, conditions }));
+    }
+
+    case 'setInventory': {
+      const inventory = event.inventory.map((line) => line.trim()).filter((line) => line !== '');
+      return ok(
+        withCharacter(state, event.characterId, {
+          ...sheet,
+          character: { ...sheet.character, inventory },
+        }),
+      );
+    }
+
+    case 'useHopeFeature': {
+      const t = spendSheetHope(sheet, HOPE_FEATURE_COST);
+      // spendSheetHope leaves the sheet alone when it cannot pay, and says why.
+      if (t.sheet === sheet) return fail('rejected', t.effect.message ?? 'not enough Hope');
+      return ok(
+        withCharacter(state, event.characterId, t.sheet),
+        coded('hopeFeatureUsed', 'Hope feature used.', { cost: HOPE_FEATURE_COST }),
+      );
     }
 
     case 'equipArmor': {

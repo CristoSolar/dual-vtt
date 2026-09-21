@@ -348,6 +348,41 @@ describe('conditions', () => {
   });
 });
 
+describe('Hope features and inventory', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  it('spends three Hope on a class Hope feature', () => {
+    // Characters start with 2 Hope, so one has to be earned first.
+    const ready = apply(room, ALEX, { type: 'gainHope', characterId: ALEX.id, amount: 1 });
+    const before = ready.characters[ALEX.id]?.hope ?? 0;
+    const next = apply(ready, ALEX, { type: 'useHopeFeature', characterId: ALEX.id });
+    expect(next.characters[ALEX.id]?.hope).toBe(before - 3);
+  });
+
+  it('refuses one the character cannot afford', () => {
+    expect(refusal(room, ALEX, { type: 'useHopeFeature', characterId: ALEX.id })).toBe('rejected');
+  });
+
+  it('lets a player keep their own inventory after creation', () => {
+    const next = apply(room, ALEX, {
+      type: 'setInventory',
+      characterId: ALEX.id,
+      inventory: ['A rope', '  ', 'A lantern'],
+    });
+    // Blank lines are dropped rather than stored.
+    expect(next.characters[ALEX.id]?.character.inventory).toEqual(['A rope', 'A lantern']);
+  });
+
+  it('refuses inventory edits made for somebody else', () => {
+    expect(
+      refusal(room, ALEX, { type: 'setInventory', characterId: SAM.id, inventory: [] }),
+    ).toBe('notYourCharacter');
+  });
+});
+
 describe('changing equipment in play', () => {
   let room: RoomState;
   beforeEach(() => {
