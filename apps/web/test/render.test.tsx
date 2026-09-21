@@ -268,6 +268,30 @@ function gmRoom(): RoomState {
   };
 }
 
+describe('the GM rolling for an adversary', () => {
+  it('offers an attack and a damage roll on each adversary card', () => {
+    const adversary = srd().adversaries[0];
+    if (adversary === undefined) throw new Error('no adversaries in the SRD data');
+    const room: RoomState = {
+      ...gmRoom(),
+      adversaryInstances: [
+        {
+          instanceId: 'a1',
+          adversaryId: adversary.id,
+          name: 'Guard A',
+          hpMarked: 0,
+          stressMarked: 0,
+        },
+      ],
+    };
+    const html = render(<GMPanel room={room} campaignName="A" send={() => {}} />, '/gm');
+    expect(html).toContain(t('gm.adversaries.rollAttack'));
+    expect(html).toContain(t('gm.adversaries.noTarget'));
+    // The seated player is offered as a target.
+    expect(html).toContain('Alice');
+  });
+});
+
 describe('downtime', () => {
   it('offers the GM a rest, and says when the party owes a long one', () => {
     const base = gmRoom();

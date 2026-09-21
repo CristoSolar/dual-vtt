@@ -7,6 +7,8 @@ import {
   mustRestLong,
   resolveDowntimeMove,
   restFear,
+  rollAdversaryAttack,
+  rollAdversaryDamage,
   spendFear,
   type DowntimeMove,
   type LevelUpChoices,
@@ -227,6 +229,7 @@ export type RoomError =
   | 'moveNotAvailable'
   | 'noMovesLeft'
   | 'characterIsGone'
+  | 'unknownExperience'
   | 'rejected';
 
 export type RoomResult =
@@ -465,6 +468,86 @@ export function applyRoomEvent(
         fear: gainFear(state.fear, fear),
         countdowns,
       });
+    }
+
+    // --- GM: adversary rolls -------------------------------------------------
+    case 'rollAdversaryAttack': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const instance = state.adversaryInstances.find((a) => a.instanceId === event.instanceId);
+      if (instance === undefined) return fail('unknownAdversary', 'no such adversary');
+      const block = srd().adversaries.find((a) => a.id === instance.adversaryId);
+      if (block === undefined) return fail('unknownAdversary', 'that stat block is not in the SRD');
+
+      // A named Experience costs a Fear, and has to be one the adversary has.
+      let fear = state.fear;
+      let experience = 0;
+      if (event.experience !== undefined) {
+        const known = block.experiences.find((e) => e.name === event.experience);
+        if (known === undefined) {
+          return fail('unknownExperience', 'that adversary has no such Experience');
+        }
+        const spent = spendFear(fear, 1);
+        if (spent === null) return fail('notEnoughFear', 'no Fear to spend on that Experience');
+        fear = spent;
+        experience = known.modifier;
+      }
+
+      const target = event.targetId === undefined ? null : state.characters[event.targetId];
+      if (event.targetId !== undefined && target === undefined) {
+        return fail('unknownCharacter', 'no such character to attack');
+      }
+
+      const roll = rollAdversaryAttack({
+        modifier: block.attackModifier.flat ?? 0,
+        modifierDice: block.attackModifier.roll,
+        evasion: target?.character.evasion ?? null,
+        advantage: event.advantage,
+        disadvantage: event.disadvantage,
+        experience,
+        rng,
+      });
+
+      const entry: RollEntry = {
+        kind: 'attack',
+        id: `${now.toString(36)}-${event.instanceId}-atk`,
+        at: now,
+        by: instance.name,
+        label: block.standardAttack.name,
+        roll,
+        evasion: target?.character.evasion ?? null,
+        target: targetNameFor(state, event.targetId),
+      };
+      return ok(appendEntries({ ...state, fear }, [entry]), null, [entry]);
+    }
+
+    case 'rollAdversaryDamage': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const instance = state.adversaryInstances.find((a) => a.instanceId === event.instanceId);
+      if (instance === undefined) return fail('unknownAdversary', 'no such adversary');
+      const block = srd().adversaries.find((a) => a.id === instance.adversaryId);
+      if (block === undefined) return fail('unknownAdversary', 'that stat block is not in the SRD');
+
+      const printed = block.standardAttack.damage;
+      const roll = rollAdversaryDamage({
+        // Minions deal flat damage with no dice, which reads as zero dice here.
+        dice: { count: printed.count, die: printed.die ?? 1 },
+        modifier: printed.modifier,
+        critical: event.critical,
+        rng,
+      });
+
+      const entry: RollEntry = {
+        kind: 'damage',
+        id: `${now.toString(36)}-${event.instanceId}-dmg`,
+        at: now,
+        by: instance.name,
+        label: block.standardAttack.name,
+        roll,
+        critical: event.critical,
+      };
+      return ok(appendEntries(state, [entry]), null, [entry]);
     }
 
     case 'endRest': {
@@ -803,6 +886,13 @@ function applyCharacterEvent(
   }
 }
 
+
+/** The display name of whoever a roll was aimed at, for the log. */
+function targetNameFor(state: RoomState, characterId: string | undefined): string | null {
+  if (characterId === undefined) return null;
+  const player = state.players.find((p) => p.characterId === characterId);
+  return player?.name ?? state.characters[characterId]?.character.name ?? null;
+}
 
 /** Replaces one scene, leaving the rest of the map untouched. */
 function withScene(state: RoomState, sceneId: string, scene: Scene): RoomState {

@@ -28,6 +28,17 @@ export const DamageRollSchema = z.object({
   total: z.number().int(),
 });
 
+/** An adversary's d20 attack, which is the GM's equivalent of a duality roll. */
+export const AdversaryAttackRollSchema = z.object({
+  dice: z.array(z.number().int()),
+  die: z.number().int(),
+  modifier: z.number().int(),
+  experience: z.number().int(),
+  total: z.number().int(),
+  critical: z.boolean(),
+  success: z.boolean().nullable(),
+});
+
 /**
  * One entry in the shared roll log. `by` is the display name of whoever rolled, so
  * the whole table can see who did what.
@@ -43,6 +54,18 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     difficulty: z.number().int(),
     outcome: ActionOutcomeSchema,
     experiences: z.array(z.string()),
+  }),
+  z.object({
+    kind: z.literal('attack'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    label: z.string().min(1),
+    roll: AdversaryAttackRollSchema,
+    /** The Evasion it was rolled against, when the target was known. */
+    evasion: z.number().int().nullable(),
+    /** Who it was aimed at, for the log to name. */
+    target: z.string().nullable(),
   }),
   z.object({
     kind: z.literal('damage'),

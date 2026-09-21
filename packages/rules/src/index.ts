@@ -7,3 +7,4 @@ export * from './characterCreation.js';
 export * from './levelUp.js';
 export * from './rest.js';
 export * from './death.js';
+export * from './adversary.js';

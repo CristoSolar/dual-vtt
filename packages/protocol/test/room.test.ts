@@ -277,6 +277,134 @@ describe('what a player is allowed to see', () => {
   });
 });
 
+describe('the GM rolling for an adversary', () => {
+  let room: RoomState;
+  let adversaryId: string;
+
+  beforeEach(() => {
+    const adversary = srd().adversaries.find((a) => a.attackModifier.flat !== null);
+    if (adversary === undefined) throw new Error('no adversary with a flat attack modifier');
+    adversaryId = adversary.id;
+    room = apply(roomWithPlayers(), GM, {
+      type: 'addAdversary',
+      instanceId: 'a-1',
+      adversaryId: adversary.id,
+      name: 'Guard A',
+    });
+  });
+
+  it('rolls a d20 against the target Evasion and logs it for the table', () => {
+    const result = applyRoomEvent(
+      room,
+      GM,
+      {
+        type: 'rollAdversaryAttack',
+        instanceId: 'a-1',
+        targetId: ALEX.id,
+        advantage: false,
+        disadvantage: false,
+      },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('the attack was rejected');
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'attack') throw new Error('no attack entry');
+
+    const block = srd().adversaries.find((a) => a.id === adversaryId);
+    expect(entry.roll.modifier).toBe(block?.attackModifier.flat);
+    expect(entry.evasion).toBe(room.characters[ALEX.id]?.character.evasion);
+    expect(typeof entry.roll.success).toBe('boolean');
+    expect(result.state.rollLog).toHaveLength(1);
+  });
+
+  it('leaves the outcome open when no target is named', () => {
+    const result = applyRoomEvent(
+      room,
+      GM,
+      { type: 'rollAdversaryAttack', instanceId: 'a-1', advantage: false, disadvantage: false },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('the attack was rejected');
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'attack') throw new Error('no attack entry');
+    expect(entry.roll.success).toBeNull();
+    expect(entry.evasion).toBeNull();
+  });
+
+  it('spends a Fear to add an Experience, and refuses one the adversary lacks', () => {
+    const block = srd().adversaries.find((a) => a.id === adversaryId);
+    const experience = block?.experiences[0];
+    if (experience === undefined) throw new Error('that adversary has no Experience');
+
+    const withFear = apply(room, GM, { type: 'gainFear', amount: 2 });
+    const spent = apply(withFear, GM, {
+      type: 'rollAdversaryAttack',
+      instanceId: 'a-1',
+      advantage: false,
+      disadvantage: false,
+      experience: experience.name,
+    });
+    expect(spent.fear).toBe(withFear.fear - 1);
+
+    expect(
+      refusal(withFear, GM, {
+        type: 'rollAdversaryAttack',
+        instanceId: 'a-1',
+        advantage: false,
+        disadvantage: false,
+        experience: 'Not A Real Experience',
+      }),
+    ).toBe('unknownExperience');
+  });
+
+  it('refuses to spend a Fear that is not there', () => {
+    expect(
+      refusal(room, GM, {
+        type: 'rollAdversaryAttack',
+        instanceId: 'a-1',
+        advantage: false,
+        disadvantage: false,
+        experience: srd().adversaries.find((a) => a.id === adversaryId)?.experiences[0]?.name,
+      }),
+    ).toBe('notEnoughFear');
+  });
+
+  it('rolls the stat block damage, and refuses both rolls from a player', () => {
+    const result = applyRoomEvent(
+      room,
+      GM,
+      { type: 'rollAdversaryDamage', instanceId: 'a-1', critical: false },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('the damage roll was rejected');
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'damage') throw new Error('no damage entry');
+    expect(entry.roll.total).toBeGreaterThan(0);
+
+    expect(
+      refusal(room, ALEX, {
+        type: 'rollAdversaryDamage',
+        instanceId: 'a-1',
+        critical: false,
+      }),
+    ).toBe('notGameMaster');
+  });
+
+  it('refuses a roll for an adversary that is not in play', () => {
+    expect(
+      refusal(room, GM, {
+        type: 'rollAdversaryAttack',
+        instanceId: 'nope',
+        advantage: false,
+        disadvantage: false,
+      }),
+    ).toBe('unknownAdversary');
+  });
+});
+
 describe('death moves', () => {
   let room: RoomState;
   beforeEach(() => {

@@ -196,6 +196,27 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('endRest') }),
   z.object({
+    // The GM's d20. The stat block supplies the modifier and the damage, so the
+    // client states only who is swinging at whom and how.
+    type: z.literal('rollAdversaryAttack'),
+    instanceId: z.string().min(1),
+    /** A character in the room, whose Evasion the roll is measured against. */
+    targetId: z.string().min(1).max(64).optional(),
+    advantage: z.boolean().default(false),
+    disadvantage: z.boolean().default(false),
+    /**
+     * Adds an Experience from the stat block by spending a Fear. The server checks
+     * the adversary has it and that the Fear is there to spend.
+     */
+    experience: z.string().min(1).max(80).optional(),
+  }),
+  z.object({
+    type: z.literal('rollAdversaryDamage'),
+    instanceId: z.string().min(1),
+    /** Set after a natural 20, which adds the damage dice's maximum. */
+    critical: z.boolean().default(false),
+  }),
+  z.object({
     type: z.literal('updateAdversary'),
     instanceId: z.string().min(1),
     hpMarked: z.number().int().min(0).max(99),

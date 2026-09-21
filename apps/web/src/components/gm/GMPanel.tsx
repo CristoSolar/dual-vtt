@@ -1,11 +1,12 @@
 import {
   outcomeTone,
+  type AdversaryInstance,
   type Countdown,
   type RoomEvent,
   type RoomState,
 } from '@daggerheart/protocol';
 import { MAX_FEAR, MOVES_PER_REST, mustRestLong } from '@daggerheart/rules';
-import { srd } from '@daggerheart/srd-data';
+import { formatDice, formatModifier, srd, type Adversary } from '@daggerheart/srd-data';
 import { useMemo, useState } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
@@ -359,6 +360,112 @@ function Countdowns({
   );
 }
 
+/**
+ * The GM's dice for one adversary. Attacks used to be rolled off-app while every
+ * player's roll was audited; these put both sides in the same log.
+ */
+function AttackControls({
+  room,
+  instance,
+  stat,
+  send,
+}: {
+  room: RoomState;
+  instance: AdversaryInstance;
+  stat: Adversary;
+  send: (event: RoomEvent) => void;
+}) {
+  const [targetId, setTargetId] = useState('');
+  const [swing, setSwing] = useState<'none' | 'advantage' | 'disadvantage'>('none');
+  const [experience, setExperience] = useState('');
+
+  const targets = room.players.filter((player) => player.characterId !== null);
+
+  return (
+    <div className="mt-2">
+      <div className="row">
+        <select value={targetId} onChange={(event) => setTargetId(event.target.value)}>
+          <option value="">{t('gm.adversaries.noTarget')}</option>
+          {targets.map((player) => (
+            <option key={player.id} value={player.characterId ?? ''}>
+              {player.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={swing}
+          onChange={(event) =>
+            setSwing(
+              event.target.value === 'advantage'
+                ? 'advantage'
+                : event.target.value === 'disadvantage'
+                  ? 'disadvantage'
+                  : 'none',
+            )
+          }
+        >
+          <option value="none">{t('gm.adversaries.straight')}</option>
+          <option value="advantage">{t('gm.adversaries.withAdvantage')}</option>
+          <option value="disadvantage">{t('gm.adversaries.withDisadvantage')}</option>
+        </select>
+
+        {stat.experiences.length > 0 ? (
+          <select value={experience} onChange={(event) => setExperience(event.target.value)}>
+            <option value="">{t('gm.adversaries.noExperience')}</option>
+            {stat.experiences.map((known) => (
+              <option key={known.name} value={known.name}>
+                {known.name} {formatModifier(known.modifier)} ({t('gm.adversaries.costsFear')})
+              </option>
+            ))}
+          </select>
+        ) : null}
+      </div>
+
+      <div className="row mt-2">
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={() =>
+            send({
+              type: 'rollAdversaryAttack',
+              instanceId: instance.instanceId,
+              advantage: swing === 'advantage',
+              disadvantage: swing === 'disadvantage',
+              ...(targetId === '' ? {} : { targetId }),
+              ...(experience === '' ? {} : { experience }),
+            })
+          }
+        >
+          {t('gm.adversaries.rollAttack')}
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            send({ type: 'rollAdversaryDamage', instanceId: instance.instanceId, critical: false })
+          }
+        >
+          {t('gm.adversaries.rollDamage', {
+            // Minions deal flat damage with no dice, which formatDice cannot take.
+            damage:
+              stat.standardAttack.damage.die === null
+                ? String(stat.standardAttack.damage.modifier)
+                : formatDice({ ...stat.standardAttack.damage, die: stat.standardAttack.damage.die }),
+          })}
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            send({ type: 'rollAdversaryDamage', instanceId: instance.instanceId, critical: true })
+          }
+        >
+          {t('gm.adversaries.rollCriticalDamage')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Adversaries({
   room,
   send,
@@ -453,6 +560,8 @@ function Adversaries({
                         : stat.attackModifier.flat,
                   })}
                 </span>
+
+                <AttackControls room={room} instance={instance} stat={stat} send={send} />
 
                 <div className="row mt-2">
                   <span className="muted">
@@ -653,6 +762,25 @@ function SharedRollLog({ room }: { room: RoomState }) {
                 <span className="outcome" data-tone={outcomeTone(entry.outcome)}>
                   {t(`roll.outcome.${entry.outcome}` as MessageKey)}
                 </span>
+              ) : entry.kind === 'attack' ? (
+                <span
+                  className="outcome"
+                  data-tone={
+                    entry.roll.critical
+                      ? 'critical'
+                      : entry.roll.success === null
+                        ? undefined
+                        : entry.roll.success
+                          ? 'success'
+                          : 'failure'
+                  }
+                >
+                  {entry.roll.critical
+                    ? t('sheet.log.attackCritical')
+                    : entry.roll.success === null
+                      ? t('sheet.log.attackTotal', { total: entry.roll.total })
+                      : t(entry.roll.success ? 'sheet.log.attackHit' : 'sheet.log.attackMiss')}
+                </span>
               ) : (
                 <span>
                   {entry.roll.total}
@@ -668,12 +796,22 @@ function SharedRollLog({ room }: { room: RoomState }) {
                     total: entry.roll.total,
                     difficulty: entry.difficulty,
                   })
-                : t('gm.rollLog.damageMeta', {
-                    rolls: entry.roll.rolls.join(', '),
-                    critical: entry.critical
-                      ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
-                      : '',
-                  })}
+                : entry.kind === 'attack'
+                  ? `${t('sheet.log.attackDice', { dice: entry.roll.dice.join(', ') })}${
+                      entry.evasion === null
+                        ? t('sheet.log.attackNoTarget', { total: entry.roll.total })
+                        : t('sheet.log.attackVs', {
+                            total: entry.roll.total,
+                            evasion: entry.evasion,
+                            target: entry.target ?? '',
+                          })
+                    }`
+                  : t('gm.rollLog.damageMeta', {
+                      rolls: entry.roll.rolls.join(', '),
+                      critical: entry.critical
+                        ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
+                        : '',
+                    })}
             </span>
           </li>
         ))}
