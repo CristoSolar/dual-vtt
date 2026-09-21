@@ -7,11 +7,21 @@ Tamaños: **S** < medio día · **M** 1–2 días · **L** 3+ días.
 
 ## Estado al 2026-09-21
 
-Rama `fix/fase-1-criticos`, 10 commits, typecheck limpio y 481 tests verdes (eran 180).
+Rama `fix/fase-1-criticos`, 15 commits, typecheck limpio y 556 tests verdes (eran 180).
 
 - **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4.
 - **Track Marca completo**: B1–B5, y la atribución ya nombra el SRD 2.0.
-- **Track SRD 2.0 completo salvo mecánicas nuevas**: D1–D7 y D10–D11 hechos; de D8 entraron las dos reglas que rompían sin depender de datos. Quedan N1–N6 y D9 (transformaciones en la hoja), que son Fase 3.
+- **Track SRD 2.0 completo salvo mecánicas nuevas**: D1–D7 y D10–D11 hechos; de D8 entraron las reglas que rompían.
+- **Fase 3 en marcha**: M1 descansos, M2 condiciones, M3 death moves y M4 tiradas de adversario, hechos. Quedan M5 y M6–M15, más N1–N6.
+
+Lo hecho de Fase 3, en detalle:
+
+| # | Qué entró |
+|---|---|
+| M1 ✅ | Descansos corto y largo abiertos por el GM, con su coste en Miedo (1d4 · 1d4+PJs), cadencia de tres cortos, y dos movimientos de tiempo libre por personaje que pueden apuntar a un aliado. Recuperar carta gratis lo decide ahora el servidor. |
+| M2 ✅ | Condiciones persistentes en la hoja (Oculto, Inmovilizado, Vulnerable y las que inventen las features) y visibles sobre la ficha del mapa. Vulnerable por Estrés lleno sigue derivado. |
+| M3 ✅ | Los tres movimientos de muerte resueltos de verdad: cicatrices que tachan ranuras de Esperanza, inconsciencia que se cura al sanar o al descansar largo, y Arriesgarlo Todo tirado en el servidor y registrado en el log. |
+| M4 ✅ | El GM tira d20 por sus adversarios contra la Evasión del objetivo, con ventaja/desventaja, Experiencia por 1 Miedo y crítico en 20 natural. El daño usa los dados del stat block. Todo al log compartido. |
 
 Contenido migrado, todo por extracción y verificado reproduciendo los datos 1.0:
 
@@ -252,10 +262,10 @@ Orden por impacto en una sesión real. Cada una entra por `applyRoomEvent`, con 
 
 | # | Mecánica | Host | Tam. |
 |---|---|---|---|
-| M1 | **Descansos**: corto/largo, movimientos de downtime (curar PV, limpiar estrés, reparar armadura, preparar, proyecto). Evento `rest {kind, moves[]}` por personaje; GM dispara `partyRest` que además avanza countdowns (ya existe `advanceCountdownsForRest`). Hoy solo hay un toggle "descansando" para cartas. | nuevo `rules/src/rest.ts`, `events.ts`, botón en GMPanel y hoja | L |
-| M2 | **Condiciones persistentes**: Vulnerable / Oculto / Inmovilizado + libres. `conditions: string[]` en `SheetStateSchema` y en `TokenSchema`; badges en token y hoja; Vulnerable dobla... nada mecánico automático, solo visible. | `sheet.ts:50`, `map.ts:13`, `MapCanvas.tsx` | M |
-| M3 | **Death moves reales**: `DeathMoveDialog` hoy no envía intent. Evento `deathMove {choice}`; Blaze of Glory / Avoid Death (cicatriz: −1 slot de Esperanza) / Risk It All (tirada servidor). | `rules/src/death.ts`, `sheet.ts` | M |
-| M4 | **Tiradas del GM auditadas**: `rollAdversaryAttack {instanceId, targetId?}` y `rollAdversaryDamage` con `rngForRoll`; usa `attackModifier`/`standardAttack` del stat block (datos ya en JSON, nunca consumidos). Botones en la tarjeta de adversario. | `rules/src/adversary.ts`, `events.ts`, `GMPanel.tsx` | L |
+| M1 ✅ | **Descansos**: corto/largo, movimientos de downtime (curar PV, limpiar estrés, reparar armadura, preparar, proyecto). Evento `rest {kind, moves[]}` por personaje; GM dispara `partyRest` que además avanza countdowns (ya existe `advanceCountdownsForRest`). Hoy solo hay un toggle "descansando" para cartas. | nuevo `rules/src/rest.ts`, `events.ts`, botón en GMPanel y hoja | L |
+| M2 ✅ | **Condiciones persistentes**: Vulnerable / Oculto / Inmovilizado + libres. `conditions: string[]` en `SheetStateSchema` y en `TokenSchema`; badges en token y hoja; Vulnerable dobla... nada mecánico automático, solo visible. | `sheet.ts:50`, `map.ts:13`, `MapCanvas.tsx` | M |
+| M3 ✅ | **Death moves reales**: `DeathMoveDialog` hoy no envía intent. Evento `deathMove {choice}`; Blaze of Glory / Avoid Death (cicatriz: −1 slot de Esperanza) / Risk It All (tirada servidor). | `rules/src/death.ts`, `sheet.ts` | M |
+| M4 ✅ | **Tiradas del GM auditadas**: `rollAdversaryAttack {instanceId, targetId?}` y `rollAdversaryDamage` con `rngForRoll`; usa `attackModifier`/`standardAttack` del stat block (datos ya en JSON, nunca consumidos). Botones en la tarjeta de adversario. | `rules/src/adversary.ts`, `events.ts`, `GMPanel.tsx` | L |
 | M5 | **Adversarios completos**: dificultad, umbrales, `hordeThreshold`, features con coste de Miedo (`costsFear`) como botones que gastan Miedo. | `room.ts:410`, `GMPanel.tsx:461` | M |
 | M6 | **Tag team y acción de grupo**: tag team gasta 3 Esperanza y combina dos tiradas; grupo = líder + ayudantes con d6 Esperanza. Extiende `rollDuality`. | `rules/src/duality.ts`, `RollDialog.tsx` | M |
 | M7 | **Tiradas de reacción**: `resolveReactionRoll` existe y no se usa. Un flag en `rollDuality`. | `sheet.ts`, `RollDialog.tsx` | S |
