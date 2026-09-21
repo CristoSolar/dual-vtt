@@ -46,7 +46,19 @@ export interface MapCanvasProps {
   health?: Readonly<Record<string, { marked: number; total: number }>>;
   /** Filled in by the canvas with a one-step zoom, so the HUD's zoom control
    * (an HTML overlay, outside the Konva tree) can drive it. */
-  zoomApi?: { current: ((direction: 1 | -1) => void) | null };
+  /**
+   * An imperative handle for the view, so the toolbar and the keyboard can drive
+   * the camera without lifting pan and zoom out of the canvas.
+   */
+  zoomApi?: {
+    current: {
+      zoom: (direction: 1 | -1) => void;
+      /** Fits the whole scene, or the grid's extent when there is no image. */
+      fit: () => void;
+      /** Centres the view on a point in scene coordinates, keeping the zoom. */
+      centreOn: (point: { x: number; y: number }) => void;
+    } | null;
+  };
 }
 
 /** Scene grid settings translated into the scale the range module expects. */
@@ -138,11 +150,33 @@ export function MapCanvas({
   // should, rather than about a pointer it doesn't have.
   useEffect(() => {
     if (zoomApi === undefined) return;
-    zoomApi.current = (direction) => zoomAbout({ x: width / 2, y: height / 2 }, direction);
+    zoomApi.current = {
+      zoom: (direction) => zoomAbout({ x: width / 2, y: height / 2 }, direction),
+      fit: () => {
+        const sceneWidth = scene.image?.width ?? width;
+        const sceneHeight = scene.image?.height ?? height;
+        if (sceneWidth <= 0 || sceneHeight <= 0) return;
+        const next = Math.min(
+          MAX_ZOOM,
+          Math.max(MIN_ZOOM, Math.min(width / sceneWidth, height / sceneHeight)),
+        );
+        setView({
+          scale: next,
+          x: (width - sceneWidth * next) / 2,
+          y: (height - sceneHeight * next) / 2,
+        });
+      },
+      centreOn: (point) =>
+        setView((current) => ({
+          ...current,
+          x: width / 2 - point.x * current.scale,
+          y: height / 2 - point.y * current.scale,
+        })),
+    };
     return () => {
       zoomApi.current = null;
     };
-  }, [zoomApi, zoomAbout, width, height]);
+  }, [zoomApi, zoomAbout, width, height, scene.image?.width, scene.image?.height]);
 
   const onWheel = (event: Konva.KonvaEventObject<WheelEvent>) => {
     event.evt.preventDefault();

@@ -162,7 +162,11 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   }, [scene, room.characters]);
 
   // Filled in by the canvas; the HUD's zoom buttons call through it.
-  const zoomApi = useRef<((direction: 1 | -1) => void) | null>(null);
+  const zoomApi = useRef<{
+    zoom: (direction: 1 | -1) => void;
+    fit: () => void;
+    centreOn: (point: { x: number; y: number }) => void;
+  } | null>(null);
 
   const moveToken = useCallback(
     (tokenId: string, x: number, y: number, commit: boolean) => {
@@ -204,6 +208,52 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     return instanceId;
   };
 
+  /**
+   * Keyboard for the map: Escape drops the selection, Delete removes the selected
+   * token, F fits the scene, and +/- zoom. Ignored while a field has focus, so
+   * typing a scene name never deletes a token.
+   */
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        setSelectedTokenId(null);
+        setMeasuring(false);
+        return;
+      }
+      if (event.key === 'f' || event.key === 'F') {
+        zoomApi.current?.fit();
+        return;
+      }
+      if (event.key === '+' || event.key === '=') {
+        zoomApi.current?.zoom(1);
+        return;
+      }
+      if (event.key === '-' || event.key === '_') {
+        zoomApi.current?.zoom(-1);
+        return;
+      }
+      if ((event.key === 'Delete' || event.key === 'Backspace') && isGameMaster) {
+        if (scene === null || selectedTokenId === null) return;
+        event.preventDefault();
+        send({ type: 'removeToken', sceneId: scene.id, tokenId: selectedTokenId });
+        setSelectedTokenId(null);
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isGameMaster, scene, selectedTokenId, send]);
+
   const hasOwnToken =
     viewerId !== null && scene !== null && scene.tokens.some((t) => t.kind === 'pc' && t.refId === viewerId);
 
@@ -217,8 +267,10 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         kind: 'pc',
         refId: viewerId,
         name: mySheet.character.name ?? t('map.tokenTools.pcFallback'),
-        x: 200,
-        y: 200,
+        // Where the player is looking, not a fixed corner of a map they may
+        // never have scrolled to.
+        x: Math.round((stageSize.width / 2 - canvasView.x) / canvasView.scale),
+        y: Math.round((stageSize.height / 2 - canvasView.y) / canvasView.scale),
         width: 50,
         height: 50,
         rotation: 0,
@@ -301,20 +353,22 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
               {toolButton('tokens', 'group', t('map.panel.tokens'))}
               {toolButton('fog', 'fog', t('map.panel.fog'))}
               {toolButton('walls', 'door', t('map.panel.walls'))}
-              <button
-                type="button"
-                className="map-rail-button"
-                aria-pressed={measuring}
-                aria-label={t('map.measureDistance')}
-                title={t('map.measureDistance')}
-                onClick={() => setMeasuring((m) => !m)}
-              >
-                <Icon name="measure" size={20} />
-              </button>
             </>
           ) : (
             toolButton('sheet', 'shield', t('app.characterSheet'))
           )}
+          {/* Measuring changes nothing on the table: it is a ruler, and a player
+              asking "can I reach them?" needs it as much as the GM does. */}
+          <button
+            type="button"
+            className="map-rail-button"
+            aria-pressed={measuring}
+            aria-label={t('map.measureDistance')}
+            title={t('map.measureDistance')}
+            onClick={() => setMeasuring((m) => !m)}
+          >
+            <Icon name="measure" size={20} />
+          </button>
         </div>
       ) : null}
 
@@ -429,7 +483,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           type="button"
           className="map-zoom-button"
           aria-label={t('map.zoomOut')}
-          onClick={() => zoomApi.current?.(-1)}
+          onClick={() => zoomApi.current?.zoom(-1)}
         >
           −
         </button>
@@ -437,8 +491,17 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         <button
           type="button"
           className="map-zoom-button"
+          aria-label={t('map.fitToScreen')}
+          title={t('map.fitToScreen')}
+          onClick={() => zoomApi.current?.fit()}
+        >
+          ⤢
+        </button>
+        <button
+          type="button"
+          className="map-zoom-button"
           aria-label={t('map.zoomIn')}
-          onClick={() => zoomApi.current?.(1)}
+          onClick={() => zoomApi.current?.zoom(1)}
         >
           +
         </button>

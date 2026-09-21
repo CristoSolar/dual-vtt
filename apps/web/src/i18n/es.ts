@@ -812,6 +812,7 @@ export const es = {
   'map.noGridMeta': 'sin cuadrícula',
   'map.newScene': 'Nueva escena',
   'map.placeMyToken': 'Colocar mi ficha',
+  'map.fitToScreen': 'Ajustar la escena a la pantalla',
   'map.measureDistance': 'Medir distancia',
   'map.gmNoSceneHint': 'Crea una escena para empezar a armar el mapa.',
   'map.playerNoSceneHint': 'El DJ todavía no ha compartido una escena.',

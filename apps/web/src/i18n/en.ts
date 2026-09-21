@@ -796,6 +796,7 @@ export const en: Record<keyof typeof es, string> = {
   'map.noGridMeta': 'no grid',
   'map.newScene': 'New scene',
   'map.placeMyToken': 'Place my token',
+  'map.fitToScreen': 'Fit the scene on screen',
   'map.measureDistance': 'Measure distance',
   'map.gmNoSceneHint': 'Create a scene to start building the map.',
   'map.playerNoSceneHint': "The GM hasn't shared a scene yet.",
