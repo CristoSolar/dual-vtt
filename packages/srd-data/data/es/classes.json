@@ -1,8 +1,40 @@
 [
   {
+    "id": "assassin",
+    "name": "Asesino",
+    "domains": [
+      "blade",
+      "midnight"
+    ],
+    "startingEvasion": 12,
+    "startingHP": 5,
+    "classItems": "Una lista de nombres con varios tachados o una hoja oxidada grabada con una insignia",
+    "hopeFeature": {
+      "name": "Determinación Letal",
+      "text": "Gasta 3 de Esperanza para despejar 2 de Estrés."
+    },
+    "features": [
+      {
+        "name": "Marcado para la Muerte",
+        "text": "Al tener éxito en un ataque con arma, puedes marcar un Estrés para dejar al objetivo Marcado para la Muerte. Cuando inflijas daño a un objetivo que hayas Marcado para la Muerte, suma a la tirada de daño una cantidad de d4 igual a tu escalón.\nSolo puedes tener un adversario Marcado para la Muerte a la vez. Esta condición dura hasta que tomes un descanso, hasta que el adversario Marcado para la Muerte sea derrotado, o hasta que el GM gaste una cantidad de Miedo igual a tu escalón para despejarla."
+      },
+      {
+        "name": "Entrar y Salir",
+        "text": "Gasta una Esperanza para pedirle al GM una vía rápida o discreta para entrar o salir de un lugar que puedas ver. La siguiente tirada que hagas basándote en esa información tiene ventaja."
+      }
+    ],
+    "subclasses": [
+      "executioners-guild",
+      "poisoners-guild"
+    ]
+  },
+  {
     "id": "bard",
     "name": "Bardo",
-    "domains": ["grace", "codex"],
+    "domains": [
+      "grace",
+      "codex"
+    ],
     "startingEvasion": 10,
     "startingHP": 5,
     "classItems": "Una novela romántica o una carta que nunca abriste",
@@ -16,12 +48,47 @@
         "text": "Una vez por sesión, describe cómo arengas al grupo y otórgate a ti mismo y a cada uno de tus aliados un Dado de Arenga. En nivel 1, tu Dado de Arenga es un d6. Un PJ puede gastar su Dado de Arenga para tirarlo, sumando el resultado a su tirada de acción, de reacción, de daño, o para despejar una cantidad de Estrés igual al resultado. Al final de cada sesión, despeja todos los Dados de Arenga no gastados. En nivel 5, tu Dado de Arenga aumenta a un d8."
       }
     ],
-    "subclasses": ["troubadour", "wordsmith"]
+    "subclasses": [
+      "troubadour",
+      "wordsmith"
+    ]
+  },
+  {
+    "id": "brawler",
+    "name": "Peleador",
+    "domains": [
+      "valor",
+      "bone"
+    ],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "Unas vendas de manos de un mentor o un libro sobre tu afición secreta",
+    "hopeFeature": {
+      "name": "Encararse",
+      "text": "Gasta 3 de Esperanza para intimidar a un objetivo a distancia Cercana y volverlo temporalmente Vulnerable."
+    },
+    "features": [
+      {
+        "name": "Yo Soy el Arma",
+        "text": "Tus ataques a mano desnuda son tan fuertes como cualquier hoja. Tienes equipada un arma primaria llamada Golpe del Peleador mientras no tengas ninguna otra Arma Activa. Usa el rasgo que elijas, tiene alcance de Combate Cuerpo a Cuerpo e inflige d8+d6 de daño físico usando tu Competencia (tanto el d8 como el d6 escalan con tu Competencia). Mientras esta arma esté activa, obtienes un bono de +1 a tu Evasión."
+      },
+      {
+        "name": "Golpe Combinado",
+        "text": "Después de tirar el daño de un ataque exitoso con un arma de Combate Cuerpo a Cuerpo, puedes marcar un Estrés para iniciar un golpe combinado. Cuando lo hagas, tira tu Dado de Combo y anota el resultado; luego sigue tirando tu Dado de Combo hasta que el resultado de tu última tirada sea menor que el de la anterior. Infliges daño adicional igual al total de todos los resultados del Dado de Combo en este ataque. Los resultados no pueden modificarse por ningún medio.\nTu Dado de Combo empieza siendo un d4. Una vez por escalón, puedes aumentar tu Dado de Combo un paso como opción de subida de nivel."
+      }
+    ],
+    "subclasses": [
+      "juggernaut",
+      "martial-artist"
+    ]
   },
   {
     "id": "druid",
     "name": "Druida",
-    "domains": ["sage", "arcana"],
+    "domains": [
+      "sage",
+      "arcana"
+    ],
     "startingEvasion": 10,
     "startingHP": 6,
     "classItems": "Una pequeña bolsa de piedras y huesos o un extraño colgante hallado en la tierra",
@@ -32,19 +99,25 @@
     "features": [
       {
         "name": "Forma Bestial",
-        "text": "Marca un Estrés para transformarte mágicamente en una criatura de tu nivel o inferior de la lista de Formas Bestiales. Puedes salir de esta forma en cualquier momento. Mientras estés transformado, no puedes usar armas ni lanzar hechizos de cartas de dominio, pero sí puedes seguir usando otras habilidades o capacidades a las que tengas acceso. Los hechizos que lances antes de transformarte permanecen activos y duran su tiempo normal, y puedes hablar y comunicarte con normalidad. Además, obtienes las características de la Forma Bestial, sumas su bonificación de Evasión a tu Evasión, y usas el rasgo especificado en sus estadísticas para tu ataque. Mientras estés en una Forma Bestial, tu armadura se vuelve parte de tu cuerpo y marcas Espacios de Armadura como de costumbre; cuando salgas de una Forma Bestial, esos Espacios de Armadura marcados permanecen marcados. Si marcas tu último Punto de Vida, sales automáticamente de esta forma."
+        "text": "Marca un Estrés para transformarte mágicamente en una criatura de tu escalón o inferior de la lista de Formas Bestiales. Puedes salir de esta forma en cualquier momento. Mientras estés transformado, no puedes usar armas ni lanzar hechizos de cartas de dominio, pero sí puedes seguir usando otras habilidades o capacidades a las que tengas acceso. Los hechizos que lances antes de transformarte permanecen activos y duran su tiempo normal, y puedes hablar y comunicarte con normalidad. Además, obtienes las características de la Forma Bestial, sumas su bonificación de Evasión a tu Evasión, y usas el rasgo especificado en sus estadísticas para tu ataque. Mientras estés en una Forma Bestial, tu armadura se vuelve parte de tu cuerpo y marcas Espacios de Armadura como de costumbre; cuando salgas de una Forma Bestial, esos Espacios de Armadura marcados permanecen marcados. Si marcas tu último Punto de Vida, sales automáticamente de esta forma."
       },
       {
         "name": "Toque Salvaje",
         "text": "Puedes realizar a voluntad efectos inofensivos y sutiles relacionados con la naturaleza, como hacer que una flor crezca rápidamente, invocar una ligera ráfaga de viento o encender una fogata."
       }
     ],
-    "subclasses": ["warden-of-the-elements", "warden-of-renewal"]
+    "subclasses": [
+      "warden-of-the-elements",
+      "warden-of-renewal"
+    ]
   },
   {
     "id": "guardian",
     "name": "Guardián",
-    "domains": ["valor", "blade"],
+    "domains": [
+      "valor",
+      "blade"
+    ],
     "startingEvasion": 9,
     "startingHP": 7,
     "classItems": "Un tótem de tu mentor o una llave secreta",
@@ -58,12 +131,18 @@
         "text": "Una vez por descanso largo, puedes volverte Imparable. Obtienes un Dado de Imparable. En nivel 1, tu Dado de Imparable es un d4. Colócalo en tu hoja de personaje en el espacio indicado, empezando con el valor 1 hacia arriba. Después de hacer una tirada de daño que infrinja 1 o más Puntos de Vida a un objetivo, aumenta el valor del Dado de Imparable en uno. Cuando el valor del dado supere su valor máximo o cuando termine la escena, retira el dado y deja de estar Imparable. En nivel 5, tu Dado de Imparable aumenta a un d6.\nMientras estés Imparable, obtienes los siguientes beneficios:\n• Reduces la gravedad del daño físico en un umbral (de Grave a Mayor, de Mayor a Menor, de Menor a Ninguno).\n• Sumas el valor actual del Dado de Imparable a tu tirada de daño.\n• No puedes estar Inmovilizado ni Vulnerable."
       }
     ],
-    "subclasses": ["stalwart", "vengeance"]
+    "subclasses": [
+      "stalwart",
+      "vengeance"
+    ]
   },
   {
     "id": "ranger",
     "name": "Explorador",
-    "domains": ["bone", "sage"],
+    "domains": [
+      "bone",
+      "sage"
+    ],
     "startingEvasion": 12,
     "startingHP": 6,
     "classItems": "Un trofeo de tu primera cacería o una brújula que parece estar rota",
@@ -77,12 +156,18 @@
         "text": "Gasta una Esperanza y realiza un ataque contra un objetivo. Con éxito, inflige el daño normal de tu ataque y convierte temporalmente al objetivo del ataque en tu Foco. Hasta que esta habilidad termine o hagas de otra criatura tu Foco, obtienes los siguientes beneficios contra tu Foco:\n• Sabes con precisión en qué dirección se encuentra.\n• Cuando le infliges daño, debe marcar un Estrés.\n• Cuando fallas un ataque contra él, puedes terminar tu habilidad de Foco del Explorador para volver a tirar tus Dados de Dualidad."
       }
     ],
-    "subclasses": ["beastbound", "wayfinder"]
+    "subclasses": [
+      "beastbound",
+      "wayfinder"
+    ]
   },
   {
     "id": "rogue",
     "name": "Pícaro",
-    "domains": ["midnight", "grace"],
+    "domains": [
+      "midnight",
+      "grace"
+    ],
     "startingEvasion": 12,
     "startingHP": 6,
     "classItems": "Un juego de herramientas de falsificación o un gancho de escalada",
@@ -97,15 +182,21 @@
       },
       {
         "name": "Ataque Furtivo",
-        "text": "Cuando tengas éxito en un ataque mientras estás Encubierto o mientras un aliado esté a distancia de Combate Cuerpo a Cuerpo de tu objetivo, suma a tu tirada de daño una cantidad de d6 igual a tu nivel."
+        "text": "Cuando tengas éxito en un ataque mientras estás Encubierto o mientras un aliado esté a distancia de Combate Cuerpo a Cuerpo de tu objetivo, suma a tu tirada de daño una cantidad de d6 igual a tu escalón.\n• Nivel 1 → Escalón 1\n• Niveles 2–4 → Escalón 2\n• Niveles 5–7 → Escalón 3\n• Niveles 8–10 → Escalón 4"
       }
     ],
-    "subclasses": ["nightwalker", "syndicate"]
+    "subclasses": [
+      "nightwalker",
+      "syndicate"
+    ]
   },
   {
     "id": "seraph",
     "name": "Serafín",
-    "domains": ["splendor", "valor"],
+    "domains": [
+      "splendor",
+      "valor"
+    ],
     "startingEvasion": 9,
     "startingHP": 7,
     "classItems": "Un fardo de ofrendas o un sigilo de tu dios",
@@ -119,12 +210,18 @@
         "text": "Al comienzo de cada sesión, tira una cantidad de d4 igual al rasgo de Lanzamiento de tu subclase y colócalos en tu hoja de personaje en el espacio indicado. Estos son tus Dados de Oración. Puedes gastar cualquier cantidad de Dados de Oración para ayudarte a ti mismo o a un aliado a distancia Lejana. Puedes usar el valor de un dado gastado para reducir daño entrante, sumarlo al resultado de una tirada después de realizarla, u obtener Esperanza igual al resultado. Al final de cada sesión, despeja todos los Dados de Oración no gastados."
       }
     ],
-    "subclasses": ["divine-wielder", "winged-sentinel"]
+    "subclasses": [
+      "divine-wielder",
+      "winged-sentinel"
+    ]
   },
   {
     "id": "sorcerer",
     "name": "Hechicero",
-    "domains": ["arcana", "midnight"],
+    "domains": [
+      "arcana",
+      "midnight"
+    ],
     "startingEvasion": 10,
     "startingHP": 6,
     "classItems": "Un orbe susurrante o una reliquia familiar",
@@ -146,12 +243,47 @@
         "text": "Una vez por descanso largo, puedes colocar una carta de dominio de tus cartas activas en tu bóveda y elegir entre:\n• Obtener Esperanza igual al nivel de la carta.\n• Potenciar un hechizo que infrinja daño, obteniendo un bono a tu tirada de daño igual al doble del nivel de la carta."
       }
     ],
-    "subclasses": ["elemental-origin", "primal-origin"]
+    "subclasses": [
+      "elemental-origin",
+      "primal-origin"
+    ]
+  },
+  {
+    "id": "warlock",
+    "name": "Brujo",
+    "domains": [
+      "dread",
+      "grace"
+    ],
+    "startingEvasion": 11,
+    "startingHP": 5,
+    "classItems": "Una talla que simboliza a tu patrón o un anillo que no te puedes quitar",
+    "hopeFeature": {
+      "name": "Favor del Patrón",
+      "text": "Cuando falles una tirada, puedes gastar 3 de Esperanza para repetirla con ventaja."
+    },
+    "features": [
+      {
+        "name": "Pacto del Patrón",
+        "text": "Te has comprometido con una entidad sobrenatural —un dios, un fae o un demonio, por ejemplo— a cambio de poder. Escribe su nombre en tu hoja de personaje y, junto con tu GM, determina su esfera de influencia (como Naturaleza, Caos, Sabiduría, Travesura, Amor, Guerra, Justicia o Muerte). Antes de hacer una tirada de acción relacionada con la esfera de influencia de tu patrón, puedes gastar un Favor para invocar su ayuda, tirando tu Dado de Patrón y sumando su resultado al total. Tu Dado de Patrón empieza en d6 y aumenta a d8 en el nivel 5."
+      },
+      {
+        "name": "Favor",
+        "text": "Empiezas con 3 de Favor. Puedes usar un movimiento de tiempo libre para rendir tributo a tu patrón. Describe cómo lo haces y obtén Favor igual a tu rasgo de Lanzamiento. Además, cuando tengas éxito en una tirada de acción con Esperanza, puedes elegir obtener un Favor en lugar de una Esperanza.\nNota: el máximo de Favor que puedes acumular a la vez es 6."
+      }
+    ],
+    "subclasses": [
+      "pact-of-the-endless",
+      "pact-of-the-wrathful"
+    ]
   },
   {
     "id": "warrior",
     "name": "Guerrero",
-    "domains": ["blade", "bone"],
+    "domains": [
+      "blade",
+      "bone"
+    ],
     "startingEvasion": 11,
     "startingHP": 6,
     "classItems": "El retrato de un amante o una piedra de afilar",
@@ -169,12 +301,47 @@
         "text": "Ignoras el lastre al equipar armas. Cuando infliges daño físico, obtienes un bono a tu tirada de daño igual a tu nivel."
       }
     ],
-    "subclasses": ["call-of-the-brave", "call-of-the-slayer"]
+    "subclasses": [
+      "call-of-the-brave",
+      "call-of-the-slayer"
+    ]
+  },
+  {
+    "id": "witch",
+    "name": "Bruja",
+    "domains": [
+      "sage",
+      "dread"
+    ],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "Una mascota pequeña e inofensiva o una piedra de videncia",
+    "hopeFeature": {
+      "name": "Embrujo de la Bruja",
+      "text": "Cuando tú o un aliado a distancia Lejana falléis una tirada de acción, puedes gastar 3 de Esperanza para convertirla en un éxito con Miedo."
+    },
+    "features": [
+      {
+        "name": "Maleficio",
+        "text": "Marca un Estrés para lanzar temporalmente un Maleficio sobre un objetivo a distancia Lejana. Mientras esté Maleficiado, el objetivo sufre una penalización a sus tiradas de daño y a su Dificultad igual a tu escalón. La cantidad máxima de criaturas que puedes tener Maleficiadas a la vez es igual a tu rasgo de Lanzamiento."
+      },
+      {
+        "name": "Comunión",
+        "text": "Una vez por descanso largo, durante un momento de calma, puedes comunicarte con un antepasado, una deidad, un espíritu o un ser de otro mundo. Hazle una pregunta y luego tira una cantidad de d6 igual a tu rasgo de Lanzamiento. Elige uno de los resultados y consulta la tabla siguiente para el efecto.\n1–3: Percibes un sabor, un olor o una sensación relacionada con la respuesta.\n4–5: Oyes sonidos o ves una visión relacionada con la respuesta.\n6: Experimentas psíquicamente una escena relacionada con la respuesta como si estuvieras allí."
+      }
+    ],
+    "subclasses": [
+      "hedge",
+      "moon"
+    ]
   },
   {
     "id": "wizard",
     "name": "Mago",
-    "domains": ["codex", "splendor"],
+    "domains": [
+      "codex",
+      "splendor"
+    ],
     "startingEvasion": 11,
     "startingHP": 5,
     "classItems": "Un libro que estás tratando de traducir o una diminuta e inofensiva mascota elemental",
@@ -192,6 +359,9 @@
         "text": "Elige un número entre 1 y 12. Cuando saques ese número en un Dado de Dualidad, obtén una Esperanza o despeja un Estrés.\nPuedes cambiar este número cuando realices un descanso largo."
       }
     ],
-    "subclasses": ["school-of-knowledge", "school-of-war"]
+    "subclasses": [
+      "school-of-knowledge",
+      "school-of-war"
+    ]
   }
 ]

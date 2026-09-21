@@ -28,8 +28,8 @@ describe('createInitialState', () => {
 });
 
 describe('full creation', () => {
-  it('builds and finalizes a valid PC for all 9 classes', () => {
-    expect(srd().classes).toHaveLength(9);
+  it('builds and finalizes a valid PC for every class', () => {
+    expect(srd().classes).toHaveLength(13);
     for (const characterClass of srd().classes) {
       const state = buildCharacter(characterClass.id);
       expect(isComplete(state), `${characterClass.id} incomplete`).toBe(true);

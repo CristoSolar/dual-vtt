@@ -1,8 +1,13 @@
 /**
  * The SRD's italic stat font is a subset with no ToUnicode map, so its digits come
  * out as Private Use Area codepoints. Each mapping below was confirmed against a
- * rendered page image (e.g. U+E541 U+E53F reads "10/HP" on Swarm of Rats, p.42;
- * U+E546 reads "Loop 6" on Choking Ash, p.55).
+ * rendered page image (e.g. U+E541 U+E53F reads "10/HP" on Swarm of Rats, SRD 1.0
+ * p.42; U+E546 reads "Loop 6" on Choking Ash, p.55).
+ *
+ * 7, 8 and 9 first appear in SRD 2.0 and were confirmed the same way: "Minion (7)"
+ * on the Recruit (p.122), "Horde (8/HP)" on the Darkweave Swarmlings (p.99), and
+ * "Minion (9)" on the Elemental (p.135) — each with the digit repeated in the
+ * feature's own prose, which renders in an ordinary font.
  */
 export const PUA_DIGITS = {
   '\ue53f': '0',
@@ -12,6 +17,9 @@ export const PUA_DIGITS = {
   '\ue544': '4',
   '\ue545': '5',
   '\ue546': '6',
+  '\ue547': '7',
+  '\ue548': '8',
+  '\ue549': '9',
   // Not a digit: the dingbat arrow used in "Level 1 → Tier 1" lists.
   '\uf0e0': '→',
 };

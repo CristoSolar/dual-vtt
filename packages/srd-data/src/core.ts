@@ -68,6 +68,8 @@ export const DomainIdSchema = z.enum([
   'blade',
   'bone',
   'codex',
+  // New in SRD 2.0, with the Warlock and the Witch.
+  'dread',
   'grace',
   'midnight',
   'sage',
@@ -77,14 +79,19 @@ export const DomainIdSchema = z.enum([
 export type DomainId = z.infer<typeof DomainIdSchema>;
 
 export const ClassIdSchema = z.enum([
+  // Assassin, Brawler, Warlock and Witch are new in SRD 2.0.
+  'assassin',
   'bard',
+  'brawler',
   'druid',
   'guardian',
   'ranger',
   'rogue',
   'seraph',
   'sorcerer',
+  'warlock',
   'warrior',
+  'witch',
   'wizard',
 ]);
 export type ClassId = z.infer<typeof ClassIdSchema>;

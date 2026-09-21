@@ -3,54 +3,96 @@
     "id": "arcana",
     "name": "Arcana",
     "text": "Arcana es el dominio de la magia innata e instintiva. Quienes eligen este camino se conectan con las fuerzas crudas y enigmáticas de los reinos para manipular tanto su propia energía como los elementos. Arcana ofrece a sus portadores un poder volátil, pero increíblemente potente cuando se canaliza correctamente.",
-    "classes": ["druid", "sorcerer"]
+    "classes": [
+      "druid",
+      "sorcerer"
+    ]
   },
   {
     "id": "blade",
     "name": "Filo",
     "text": "Filo es el dominio de la maestría con las armas. Ya sea con acero, con arco o con un arma más especializada, quienes siguen este camino tienen la habilidad de acortar la vida de otros. Los portadores de Filo se dedican a alcanzar un poder inexorable sobre la muerte.",
-    "classes": ["guardian", "warrior"]
+    "classes": [
+      "assassin",
+      "guardian",
+      "warrior"
+    ]
   },
   {
     "id": "bone",
     "name": "Hueso",
     "text": "Hueso es el dominio de la táctica y el cuerpo. Sus practicantes tienen un control asombroso sobre sus propias capacidades físicas y un ojo certero para predecir el comportamiento de otros en combate. Los seguidores de Hueso adquieren una comprensión sin igual de los cuerpos y sus movimientos.",
-    "classes": ["ranger", "warrior"]
+    "classes": [
+      "brawler",
+      "ranger",
+      "warrior"
+    ]
   },
   {
     "id": "codex",
     "name": "Códice",
     "text": "Códice es el dominio del estudio intensivo de la magia. Quienes buscan conocimiento mágico recurren a las ecuaciones de poder registradas en libros, escritas en pergaminos, grabadas en muros o tatuadas en cuerpos. Códice ofrece a sus devotos una comprensión dominante y versátil de la magia, más allá de los límites del saber común.",
-    "classes": ["bard", "wizard"]
+    "classes": [
+      "bard",
+      "wizard"
+    ]
+  },
+  {
+    "id": "dread",
+    "name": "Pavor",
+    "text": "Pavor es el dominio de las pesadillas y el miedo. Quienes eligen este camino pueden invocar monstruosidades, debilitar a sus enemigos y canalizar magia aterradora para destruirlos. Pavor concede a sus adeptos poder sobre fuerzas que la mayoría teme demasiado como para emplearlas.",
+    "classes": [
+      "warlock",
+      "witch"
+    ]
   },
   {
     "id": "grace",
     "name": "Gracia",
     "text": "Gracia es el dominio del carisma. A través de relatos arrebatadores, hechizos encantadores o un velo de mentiras, quienes canalizan este poder definen la realidad de sus adversarios, doblegando su percepción a voluntad. Gracia ofrece a sus portadores un magnetismo natural y el dominio del lenguaje.",
-    "classes": ["bard", "rogue"]
+    "classes": [
+      "bard",
+      "rogue",
+      "warlock"
+    ]
   },
   {
     "id": "midnight",
     "name": "Medianoche",
     "text": "Medianoche es el dominio de las sombras y el secretismo. Ya sea mediante trucos ingeniosos, magia sutil o el manto de la noche, quienes canalizan estas fuerzas practican el arte del ocultamiento y pueden desvelar tesoros escondidos. Medianoche otorga a sus practicantes el poder de controlar y crear enigmas.",
-    "classes": ["rogue", "sorcerer"]
+    "classes": [
+      "assassin",
+      "rogue",
+      "sorcerer"
+    ]
   },
   {
     "id": "sage",
     "name": "Sabio",
     "text": "Sabio es el dominio del mundo natural. Quienes recorren este camino se conectan con el poder desatado de la tierra y sus criaturas para desplegar magia pura. Sabio otorga a sus seguidores la vitalidad de una flor en pleno florecimiento y la ferocidad de un depredador voraz.",
-    "classes": ["druid", "ranger"]
+    "classes": [
+      "druid",
+      "ranger",
+      "witch"
+    ]
   },
   {
     "id": "splendor",
     "name": "Esplendor",
     "text": "Esplendor es el dominio de la vida. A través de esta magia, sus seguidores obtienen la capacidad de curar y, en cierta medida, controlar la muerte. Esplendor otorga a sus discípulos la magnífica capacidad de dar y de arrebatar la vida.",
-    "classes": ["seraph", "wizard"]
+    "classes": [
+      "seraph",
+      "wizard"
+    ]
   },
   {
     "id": "valor",
     "name": "Valor",
     "text": "Valor es el dominio de la protección. Ya sea mediante el ataque o la defensa, quienes eligen esta disciplina canalizan una fuerza formidable para proteger a sus aliados en batalla. Valor otorga un gran poder a quienes alzan su escudo en defensa de otros.",
-    "classes": ["guardian", "seraph"]
+    "classes": [
+      "brawler",
+      "guardian",
+      "seraph"
+    ]
   }
 ]

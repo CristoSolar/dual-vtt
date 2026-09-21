@@ -1,8 +1,8 @@
 # SRD extraction
 
-One-time scripts that generated `../data/*.json` from
-`Daggerheart-SRD-9-09-25.pdf`. The JSON is committed, so you only need these to
-re-derive the data (e.g. against a newer SRD release).
+Scripts that generate `../data/en/*.json` from the SRD PDF, currently
+`DH_SRD_2_2026_08_25.pdf` (SRD 2.0). The JSON is committed, so you only need these
+to re-derive the data against a newer SRD release.
 
 ## Regenerating
 
@@ -10,20 +10,20 @@ The scripts read `srd-bbox.xml`, which is produced by poppler's `pdftotext`. It 
 not committed. Generate it from the repo root:
 
 ```sh
-pdftotext -bbox-layout Daggerheart-SRD-9-09-25.pdf packages/srd-data/extract/srd-bbox.xml
+pdftotext -bbox-layout DH_SRD_2_2026_08_25.pdf packages/srd-data/extract/srd-bbox.xml
 ```
 
 No poppler installed? Run it in a container instead:
 
 ```sh
 docker run --rm -v "$PWD:/w" -w /w minidocks/poppler:latest \
-  pdftotext -bbox-layout Daggerheart-SRD-9-09-25.pdf packages/srd-data/extract/srd-bbox.xml
+  pdftotext -bbox-layout DH_SRD_2_2026_08_25.pdf packages/srd-data/extract/srd-bbox.xml
 ```
 
 Then, from this directory:
 
 ```sh
-for g in gen-weapons gen-armor gen-cards gen-adversaries \
+for g in gen-weapons gen-armor gen-classes gen-cards gen-adversaries \
          gen-environments gen-loot gen-beastforms; do node "$g.mjs"; done
 ```
 
@@ -32,6 +32,13 @@ contract** — any parse anomaly is reported rather than silently dropped or gue
 
 `gen-weapons.mjs` and `gen-armor.mjs` differ from the rest: their tables are small
 and dense enough that the rows are transcribed inline, so they need no XML.
+
+`gen-classes.mjs` writes two files, `classes.json` and `subclasses.json`, because one
+pass over the Classes chapter produces both and they have to agree on ids. It carries
+a short `TABLE_FEATURES` list: two features are printed as tables whose cells a
+column reader cannot put back into reading order, so their text is written out there.
+Each one is checked against what the reader did extract, so a later SRD edit makes the
+script complain rather than silently keep stale text.
 
 ## Why bbox instead of plain text
 

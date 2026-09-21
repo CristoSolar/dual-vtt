@@ -15,7 +15,10 @@ const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos
 const clean = (s) =>
   fixGlyphs(s)
     .replace(/&(amp|lt|gt|quot|apos);/g, (m) => ENTITIES[m])
-    .replace(/[ﬀ-ﬄ]/g, (c) => LIGATURES[c] ?? c);
+    .replace(/[ﬀ-ﬄ]/g, (c) => LIGATURES[c] ?? c)
+    // Soft hyphens and zero-width spaces are invisible on the page but would sit
+    // inside a word in the data, where they break any search for it.
+    .replace(/[\u00ad\u200b]/g, '');
 
 /**
  * Same extraction as `readPages`, but keeps each block's coordinates so callers can

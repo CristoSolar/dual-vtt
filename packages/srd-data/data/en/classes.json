@@ -1,8 +1,40 @@
 [
   {
+    "id": "assassin",
+    "name": "Assassin",
+    "domains": [
+      "blade",
+      "midnight"
+    ],
+    "startingEvasion": 12,
+    "startingHP": 5,
+    "classItems": "A list of names with several marked off or a rusted blade inscribed with an insignia",
+    "hopeFeature": {
+      "name": "Deadly Determination",
+      "text": "Spend 3 Hope to clear 2 Stress."
+    },
+    "features": [
+      {
+        "name": "Marked for Death",
+        "text": "On a successful weapon attack, you can mark a Stress to make the target Marked for Death. When you deal damage to a target you’ve Marked for Death, add a number of d4s equal to your tier to the damage roll.\nYou can have only one adversary Marked for Death at a time. This condition lasts until you take a rest, the current adversary Marked for Death is defeated, or the GM spends a number of Fear equal to your tier to clear it."
+      },
+      {
+        "name": "Get In & Get Out",
+        "text": "Spend a Hope to ask the GM for a quick or inconspicuous way into or out of a place you can see. The next roll you make that acts on this information has advantage."
+      }
+    ],
+    "subclasses": [
+      "executioners-guild",
+      "poisoners-guild"
+    ]
+  },
+  {
     "id": "bard",
     "name": "Bard",
-    "domains": ["grace", "codex"],
+    "domains": [
+      "grace",
+      "codex"
+    ],
     "startingEvasion": 10,
     "startingHP": 5,
     "classItems": "A romance novel or a letter never opened",
@@ -16,12 +48,47 @@
         "text": "Once per session, describe how you rally the party and give yourself and each of your allies a Rally Die. At level 1, your Rally Die is a d6. A PC can spend their Rally Die to roll it, adding the result to their action roll, reaction roll, damage roll, or to clear a number of Stress equal to the result. At the end of each session, clear all unspent Rally Dice. At level 5, your Rally Die increases to a d8."
       }
     ],
-    "subclasses": ["troubadour", "wordsmith"]
+    "subclasses": [
+      "troubadour",
+      "wordsmith"
+    ]
+  },
+  {
+    "id": "brawler",
+    "name": "Brawler",
+    "domains": [
+      "valor",
+      "bone"
+    ],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "Hand wraps from a mentor or a book about your secret hobby",
+    "hopeFeature": {
+      "name": "Square Up",
+      "text": "Spend 3 Hope to intimidate a target within Close range, making them temporarily Vulnerable."
+    },
+    "features": [
+      {
+        "name": "I Am the Weapon",
+        "text": "Your barehanded attacks are as strong as any blade. You have a primary weapon called Brawler’s Strike equipped while you have no other Active Weapons. It uses a trait of your choice, has Melee range, and deals d8+d6 physical damage using your Proficiency (both the d8 and d6 scale off your Proficiency). While this weapon is active, you gain a +1 bonus to your Evasion."
+      },
+      {
+        "name": "Combo Strike",
+        "text": "After rolling damage on a successful attack with a Melee weapon, you can mark a Stress to start a combo strike. When you do, roll your Combo Die and note the result, then continue rolling your Combo Die until the result of your latest roll is lower than the roll that preceded it. You deal extra damage equal to the total of all rolled Combo Die results on this attack. The results can’t be modified by any means.\nYour Combo Die starts as a d4. Once per tier, you can increase your Combo Die by one step as a level advancement option."
+      }
+    ],
+    "subclasses": [
+      "juggernaut",
+      "martial-artist"
+    ]
   },
   {
     "id": "druid",
     "name": "Druid",
-    "domains": ["sage", "arcana"],
+    "domains": [
+      "sage",
+      "arcana"
+    ],
     "startingEvasion": 10,
     "startingHP": 6,
     "classItems": "A small bag of rocks and bones or a strange pendant found in the dirt",
@@ -32,19 +99,25 @@
     "features": [
       {
         "name": "Beastform",
-        "text": "Mark a Stress to magically transform into a creature of your tier or lower from the Beastform list. You can drop out of this form at any time. While transformed, you can't use weapons or cast spells from domain cards, but you can still use other features or abilities you have access to. Spells you cast before you transform stay active and last for their normal duration, and you can talk and communicate as normal. Additionally, you gain the Beastform's features, add their Evasion bonus to your Evasion, and use the trait specified in their statistics for your attack. While you're in a Beastform, your armor becomes part of your body and you mark Armor Slots as usual; when you drop out of a Beastform, those marked Armor Slots remain marked. If you mark your last Hit Point, you automatically drop out of this form."
+        "text": "Mark a Stress to magically transform into a creature of your tier or lower from the Beastform list. You can drop out of this form at any time. While transformed, you can’t use weapons or cast spells from domain cards, but you can still use other features or abilities you have access to. Spells you cast before you transform stay active and last for their normal duration, and you can talk and communicate as normal. Additionally, you gain the Beastform’s features, add their Evasion bonus to your Evasion, and use the trait specified in their statistics for your attack. While you’re in a Beastform, your armor becomes part of your body and you mark Armor Slots as usual; when you drop out of a Beastform, those marked Armor Slots remain marked. If you mark your last Hit Point, you automatically drop out of this form."
       },
       {
         "name": "Wildtouch",
         "text": "You can perform harmless, subtle effects that involve nature—such as causing a flower to rapidly grow, summoning a slight gust of wind, or starting a campfire—at will."
       }
     ],
-    "subclasses": ["warden-of-the-elements", "warden-of-renewal"]
+    "subclasses": [
+      "warden-of-the-elements",
+      "warden-of-renewal"
+    ]
   },
   {
     "id": "guardian",
     "name": "Guardian",
-    "domains": ["valor", "blade"],
+    "domains": [
+      "valor",
+      "blade"
+    ],
     "startingEvasion": 9,
     "startingHP": 7,
     "classItems": "A totem from your mentor or a secret key",
@@ -55,15 +128,21 @@
     "features": [
       {
         "name": "Unstoppable",
-        "text": "Once per long rest, you can become Unstoppable. You gain an Unstoppable Die. At level 1, your Unstoppable Die is a d4. Place it on your character sheet in the space provided, starting with the 1 value facing up. After you make a damage roll that deals 1 or more Hit Points to a target, increase the Unstoppable Die value by one. When the die's value would exceed its maximum value or when the scene ends, remove the die and drop out of Unstoppable. At level 5, your Unstoppable Die increases to a d6.\nWhile Unstoppable, you gain the following benefits:\n• You reduce the severity of physical damage by one threshold (Severe to Major, Major to Minor, Minor to None).\n• You add the current value of the Unstoppable Die to your damage roll.\n• You can't be Restrained or Vulnerable."
+        "text": "Once per long rest, you can become Unstoppable. You gain an Unstoppable Die. At level 1, your Unstoppable Die is a d4. Place it on your character sheet in the space provided, starting with the 1 value facing up. After you make a damage roll that deals 1 or more Hit Points to a target, increase the Unstoppable Die value by one. When the die’s value would exceed its maximum value or when the scene ends, remove the die and drop out of Unstoppable. At level 5, your Unstoppable Die increases to a d6.\nWhile Unstoppable, you gain the following benefits:\n◦ You reduce the severity of physical damage by one threshold (Severe to Major, Major to Minor, Minor to None).\n◦ You add the current value of the Unstoppable Die to your damage roll.\n◦ You can’t be Restrained or Vulnerable.\nTip: If your Unstoppable Die is a d4 and the 4 is currently facing up, you remove the die the next time you would increase it. However, if your Unstoppable Die has increased to a d6 and the 4 is currently facing up, you’ll turn it to 5 the next time you would increase it. In this case, you’ll remove the die after you would need to increase it higher than 6."
       }
     ],
-    "subclasses": ["stalwart", "vengeance"]
+    "subclasses": [
+      "stalwart",
+      "vengeance"
+    ]
   },
   {
     "id": "ranger",
     "name": "Ranger",
-    "domains": ["bone", "sage"],
+    "domains": [
+      "bone",
+      "sage"
+    ],
     "startingEvasion": 12,
     "startingHP": 6,
     "classItems": "A trophy from your first kill or a seemingly broken compass",
@@ -73,21 +152,27 @@
     },
     "features": [
       {
-        "name": "Ranger's Focus",
-        "text": "Spend a Hope and make an attack against a target. On a success, deal your attack's normal damage and temporarily make the attack's target your Focus. Until this feature ends or you make a different creature your Focus, you gain the following benefits against your Focus:\n• You know precisely what direction they are in.\n• When you deal damage to them, they must mark a Stress.\n• When you fail an attack against them, you can end your Ranger's Focus feature to reroll your Duality Dice."
+        "name": "Ranger’s Focus",
+        "text": "Spend a Hope and make an attack against a target. On a success, deal your attack’s normal damage and temporarily make the attack’s target your Focus. Until this feature ends or you make a different creature your Focus, you gain the following benefits against your Focus:\n◦ You know precisely what direction they are in.\n◦ When you deal damage to them, they must mark a Stress.\n◦ When you fail an attack against them, you can end your Ranger’s Focus feature to reroll your Duality Dice."
       }
     ],
-    "subclasses": ["beastbound", "wayfinder"]
+    "subclasses": [
+      "beastbound",
+      "wayfinder"
+    ]
   },
   {
     "id": "rogue",
     "name": "Rogue",
-    "domains": ["midnight", "grace"],
+    "domains": [
+      "midnight",
+      "grace"
+    ],
     "startingEvasion": 12,
     "startingHP": 6,
     "classItems": "A set of forgery tools or a grappling hook",
     "hopeFeature": {
-      "name": "Rogue's Dodge",
+      "name": "Rogue’s Dodge",
       "text": "Spend 3 Hope to gain a +2 bonus to your Evasion until the next time an attack succeeds against you. Otherwise, this bonus lasts until your next rest."
     },
     "features": [
@@ -97,15 +182,21 @@
       },
       {
         "name": "Sneak Attack",
-        "text": "When you succeed on an attack while Cloaked or while an ally is within Melee range of your target, add a number of d6s equal to your tier to your damage roll."
+        "text": "When you succeed on an attack while Cloaked or while an ally is within Melee range of your target, add a number of d6s equal to your tier to your damage roll.\n• Level 1 → Tier 1\n• Levels 2–4 → Tier 2\n• Levels 5–7 → Tier 3\n• Levels 8–10 → Tier 4"
       }
     ],
-    "subclasses": ["nightwalker", "syndicate"]
+    "subclasses": [
+      "nightwalker",
+      "syndicate"
+    ]
   },
   {
     "id": "seraph",
     "name": "Seraph",
-    "domains": ["splendor", "valor"],
+    "domains": [
+      "splendor",
+      "valor"
+    ],
     "startingEvasion": 9,
     "startingHP": 7,
     "classItems": "A bundle of offerings or a sigil of your god",
@@ -116,15 +207,21 @@
     "features": [
       {
         "name": "Prayer Dice",
-        "text": "At the beginning of each session, roll a number of d4s equal to your subclass's Spellcast trait and place them on your character sheet in the space provided. These are your Prayer Dice. You can spend any number of Prayer Dice to aid yourself or an ally within Far range. You can use a spent die's value to reduce incoming damage, add to a roll's result after the roll is made, or gain Hope equal to the result. At the end of each session, clear all unspent Prayer Dice."
+        "text": "At the beginning of each session, roll a number of d4s equal to your subclass’s Spellcast trait and place them on your character sheet in the space provided. These are your Prayer Dice. You can spend any number of Prayer Dice to aid yourself or an ally within Far range. You can use a spent die’s value to reduce incoming damage, add to a roll’s result after the roll is made, or gain Hope equal to the result. At the end of each session, clear all unspent Prayer Dice."
       }
     ],
-    "subclasses": ["divine-wielder", "winged-sentinel"]
+    "subclasses": [
+      "divine-wielder",
+      "winged-sentinel"
+    ]
   },
   {
     "id": "sorcerer",
     "name": "Sorcerer",
-    "domains": ["arcana", "midnight"],
+    "domains": [
+      "arcana",
+      "midnight"
+    ],
     "startingEvasion": 10,
     "startingHP": 6,
     "classItems": "A whispering orb or a family heirloom",
@@ -143,15 +240,50 @@
       },
       {
         "name": "Channel Raw Power",
-        "text": "Once per long rest, you can place a domain card from your loadout into your vault and choose to either:\n• Gain Hope equal to the level of the card.\n• Enhance a spell that deals damage, gaining a bonus to your damage roll equal to twice the level of the card."
+        "text": "Once per long rest, you can place a domain card from your loadout into your vault and choose to either:\n◦ Gain Hope equal to the level of the card.\n◦ Enhance a spell that deals damage, gaining a bonus to your damage roll equal to twice the level of the card."
       }
     ],
-    "subclasses": ["elemental-origin", "primal-origin"]
+    "subclasses": [
+      "elemental-origin",
+      "primal-origin"
+    ]
+  },
+  {
+    "id": "warlock",
+    "name": "Warlock",
+    "domains": [
+      "dread",
+      "grace"
+    ],
+    "startingEvasion": 11,
+    "startingHP": 5,
+    "classItems": "A carving that symbolizes your patron or a ring you can’t remove",
+    "hopeFeature": {
+      "name": "Patron’s Boon",
+      "text": "When you fail a roll, you can spend 3 Hope to reroll with advantage."
+    },
+    "features": [
+      {
+        "name": "Patron’s Pact",
+        "text": "You have committed yourself to a supernatural entity—such as a god, fae, or demon—in exchange for power. Write their name on your character sheet, then work with your GM to determine their sphere of influence (such as Nature, Chaos, Wisdom, Mischief, Love, War, Justice, or Death). Before making an action roll that relates to your patron’s sphere of influence, you can spend a Favor to call upon their aid, rolling your Patron Die and adding its result to the total. Your Patron Die starts at a d6 and increases to a d8 at level 5."
+      },
+      {
+        "name": "Favor",
+        "text": "You start with 3 Favor. You can use a downtime move to show tribute to your patron. Describe how and gain Favor equal to your Spellcast trait. Additionally, when you succeed on an action roll with Hope, you can choose to gain a Favor instead of a Hope.\nNote: The maximum Favor you can hold at one time is 6."
+      }
+    ],
+    "subclasses": [
+      "pact-of-the-endless",
+      "pact-of-the-wrathful"
+    ]
   },
   {
     "id": "warrior",
     "name": "Warrior",
-    "domains": ["blade", "bone"],
+    "domains": [
+      "blade",
+      "bone"
+    ],
     "startingEvasion": 11,
     "startingHP": 6,
     "classItems": "The drawing of a lover or a sharpening stone",
@@ -162,22 +294,57 @@
     "features": [
       {
         "name": "Attack of Opportunity",
-        "text": "If an adversary within Melee range attempts to leave that range, make a reaction roll using a trait of your choice against their Difficulty. Choose one effect on a success, or two if you critically succeed:\n• They can't move from where they are.\n• You deal damage to them equal to your primary weapon's damage.\n• You move with them."
+        "text": "If an adversary within Melee range attempts to leave that range, make a reaction roll using a trait of your choice against their Difficulty. Choose one effect on a success, or two if you critically succeed:\n◦ They can’t move from where they are.\n◦ You deal damage to them equal to your primary weapon’s damage.\n◦ You move with them."
       },
       {
         "name": "Combat Training",
         "text": "You ignore burden when equipping weapons. When you deal physical damage, you gain a bonus to your damage roll equal to your level."
       }
     ],
-    "subclasses": ["call-of-the-brave", "call-of-the-slayer"]
+    "subclasses": [
+      "call-of-the-brave",
+      "call-of-the-slayer"
+    ]
+  },
+  {
+    "id": "witch",
+    "name": "Witch",
+    "domains": [
+      "sage",
+      "dread"
+    ],
+    "startingEvasion": 10,
+    "startingHP": 6,
+    "classItems": "A small, harmless pet or a scrying stone",
+    "hopeFeature": {
+      "name": "Witch’s Charm",
+      "text": "When you or an ally within Far range fails an action roll, you can spend 3 Hope to change it into a success with Fear instead."
+    },
+    "features": [
+      {
+        "name": "Hex",
+        "text": "Mark a Stress to temporarily Hex a target within Far range. While Hexed, the target gains a penalty to their damage rolls and Difficulty equal to your tier. The maximum number of creatures you can Hex at one time is equal to your Spellcast trait."
+      },
+      {
+        "name": "Commune",
+        "text": "Once per long rest during a moment of calm, you can commune with an ancestor, a deity, a spirit, or an otherworldly being. Ask them a question, then roll a number of d6s equal to your Spellcast trait. Choose one of the results and reference the chart below for the effect.\n1–3: You taste a flavor, smell a scent, or feel a sensation relevant to the answer.\n4–5: You hear sounds or see a vision relevant to the answer.\n6: You psychically experience a scene relevant to the answer as if you were there."
+      }
+    ],
+    "subclasses": [
+      "hedge",
+      "moon"
+    ]
   },
   {
     "id": "wizard",
     "name": "Wizard",
-    "domains": ["codex", "splendor"],
+    "domains": [
+      "codex",
+      "splendor"
+    ],
     "startingEvasion": 11,
     "startingHP": 5,
-    "classItems": "A book you're trying to translate or a tiny, harmless elemental pet",
+    "classItems": "A book you’re trying to translate or a tiny, harmless elemental pet",
     "hopeFeature": {
       "name": "Not This Time",
       "text": "Spend 3 Hope to force an adversary within Far range to reroll an attack or damage roll."
@@ -185,13 +352,16 @@
     "features": [
       {
         "name": "Prestidigitation",
-        "text": "You can perform harmless, subtle magical effects at will. For example, you can change an object's color, create a smell, light a candle, cause a tiny object to float, illuminate a room, or repair a small object."
+        "text": "You can perform harmless, subtle magical effects at will. For example, you can change an object’s color, create a smell, light a candle, cause a tiny object to float, illuminate a room, or repair a small object."
       },
       {
         "name": "Strange Patterns",
         "text": "Choose a number between 1 and 12. When you roll that number on a Duality Die, gain a Hope or clear a Stress.\nYou can change this number when you take a long rest."
       }
     ],
-    "subclasses": ["school-of-knowledge", "school-of-war"]
+    "subclasses": [
+      "school-of-knowledge",
+      "school-of-war"
+    ]
   }
 ]

@@ -44,12 +44,13 @@ describe('locale switch', () => {
 describe.each(LOCALES)('completeness (%s)', (locale) => {
   const data = srdByLocale[locale];
 
-  it('has 9 classes', () => {
-    expect(data.classes).toHaveLength(9);
+  it('has 13 classes', () => {
+    // Nine in the core set, plus the Assassin, Brawler, Warlock and Witch (SRD 2.0).
+    expect(data.classes).toHaveLength(13);
   });
 
-  it('has 18 subclasses, two per class', () => {
-    expect(data.subclasses).toHaveLength(18);
+  it('has 26 subclasses, two per class', () => {
+    expect(data.subclasses).toHaveLength(26);
     for (const characterClass of data.classes) {
       const pair = data.subclasses.filter((s) => s.classId === characterClass.id);
       expect(pair, characterClass.id).toHaveLength(2);
@@ -64,8 +65,9 @@ describe.each(LOCALES)('completeness (%s)', (locale) => {
     expect(data.communities).toHaveLength(9);
   });
 
-  it('has 9 domains', () => {
-    expect(data.domains).toHaveLength(9);
+  it('has 10 domains', () => {
+    // Nine in the core set, plus Dread (SRD 2.0 p.7).
+    expect(data.domains).toHaveLength(10);
   });
 });
 

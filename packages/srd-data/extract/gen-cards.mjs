@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import { readPages } from './geo.mjs';
 
 // The Domain Card Reference appendix, read column by column so cards stay intact.
+// SRD 2.0 prints it on pages 206-224, and the PDF's page numbering matches the
+// printed one, so these are plain zero-based indices into that range.
 const lines = readPages(new URL('./srd-bbox.xml', import.meta.url).pathname)
-  .slice(59, 68)
+  .slice(205, 224)
   .flatMap((columns) => columns.flat());
 
 const DOMAINS = [
@@ -11,6 +13,8 @@ const DOMAINS = [
   'Blade',
   'Bone',
   'Codex',
+  // Dread is new in SRD 2.0: the Warlock's and the Witch's domain.
+  'Dread',
   'Grace',
   'Midnight',
   'Sage',
@@ -77,6 +81,10 @@ headerIdx.forEach((hi, n) => {
 
   const bodyLines = lines.slice(hi + 2, end).filter((l) => !isNoise(l));
   // Rewrap: hard-wrapped prose rejoins with a space; bullets start a new line.
+  // SRD 2.0 sets the appendix's option lists with the hollow bullet (U+25E6) where
+  // 1.0 used the solid one; both mark a list item, and the character is kept as the
+  // SRD prints it.
+  const BULLET = /^[•◦]/;
   let body = '';
   for (const line of bodyLines) {
     if (body === '') {
@@ -84,8 +92,8 @@ headerIdx.forEach((hi, n) => {
       continue;
     }
     const lastLine = body.slice(body.lastIndexOf('\n') + 1);
-    const inBullet = lastLine.startsWith('•');
-    if (line.startsWith('•')) {
+    const inBullet = BULLET.test(lastLine);
+    if (BULLET.test(line)) {
       body += `\n${line}`;
     } else if (inBullet && /[.!?]$/.test(lastLine) && /^[A-Z“"]/.test(line)) {
       // A finished bullet followed by a new sentence: prose resuming after the list.

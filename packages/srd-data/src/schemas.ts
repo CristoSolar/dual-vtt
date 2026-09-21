@@ -16,8 +16,11 @@ export const DomainSchema = z.object({
   id: DomainIdSchema,
   name: z.string().min(1),
   text: z.string().min(1),
-  /** Which classes can access this domain (SRD p.7, "Class Domains"). */
-  classes: z.array(ClassIdSchema).length(2),
+  /**
+   * Which classes can access this domain (SRD 2.0 p.7). Two in the core set; the
+   * classes added in 2.0 take some domains to three.
+   */
+  classes: z.array(ClassIdSchema).min(2),
 });
 export type Domain = z.infer<typeof DomainSchema>;
 

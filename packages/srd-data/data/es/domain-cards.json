@@ -738,6 +738,213 @@
     "text": "Haz una Tirada de Lanzamiento (18). Una vez por descanso largo, con éxito, el GM te dice qué adversarios dentro de distancia Lejana tienen una Dificultad de 18 o menos. Marca Estrés por cada uno al que quieras golpear con este hechizo. Mueren y no pueden volver a la vida por ningún medio."
   },
   {
+    "id": "blighting-strike",
+    "name": "Golpe Marchitador",
+    "level": 1,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo a distancia Lejana. Con éxito:\n◦ En una tirada con Esperanza, inflige d6+1 de daño mágico usando tu Competencia. En una tirada con Miedo, inflige d10+1 de daño mágico usando tu Competencia.\n◦ El siguiente ataque exitoso del objetivo inflige la mitad del daño.\nSi fallas, debes gastar una Esperanza o marcar un Estrés."
+  },
+  {
+    "id": "umbral-veil",
+    "name": "Velo Umbrío",
+    "level": 1,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Una vez por descanso, puedes marcar un Estrés para envolverte en energía sombría. Cuando lo hagas, coloca en esta carta una cantidad de fichas igual a la cantidad de Miedo en la reserva del GM. Después de que se haga una tirada de ataque contra ti, puedes gastar cualquier cantidad de fichas para dar al resultado una penalización de −1 por cada ficha gastada. Al final de la escena, despeja todas las fichas sin gastar."
+  },
+  {
+    "id": "voice-of-dread",
+    "name": "Voz del Pavor",
+    "level": 1,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 0,
+    "text": "Puedes hablar mágicamente a una criatura que puedas ver, atormentándola con tus palabras. Haz una Tirada de Lanzamiento contra ella. Con éxito, debe marcar un Estrés y queda paralizada de terror, volviéndose temporalmente Inmovilizada."
+  },
+  {
+    "id": "hideous-retribution",
+    "name": "Represalia Horrenda",
+    "level": 2,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Cuando un aliado a distancia Cercana reciba daño de un objetivo que puedas ver, puedes hacer una tirada de reacción contra ese objetivo usando tu rasgo de Lanzamiento. Con éxito, marca un Estrés para infligir d6 de daño mágico usando tu Competencia."
+  },
+  {
+    "id": "book-of-yarrow",
+    "name": "LIBRO DE YARROW",
+    "level": 10,
+    "domain": "codex",
+    "type": "grimoire",
+    "recallCost": 2,
+    "text": "Detenedor del Tiempo: Haz una Tirada de Lanzamiento (18). Con éxito, el tiempo se detiene temporalmente por completo para todos dentro de distancia Lejana excepto para ti. Se reanuda la próxima vez que hagas una tirada de acción dirigida a otra criatura. Inmunidad Mágica: Gasta 5 de Esperanza para volverte inmune al daño mágico hasta tu próximo descanso."
+  },
+  {
+    "id": "transcendent-union",
+    "name": "UNIÓN TRASCENDENTE",
+    "level": 10,
+    "domain": "codex",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Una vez por descanso largo, gasta 5 de Esperanza para lanzar este hechizo sobre dos o más criaturas dispuestas. Hasta tu próximo descanso, cuando una criatura conectada por esta unión vaya a marcar Estrés o Puntos de Vida, las criaturas conectadas pueden elegir quién lo marca."
+  },
+  {
+    "id": "siphon-essence",
+    "name": "Drenar Esencia",
+    "level": 2,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo a distancia Muy Cercana. Una vez por descanso largo, con éxito, el objetivo recibe d12+4 de daño mágico usando tu Competencia. Con un éxito con Miedo, obtienes un bono de +1 a tu Competencia para este ataque. Despejas una cantidad de Puntos de Vida igual a la cantidad de Puntos de Vida que el objetivo marcó por este ataque."
+  },
+  {
+    "id": "shared-trauma",
+    "name": "Trauma Compartido",
+    "level": 3,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Puedes transferir el sufrimiento de una criatura a otra. Una vez por descanso, marca cualquier cantidad de Puntos de Vida en una criatura voluntaria a distancia de Combate Cuerpo a Cuerpo para despejar una cantidad igual de Puntos de Vida en otra criatura voluntaria a distancia de Combate Cuerpo a Cuerpo."
+  },
+  {
+    "id": "terrify",
+    "name": "Aterrorizar",
+    "level": 3,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo a distancia Cercana. Con éxito, el objetivo marca 1d4 de Estrés y puedes hacer que huya una categoría de distancia respecto de ti (por ejemplo, de Muy Cercana a Cercana, o de Cercana a Lejana). Con un éxito con Miedo, el objetivo además se vuelve temporalmente Vulnerable."
+  },
+  {
+    "id": "chains-of-affliction",
+    "name": "Cadenas de Aflicción",
+    "level": 4,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Marca 2 de Estrés para Encadenar temporalmente a un objetivo a distancia Cercana. Cuando una criatura Encadenada inflige daño, el objetivo de su ataque marca un Punto de Vida menos de lo que marcaría normalmente. No puedes tener más de una criatura Encadenada a la vez."
+  },
+  {
+    "id": "summon-horror",
+    "name": "Invocar Horror",
+    "level": 4,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Una vez por escena, marca un Estrés para invocar a una criatura de otro mundo que inflige d8+1 de daño mágico usando tu rasgo de Lanzamiento a un objetivo a distancia Lejana. Si el objetivo marca algún Punto de Vida por este ataque, debe tener éxito en una Tirada de Reacción (12) para sobreponerse al horror o marcar una cantidad igual de Estrés. Tras hacer el ataque, la criatura se disipa."
+  },
+  {
+    "id": "dire-strike",
+    "name": "Golpe Funesto",
+    "level": 5,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Cuando un objetivo marque cualquier cantidad de Puntos de Vida por un ataque tuyo, puedes gastar una Esperanza para drenarle poder. El GM pierde un Miedo."
+  },
+  {
+    "id": "spectral-mist",
+    "name": "Niebla Espectral",
+    "level": 5,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 0,
+    "text": "Gasta 2 de Esperanza para conjurar una niebla inquietante que vuelve momentáneamente incorpóreos a ti y a los aliados que elijas a distancia Cercana. Mientras una criatura es incorpórea, puede atravesar objetos sólidos y es inmune al daño físico. Vuelve a ser corpórea después de atravesar un objeto sólido o de hacer una tirada de acción. En caso contrario, este efecto dura hasta el final de la escena."
+  },
+  {
+    "id": "darkfire",
+    "name": "Fuego Oscuro",
+    "level": 6,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Una vez por escena, gasta cualquier cantidad de Esperanza para elegir como objetivo a una cantidad igual de adversarios a distancia Cercana. Cada objetivo hace una Tirada de Reacción (15). Los objetivos que fallen reciben d8+6 de daño mágico usando tu rasgo de Lanzamiento mientras son envueltos en fuego oscuro. Los que tengan éxito reciben la mitad del daño."
+  },
+  {
+    "id": "jump-scare",
+    "name": "Susto Repentino",
+    "level": 6,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Cuando inflijas daño mágico a un objetivo, puedes marcar un Estrés para teletransportarte a distancia de Combate Cuerpo a Cuerpo con él. Cuando lo hagas, queda Vulnerable hasta que marque 1 o más Puntos de Vida."
+  },
+  {
+    "id": "dread-touched",
+    "name": "Tocado por el Pavor",
+    "level": 7,
+    "domain": "dread",
+    "type": "ability",
+    "recallCost": 2,
+    "text": "Cuando 4 o más de las cartas de dominio de tu equipo activo sean del dominio Pavor, obtienes los siguientes beneficios:\n◦ Cuando tengas éxito con Miedo, puedes marcar 2 de Estrés para impedir que el GM obtenga un Miedo.\n◦ Una vez por descanso, al hacer una tirada de acción, puedes obtener un bono a la tirada igual a la cantidad de Miedo en la reserva del GM."
+  },
+  {
+    "id": "wall-of-hunger",
+    "name": "Muro de Hambre",
+    "level": 7,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Haz una Tirada de Lanzamiento (10). Con éxito, puedes gastar una Esperanza para crear un muro visible de energía necrótica retorcida entre dos puntos a distancia Lejana. El muro dura hasta que marques un Punto de Vida o vuelvas a lanzar este hechizo. Una criatura que esté dentro del muro cuando aparece, o que lo atraviese, debe marcar 2 de Estrés."
+  },
+  {
+    "id": "dark-army",
+    "name": "Ejército Oscuro",
+    "level": 8,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Haz una Tirada de Lanzamiento (14). Una vez por descanso largo, con éxito, puedes invocar demonios que te rodean y se mueven contigo. Coloca 8 fichas en esta carta. Cuando inflijas daño a un objetivo a distancia Muy Cercana, puedes gastar cualquier cantidad de fichas para sumar 1d8 por cada ficha gastada a tu tirada de daño. Además, cuando recibas daño, puedes gastar cualquier cantidad de fichas para reducir el daño en 1d8 por cada ficha gastada. Cada vez que gastas una ficha, un demonio actúa en tu nombre y luego desaparece. Cuando tomes un descanso, despeja todas las fichas sin gastar."
+  },
+  {
+    "id": "eldritch-flesh",
+    "name": "Carne Sobrenatural",
+    "level": 8,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Obtienes un bono de +1 a tus umbrales de daño por cada Estrés que tengas marcado. Además, cuando tires con Miedo, puedes gastar 2 de Esperanza para despejar una Ranura de Armadura."
+  },
+  {
+    "id": "damnation",
+    "name": "Condenación",
+    "level": 9,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Haz una Tirada de Lanzamiento contra un objetivo a distancia Lejana. Con éxito, marca cualquier cantidad de Estrés para tirar una cantidad igual de d20, infligiendo daño mágico igual al resultado total. Si este ataque derrota al objetivo, todos los adversarios a distancia Lejana de él deben marcar un Estrés."
+  },
+  {
+    "id": "savor-the-anguish",
+    "name": "Saborear la Angustia",
+    "level": 9,
+    "domain": "dread",
+    "type": "ability",
+    "recallCost": 1,
+    "text": "Cuando un adversario a distancia Cercana reciba daño Grave, puedes despejar un Estrés."
+  },
+  {
+    "id": "avatar-of-terror",
+    "name": "Avatar del Terror",
+    "level": 10,
+    "domain": "dread",
+    "type": "spell",
+    "recallCost": 2,
+    "text": "Marca un Estrés para transformarte en una criatura alimentada por el miedo. Mientras estés en esta forma, obtienes un bono de 1d6 a tus tiradas de daño por cada Miedo en la reserva del GM. Además, obtienes una Esperanza cuando el GM gasta un Miedo para dar el foco a un adversario a distancia Muy Cercana. Antes de hacer una tirada de acción, debes gastar una Esperanza. Si no puedes, vuelves a tu forma normal."
+  },
+  {
+    "id": "invoke-torment",
+    "name": "Invocar Tormento",
+    "level": 10,
+    "domain": "dread",
+    "type": "ability",
+    "recallCost": 2,
+    "text": "Infliges el doble de daño a los objetivos que tengan todo su Estrés marcado. Además, cuando un adversario a distancia Cercana sea derrotado con todo su Estrés marcado, obtienes una Esperanza."
+  },
+  {
     "id": "deft-deceiver",
     "name": "EMBAUCADOR HÁBIL",
     "level": 1,
@@ -772,24 +979,6 @@
     "type": "spell",
     "recallCost": 1,
     "text": "Haz una Tirada de Lanzamiento contra un objetivo dentro de distancia Muy Cercana. Con éxito, no podrá mentirte mientras permanezca dentro de distancia Cercana, aunque no está obligado a hablar. Si le haces una pregunta y se niega a responder, debe marcar Estrés y el efecto termina. El objetivo normalmente no es consciente de que este hechizo se lanzó sobre él hasta que lo obliga a decir la verdad."
-  },
-  {
-    "id": "book-of-yarrow",
-    "name": "LIBRO DE YARROW",
-    "level": 10,
-    "domain": "codex",
-    "type": "grimoire",
-    "recallCost": 2,
-    "text": "Detenedor del Tiempo: Haz una Tirada de Lanzamiento (18). Con éxito, el tiempo se detiene temporalmente por completo para todos dentro de distancia Lejana excepto para ti. Se reanuda la próxima vez que hagas una tirada de acción dirigida a otra criatura. Inmunidad Mágica: Gasta 5 de Esperanza para volverte inmune al daño mágico hasta tu próximo descanso."
-  },
-  {
-    "id": "transcendent-union",
-    "name": "UNIÓN TRASCENDENTE",
-    "level": 10,
-    "domain": "codex",
-    "type": "spell",
-    "recallCost": 1,
-    "text": "Una vez por descanso largo, gasta 5 de Esperanza para lanzar este hechizo sobre dos o más criaturas dispuestas. Hasta tu próximo descanso, cuando una criatura conectada por esta unión vaya a marcar Estrés o Puntos de Vida, las criaturas conectadas pueden elegir quién lo marca."
   },
   {
     "id": "troublemaker",
@@ -900,6 +1089,24 @@
     "text": "Una vez por descanso largo, marca Estrés para crear una copia proyectada de ti mismo que puede aparecer en cualquier lugar en el que hayas estado antes. Puedes ver y oír a través de la proyección como si fueras tú mismo, y afectar el mundo como si estuvieras allí. Una criatura que investigue la proyección puede notar que es de origen mágico. Este efecto dura hasta tu próximo descanso o hasta que tu proyección reciba cualquier daño."
   },
   {
+    "id": "pick-and-pull",
+    "name": "GANZÚA Y SUSTRACCIÓN",
+    "level": 1,
+    "domain": "midnight",
+    "type": "ability",
+    "recallCost": 0,
+    "text": "Tienes ventaja en tiradas de acción para forzar cerraduras no mágicas, desactivar trampas no mágicas o robar objetos de un objetivo (ya sea con sigilo o por la fuerza)."
+  },
+  {
+    "id": "rain-of-blades",
+    "name": "LLUVIA DE CUCHILLAS",
+    "level": 1,
+    "domain": "midnight",
+    "type": "spell",
+    "recallCost": 1,
+    "text": "Gasta una Esperanza para hacer una Tirada de Lanzamiento e invocar cuchillas arrojadizas que golpean a todos los objetivos dentro de distancia Muy Cercana. Los objetivos contra los que tengas éxito reciben d8+2 de daño mágico usando tu Competencia. Si un objetivo golpeado es Vulnerable, recibe 1d8 de daño extra."
+  },
+  {
     "id": "mass-enrapture",
     "name": "EMBELESO MASIVO",
     "level": 8,
@@ -943,24 +1150,6 @@
     "type": "ability",
     "recallCost": 0,
     "text": "La gente sabe quién eres y lo que has hecho, y te tratan de forma diferente por ello. Cuando aproveches tu notoriedad para conseguir lo que quieres, puedes marcar Estrés antes de tirar para obtener un +10 al resultado. Tu comida y bebida son siempre gratis a donde vayas, y todo lo demás que compres se reduce en precio en una bolsa de oro (hasta un mínimo de un puñado). Esta carta no cuenta contra el máximo de cartas de dominio de tu equipo (5) y no puede colocarse en tu bóveda."
-  },
-  {
-    "id": "pick-and-pull",
-    "name": "GANZÚA Y SUSTRACCIÓN",
-    "level": 1,
-    "domain": "midnight",
-    "type": "ability",
-    "recallCost": 0,
-    "text": "Tienes ventaja en tiradas de acción para forzar cerraduras no mágicas, desactivar trampas no mágicas o robar objetos de un objetivo (ya sea con sigilo o por la fuerza)."
-  },
-  {
-    "id": "rain-of-blades",
-    "name": "LLUVIA DE CUCHILLAS",
-    "level": 1,
-    "domain": "midnight",
-    "type": "spell",
-    "recallCost": 1,
-    "text": "Gasta una Esperanza para hacer una Tirada de Lanzamiento e invocar cuchillas arrojadizas que golpean a todos los objetivos dentro de distancia Muy Cercana. Los objetivos contra los que tengas éxito reciben d8+2 de daño mágico usando tu Competencia. Si un objetivo golpeado es Vulnerable, recibe 1d8 de daño extra."
   },
   {
     "id": "uncanny-disguise",
@@ -1107,6 +1296,15 @@
     "text": "Una vez por descanso largo, elige objetivos dentro de distancia Muy Cercana para que te perciban como un horror de pesadilla. Los objetivos deben tener éxito en una Tirada de Reacción (16) o quedar temporalmente Horrorizados. Mientras estén Horrorizados, son Vulnerables. Roba al GM una cantidad de puntos de Miedo igual a la cantidad de objetivos Horrorizados (hasta el total en la reserva del GM). Tira una cantidad de d6 igual al Miedo robado y causa ese daño total a cada objetivo Horrorizado. Descarta el Miedo robado."
   },
   {
+    "id": "gifted-tracker",
+    "name": "RASTREADOR TALENTOSO",
+    "level": 1,
+    "domain": "sage",
+    "type": "ability",
+    "recallCost": 0,
+    "text": "Cuando rastrees a una criatura específica o a un grupo de criaturas basándote en señales de su paso, puedes gastar cualquier cantidad de Esperanza y hacer al GM esa cantidad de preguntas de la siguiente lista:\n• ¿En qué dirección se fueron?\n• ¿Cuánto tiempo hace que pasaron por aquí?\n• ¿Qué estaban haciendo en este lugar?\n• ¿Cuántos eran?\nCuando encuentres criaturas que hayas rastreado de esta manera, obtienes un +1 a tu Evasión contra ellas."
+  },
+  {
     "id": "twilight-toll",
     "name": "TAÑIDO DEL OCASO",
     "level": 9,
@@ -1132,15 +1330,6 @@
     "type": "spell",
     "recallCost": 1,
     "text": "Marca Estrés para volverte Espectral hasta que hagas una tirada de acción dirigida a otra criatura. Mientras estés Espectral, eres inmune al daño físico y puedes flotar y atravesar objetos sólidos. Otras criaturas aún pueden verte en esta forma."
-  },
-  {
-    "id": "gifted-tracker",
-    "name": "RASTREADOR TALENTOSO",
-    "level": 1,
-    "domain": "sage",
-    "type": "ability",
-    "recallCost": 0,
-    "text": "Cuando rastrees a una criatura específica o a un grupo de criaturas basándote en señales de su paso, puedes gastar cualquier cantidad de Esperanza y hacer al GM esa cantidad de preguntas de la siguiente lista:\n• ¿En qué dirección se fueron?\n• ¿Cuánto tiempo hace que pasaron por aquí?\n• ¿Qué estaban haciendo en este lugar?\n• ¿Cuántos eran?\nCuando encuentres criaturas que hayas rastreado de esta manera, obtienes un +1 a tu Evasión contra ellas."
   },
   {
     "id": "natures-tongue",
@@ -1467,6 +1656,15 @@
     "text": "Marca Estrés para lanzar un aura protectora sobre un objetivo dentro de distancia Muy Cercana. Cuando el objetivo marque una Ranura de Armadura, reduce la severidad del ataque en un umbral adicional. Si este hechizo hace que una criatura que iba a recibir daño no marque ningún Punto de Vida, el efecto termina. Solo puedes mantener Aura de Escudo sobre una criatura a la vez."
   },
   {
+    "id": "bare-bones",
+    "name": "SIN PROTECCIÓN",
+    "level": 1,
+    "domain": "valor",
+    "type": "ability",
+    "recallCost": 0,
+    "text": "Cuando elijas no equipar armadura, tienes una Puntuación de Armadura base de 3 + tu Fuerza y usas los siguientes umbrales de daño base:\n• Escalón 1: 9/19\n• Escalón 2: 11/24\n• Escalón 3: 13/31\n• Escalón 4: 15/38"
+  },
+  {
     "id": "stunning-sunlight",
     "name": "LUZ SOLAR ATURDIDORA",
     "level": 8,
@@ -1510,15 +1708,6 @@
     "type": "spell",
     "recallCost": 2,
     "text": "Haz una Tirada de Lanzamiento (20). Con éxito, restauras a plena fuerza a una criatura que haya muerto hace no más de 100 años. Luego tira un d6. Con un resultado de 5 o menos, coloca esta carta en tu bóveda de forma permanente. Con un fallo, no puedes volver a lanzar Resurrección durante una semana."
-  },
-  {
-    "id": "bare-bones",
-    "name": "SIN PROTECCIÓN",
-    "level": 1,
-    "domain": "valor",
-    "type": "ability",
-    "recallCost": 0,
-    "text": "Cuando elijas no equipar armadura, tienes una Puntuación de Armadura base de 3 + tu Fuerza y usas los siguientes umbrales de daño base:\n• Nivel 1: 9/19\n• Nivel 2: 11/24\n• Nivel 3: 13/31\n• Nivel 4: 15/38"
   },
   {
     "id": "forceful-push",
