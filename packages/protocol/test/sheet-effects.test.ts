@@ -55,7 +55,7 @@ describe('SheetEffect codes', () => {
       character: {
         ...base.character,
         level: 5,
-        multiclass: { classId: 'wizard', domainId: 'codex', subclassId: 'school-of-knowledge' },
+        multiclass: { classId: 'wizard' as const, domainId: 'codex' as const, subclassId: 'school-of-knowledge' },
       },
     };
     const codex = srd().domainCards.filter((c) => c.domain === 'codex');

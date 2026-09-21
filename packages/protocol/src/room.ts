@@ -54,6 +54,8 @@ import {
   applyDowntime,
   coded,
   equipArmorOnSheet,
+  dropBeastform,
+  enterBeastform,
   equipWeaponOnSheet,
   makeDeathMove,
   makeDamageRoll,
@@ -373,6 +375,7 @@ export function applyRoomEvent(
     case 'equipArmor':
     case 'equipWeapon':
     case 'setTransformation':
+    case 'setBeastform':
     case 'downtimeMove':
     case 'deathMove':
     case 'levelUp':
@@ -866,6 +869,17 @@ function applyCharacterEvent(
     case 'equipWeapon': {
       const t = equipWeaponOnSheet(sheet, event.slot, event.weaponId, state.rest !== null);
       if (!t.ok) return fail('rejected', t.effect.message ?? 'cannot equip that weapon');
+      return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
+    }
+
+    case 'setBeastform': {
+      const t =
+        event.beastformId === null
+          ? dropBeastform(sheet)
+          : enterBeastform(sheet, event.beastformId);
+      if (t.sheet === sheet && t.effect.code !== null && t.effect.code !== 'droppedBeastform') {
+        return fail('rejected', t.effect.message ?? 'cannot take that Beastform');
+      }
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
 

@@ -700,6 +700,49 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('takes a Beastform for a Stress, refuses one above the tier, and drops on the last HP', () => {
+    const claimed = claimCharacterInRoom(
+      roomWithPlayers(),
+      ALEX.id,
+      createSheet(makeCharacter('druid')),
+    );
+    const characterId = Object.keys(claimed.characters)[0];
+    if (characterId === undefined) throw new Error('no character');
+
+    const low = srd().beastforms.find((b) => b.tier === 1);
+    const high = srd().beastforms.find((b) => b.tier === 4);
+    if (low === undefined || high === undefined) throw new Error('no beastforms to test');
+
+    const taken = apply(claimed, ALEX, {
+      type: 'setBeastform',
+      characterId,
+      beastformId: low.id,
+    });
+    const sheet = taken.characters[characterId];
+    expect(sheet?.beastform).toBe(low.id);
+    expect(sheet?.stressMarked).toBe(1);
+
+    expect(
+      refusal(claimed, ALEX, { type: 'setBeastform', characterId, beastformId: high.id }),
+    ).toBe('rejected');
+
+    const dropped = apply(taken, ALEX, {
+      type: 'setBeastform',
+      characterId,
+      beastformId: null,
+    });
+    expect(dropped.characters[characterId]?.beastform).toBeNull();
+
+    // Marking the last Hit Point drops the character out of the form on its own.
+    const hpSlots = sheet?.character.hpSlots ?? 0;
+    const downed = apply(taken, ALEX, {
+      type: 'markHP',
+      characterId,
+      amount: hpSlots,
+    });
+    expect(downed.characters[characterId]?.beastform).toBeNull();
+  });
+
   it('spends Fear on an environment feature, and refuses one that is not there', () => {
     const environment = srd().environments.find((e) => e.features.length > 0);
     const feature = environment?.features[0];

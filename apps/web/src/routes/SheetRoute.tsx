@@ -16,6 +16,7 @@ import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
 import { EquipmentPanel } from '../components/sheet/EquipmentPanel.js';
 import { InventoryPanel } from '../components/sheet/InventoryPanel.js';
+import { BeastformPanel } from '../components/sheet/BeastformPanel.js';
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -57,6 +58,8 @@ import {
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
+  dropBeastform,
+  enterBeastform,
   noEffect,
   equipArmorOnSheet,
   equipWeaponOnSheet,
@@ -676,6 +679,19 @@ export function SheetRoute({
               )
             }
           />
+          {character.classId === 'druid' || character.multiclass?.classId === 'druid' ? (
+            <BeastformPanel
+              beastform={sheet.beastform}
+              tier={tierForLevel(character.level)}
+              onChange={(beastformId) =>
+                run(
+                  (s) =>
+                    beastformId === null ? dropBeastform(s) : enterBeastform(s, beastformId),
+                  forMe({ type: 'setBeastform', beastformId }),
+                )
+              }
+            />
+          ) : null}
           <TransformationPanel
             transformation={sheet.transformation}
             onChange={(transformation) =>

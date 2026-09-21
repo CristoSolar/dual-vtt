@@ -41,6 +41,7 @@ import {
   type LevelUpChoices,
   type Rng,
   multiclassCardLevelCap,
+  tierForLevel,
 } from '@daggerheart/rules';
 
 /**
@@ -99,6 +100,11 @@ export const SheetStateSchema = z.object({
    * maximum, which is why it is not a card in `loadout`.
    */
   transformation: z.string().min(1).max(40).nullable().default(null),
+  /**
+   * The Beastform a Druid is currently in, by id, or null (SRD 2.0 p.20). It is a
+   * state the character enters and drops, not a possession, so it is not a card.
+   */
+  beastform: z.string().min(1).max(40).nullable().default(null),
 });
 
 /**
@@ -124,6 +130,7 @@ export function createSheet(character: Character): SheetState {
     dead: false,
     conditions: [],
     transformation: null,
+    beastform: null,
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
     loadout: [...character.domainCards],
@@ -150,6 +157,10 @@ export type SheetEffectCode =
   | 'cardNotInLoadout'
   | 'swapNotAllowed'
   | 'levelUpRejected'
+  | 'notADruid'
+  | 'unknownBeastform'
+  | 'beastformTooHigh'
+  | 'droppedBeastform'
   | 'unknownCard'
   | 'cardTooHigh'
   | 'unknownMulticlass'
@@ -214,7 +225,8 @@ export function isVulnerable(sheet: SheetState): boolean {
 export function markSheetHP(sheet: SheetState, amount = 1): SheetTransition {
   const result = markHP(pools(sheet), amount);
   return {
-    sheet: { ...sheet, hpMarked: result.hpMarked },
+    // "If you mark your last Hit Point, you automatically drop out of this form."
+    sheet: { ...sheet, hpMarked: result.hpMarked, ...(result.deathMoveRequired ? { beastform: null } : {}) },
     effect: {
       ...noEffect,
       deathMoveRequired: result.deathMoveRequired,
@@ -235,7 +247,12 @@ export function markSheetStress(sheet: SheetState, amount = 1): SheetTransition 
   if (result.deathMoveRequired) messages.push('Last Hit Point marked — make a death move.');
 
   return {
-    sheet: { ...sheet, stressMarked: result.stressMarked, hpMarked: result.hpMarked },
+    sheet: {
+      ...sheet,
+      stressMarked: result.stressMarked,
+      hpMarked: result.hpMarked,
+      ...(result.deathMoveRequired ? { beastform: null } : {}),
+    },
     effect: {
       vulnerable: result.vulnerable,
       deathMoveRequired: result.deathMoveRequired,
@@ -533,6 +550,58 @@ export function equipWeaponOnSheet(
 }
 
 /** Waking from unconsciousness, which an ally's healing or a long rest does. */
+/**
+ * A Druid's Beastform (SRD 2.0 p.20).
+ *
+ * Entering costs a Stress and is limited to forms of the character's tier or
+ * lower; dropping out is free and can happen at any time. The form's Evasion
+ * bonus and attack trait are derived through `beastformOf` rather than written
+ * into the character, so dropping out restores the original numbers exactly.
+ */
+export function enterBeastform(sheet: SheetState, beastformId: string): SheetTransition {
+  const druid =
+    sheet.character.classId === 'druid' || sheet.character.multiclass?.classId === 'druid';
+  if (!druid) return { sheet, effect: coded('notADruid', 'Only a Druid can take a Beastform.') };
+
+  const form = srd().beastforms.find((b) => b.id === beastformId);
+  if (form === undefined) {
+    return { sheet, effect: coded('unknownBeastform', 'That Beastform does not exist.') };
+  }
+  const tier = tierForLevel(sheet.character.level);
+  if (form.tier > tier) {
+    return {
+      sheet,
+      effect: coded('beastformTooHigh', `${form.name} is above your tier.`, {
+        form: form.name,
+        tier,
+      }),
+    };
+  }
+
+  const stressed = markSheetStress(sheet, 1);
+  return { sheet: { ...stressed.sheet, beastform: form.id }, effect: stressed.effect };
+}
+
+/** Dropping out of a Beastform, which the character may do at any time, for free. */
+export function dropBeastform(sheet: SheetState): SheetTransition {
+  if (sheet.beastform === null) return { sheet, effect: noEffect };
+  return {
+    sheet: { ...sheet, beastform: null },
+    effect: coded('droppedBeastform', 'Dropped out of the Beastform.'),
+  };
+}
+
+/** The Beastform this sheet is in, or null. */
+export function beastformOf(sheet: SheetState) {
+  if (sheet.beastform === null) return null;
+  return srd().beastforms.find((b) => b.id === sheet.beastform) ?? null;
+}
+
+/** Evasion including a Beastform's bonus, which is added while transformed. */
+export function evasionOf(sheet: SheetState): number {
+  return sheet.character.evasion + (beastformOf(sheet)?.evasionBonus ?? 0);
+}
+
 export function wake(sheet: SheetState): SheetState {
   return sheet.unconscious ? { ...sheet, unconscious: false } : sheet;
 }
