@@ -5,6 +5,19 @@ Hallazgos citados con `archivo:línea`; los marcados **[verificado]** se confirm
 
 Tamaños: **S** < medio día · **M** 1–2 días · **L** 3+ días.
 
+## Estado al 2026-09-21
+
+Rama `fix/fase-1-criticos`, 6 commits, typecheck limpio y 478 tests verdes (eran 180).
+
+- **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4. Ver detalle en cada tabla, marcado ✅.
+- **Track Marca completo**: B1–B5.
+- **Track SRD 2.0 iniciado**: hechas las dos reglas que rompían sin depender de datos (Miedo inicial por PJ, un solo dado de ventaja con excepción de Ayudar a un Aliado). Pendiente todo lo demás.
+
+Dos ajustes respecto del plan original, tomados al implementar:
+
+- **Estrés como coste** (movimiento bloqueado con el track lleno) no se implementó: hoy no hay ningún movimiento con coste de Estrés salvo recuperar cartas, que ya lo verifica. Entra con M8 (features de Esperanza), que es cuando aparecen los consumidores.
+- **La atribución sigue diciendo SRD 1.0** porque los datos siguen siendo 1.0. Cambia junto con D5–D7.
+
 ---
 
 ## 0. Diagnóstico en una pantalla
@@ -116,11 +129,11 @@ Qué dice la DPCGL 2.0 (leída del PDF oficial):
 
 | # | Acción | Tam. |
 |---|---|---|
-| B1 | Copiar solo lo necesario a `apps/web/public/images/brand/`: `DH_CGL_logos_final_white_full_color.svg` (fondo oscuro) y un PNG del icono. Ignorar `__MACOSX`, `.DS_Store`, el zip y la carpeta descomprimida en `.gitignore`. | S |
-| B2 | Lockup "Daggerheart Compatible" en pie del login (`LoginRoute.tsx:28`) y en pestaña Ayuda → "Acerca de" con el texto §4.3 completo, enlace a licencia y declaración de traducción. | S |
-| B3 | **No** usar la botella como favicon ni como logo principal de la app. El favicon sigue siendo propio; el mark de Darrington acompaña, no titula (§2.5). | — |
-| B4 | Actualizar `NOTICE.md` y README: SRD 1.0 → 2.0, texto §4.3, "Daggerheart™ Compatible" en la primera línea del README, declaración de modificación (traducción es). Hoy dicen "DPCG"; la licencia se llama DPCGL. | S |
-| B5 | Hoja imprimible: pie "Daggerheart™ Compatible. Terms at Daggerheart.com" (formato que la licencia pide para cartas/adversarios impresos, §4.2.f.iii; opcional en no comercial pero barato). | S |
+| B1 ✅ | Copiar solo lo necesario a `apps/web/public/images/brand/`: `DH_CGL_logos_final_white_full_color.svg` (fondo oscuro) y un PNG del icono. Ignorar `__MACOSX`, `.DS_Store`, el zip y la carpeta descomprimida en `.gitignore`. | S |
+| B2 ✅ | Lockup "Daggerheart Compatible" en pie del login (`LoginRoute.tsx:28`) y en pestaña Ayuda → "Acerca de" con el texto §4.3 completo, enlace a licencia y declaración de traducción. | S |
+| B3 ✅ | **No** usar la botella como favicon ni como logo principal de la app. El favicon sigue siendo propio; el mark de Darrington acompaña, no titula (§2.5). | — |
+| B4 ✅ | Actualizar `NOTICE.md` y README: SRD 1.0 → 2.0, texto §4.3, "Daggerheart™ Compatible" en la primera línea del README, declaración de modificación (traducción es). Hoy dicen "DPCG"; la licencia se llama DPCGL. | S |
+| B5 ✅ | Hoja imprimible: pie "Daggerheart™ Compatible. Terms at Daggerheart.com" (formato que la licencia pide para cartas/adversarios impresos, §4.2.f.iii; opcional en no comercial pero barato). | S |
 
 **Riesgo a decidir por vos, no cambia con 2.0**: §1.9(d) limita "compartir" contenido SRD en VTTs a la lista blanca (Roll20, Demiplane, Foundry, Alchemy, Fantasy Grounds); §1.8 exime el juego privado entre amigos. La cláusula ya existía en la DPCGL de julio 2025 bajo la que se publicó el repo. Un repo público con el SRD en JSON es "digital print" del contenido, permitido; que el software sea un VTT auto-hospedado no listado es zona gris. Opciones: mantener como está (uso privado, no comercial, sin monetizar), o escribir a Darrington pidiendo aprobación escrita (§1.9.1 lo contempla). No es algo que el código pueda resolver.
 
@@ -136,55 +149,55 @@ Primero lo que rompe partidas o expone el servidor. Nada de features.
 
 | # | Hallazgo | Archivo | Tam. |
 |---|---|---|---|
-| S1 | `POST /uploads` sin auth ni asociación a campaña **[verificado]**. Exigir sesión (miembro o GM), guardar `campaignId` en el nombre o índice. | `apps/server/src/uploads.ts:99`, `main.ts:99` | S |
-| S2 | Snapshots comparten `${path}.tmp`; escrituras concurrentes (intervalo + `claimCharacter` + HTTP) pueden intercalarse **[verificado]**. Cola serializada o tmp único por escritura. Mismo patrón en `users-snapshot.ts`. | `campaigns-snapshot.ts:34`, `users-snapshot.ts:28` | S |
-| S3 | Login sin rate limit ni lockout; `password.min(1)`. Contador por IP+usuario en memoria, 5 fallos → 60 s. | `auth-http.ts:67`, `protocol/src/auth.ts:20` | S |
-| S4 | Sesiones sin TTL ni cap; cambiar contraseña no invalida tokens. TTL deslizante 30 días, `destroyAllFor(userId)` en reset/cambio. | `sessions.ts:9`, `auth-http.ts:116,178` | S |
-| S5 | Timing leak en usuario inexistente: verificar contra hash dummy en el camino de fallo. | `users.ts:60` | S |
-| S6 | Shutdown parcial: no vuelca `users`, no espera `http.close()`, segunda señal reentra. | `main.ts:118` | S |
-| S7 | Cadena `void handler().then(...)` sin `.catch`: un throw fuera del try deja el socket colgado. | `main.ts:92` | S |
-| S8 | `tunnel.ts`: `spawnSync` del build bloquea el event loop con la mesa en vivo; en fallo deja `this.tunnel` seteado y fuga cloudflared. | `tunnel.ts:52,80` | S |
-| S9 | Carrera de username duplicado (check → hash 100 ms → insert). Reservar nombre antes de hashear. | `auth-http.ts:151`, `users.ts:51` | S |
-| S10 | `joinCampaign` emite `{players: undefined}` en canal combinado si la campaña desapareció. | `gateway.ts:121` | S |
+| S1 ✅ | `POST /uploads` sin auth ni asociación a campaña **[verificado]**. Exigir sesión (miembro o GM), guardar `campaignId` en el nombre o índice. | `apps/server/src/uploads.ts:99`, `main.ts:99` | S |
+| S2 ✅ | Snapshots comparten `${path}.tmp`; escrituras concurrentes (intervalo + `claimCharacter` + HTTP) pueden intercalarse **[verificado]**. Cola serializada o tmp único por escritura. Mismo patrón en `users-snapshot.ts`. | `campaigns-snapshot.ts:34`, `users-snapshot.ts:28` | S |
+| S3 ✅ | Login sin rate limit ni lockout; `password.min(1)`. Contador por IP+usuario en memoria, 5 fallos → 60 s. | `auth-http.ts:67`, `protocol/src/auth.ts:20` | S |
+| S4 ✅ | Sesiones sin TTL ni cap; cambiar contraseña no invalida tokens. TTL deslizante 30 días, `destroyAllFor(userId)` en reset/cambio. | `sessions.ts:9`, `auth-http.ts:116,178` | S |
+| S5 ✅ | Timing leak en usuario inexistente: verificar contra hash dummy en el camino de fallo. | `users.ts:60` | S |
+| S6 ✅ | Shutdown parcial: no vuelca `users`, no espera `http.close()`, segunda señal reentra. | `main.ts:118` | S |
+| S7 ✅ | Cadena `void handler().then(...)` sin `.catch`: un throw fuera del try deja el socket colgado. | `main.ts:92` | S |
+| S8 ✅ | `tunnel.ts`: `spawnSync` del build bloquea el event loop con la mesa en vivo; en fallo deja `this.tunnel` seteado y fuga cloudflared. | `tunnel.ts:52,80` | S |
+| S9 ✅ | Carrera de username duplicado (check → hash 100 ms → insert). Reservar nombre antes de hashear. | `auth-http.ts:151`, `users.ts:51` | S |
+| S10 ✅ | `joinCampaign` emite `{players: undefined}` en canal combinado si la campaña desapareció. | `gateway.ts:121` | S |
 
 ### 1.2 Reglas y protocolo
 
 | # | Hallazgo | Archivo | Tam. |
 |---|---|---|---|
-| R1 | Daño masivo (2× severo → 4 PV) ausente **[verificado]**. En SRD 2.0 es regla opcional: implementar como toggle de campaña, apagado por defecto. | `rules/src/damage.ts:166` | S |
-| R2 | PV/estrés de adversarios llegan a jugadores: `roomForRole` solo filtra `map` **[verificado]**. Filtrar `adversaryInstances` a `{instanceId, name}`. | `protocol/src/room.ts:139` | S |
-| R3 | "Intents, not results" roto: cliente envía `recallCost`, `proficiency` y `experience.modifier` sin cota **[verificado parcial]**. Leerlos de la hoja en el servidor. | `events.ts:75,109,121` | S |
-| R4 | `markHP` con `amount 0` y PV llenos devuelve `deathMoveRequired`. | `rules/src/resources.ts:258` | S |
-| R5 | `updateAdversary` no acota al `hp` del stat block. | `room.ts:410` | S |
-| R6 | `advanceCountdown` manual no salta los ya `triggered`. | `room.ts:306` | S |
-| R7 | `addToken` de jugador exige `refId === actor.id` (id de cuenta, no de personaje); sin unicidad de `token.id`. | `room.ts:371` | S |
-| R8 | `armorSlotsToMark` sin límite de 1 por ataque. | `sheet.ts:270` | S |
-| R9 | Puertas: `addWall/updateWall/removeWall` no llaman `revealVisionFor` **[verificado]**. Abrir puerta en modo auto no revela nada. | `room.ts:710` | S |
-| R10 | Visión auto sin imagen: bounds `{0,0}` colapsan el polígono. | `room.ts:207` | S |
+| R1 ✅ | Daño masivo (2× severo → 4 PV) ausente **[verificado]**. En SRD 2.0 es regla opcional: implementar como toggle de campaña, apagado por defecto. | `rules/src/damage.ts:166` | S |
+| R2 ✅ | PV/estrés de adversarios llegan a jugadores: `roomForRole` solo filtra `map` **[verificado]**. Filtrar `adversaryInstances` a `{instanceId, name}`. | `protocol/src/room.ts:139` | S |
+| R3 ✅ | "Intents, not results" roto: cliente envía `recallCost`, `proficiency` y `experience.modifier` sin cota **[verificado parcial]**. Leerlos de la hoja en el servidor. | `events.ts:75,109,121` | S |
+| R4 ✅ | `markHP` con `amount 0` y PV llenos devuelve `deathMoveRequired`. | `rules/src/resources.ts:258` | S |
+| R5 ✅ | `updateAdversary` no acota al `hp` del stat block. | `room.ts:410` | S |
+| R6 ✅ | `advanceCountdown` manual no salta los ya `triggered`. | `room.ts:306` | S |
+| R7 ✅ | Unicidad de `token.id` por escena. Nota: `refId === actor.id` **no era un bug**: en una sala los personajes se indexan por id de cuenta, así que ese es su id de personaje. Se corrigió el comentario del schema, no la lógica. | `room.ts:371` | S |
+| R8 ✅ | `armorSlotsToMark` sin límite de 1 por ataque. | `sheet.ts:270` | S |
+| R9 ✅ | Puertas: `addWall/updateWall/removeWall` no llaman `revealVisionFor` **[verificado]**. Abrir puerta en modo auto no revela nada. | `room.ts:710` | S |
+| R10 ✅ | Visión auto sin imagen: bounds `{0,0}` colapsan el polígono. | `room.ts:207` | S |
 
 ### 1.3 Web
 
 | # | Hallazgo | Archivo | Tam. |
 |---|---|---|---|
-| W1 | Online, `run()` retorna antes de `describeEffect` / `deathMoveRequired` **[verificado]**: death move nunca aparece en campaña, ni los toasts de efecto. Derivar del `roomPatch` (comparar PV antes/después) o que el servidor emita `effect` junto al patch. | `SheetRoute.tsx:110` | M |
-| W2 | `status` de `useCampaign` no lo consume nadie **[verificado]**. Banner "reconectando" + deshabilitar controles que envían intents. | `useCampaign.ts:74`, `App.tsx` | S |
-| W3 | Pincel de niebla solo pinta en clic **[verificado]**: el guard en `onStagePointerMove` retorna siempre y no hay llamada a pintar. Pintar en move con throttle. | `MapCanvas.tsx:181` | S |
-| W4 | Token fantasma: drag imperativo en Konva; si el servidor rechaza, el nodo queda donde se soltó. Resetear `x/y` desde props en `onDragEnd`. | `MapCanvas.tsx:459` | S |
-| W5 | `RollDialog` dificultad sin clamp → `NaN` en la tirada y el log. | `RollDialog.tsx:457` | S |
-| W6 | Borrador de wizard que no deserializa se sobreescribe en silencio. Versionar clave y avisar. | `storage.ts:651`, `useCreation.ts:494` | S |
-| W7 | Resultados de `createCampaign`/`addPlayer` descartados; agregar usuario inexistente parece éxito. | `App.tsx:227`, `CampaignsRoute.tsx:64` | S |
-| W8 | Doble `joinCampaign` en primer connect; `roomPatch` antes de `roomState` se descarta sin resync. | `useCampaign.ts:111,136,222` | S |
-| W9 | Popover de token congelado durante pan; sin clamp a viewport. | `MapCanvas.tsx:218`, `MapRoute.tsx:341` | S |
-| W10 | Botón de anillos de rango visible para jugador pero `updateToken` es GM-only → falla mudo. Ocultar o abrir evento `setMyTokenRings`. | `MapRoute.tsx`, `room.ts:664` | S |
-| W11 | `LevelUpDialog`: `toggleIn` descarta la selección más vieja sin aviso; confirm habilitado con `traits` y 0 rasgos. | `LevelUpDialog.tsx:170,261` | S |
-| W12 | `PlayersRoute` sin abort ni refresh tras reset; `window.prompt` para reset de contraseña. | `PlayersRoute.tsx:20,46` | S |
+| W1 ✅ | Online, `run()` retorna antes de `describeEffect` / `deathMoveRequired` **[verificado]**: death move nunca aparece en campaña, ni los toasts de efecto. Derivar del `roomPatch` (comparar PV antes/después) o que el servidor emita `effect` junto al patch. | `SheetRoute.tsx:110` | M |
+| W2 ✅ | `status` de `useCampaign` no lo consume nadie **[verificado]**. Banner "reconectando" + deshabilitar controles que envían intents. | `useCampaign.ts:74`, `App.tsx` | S |
+| W3 ✅ | Pincel de niebla solo pinta en clic **[verificado]**: el guard en `onStagePointerMove` retorna siempre y no hay llamada a pintar. Pintar en move con throttle. | `MapCanvas.tsx:181` | S |
+| W4 ✅ | Token fantasma: drag imperativo en Konva; si el servidor rechaza, el nodo queda donde se soltó. Resetear `x/y` desde props en `onDragEnd`. | `MapCanvas.tsx:459` | S |
+| W5 ✅ | `RollDialog` dificultad sin clamp → `NaN` en la tirada y el log. | `RollDialog.tsx:457` | S |
+| W6 ✅ | Borrador de wizard que no deserializa se sobreescribe en silencio. Versionar clave y avisar. | `storage.ts:651`, `useCreation.ts:494` | S |
+| W7 ✅ | Resultados de `createCampaign`/`addPlayer` descartados; agregar usuario inexistente parece éxito. | `App.tsx:227`, `CampaignsRoute.tsx:64` | S |
+| W8 ✅ | Doble `joinCampaign` en primer connect; `roomPatch` antes de `roomState` se descarta sin resync. | `useCampaign.ts:111,136,222` | S |
+| W9 ✅ | Popover de token congelado durante pan; sin clamp a viewport. | `MapCanvas.tsx:218`, `MapRoute.tsx:341` | S |
+| W10 ✅ | Botón de anillos de rango visible para jugador pero `updateToken` es GM-only → falla mudo. Ocultar o abrir evento `setMyTokenRings`. | `MapRoute.tsx`, `room.ts:664` | S |
+| W11 ✅ | `LevelUpDialog`: `toggleIn` descarta la selección más vieja sin aviso; confirm habilitado con `traits` y 0 rasgos. | `LevelUpDialog.tsx:170,261` | S |
+| W12 ✅ | `PlayersRoute` sin abort ni refresh tras reset; `window.prompt` para reset de contraseña. | `PlayersRoute.tsx:20,46` | S |
 
 ### 1.4 Tests que faltan para no regresar
 
-- `packages/protocol/test/room.test.ts`: permisos por rol, `recallCard`/`vaultCard`, `levelUp`, `rollDamage`, oro, countdowns, muros, `roomForRole` (R2). **M**
-- `apps/server/test/uploads-http.test.ts`: 401 sin sesión, 413, 415, traversal. **S**
-- `apps/server/test/gateway.test.ts`: payload de roster en join, mensaje sobredimensionado, doble join. **S**
-- `rules/test/damage.test.ts`: daño masivo. **S**
+- ✅ `packages/protocol/test/room.test.ts`: permisos por rol, oro, cartas, level-up, tiradas, countdowns, tokens, muros, visión por puerta, `roomForRole`.
+- ✅ `apps/server/test/hardening.test.ts`: auth de uploads, traversal, rate limit, TTL de sesión, carrera de usuario, escritura atómica concurrente.
+- ✅ `rules/test/damage.test.ts`: daño masivo. `rules/test/duality.test.ts`: tope de un dado y Ayudar a un Aliado.
+- Pendiente: `apps/server/test/gateway.test.ts` (mensaje sobredimensionado, doble join en el socket).
 
 ---
 
