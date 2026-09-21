@@ -7,12 +7,12 @@ Tamaños: **S** < medio día · **M** 1–2 días · **L** 3+ días.
 
 ## Estado al 2026-09-21
 
-Rama `fix/fase-1-criticos`, 15 commits, typecheck limpio y 556 tests verdes (eran 180).
+Rama `fix/fase-1-criticos`, 22 commits, typecheck limpio y 562 tests verdes (eran 180).
 
 - **Fase 1 completa**: S1–S10, R1–R10, W1–W12 y los tests de 1.4.
 - **Track Marca completo**: B1–B5, y la atribución ya nombra el SRD 2.0.
 - **Track SRD 2.0 completo salvo mecánicas nuevas**: D1–D7 y D10–D11 hechos; de D8 entraron las reglas que rompían.
-- **Fase 3 en marcha**: M1 descansos, M2 condiciones, M3 death moves y M4 tiradas de adversario, hechos. Quedan M5 y M6–M15, más N1–N6.
+- **Fase 3 en marcha**: hechos M1 descansos, M2 condiciones, M3 death moves, M4 tiradas de adversario, M5 features de adversario, M7 tiradas de reacción, M9 equipo cambiable, M11 level-up y N1 transformaciones. Quedan M6, M8, M10, M12–M14 y N2–N6.
 
 Lo hecho de Fase 3, en detalle:
 
@@ -22,6 +22,11 @@ Lo hecho de Fase 3, en detalle:
 | M2 ✅ | Condiciones persistentes en la hoja (Oculto, Inmovilizado, Vulnerable y las que inventen las features) y visibles sobre la ficha del mapa. Vulnerable por Estrés lleno sigue derivado. |
 | M3 ✅ | Los tres movimientos de muerte resueltos de verdad: cicatrices que tachan ranuras de Esperanza, inconsciencia que se cura al sanar o al descansar largo, y Arriesgarlo Todo tirado en el servidor y registrado en el log. |
 | M4 ✅ | El GM tira d20 por sus adversarios contra la Evasión del objetivo, con ventaja/desventaja, Experiencia por 1 Miedo y crítico en 20 natural. El daño usa los dados del stat block. Todo al log compartido. |
+| M5 ✅ | Features del stat block usables desde el panel: gastan el Miedo que pide su texto, y las Evoluciones son de un solo uso por adversario. |
+| M7 ✅ | Tiradas de reacción: `resolveReactionRoll` existía sin usarse, así que esquivar entregaba al GM un Miedo que no le tocaba. |
+| M9 ✅ | Cambiar armadura recalcula Puntaje y umbrales; cambiar arma cuesta un Estrés fuera de descanso y nada durante uno; una combinación que pide más manos se rechaza. |
+| M11 ✅ | Las dos opciones de subida que no hacían nada: carta de dominio adicional y mejora de subclase (fundación → especialización → maestría), excluyente con multiclase. |
+| N1 ✅ | Las seis transformaciones del 2.0, extraídas, en la hoja (una por personaje, fuera del loadout) y en el compendio. |
 
 Contenido migrado, todo por extracción y verificado reproduciendo los datos 1.0:
 
@@ -276,7 +281,7 @@ Orden por impacto en una sesión real. Cada una entra por `applyRoomEvent`, con 
 | M12 | **Multiclase**: `multiclassCardLevelCap` sin usar, acceso a dominio no verificado. | `levelUp.ts` | S |
 | M13 | **Beastforms** (Druida): esquema sin consumidores. Selector en hoja que sobrescribe rasgo/evasión/ataque temporalmente. | `rules/src/beastform.ts` | M |
 | M14 | **Entornos**: mostrar dificultad, features e impulsos en panel GM; features con Miedo como en M5. | `room.ts:277`, `GMPanel.tsx` | S |
-| M15 | Unificar `DamageTypeSchema` (`core.ts:19` sin `both` vs `damage.ts:6`). | `srd-data/src/core.ts` | S |
+| ~~M15~~ | **No era un problema.** Son tres conceptos distintos: un tipo único para el ataque de adversario, `physicalOrMagic` para el arma que deja elegir, y `both` para el daño que es ambos a la vez. Documentado en `core.ts`. | — | — |
 
 ---
 
