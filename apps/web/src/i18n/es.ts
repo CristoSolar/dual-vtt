@@ -527,6 +527,7 @@ export const es = {
     'Solo en descanso largo. El GM lleva el progreso con una cuenta atrás.',
   'sheet.loadout.cardLevelTitle': 'Nivel de la carta',
   'sheet.loadout.recallCostTitle': 'Costo de Recuperación',
+  'sheet.loadout.lookUp': 'Consultar',
   'sheet.loadout.sendToVault': 'Enviar a la Bóveda',
   'sheet.loadout.vaultTitle': 'Bóveda',
   'sheet.loadout.vaultEmpty': 'No hay nada en la Bóveda.',
@@ -1091,6 +1092,7 @@ export const es = {
 
   'compendium.filterPlaceholder': 'Buscar en el compendio…',
   'compendium.tooMany': 'Mostrando 100 de {n} resultados.',
+  'compendium.searchEverywhere': 'Buscar en todas las listas',
   'compendium.empty': 'Sin resultados.',
   'compendium.notFound': 'No se encontró esa entrada.',
   'compendium.pick': 'Elige una entrada de la lista.',

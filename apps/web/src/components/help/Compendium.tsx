@@ -45,11 +45,25 @@ export function Compendium({
   const collection: CollectionKey = isCollection(path[0]) ? path[0] : 'classes';
   const selectedId = (path[1] ?? '') || null;
   const [filter, setFilter] = useState('');
+  // Searching everything at once: the thing being looked up is often known by
+  // name and not by which of eleven lists it lives in.
+  const [everywhere, setEverywhere] = useState(false);
   const needle = filter.trim().toLowerCase();
 
   const entries = srd()[collection] as readonly SrdData[CollectionKey][number][];
-  const matches = needle === '' ? entries : entries.filter((e) => haystack(e).includes(needle));
-  const shown = matches.slice(0, MAX_RESULTS);
+  const own = needle === '' ? entries : entries.filter((e) => haystack(e).includes(needle));
+
+  /** Every collection's matches, each tagged with where it came from. */
+  const across =
+    everywhere && needle !== ''
+      ? COLLECTIONS.flatMap((key) =>
+          (srd()[key] as readonly SrdData[CollectionKey][number][])
+            .filter((entry) => haystack(entry).includes(needle))
+            .map((entry) => ({ key, entry })),
+        )
+      : own.map((entry) => ({ key: collection, entry }));
+
+  const shown = across.slice(0, MAX_RESULTS);
 
   return (
     <div className="compendium">
@@ -72,26 +86,37 @@ export function Compendium({
           placeholder={t('compendium.filterPlaceholder')}
           aria-label={t('compendium.filterPlaceholder')}
         />
+        <label htmlFor="compendium-everywhere">
+          <input
+            id="compendium-everywhere"
+            type="checkbox"
+            checked={everywhere}
+            onChange={(event) => setEverywhere(event.target.checked)}
+          />{' '}
+          {t('compendium.searchEverywhere')}
+        </label>
       </div>
       <div className="compendium-body">
         <ul className="compendium-list">
-          {shown.map((entry) => (
-            <li key={entry.id}>
+          {shown.map(({ key, entry }) => (
+            <li key={`${key}/${entry.id}`}>
               <button
                 type="button"
-                aria-pressed={entry.id === selectedId}
-                onClick={() => onNavigate(collection, entry.id)}
+                aria-pressed={entry.id === selectedId && key === collection}
+                onClick={() => onNavigate(key, entry.id)}
               >
                 <strong>{entry.name}</strong>
-                {metaLine(collection, entry) !== '' ? (
-                  <span className="muted">{metaLine(collection, entry)}</span>
-                ) : null}
+                <span className="muted">
+                  {everywhere && needle !== ''
+                    ? t(`compendium.collection.${key}` as MessageKey)
+                    : metaLine(key, entry)}
+                </span>
               </button>
             </li>
           ))}
-          {matches.length === 0 ? <li className="muted">{t('compendium.empty')}</li> : null}
-          {matches.length > MAX_RESULTS ? (
-            <li className="muted">{t('compendium.tooMany', { n: matches.length })}</li>
+          {across.length === 0 ? <li className="muted">{t('compendium.empty')}</li> : null}
+          {across.length > MAX_RESULTS ? (
+            <li className="muted">{t('compendium.tooMany', { n: across.length })}</li>
           ) : null}
         </ul>
         <div className="compendium-detail">

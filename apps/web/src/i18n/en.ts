@@ -511,6 +511,7 @@ export const en: Record<keyof typeof es, string> = {
     'Long rest only. The GM tracks its progress with a countdown.',
   'sheet.loadout.cardLevelTitle': 'Card level',
   'sheet.loadout.recallCostTitle': 'Recall Cost',
+  'sheet.loadout.lookUp': 'Look up',
   'sheet.loadout.sendToVault': 'Send to Vault',
   'sheet.loadout.vaultTitle': 'Vault',
   'sheet.loadout.vaultEmpty': 'There is nothing in the Vault.',
@@ -1073,6 +1074,7 @@ export const en: Record<keyof typeof es, string> = {
 
   'compendium.filterPlaceholder': 'Search the compendium…',
   'compendium.tooMany': 'Showing 100 of {n} results.',
+  'compendium.searchEverywhere': 'Search every list',
   'compendium.empty': 'No results.',
   'compendium.notFound': 'That entry was not found.',
   'compendium.pick': 'Pick an entry from the list.',

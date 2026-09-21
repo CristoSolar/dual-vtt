@@ -72,9 +72,16 @@ export function LoadoutPanel({
               <br />
               <span className="domain-title">{card.name}</span>
             </span>
-            <button type="button" onClick={() => onVault(card.id)}>
-              {t('sheet.loadout.sendToVault')}
-            </button>
+            <span className="row">
+              {/* Straight to this card's compendium entry, which carries the
+                  full text and whatever it cross-references. */}
+              <a href={`#/help#compendium/domainCards/${card.id}`}>
+                {t('sheet.loadout.lookUp')}
+              </a>
+              <button type="button" onClick={() => onVault(card.id)}>
+                {t('sheet.loadout.sendToVault')}
+              </button>
+            </span>
           </div>
           <p className="card-text">{card.text}</p>
         </div>
