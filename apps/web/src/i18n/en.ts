@@ -383,7 +383,7 @@ export const en: Record<keyof typeof es, string> = {
   // licence notice (help 'about' tab, login footer, printable sheet)
   'brand.logoAlt': 'Daggerheart Compatible',
   'brand.notice':
-    'This product includes materials from the Daggerheart System Reference Document 1.0, ' +
+    'This product includes materials from the Daggerheart System Reference Document 2.0, ' +
     '© Critical Role, LLC, under the terms of the Darrington Press Community Gaming ' +
     '(DPCGL) License.',
   'brand.licenseLink': 'Darrington Press Community Gaming License',

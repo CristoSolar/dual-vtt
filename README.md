@@ -27,7 +27,7 @@ Regenerate with `pnpm dev` running: copy `docs/screenshots/shots.mts` into
 
 | Package | What it is |
 |---|---|
-| `packages/srd-data` | SRD content as typed JSON, one Zod schema per file |
+| `packages/srd-data` | SRD 2.0 content as typed JSON, one Zod schema per file |
 | `packages/rules` | Pure rules functions over that data — no I/O, no global state |
 | `packages/character` | Headless 9-step character creation reducer |
 | `packages/protocol` | Shared wire types and the pure reducers the server and client both run |
@@ -85,8 +85,9 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 - Dice are structured (`{ count: 1, die: 8, modifier: 3 }`), never strings.
   `formatDice` renders them for display.
 - Rules text is stored verbatim from the SRD, including its own typos.
-- `packages/srd-data/extract/` holds the scripts that generated the JSON from the
-  PDF; see the README there to re-derive it.
+- `packages/srd-data/extract/` holds the scripts that generate the JSON from the
+  SRD PDF; see the README there to re-derive it against a newer release. They are
+  the only way the data changes: every file is extracted, never hand-edited.
 - The web app holds no game logic: components render state and dispatch actions,
   while every rule lives in `rules` or `character`. State transitions are pure
   functions in `apps/web/src/state`, so they can later be replayed over a socket.
@@ -124,7 +125,7 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 Source code: MIT (see `LICENSE`).
 
 Game content: this product includes materials from the Daggerheart System Reference
-Document 1.0, © Critical Role, LLC, under the terms of the Darrington Press Community
+Document 2.0, © Critical Role, LLC, under the terms of the Darrington Press Community
 Gaming (DPCGL) License — https://www.darringtonpress.com/license/. More information
 at https://www.daggerheart.com.
 

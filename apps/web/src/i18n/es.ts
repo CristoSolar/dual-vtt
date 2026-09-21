@@ -396,7 +396,7 @@ export const es = {
   // licence notice (help 'about' tab, login footer, printable sheet)
   'brand.logoAlt': 'Compatible con Daggerheart',
   'brand.notice':
-    'Este producto incluye materiales del Daggerheart System Reference Document 1.0, ' +
+    'Este producto incluye materiales del Daggerheart System Reference Document 2.0, ' +
     '© Critical Role, LLC, bajo los términos de la Darrington Press Community Gaming ' +
     '(DPCGL) License.',
   'brand.licenseLink': 'Darrington Press Community Gaming License',
