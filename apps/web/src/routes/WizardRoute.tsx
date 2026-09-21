@@ -15,6 +15,7 @@ import {
   type StepProps,
 } from '../components/wizard/Steps.js';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
+import { CreationSummary } from '../components/wizard/CreationSummary.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
 import { t, type MessageKey } from '../i18n/index.js';
 import { createSheet } from '../state/sheet.js';
@@ -169,6 +170,8 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
 
         <StepComponent state={state} dispatch={dispatch} errors={validation.errors} />
       </div>
+
+      {isLast ? <CreationSummary state={state} /> : null}
 
       <ErrorSummary errors={validation.errors} />
 

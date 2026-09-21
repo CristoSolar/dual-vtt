@@ -229,6 +229,54 @@ export function MapCanvas({
     if (wallDraft !== null) setWallDraft({ ...wallDraft, to: point });
   };
 
+  /**
+   * Pinch to zoom. Two fingers zoom about the point between them, which is what a
+   * phone does everywhere else; one finger keeps panning through the stage's own
+   * drag. Konva reports the raw touches, so the gesture is tracked here.
+   */
+  const pinch = useRef<{ distance: number; scale: number } | null>(null);
+
+  const onTouchMove = (event: Konva.KonvaEventObject<TouchEvent>) => {
+    const touches = event.evt.touches;
+    const first = touches[0];
+    const second = touches[1];
+    if (first === undefined || second === undefined) {
+      pinch.current = null;
+      return;
+    }
+
+    event.evt.preventDefault();
+    const stage = stageRef.current;
+    if (stage === null) return;
+    const box = stage.container().getBoundingClientRect();
+    const centre = {
+      x: (first.clientX + second.clientX) / 2 - box.left,
+      y: (first.clientY + second.clientY) / 2 - box.top,
+    };
+    const distance = Math.hypot(
+      first.clientX - second.clientX,
+      first.clientY - second.clientY,
+    );
+
+    if (pinch.current === null) {
+      pinch.current = { distance, scale: view.scale };
+      return;
+    }
+    if (pinch.current.distance === 0) return;
+
+    const next = Math.min(
+      MAX_ZOOM,
+      Math.max(MIN_ZOOM, (pinch.current.scale * distance) / pinch.current.distance),
+    );
+    setView((current) => {
+      const scenePoint = {
+        x: (centre.x - current.x) / current.scale,
+        y: (centre.y - current.y) / current.scale,
+      };
+      return { scale: next, x: centre.x - scenePoint.x * next, y: centre.y - scenePoint.y * next };
+    });
+  };
+
   const canDrag = (token: Token): boolean =>
     isGameMaster || (viewerId !== null && token.ownerId === viewerId);
 
@@ -246,6 +294,10 @@ export function MapCanvas({
       scaleY={view.scale}
       draggable={!painting && !measuring && !drawingWall}
       onWheel={onWheel}
+      onTouchMove={onTouchMove}
+      onTouchEnd={() => {
+        pinch.current = null;
+      }}
       onPointerDown={onStagePointerDown}
       onPointerMove={onStagePointerMove}
       onPointerUp={() => {

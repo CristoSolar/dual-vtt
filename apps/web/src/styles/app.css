@@ -2978,3 +2978,54 @@ details summary {
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================== narrow screens
+ *
+ * Desktop layout is untouched: everything here is a phone-width override. The
+ * four places that broke were the top bar (nav ran off the side), the nine step
+ * pips (a nine-across row on a phone leaves each one unreadable), card heads
+ * (a title and its buttons on one baseline overlapped), and the help tabs.
+ */
+@media (max-width: 560px) {
+  .topbar {
+    gap: var(--sp-3);
+    align-items: flex-start;
+  }
+
+  .topbar nav {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: var(--sp-1);
+    /* A row that scrolls sideways rather than one that wraps into four lines. */
+    scrollbar-width: thin;
+  }
+
+  .steps {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: var(--sp-2);
+  }
+
+  .step-pip-label {
+    display: none;
+  }
+
+  .card-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .help-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .grid.cols-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toast-stack {
+    width: calc(100vw - var(--sp-5));
+  }
+}
