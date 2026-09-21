@@ -353,6 +353,22 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.loadout.notResting': 'Not resting',
 
   // character sheet: downtime moves during a rest
+
+  // character sheet: conditions (SRD 2.0 p.52)
+  'sheet.conditions.title': 'Conditions',
+  'sheet.conditions.hidden': 'Hidden',
+  'sheet.conditions.hidden.hint':
+    'Rolls against a Hidden creature have disadvantage. It ends when an adversary ' +
+    'moves to where they would see you, you move into their line of sight, or you attack.',
+  'sheet.conditions.restrained': 'Restrained',
+  'sheet.conditions.restrained.hint': 'You cannot move, but you can still act from where you are.',
+  'sheet.conditions.vulnerable': 'Vulnerable',
+  'sheet.conditions.vulnerable.hint': 'All rolls targeting you have advantage.',
+  'sheet.conditions.fromStress':
+    'Vulnerable from a full Stress track, until you clear at least one.',
+  'sheet.conditions.customPlaceholder': 'Another condition (for example, Ablaze)',
+  'sheet.conditions.add': 'Add',
+  'sheet.conditions.remove': 'Remove',
   'sheet.downtime.title': 'Downtime moves',
   'sheet.downtime.shortRest': 'Short rest · {left} of {max} moves left',
   'sheet.downtime.longRest': 'Long rest · {left} of {max} moves left',
@@ -868,7 +884,15 @@ export const en: Record<keyof typeof es, string> = {
     'they cross through the veil (SRD 2.0 p.53).',
   'help.rules.conditions.title': 'Conditions',
   'help.rules.conditions.body':
-    'Hidden describes a character adversaries can\'t see or directly target until they\'re revealed or discovered. Restrained prevents a character from moving, though they can still act normally while the condition lasts. Vulnerable, which also triggers when a character marks every available Stress, gives any roll against the affected character or adversary advantage until the condition is removed. All three are cleared by the fiction, a specific feature, or the end of whatever effect caused them (SRD p. 41).',
+    'Daggerheart has three standard conditions. Hidden: you are out of sight and ' +
+    'unlocated, and any roll against you has disadvantage — it ends when an adversary ' +
+    'moves to where they would see you, you move into their line of sight, or you ' +
+    'attack. Restrained: you cannot move, but you can still act from where you are. ' +
+    'Vulnerable: every roll targeting you has advantage, and marking your last Stress ' +
+    'makes you Vulnerable until you clear one. Features can apply conditions of their ' +
+    'own, described in their own text, and the same condition never applies twice to ' +
+    'the same target. A temporary condition is cleared by making a move against it ' +
+    '(SRD 2.0 p.52).',
   'help.rules.ranges.title': 'Ranges',
   'help.rules.ranges.body':
     'Daggerheart measures distance in relative bands rather than exact feet: Melee, Very Close, Close, Far, and Very Far, from shortest to longest reach. With the optional one-inch grid, each band equals a number of squares (one for Melee, up to three for Very Close, up to six for Close, up to twelve for Far, and thirteen or more for Very Far). Without a grid, each band is described in approximate feet and one inch of map stands for about five feet of fiction. The weapon or feature used sets how far a band an attack can reach (SRD p. 40).',

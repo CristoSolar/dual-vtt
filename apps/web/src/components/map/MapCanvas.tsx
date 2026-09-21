@@ -544,6 +544,33 @@ function TokenShape({
           listening={false}
         />
       ) : null}
+      {/* Conditions ride above the token as initials, so the table can read at a
+          glance who is Hidden, Restrained or Vulnerable without opening a sheet. */}
+      {token.conditions.length === 0 ? null : (
+        <>
+          <Rect
+            x={-6}
+            y={-CHIP_HEIGHT - 4}
+            width={token.width + 12}
+            height={CHIP_HEIGHT}
+            fill={canvasPalette.tokenChip()}
+            cornerRadius={2}
+            opacity={0.9}
+            listening={false}
+          />
+          <Text
+            x={-6}
+            y={-CHIP_HEIGHT - 1}
+            width={token.width + 12}
+            align="center"
+            text={token.conditions.map((c) => c.slice(0, 1).toUpperCase()).join(' ')}
+            fill={canvasPalette.tokenLabel()}
+            fontSize={11}
+            fontStyle="700"
+            listening={false}
+          />
+        </>
+      )}
       {/* The name never floats loose over the art: it sits in a chip dark
           enough to read against anything underneath. */}
       <Rect

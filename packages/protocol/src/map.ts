@@ -57,6 +57,11 @@ export const TokenSchema = z.object({
    */
   colorFrame: z.boolean().default(false),
   /** Pixels a `pc` token can see in `visionMode: 'auto'`. Ignored otherwise. */
+  /**
+   * Conditions showing on the token, by name. Defaulted so a scene saved before
+   * conditions existed still parses.
+   */
+  conditions: z.array(z.string().min(1).max(40)).max(8).default([]),
   visionRadius: z.number().min(0).max(4000).default(720),
 });
 export type Token = z.infer<typeof TokenSchema>;

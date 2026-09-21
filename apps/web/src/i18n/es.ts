@@ -366,6 +366,24 @@ export const es = {
   'sheet.loadout.notResting': 'Sin descansar',
 
   // character sheet: downtime moves during a rest
+
+  // character sheet: conditions (SRD 2.0 p.52)
+  'sheet.conditions.title': 'Condiciones',
+  'sheet.conditions.hidden': 'Oculto',
+  'sheet.conditions.hidden.hint':
+    'Las tiradas contra una criatura Oculta tienen desventaja. Deja de aplicarse cuando ' +
+    'un adversario se mueve a donde te vería, entras en su línea de visión, o atacas.',
+  'sheet.conditions.restrained': 'Inmovilizado',
+  'sheet.conditions.restrained.hint':
+    'No puedes moverte, pero sí actuar desde donde estás.',
+  'sheet.conditions.vulnerable': 'Vulnerable',
+  'sheet.conditions.vulnerable.hint':
+    'Todas las tiradas que te tengan como objetivo tienen ventaja.',
+  'sheet.conditions.fromStress':
+    'Vulnerable por tener todo el Estrés marcado, hasta que despejes al menos uno.',
+  'sheet.conditions.customPlaceholder': 'Otra condición (por ejemplo, En Llamas)',
+  'sheet.conditions.add': 'Añadir',
+  'sheet.conditions.remove': 'Quitar',
   'sheet.downtime.title': 'Movimientos de tiempo libre',
   'sheet.downtime.shortRest': 'Descanso corto · te quedan {left} de {max} movimientos',
   'sheet.downtime.longRest': 'Descanso largo · te quedan {left} de {max} movimientos',
@@ -886,7 +904,15 @@ export const es = {
     'todo; si Miedo es mayor, cruza el velo (SRD 2.0 p.53).',
   'help.rules.conditions.title': 'Condiciones',
   'help.rules.conditions.body':
-    'Oculto describe a un personaje que los adversarios no pueden ver ni atacar directamente hasta que se revele o sea descubierto. Inmovilizado impide moverse, pero el personaje todavía puede actuar con normalidad mientras dura la condición. Vulnerable, que también se activa al marcar todo el Estrés disponible, hace que cualquier tirada en contra del personaje o adversario afectado tenga ventaja hasta que la condición se elimine. Las tres se quitan por la narración, una habilidad concreta o el fin del efecto que las causó (SRD p. 41).',
+    'Daggerheart tiene tres condiciones estándar. Oculto: estás fuera de vista y nadie ' +
+    'sabe dónde estás, y toda tirada contra ti tiene desventaja; deja de aplicarse ' +
+    'cuando un adversario se mueve a donde te vería, entras en su línea de visión o ' +
+    'atacas. Inmovilizado: no puedes moverte, pero sí actuar desde donde estás. ' +
+    'Vulnerable: toda tirada que te tenga como objetivo tiene ventaja, y marcar tu ' +
+    'último Estrés te vuelve Vulnerable hasta que despejes uno. Las habilidades pueden ' +
+    'aplicar condiciones propias, descritas en su texto, y una misma condición nunca ' +
+    'se aplica dos veces al mismo objetivo. Una condición temporal se despeja haciendo ' +
+    'un movimiento contra ella (SRD 2.0 p.52).',
   'help.rules.ranges.title': 'Rangos',
   'help.rules.ranges.body':
     'Daggerheart mide la distancia en bandas relativas, no en pies exactos: Cuerpo a cuerpo, Muy cerca, Cerca, Lejos y Muy lejos, de menor a mayor alcance. Con la cuadrícula opcional de una pulgada por casilla, cada banda equivale a un número de casillas (una para Cuerpo a cuerpo, hasta tres para Muy cerca, hasta seis para Cerca, hasta doce para Lejos, y trece o más para Muy lejos). Sin cuadrícula, cada banda se describe en pies aproximados y una pulgada de mapa representa unos cinco pies de ficción. El arma o habilidad usada define hasta qué banda puede alcanzar un ataque (SRD p. 40).',

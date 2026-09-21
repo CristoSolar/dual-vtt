@@ -15,6 +15,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   rotation: 0,
   ownerId: null,
   hidden: false,
+  conditions: [],
   showRings: false,
   color: '#e2b857',
   image: null,

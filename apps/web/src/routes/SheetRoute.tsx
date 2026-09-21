@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
+import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -45,6 +46,7 @@ import {
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
+  noEffect,
   makeDeathMove,
   recallFromVault,
   sendToVault,
@@ -588,6 +590,16 @@ export function SheetRoute({
         </div>
 
         <aside>
+          <ConditionsPanel
+            conditions={sheet.conditions}
+            vulnerableFromStress={vulnerable}
+            onChange={(conditions) =>
+              run(
+                (s) => ({ sheet: { ...s, conditions }, effect: noEffect }),
+                forMe({ type: 'setConditions', conditions }),
+              )
+            }
+          />
           {rest !== null && characterId !== undefined ? (
             <DowntimePanel
               rest={rest}

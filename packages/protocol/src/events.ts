@@ -86,6 +86,13 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
   z.object({
+    // Replaces the whole list, which is how a chip row edits: the client sends what
+    // the character should have, not a diff.
+    type: z.literal('setConditions'),
+    characterId,
+    conditions: z.array(z.string().min(1).max(40)).max(12),
+  }),
+  z.object({
     // Made when the last Hit Point is marked. The dice are the server's.
     type: z.literal('deathMove'),
     characterId,

@@ -277,6 +277,46 @@ describe('what a player is allowed to see', () => {
   });
 });
 
+describe('conditions', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  it('applies the standard conditions to a character', () => {
+    const next = apply(room, ALEX, {
+      type: 'setConditions',
+      characterId: ALEX.id,
+      conditions: ['hidden', 'restrained'],
+    });
+    expect(next.characters[ALEX.id]?.conditions).toEqual(['hidden', 'restrained']);
+  });
+
+  it('never applies the same condition twice', () => {
+    const next = apply(room, ALEX, {
+      type: 'setConditions',
+      characterId: ALEX.id,
+      conditions: ['hidden', 'hidden', ' hidden '],
+    });
+    expect(next.characters[ALEX.id]?.conditions).toEqual(['hidden']);
+  });
+
+  it('keeps a condition a feature invented, as the text it printed', () => {
+    const next = apply(room, GM, {
+      type: 'setConditions',
+      characterId: SAM.id,
+      conditions: ['Ablaze'],
+    });
+    expect(next.characters[SAM.id]?.conditions).toEqual(['Ablaze']);
+  });
+
+  it('refuses a player setting conditions on somebody else', () => {
+    expect(
+      refusal(room, ALEX, { type: 'setConditions', characterId: SAM.id, conditions: ['hidden'] }),
+    ).toBe('notYourCharacter');
+  });
+});
+
 describe('the GM rolling for an adversary', () => {
   let room: RoomState;
   let adversaryId: string;
@@ -698,6 +738,7 @@ describe('map events', () => {
     hidden: false,
     showRings: false,
     ownerId: ALEX.id,
+    conditions: [],
     visionRadius: 300,
     ...over,
   });

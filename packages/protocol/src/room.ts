@@ -353,6 +353,7 @@ export function applyRoomEvent(
     case 'takeDamage':
     case 'recallCard':
     case 'vaultCard':
+    case 'setConditions':
     case 'downtimeMove':
     case 'deathMove':
     case 'levelUp':
@@ -752,6 +753,13 @@ function applyCharacterEvent(
       if (!t.ok) return fail('rejected', t.effect.message ?? 'recall rejected');
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
+    case 'setConditions': {
+      // Duplicates are dropped: "the same condition can't be applied more than once
+      // to the same target" (SRD 2.0 p.52).
+      const conditions = [...new Set(event.conditions.map((c) => c.trim()).filter((c) => c !== ''))];
+      return ok(withCharacter(state, event.characterId, { ...sheet, conditions }));
+    }
+
     case 'deathMove': {
       if (sheet.dead) return fail('characterIsGone', 'that character\u2019s journey has ended');
       const t = makeDeathMove(sheet, event.choice, event.prefer, rng);

@@ -79,6 +79,15 @@ export const SheetStateSchema = z.object({
   unconscious: z.boolean().default(false),
   /** Set when a death move ended the character. */
   dead: z.boolean().default(false),
+  /**
+   * Conditions applied by features and effects, by name. The three standard ones
+   * are 'hidden', 'restrained' and 'vulnerable'; anything else is a condition some
+   * feature invented, kept as the text it printed.
+   *
+   * Vulnerable from a full Stress track is derived rather than stored, so it can
+   * appear here as well without the two disagreeing: the sheet shows their union.
+   */
+  conditions: z.array(z.string().min(1).max(40)).max(12).default([]),
 });
 
 /**
@@ -102,6 +111,7 @@ export function createSheet(character: Character): SheetState {
     scars: 0,
     unconscious: false,
     dead: false,
+    conditions: [],
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
     loadout: [...character.domainCards],
@@ -152,7 +162,8 @@ export interface SheetEffect {
   params?: Record<string, string | number>;
 }
 
-const noEffect: SheetEffect = {
+/** The effect for a change with nothing to say about it. */
+export const noEffect: SheetEffect = {
   vulnerable: false,
   deathMoveRequired: false,
   stressBecameHP: false,

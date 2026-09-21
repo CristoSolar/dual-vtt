@@ -144,6 +144,23 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
     return byToken;
   }, [scene, room.characters, room.adversaryInstances]);
 
+  /**
+   * A PC token wears whatever conditions their sheet says, so a player toggling
+   * Hidden shows up on the map without the GM copying it across. Everything else
+   * keeps the conditions the GM put on the token itself.
+   */
+  const drawnScene = useMemo(() => {
+    if (scene === null) return scene;
+    return {
+      ...scene,
+      tokens: scene.tokens.map((token) => {
+        if (token.kind !== 'pc' || token.refId === null) return token;
+        const sheet = room.characters[token.refId];
+        return sheet === undefined ? token : { ...token, conditions: sheet.conditions };
+      }),
+    };
+  }, [scene, room.characters]);
+
   // Filled in by the canvas; the HUD's zoom buttons call through it.
   const zoomApi = useRef<((direction: 1 | -1) => void) | null>(null);
 
@@ -207,7 +224,8 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
         rotation: 0,
         ownerId: viewerId,
         hidden: false,
-        showRings: false,
+        conditions: [],
+    showRings: false,
         color: tokenColorAt(0),
         image: null,
         colorFrame: false,
@@ -309,7 +327,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           </div>
         ) : stageSize.width > 0 ? (
           <MapCanvas
-            scene={scene}
+            scene={drawnScene ?? scene}
             isGameMaster={isGameMaster}
             viewerId={viewerId}
             width={stageSize.width}
@@ -794,6 +812,7 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
     height: 50,
     rotation: 0,
     hidden: false,
+    conditions: [],
     showRings: false,
     color,
     image: null,

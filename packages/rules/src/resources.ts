@@ -141,6 +141,17 @@ export function clearArmorSlot(slots: ArmorSlots, amount = 1): ArmorSlots {
   return { ...slots, marked: Math.max(0, slots.marked - Math.max(0, amount)) };
 }
 
+/**
+ * The three standard conditions (SRD 2.0 p.52). A feature can apply others by
+ * name, so a character's conditions are stored as free text with these as the
+ * ones the app knows how to describe.
+ *
+ * Vulnerable is also derived, not only applied: marking the last Stress makes a
+ * character Vulnerable until they clear at least one.
+ */
+export const STANDARD_CONDITIONS = ['hidden', 'restrained', 'vulnerable'] as const;
+export type StandardCondition = (typeof STANDARD_CONDITIONS)[number];
+
 /** Gold is measured in handfuls, bags, and chests (SRD p.60). */
 export interface Gold {
   handfuls: number;
