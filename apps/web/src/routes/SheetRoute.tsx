@@ -17,6 +17,7 @@ import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
 import { EquipmentPanel } from '../components/sheet/EquipmentPanel.js';
 import { InventoryPanel } from '../components/sheet/InventoryPanel.js';
 import { BeastformPanel } from '../components/sheet/BeastformPanel.js';
+import { TagTeamPanel, type TagTeam } from '../components/sheet/TagTeamPanel.js';
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
@@ -99,6 +100,8 @@ interface SheetRouteProps {
   rest?: Rest | null;
   /** Everyone with a character in the room, for aiming a downtime move at an ally. */
   party?: readonly { id: string; name: string }[];
+  /** The Tag Team Roll in progress, when a campaign is joined. */
+  tagTeam?: TagTeam | null;
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -123,6 +126,7 @@ export function SheetRoute({
   lastEffect = null,
   rest = null,
   party = [],
+  tagTeam = null,
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -679,6 +683,17 @@ export function SheetRoute({
               )
             }
           />
+          {characterId !== null && characterId !== undefined && party.length > 1 ? (
+            <TagTeamPanel
+              characterId={characterId}
+              party={party}
+              tagTeam={tagTeam}
+              onStart={(partnerCharacterId) =>
+                send?.(forMe({ type: 'startTagTeam', partnerCharacterId }))
+              }
+              onChoose={(rollOf) => send?.(forMe({ type: 'chooseTagTeam', rollOf }))}
+            />
+          ) : null}
           {character.classId === 'druid' || character.multiclass?.classId === 'druid' ? (
             <BeastformPanel
               beastform={sheet.beastform}

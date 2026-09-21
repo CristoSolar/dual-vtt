@@ -263,6 +263,8 @@ function gmRoom(): RoomState {
     activeEnvironment: null,
     rest: null,
     consecutiveShortRests: 0,
+    groupAction: null,
+    tagTeam: null,
     map: createMapState(),
     rollLog: [],
   };
@@ -359,6 +361,8 @@ describe('GM panel renders', () => {
       activeEnvironment: null,
       rest: null,
       consecutiveShortRests: 0,
+      groupAction: null,
+      tagTeam: null,
       map: createMapState(),
       rollLog: [
         {

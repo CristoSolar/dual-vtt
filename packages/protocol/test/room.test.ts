@@ -700,6 +700,108 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('carries the group action bonus into the lead roll and then closes it', () => {
+    const room = roomWithPlayers();
+    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id });
+    expect(refusal(room, ALEX, { type: 'startGroupAction', leadCharacterId: ALEX.id })).toBe(
+      'notGameMaster',
+    );
+
+    const request = {
+      label: 'Push the door',
+      modifiers: 0,
+      difficulty: 10,
+      advantage: 0,
+      disadvantage: 0,
+      experiences: [],
+      helpDice: 0,
+      reaction: false,
+    };
+
+    // Sam collaborates: the roll is forced to be a reaction, and its outcome is kept.
+    const helped = apply(opened, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    const recorded = helped.groupAction?.reactions[SAM.id];
+    expect(typeof recorded).toBe('boolean');
+    // The log is newest-first.
+    const helpEntry = helped.rollLog[0];
+    if (helpEntry === undefined || helpEntry.kind !== 'duality') throw new Error('no entry');
+    expect(helpEntry.reaction).toBe(true);
+
+    // Alex leads: the bonus lands in the roll's modifiers and the group action closes.
+    const led = apply(helped, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    const leadEntry = led.rollLog[0];
+    if (leadEntry === undefined || leadEntry.kind !== 'duality') throw new Error('no lead entry');
+    expect(leadEntry.roll.modifiers).toBe(recorded === true ? 1 : -1);
+    expect(leadEntry.reaction).toBe(false);
+    expect(led.groupAction).toBeNull();
+
+    expect(apply(opened, GM, { type: 'cancelGroupAction' }).groupAction).toBeNull();
+  });
+
+  it('holds both Tag Team rolls until the initiator picks one', () => {
+    const room = roomWithPlayers();
+    // A Tag Team Roll costs 3 Hope, and a character starts with 2.
+    expect(
+      refusal(room, ALEX, {
+        type: 'startTagTeam',
+        characterId: ALEX.id,
+        partnerCharacterId: SAM.id,
+      }),
+    ).toBe('rejected');
+
+    const funded = apply(room, ALEX, { type: 'gainHope', characterId: ALEX.id, amount: 2 });
+    const opened = apply(funded, ALEX, {
+      type: 'startTagTeam',
+      characterId: ALEX.id,
+      partnerCharacterId: SAM.id,
+    });
+    expect(opened.characters[ALEX.id]?.hope).toBe(1);
+    expect(opened.tagTeam?.partnerId).toBe(SAM.id);
+
+    const request = {
+      label: 'Together',
+      modifiers: 0,
+      difficulty: 10,
+      advantage: 0,
+      disadvantage: 0,
+      experiences: [],
+      helpDice: 0,
+      reaction: false,
+    };
+
+    // Neither roll pays out on its own.
+    const first = apply(opened, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    expect(
+      refusal(first, ALEX, { type: 'chooseTagTeam', characterId: ALEX.id, rollOf: ALEX.id }),
+    ).toBe('rejected');
+    const both = apply(first, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    expect(Object.keys(both.tagTeam?.rolls ?? {})).toHaveLength(2);
+    expect(both.fear).toBe(opened.fear);
+
+    expect(
+      refusal(both, SAM, { type: 'chooseTagTeam', characterId: SAM.id, rollOf: SAM.id }),
+    ).toBe('rejected');
+
+    const outcome = both.tagTeam?.rolls[ALEX.id]?.outcome;
+    if (outcome === undefined) throw new Error('no roll to choose');
+    const chosen = apply(both, ALEX, {
+      type: 'chooseTagTeam',
+      characterId: ALEX.id,
+      rollOf: ALEX.id,
+    });
+    expect(chosen.tagTeam).toBeNull();
+
+    const hopeful = outcome === 'successFear' || outcome === 'failureFear' ? false : true;
+    if (hopeful) {
+      // Every PC involved gains a Hope.
+      expect(chosen.characters[ALEX.id]?.hope).toBe((both.characters[ALEX.id]?.hope ?? 0) + 1);
+      expect(chosen.characters[SAM.id]?.hope).toBe((both.characters[SAM.id]?.hope ?? 0) + 1);
+    } else {
+      // The GM gains a Fear per PC involved.
+      expect(chosen.fear).toBe(both.fear + 2);
+    }
+  });
+
   it('takes a Beastform for a Stress, refuses one above the tier, and drops on the last HP', () => {
     const claimed = claimCharacterInRoom(
       roomWithPlayers(),

@@ -317,6 +317,7 @@ function Shell() {
                 lastEffect={campaign.lastEffect}
                 rest={campaign.room?.rest ?? null}
                 party={party}
+                tagTeam={campaign.room?.tagTeam ?? null}
               />
             )
           }

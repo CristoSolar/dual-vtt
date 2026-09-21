@@ -39,6 +39,59 @@ const nextId = (prefix: string) => {
  * Downtime is the GM's to open and close: the party rests together, the GM is paid
  * in Fear for it, and each PC then spends their own two moves from their sheet.
  */
+/**
+ * Group action rolls (SRD 2.0 p.48). The GM opens one and names the lead; every
+ * other PC who rolls while it is open is collaborating, and their reaction rolls
+ * shift the lead roll by one each way.
+ */
+function GroupAction({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  const party = room.players.filter((player) => player.characterId !== null);
+  const [lead, setLead] = useState(party[0]?.characterId ?? '');
+  const open = room.groupAction;
+  const nameOf = (id: string) =>
+    room.players.find((player) => player.characterId === id)?.name ?? id;
+
+  if (party.length < 2) return null;
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.groupAction.title')}</SectionHead>
+      <p className="muted">{t('gm.groupAction.hint')}</p>
+      {open === null ? (
+        <div className="row">
+          <label htmlFor="group-lead">{t('gm.groupAction.lead')}</label>
+          <select id="group-lead" value={lead} onChange={(event) => setLead(event.target.value)}>
+            {party.map((player) => (
+              <option key={player.id} value={player.characterId ?? ''}>
+                {player.name}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            disabled={lead === ''}
+            onClick={() => send({ type: 'startGroupAction', leadCharacterId: lead })}
+          >
+            {t('gm.groupAction.start')}
+          </button>
+        </div>
+      ) : (
+        <div className="row">
+          <p>
+            {t('gm.groupAction.open', {
+              name: nameOf(open.leadCharacterId),
+              count: Object.keys(open.reactions).length,
+            })}
+          </p>
+          <button type="button" onClick={() => send({ type: 'cancelGroupAction' })}>
+            {t('gm.groupAction.cancel')}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Downtime({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   const resting = room.rest !== null;
   const owesLong = mustRestLong(room.consecutiveShortRests);
@@ -110,6 +163,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
         <div>
           <FearTrack fear={room.fear} send={send} />
           <Downtime room={room} send={send} />
+          <GroupAction room={room} send={send} />
           <PartyOverview room={room} send={send} />
           <Countdowns countdowns={room.countdowns} send={send} />
           <Adversaries room={room} send={send} />

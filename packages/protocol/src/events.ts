@@ -115,6 +115,18 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     weaponId: z.string().min(1).max(64).nullable(),
   }),
   z.object({
+    // Spends 3 Hope to open a Tag Team Roll with another PC (SRD 2.0 p.49).
+    type: z.literal('startTagTeam'),
+    characterId,
+    partnerCharacterId: z.string().min(1).max(64),
+  }),
+  z.object({
+    // The initiator picks whose roll applies to both actions.
+    type: z.literal('chooseTagTeam'),
+    characterId,
+    rollOf: z.string().min(1).max(64),
+  }),
+  z.object({
     // A Druid entering a Beastform, or dropping out of one with null. Entering
     // costs a Stress, which the reducer marks.
     type: z.literal('setBeastform'),
@@ -212,6 +224,16 @@ export type CharacterRoomEvent = z.infer<typeof CharacterRoomEventSchema>;
 
 /** Intents only the GM may send. */
 export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
+  z.object({
+    // Opens a group action roll: this character leads, everyone else who rolls
+    // while it is open is collaborating (SRD 2.0 p.48).
+    type: z.literal('startGroupAction'),
+    leadCharacterId: z.string().min(1).max(64),
+  }),
+  z.object({
+    // Abandons a group action without anyone leading it.
+    type: z.literal('cancelGroupAction'),
+  }),
   z.object({ type: z.literal('gainFear'), amount: amount.default(1) }),
   z.object({ type: z.literal('spendFear'), amount: amount.default(1) }),
   z.object({ type: z.literal('setSpotlight'), spotlight: z.string().min(1).nullable() }),
@@ -417,6 +439,8 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.consecutiveShortRests !== after.consecutiveShortRests) {
     patch.consecutiveShortRests = after.consecutiveShortRests;
   }
+  if (before.groupAction !== after.groupAction) patch.groupAction = after.groupAction;
+  if (before.tagTeam !== after.tagTeam) patch.tagTeam = after.tagTeam;
   if (before.map !== after.map) patch.map = after.map;
   return patch;
 }
@@ -445,6 +469,8 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.consecutiveShortRests === undefined
       ? {}
       : { consecutiveShortRests: patch.consecutiveShortRests }),
+    ...(patch.groupAction === undefined ? {} : { groupAction: patch.groupAction }),
+    ...(patch.tagTeam === undefined ? {} : { tagTeam: patch.tagTeam }),
     ...(patch.map === undefined ? {} : { map: patch.map }),
   };
 }

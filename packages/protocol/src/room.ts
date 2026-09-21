@@ -42,7 +42,7 @@ import {
   type Token,
 } from './map.js';
 import { computeVisionPolygon } from './vision.js';
-import { RollEntrySchema, type RollEntry } from './rollLog.js';
+import { ActionOutcomeSchema, RollEntrySchema, type RollEntry } from './rollLog.js';
 import {
   SheetStateSchema,
   applyLevelUp,
@@ -60,6 +60,7 @@ import {
   makeDeathMove,
   makeDamageRoll,
   makeDualityRoll,
+  type DualityRollRequest,
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
@@ -169,6 +170,36 @@ export const RoomStateSchema = z.object({
    * must be a long one (SRD 2.0 p.52).
    */
   consecutiveShortRests: z.number().int().min(0).default(0),
+  /**
+   * A group action roll in progress (SRD 2.0 p.48): one PC leads, the others make
+   * reaction rolls, and the lead's roll takes +1 for each of those that succeeded
+   * and -1 for each that failed. It lives in room state because it spans characters.
+   */
+  groupAction: z
+    .object({
+      leadCharacterId: z.string().min(1),
+      /** Character id -> whether their reaction roll succeeded. */
+      reactions: z.record(z.string(), z.boolean()),
+    })
+    .nullable()
+    .default(null),
+  /**
+   * A Tag Team Roll in progress (SRD 2.0 p.49). Both PCs roll, then the initiator
+   * picks which result applies to both, so neither roll's Hope or Fear is handed
+   * out until that choice is made.
+   */
+  tagTeam: z
+    .object({
+      initiatorId: z.string().min(1),
+      partnerId: z.string().min(1),
+      /** Character id -> the roll they made, held until one is chosen. */
+      rolls: z.record(
+        z.string(),
+        z.object({ outcome: ActionOutcomeSchema, total: z.number().int() }),
+      ),
+    })
+    .nullable()
+    .default(null),
   /** Scenes, tokens, and fog. Players receive only the active scene. */
   map: MapStateSchema,
 });
@@ -191,6 +222,8 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     rollLog: [],
     rest: null,
     consecutiveShortRests: 0,
+    groupAction: null,
+    tagTeam: null,
     map: createMapState(),
   };
 }
@@ -337,6 +370,26 @@ function revealVisionForAll(scene: Scene): Scene {
   );
 }
 
+/** Spending this much Hope opens a Tag Team Roll (SRD 2.0 p.49). */
+export const TAG_TEAM_HOPE_COST = 3;
+
+type Outcome = z.infer<typeof ActionOutcomeSchema>;
+
+/** Whether an action roll's outcome counts as a success. */
+function succeeded(outcome: Outcome): boolean {
+  return outcome === 'criticalSuccess' || outcome === 'successHope' || outcome === 'successFear';
+}
+
+/** Whether an outcome was rolled with Hope, which is what a Tag Team choice pays out on. */
+function withHope(outcome: Outcome): boolean {
+  return outcome === 'criticalSuccess' || outcome === 'successHope' || outcome === 'failureHope';
+}
+
+/** +1 for each collaborator who succeeded, -1 for each who failed (SRD 2.0 p.48). */
+function groupActionBonus(reactions: Record<string, boolean>): number {
+  return Object.values(reactions).reduce((total, ok) => total + (ok ? 1 : -1), 0);
+}
+
 /**
  * Applies one validated intent to the room, enforcing permissions.
  *
@@ -376,6 +429,8 @@ export function applyRoomEvent(
     case 'equipWeapon':
     case 'setTransformation':
     case 'setBeastform':
+    case 'startTagTeam':
+    case 'chooseTagTeam':
     case 'downtimeMove':
     case 'deathMove':
     case 'levelUp':
@@ -389,6 +444,24 @@ export function applyRoomEvent(
         return fail('notYourCharacter', 'you do not control that character');
       }
       return applyCharacterEvent(state, actor, event, sheet, rng, now);
+    }
+
+    // --- group action rolls ---------------------------------------------------
+    case 'startGroupAction': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (state.characters[event.leadCharacterId] === undefined) {
+        return fail('unknownCharacter', 'no such character to lead the action');
+      }
+      return ok({
+        ...state,
+        groupAction: { leadCharacterId: event.leadCharacterId, reactions: {} },
+      });
+    }
+    case 'cancelGroupAction': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      return ok({ ...state, groupAction: null });
     }
 
     // --- GM: Fear ------------------------------------------------------------
@@ -982,7 +1055,25 @@ function applyCharacterEvent(
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
     case 'rollDuality': {
-      const t = makeDualityRoll(sheet, event.request, rng);
+      const group = state.groupAction;
+      const tag = state.tagTeam;
+      const inTagTeam =
+        tag !== null &&
+        (event.characterId === tag.initiatorId || event.characterId === tag.partnerId);
+      const collaborating = group !== null && group.leadCharacterId !== event.characterId;
+      const leading = group !== null && group.leadCharacterId === event.characterId;
+
+      // A collaborator's roll and either half of a Tag Team roll generate no Hope or
+      // Fear of their own: the lead roll and the chosen Tag Team roll do that.
+      const request: DualityRollRequest = {
+        ...event.request,
+        ...(collaborating || inTagTeam ? { reaction: true } : {}),
+        ...(leading
+          ? { modifiers: event.request.modifiers + groupActionBonus(group.reactions) }
+          : {}),
+      };
+
+      const t = makeDualityRoll(sheet, request, rng);
       if (t.outcome === null) return fail('rejected', t.effect.message ?? 'roll rejected');
 
       const entry: RollEntry = {
@@ -990,12 +1081,12 @@ function applyCharacterEvent(
         id: `${now.toString(36)}-${event.characterId}`,
         at: now,
         by: rollerName,
-        label: event.request.label,
+        label: request.label,
         roll: t.outcome.roll,
-        difficulty: event.request.difficulty,
+        difficulty: request.difficulty,
         outcome: t.outcome.result.outcome,
-        experiences: [...event.request.experiences],
-        reaction: event.request.reaction,
+        experiences: [...request.experiences],
+        reaction: request.reaction ?? false,
       };
 
       let next = withCharacter(state, event.characterId, t.sheet);
@@ -1007,7 +1098,88 @@ function applyCharacterEvent(
       const advanced = advanceOnActionRoll(next.countdowns, t.outcome.result.outcome);
       next = { ...next, countdowns: advanced.countdowns };
 
+      if (inTagTeam && tag !== null) {
+        next = {
+          ...next,
+          tagTeam: {
+            ...tag,
+            rolls: {
+              ...tag.rolls,
+              [event.characterId]: {
+                outcome: t.outcome.result.outcome,
+                total: t.outcome.roll.total,
+              },
+            },
+          },
+        };
+      } else if (collaborating && group !== null) {
+        next = {
+          ...next,
+          groupAction: {
+            ...group,
+            reactions: {
+              ...group.reactions,
+              [event.characterId]: succeeded(t.outcome.result.outcome),
+            },
+          },
+        };
+      } else if (leading) {
+        // The lead roll is the group action: it closes when that roll lands.
+        next = { ...next, groupAction: null };
+      }
+
       return ok(appendEntries(next, [entry]), t.effect, [entry]);
+    }
+    case 'startTagTeam': {
+      if (state.tagTeam !== null) return fail('rejected', 'a Tag Team Roll is already open');
+      if (event.partnerCharacterId === event.characterId) {
+        return fail('rejected', 'a Tag Team Roll needs two different characters');
+      }
+      if (state.characters[event.partnerCharacterId] === undefined) {
+        return fail('unknownCharacter', 'no such character to team up with');
+      }
+      const spent = spendSheetHope(sheet, TAG_TEAM_HOPE_COST);
+      if (spent.effect.code === 'notEnoughHope') {
+        return fail('rejected', spent.effect.message ?? 'not enough Hope');
+      }
+      return ok(
+        {
+          ...withCharacter(state, event.characterId, spent.sheet),
+          tagTeam: {
+            initiatorId: event.characterId,
+            partnerId: event.partnerCharacterId,
+            rolls: {},
+          },
+        },
+        spent.effect,
+      );
+    }
+    case 'chooseTagTeam': {
+      const tag = state.tagTeam;
+      if (tag === null) return fail('rejected', 'no Tag Team Roll is open');
+      if (event.characterId !== tag.initiatorId) {
+        return fail('rejected', 'only the character who initiated it can choose');
+      }
+      if (Object.keys(tag.rolls).length < 2) {
+        return fail('rejected', 'both characters have to roll first');
+      }
+      const chosen = tag.rolls[event.rollOf];
+      if (chosen === undefined) return fail('rejected', 'that character has not rolled yet');
+
+      // "On a roll with Hope, all PCs involved gain a Hope. On a roll with Fear, the
+      // GM gains a Fear token for each PC involved."
+      const involved = [tag.initiatorId, tag.partnerId];
+      let next: RoomState = { ...state, tagTeam: null };
+      if (withHope(chosen.outcome)) {
+        for (const id of involved) {
+          const theirs = next.characters[id];
+          if (theirs === undefined) continue;
+          next = withCharacter(next, id, gainSheetHope(theirs, 1).sheet);
+        }
+      } else {
+        next = { ...next, fear: gainFear(next.fear, involved.length) };
+      }
+      return ok(next);
     }
     case 'rollDamage': {
       const roll = makeDamageRoll(
