@@ -1,7 +1,8 @@
-import type { CampaignSummary } from '@daggerheart/protocol';
-import { useState } from 'react';
+import type { CampaignSummary, User } from '@daggerheart/protocol';
+import { useEffect, useState } from 'react';
 
 import { t } from '../i18n/index.js';
+import { SERVER_URL } from '../state/useCampaign.js';
 
 interface CampaignsRouteProps {
   accountId: string;
@@ -9,6 +10,8 @@ interface CampaignsRouteProps {
   onCreate: (name: string) => void;
   onJoin: (campaignId: string) => void;
   onAddPlayer: (campaignId: string, username: string) => void;
+  /** Session token — the player list behind "add player" is GM-only. */
+  token: string;
   /** True while creating a campaign or adding a player — disables the relevant
    * form so a double-click can't fire the request twice. */
   pending: boolean;
@@ -30,6 +33,7 @@ export function CampaignsRoute({
   onCreate,
   onJoin,
   onAddPlayer,
+  token,
   pending,
   tunnelUrl,
   tunnelLoading,
@@ -39,6 +43,23 @@ export function CampaignsRoute({
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [username, setUsername] = useState('');
   const [copied, setCopied] = useState(false);
+  /** The accounts that exist, so the GM picks one instead of typing a name that
+   * may not match any. Loaded once, when the first "add player" form opens. */
+  const [players, setPlayers] = useState<readonly User[]>([]);
+
+  useEffect(() => {
+    if (addingTo === null) return;
+    const controller = new AbortController();
+    void fetch(`${SERVER_URL}/users`, {
+      headers: { authorization: `Bearer ${token}` },
+      signal: controller.signal,
+    })
+      .then((response) => (response.ok ? (response.json() as Promise<User[]>) : []))
+      .then(setPlayers)
+      // A failure leaves the list empty, which reads as "no accounts yet".
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [addingTo, token]);
 
   return (
     <section>
@@ -110,31 +131,46 @@ export function CampaignsRoute({
                     ) : null}
                   </div>
                   {addingTo === campaign.id ? (
-                    <form
-                      className="row mt-3"
-                      onSubmit={(event) => {
-                        event.preventDefault();
-                        if (pending || username.trim() === '') return;
-                        onAddPlayer(campaign.id, username.trim());
-                        setUsername('');
-                        setAddingTo(null);
-                      }}
-                    >
-                      <label className="sr-only" htmlFor={`add-player-${campaign.id}`}>
-                        {t('common.username')}
-                      </label>
-                      <input
-                        id={`add-player-${campaign.id}`}
-                        name="username"
-                        autoComplete="off"
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                        placeholder={t('common.usernamePlaceholder')}
-                      />
-                      <button type="submit" disabled={pending || username.trim() === ''}>
-                        {pending ? t('campaigns.adding') : t('campaigns.add')}
-                      </button>
-                    </form>
+                    (() => {
+                      const candidates = players.filter(
+                        (player) => !campaign.memberIds.includes(player.id),
+                      );
+                      if (candidates.length === 0) {
+                        return <p className="muted mt-3">{t('campaigns.noPlayersToAdd')}</p>;
+                      }
+                      return (
+                        <form
+                          className="row mt-3"
+                          onSubmit={(event) => {
+                            event.preventDefault();
+                            if (pending || username === '') return;
+                            onAddPlayer(campaign.id, username);
+                            setUsername('');
+                            setAddingTo(null);
+                          }}
+                        >
+                          <label className="sr-only" htmlFor={`add-player-${campaign.id}`}>
+                            {t('common.username')}
+                          </label>
+                          <select
+                            id={`add-player-${campaign.id}`}
+                            name="username"
+                            value={username}
+                            onChange={(event) => setUsername(event.target.value)}
+                          >
+                            <option value="">{t('campaigns.choosePlayer')}</option>
+                            {candidates.map((player) => (
+                              <option key={player.id} value={player.username}>
+                                {player.username}
+                              </option>
+                            ))}
+                          </select>
+                          <button type="submit" disabled={pending || username === ''}>
+                            {pending ? t('campaigns.adding') : t('campaigns.add')}
+                          </button>
+                        </form>
+                      );
+                    })()
                   ) : null}
                   {isOwner ? (
                     <div className="row mt-3">

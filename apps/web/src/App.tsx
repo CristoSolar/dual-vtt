@@ -287,6 +287,7 @@ function Shell() {
                   navigate('/');
                 }}
                 onAddPlayer={(campaignId, username) => void campaign.addPlayer(campaignId, username)}
+                token={auth.token ?? ''}
                 pending={campaign.pending}
                 tunnelUrl={tunnelUrl}
                 tunnelLoading={tunnelLoading}

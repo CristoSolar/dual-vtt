@@ -141,6 +141,8 @@ export const es = {
   'campaigns.ownedBy': 'DJ: {username}',
   'campaigns.join': 'Entrar',
   'campaigns.addPlayer': 'Agregar jugador',
+  'campaigns.choosePlayer': 'Elige un jugador…',
+  'campaigns.noPlayersToAdd': 'No hay cuentas de jugador disponibles. Crea una en Jugadores.',
   'campaigns.adding': 'Agregando…',
   'campaigns.add': 'Agregar',
   'campaigns.generatingLink': 'Generando…',

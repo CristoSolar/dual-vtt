@@ -133,6 +133,8 @@ export const en: Record<keyof typeof es, string> = {
   'campaigns.ownedBy': 'GM: {username}',
   'campaigns.join': 'Join',
   'campaigns.addPlayer': 'Add player',
+  'campaigns.choosePlayer': 'Choose a player…',
+  'campaigns.noPlayersToAdd': 'No player accounts available. Create one under Players.',
   'campaigns.adding': 'Adding…',
   'campaigns.add': 'Add',
   'campaigns.generatingLink': 'Generating…',
