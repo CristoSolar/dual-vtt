@@ -704,6 +704,9 @@ export const en: Record<keyof typeof es, string> = {
   'gm.countdowns.title': 'Countdowns',
   'gm.countdowns.none': 'No countdowns running.',
   'gm.countdowns.advanceAria': 'Advance {name}',
+  'gm.countdowns.backOffAria': 'Back {name} off by one',
+  'gm.countdowns.triggerNow': 'Trigger now',
+  'gm.countdowns.reset': 'Reset',
   'gm.countdowns.triggered': 'Triggered',
   'gm.countdowns.autoAdvanceHint':
     'Advances automatically with action rolls, per the dynamic countdown table.',
@@ -740,6 +743,8 @@ export const en: Record<keyof typeof es, string> = {
   'gm.adversaries.addToEncounter': 'Add to encounter',
   'gm.adversaries.meta': 'Tier {tier} · {type} · Difficulty {difficulty} · HP {hp} · Stress {stress}',
   'gm.adversaries.inEncounter': 'In the encounter',
+  'gm.adversaries.quantity': 'How many',
+  'gm.adversaries.duplicate': 'Add another',
   'gm.adversaries.empty': 'Nothing on the table yet.',
   'gm.adversaries.thresholdsNone': 'none',
   'gm.adversaries.meta2': 'Difficulty {difficulty} · Thresholds {thresholds} · ATK {atk}',

@@ -640,6 +640,18 @@ export function applyRoomEvent(
       );
       return ok({ ...state, countdowns });
     }
+    case 'setCountdownValue': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!state.countdowns.some((c) => c.id === event.id)) {
+        return fail('unknownCountdown', 'no such countdown');
+      }
+      // A countdown put back above zero is no longer a triggered one.
+      const countdowns = state.countdowns.map((c) =>
+        c.id === event.id ? { ...c, value: event.value, triggered: event.value === 0 } : c,
+      );
+      return ok({ ...state, countdowns });
+    }
     case 'removeCountdown': {
       const denied = gmOnly();
       if (denied) return denied;

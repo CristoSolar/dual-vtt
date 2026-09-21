@@ -40,14 +40,6 @@ const nextId = (prefix: string) => {
 };
 
 /**
- * The GM's screen. Every control emits an intent; the server validates it, applies
- * it, and broadcasts the result — nothing here changes state directly.
- */
-/**
- * Downtime is the GM's to open and close: the party rests together, the GM is paid
- * in Fear for it, and each PC then spends their own two moves from their sheet.
- */
-/**
  * Group action rolls (SRD 2.0 p.48). The GM opens one and names the lead; every
  * other PC who rolls while it is open is collaborating, and their reaction rolls
  * shift the lead roll by one each way.
@@ -100,6 +92,10 @@ function GroupAction({ room, send }: { room: RoomState; send: (event: RoomEvent)
   );
 }
 
+/**
+ * Downtime is the GM's to open and close: the party rests together, the GM is paid
+ * in Fear for it, and each PC then spends their own two moves from their sheet.
+ */
 function Downtime({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   const resting = room.rest !== null;
   const owesLong = mustRestLong(room.consecutiveShortRests);
@@ -153,6 +149,10 @@ function Downtime({ room, send }: { room: RoomState; send: (event: RoomEvent) =>
   );
 }
 
+/**
+ * The GM's screen. Every control emits an intent; the server validates it, applies
+ * it, and broadcasts the result — nothing here changes state directly.
+ */
 export function GMPanel({ room, campaignName, send }: GMPanelProps) {
   return (
     <section className="gm-scope">
@@ -401,6 +401,41 @@ function Countdowns({
                 onClick={() => send({ type: 'advanceCountdown', id: countdown.id, amount: 1 })}
               >
                 −1
+              </button>
+              <button
+                type="button"
+                aria-label={t('gm.countdowns.backOffAria', { name: countdown.name })}
+                onClick={() =>
+                  send({
+                    type: 'setCountdownValue',
+                    id: countdown.id,
+                    value: Math.min(99, countdown.value + 1),
+                  })
+                }
+              >
+                +1
+              </button>
+              <button
+                type="button"
+                disabled={countdown.value === 0}
+                onClick={() =>
+                  send({ type: 'advanceCountdown', id: countdown.id, amount: countdown.value })
+                }
+              >
+                {t('gm.countdowns.triggerNow')}
+              </button>
+              <button
+                type="button"
+                disabled={countdown.value === countdown.startingValue && !countdown.triggered}
+                onClick={() =>
+                  send({
+                    type: 'setCountdownValue',
+                    id: countdown.id,
+                    value: countdown.startingValue,
+                  })
+                }
+              >
+                {t('gm.countdowns.reset')}
               </button>
               <button
                 type="button"
@@ -661,18 +696,6 @@ function AttackControls({
 }
 
 /**
- * The Battle Points readout for the adversaries on the table (SRD 2.0 p.94).
- *
- * It reports rather than refuses: an encounter over budget is a legal encounter,
- * just a harder one. The two line-up adjustments are derived from what is already
- * on the table; the rest are the GM's to tick.
- */
-/**
- * Adversary pools (SRD 2.0 p.94): tokens shared by several adversaries instead of
- * sitting on one stat block. They are empty when a scene begins and cleared when it
- * ends, so clearing them all is one button.
- */
-/**
  * Fate rolls and the printed hazards (SRD 2.0 p.92), plus the per-scene Fear budget
  * the SRD suggests. Nothing here is applied to anyone: it rolls a number into the
  * shared log and leaves the adjudication to the GM, which is how the SRD prints it.
@@ -718,6 +741,11 @@ function Hazards({ send }: { send: (event: RoomEvent) => void }) {
   );
 }
 
+/**
+ * Adversary pools (SRD 2.0 p.94): tokens shared by several adversaries instead of
+ * sitting on one stat block. They are empty when a scene begins and cleared when it
+ * ends, so clearing them all is one button.
+ */
 function AdversaryPools({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   const [name, setName] = useState('');
 
@@ -779,6 +807,13 @@ function AdversaryPools({ room, send }: { room: RoomState; send: (event: RoomEve
   );
 }
 
+/**
+ * The Battle Points readout for the adversaries on the table (SRD 2.0 p.94).
+ *
+ * It reports rather than refuses: an encounter over budget is a legal encounter,
+ * just a harder one. The two line-up adjustments are derived from what is already
+ * on the table; the rest are the GM's to tick.
+ */
 function BattlePoints({ room }: { room: RoomState }) {
   const [adjustments, setAdjustments] = useState<BattlePointAdjustments>({});
 
@@ -827,6 +862,26 @@ function Adversaries({
   send: (event: RoomEvent) => void;
 }) {
   const [query, setQuery] = useState('');
+  const [quantity, setQuantity] = useState(1);
+
+  /**
+   * Adds `count` of an adversary at once, lettering them when there is more than
+   * one: a fight with four guards needs four names the table can say out loud,
+   * not four identical rows.
+   */
+  const addAdversaries = (adversaryId: string, baseName: string, count: number) => {
+    const existing = room.adversaryInstances.filter((i) => i.adversaryId === adversaryId).length;
+    for (let i = 0; i < count; i++) {
+      const index = existing + i;
+      const letter = String.fromCharCode(65 + (index % 26));
+      send({
+        type: 'addAdversary',
+        instanceId: nextId('adv'),
+        adversaryId,
+        name: count === 1 && existing === 0 ? baseName : `${baseName} ${letter}`,
+      });
+    }
+  };
 
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -849,6 +904,19 @@ function Adversaries({
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t('gm.adversaries.searchPlaceholder')}
       />
+      <div className="row">
+        <label htmlFor="adversary-quantity">{t('gm.adversaries.quantity')}</label>
+        <input
+          id="adversary-quantity"
+          type="number"
+          min={1}
+          max={12}
+          value={quantity}
+          onChange={(event) =>
+            setQuantity(Math.max(1, Math.min(12, Number(event.target.value) || 1)))
+          }
+        />
+      </div>
 
       {matches.map((adversary) => (
         <div className="card" key={adversary.id}>
@@ -856,14 +924,7 @@ function Adversaries({
             <strong>{adversary.name}</strong>
             <button
               type="button"
-              onClick={() =>
-                send({
-                  type: 'addAdversary',
-                  instanceId: nextId('adv'),
-                  adversaryId: adversary.id,
-                  name: adversary.name,
-                })
-              }
+              onClick={() => addAdversaries(adversary.id, adversary.name, quantity)}
             >
               {t('gm.adversaries.addToEncounter')}
             </button>
@@ -891,12 +952,20 @@ function Adversaries({
           <div className="card" key={instance.instanceId}>
             <div className="card-head">
               <strong>{instance.name}</strong>
-              <button
-                type="button"
-                onClick={() => send({ type: 'removeAdversary', instanceId: instance.instanceId })}
-              >
-                {t('gm.remove')}
-              </button>
+              <div className="row">
+                <button
+                  type="button"
+                  onClick={() => addAdversaries(instance.adversaryId, stat?.name ?? instance.name, 1)}
+                >
+                  {t('gm.adversaries.duplicate')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => send({ type: 'removeAdversary', instanceId: instance.instanceId })}
+                >
+                  {t('gm.remove')}
+                </button>
+              </div>
             </div>
             {stat === undefined ? null : (
               <>

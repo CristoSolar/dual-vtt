@@ -274,6 +274,14 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     id: z.string().min(1),
     amount: z.number().int().min(1).max(99),
   }),
+  z.object({
+    // Sets a countdown's value outright: backing one off a tick, correcting a
+    // miscount, or putting it back where it started. Advancing stays its own
+    // intent, because advancing is what loops and increments react to.
+    type: z.literal('setCountdownValue'),
+    id: z.string().min(1),
+    value: z.number().int().min(0).max(99),
+  }),
   z.object({ type: z.literal('removeCountdown'), id: z.string().min(1) }),
   z.object({
     type: z.literal('advanceCountdownsForRest'),

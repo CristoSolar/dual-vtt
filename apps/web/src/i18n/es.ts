@@ -720,6 +720,9 @@ export const es = {
   'gm.countdowns.title': 'Cuentas atrás',
   'gm.countdowns.none': 'No hay cuentas atrás en marcha.',
   'gm.countdowns.advanceAria': 'Avanzar {name}',
+  'gm.countdowns.backOffAria': 'Retrasar {name} un punto',
+  'gm.countdowns.triggerNow': 'Disparar ahora',
+  'gm.countdowns.reset': 'Reiniciar',
   'gm.countdowns.triggered': 'Activada',
   'gm.countdowns.autoAdvanceHint':
     'Avanza automáticamente con las tiradas de acción, según la tabla de cuentas atrás dinámicas.',
@@ -756,6 +759,8 @@ export const es = {
   'gm.adversaries.addToEncounter': 'Añadir al encuentro',
   'gm.adversaries.meta': 'Nivel {tier} · {type} · Dificultad {difficulty} · PV {hp} · Estrés {stress}',
   'gm.adversaries.inEncounter': 'En el encuentro',
+  'gm.adversaries.quantity': 'Cuántos',
+  'gm.adversaries.duplicate': 'Añadir otro',
   'gm.adversaries.empty': 'Todavía no hay nada en la mesa.',
   'gm.adversaries.thresholdsNone': 'ninguno',
   'gm.adversaries.meta2': 'Dificultad {difficulty} · Umbrales {thresholds} · ATQ {atk}',

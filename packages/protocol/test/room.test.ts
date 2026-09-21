@@ -700,6 +700,33 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('sets a countdown outright, which is how a miscount is corrected', () => {
+    const room = roomWithPlayers();
+    const added = apply(room, GM, {
+      type: 'addCountdown',
+      id: 'cd-1',
+      name: 'Reinforcements',
+      startingValue: 4,
+      kind: 'standard',
+      loop: 'none',
+    });
+
+    const backedOff = apply(added, GM, { type: 'setCountdownValue', id: 'cd-1', value: 6 });
+    expect(backedOff.countdowns[0]?.value).toBe(6);
+    expect(backedOff.countdowns[0]?.triggered).toBe(false);
+
+    // Set to zero and the countdown reads as triggered, the same as running out.
+    const spent = apply(added, GM, { type: 'setCountdownValue', id: 'cd-1', value: 0 });
+    expect(spent.countdowns[0]?.triggered).toBe(true);
+
+    expect(refusal(added, ALEX, { type: 'setCountdownValue', id: 'cd-1', value: 1 })).toBe(
+      'notGameMaster',
+    );
+    expect(refusal(added, GM, { type: 'setCountdownValue', id: 'nope', value: 1 })).toBe(
+      'unknownCountdown',
+    );
+  });
+
   it('rolls fate and hazards into the log, and only for the GM', () => {
     const room = roomWithPlayers();
     expect(refusal(room, ALEX, { type: 'rollFate', kind: 'fate', label: 'Fire' })).toBe(
