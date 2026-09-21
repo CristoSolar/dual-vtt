@@ -39,6 +39,9 @@ export function RollDialog({
 
   const selected = experiences.filter((e) => chosen.includes(e.name));
   const hopeCost = selected.length;
+  // The request carries names only; the modifiers are read from the character,
+  // on the server in a campaign and from the same sheet offline.
+  const selectedNames = selected.map((e) => e.name);
   const canAfford = hopeCost <= hope;
 
   const toggleExperience = (name: string) => {
@@ -120,7 +123,7 @@ export function RollDialog({
                 difficulty,
                 advantage,
                 disadvantage,
-                experiences: selected,
+                experiences: selectedNames,
               })
             }
           >

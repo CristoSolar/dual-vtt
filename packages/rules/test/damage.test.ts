@@ -169,4 +169,42 @@ describe('applyDamage', () => {
     // 20 -> 10 (Major) -> one slot -> Minor -> 1 HP.
     expect(result.hpMarked).toBe(1);
   });
+
+  describe('the optional massive damage rule (SRD 2.0 p.50)', () => {
+    it('is off by default: twice the Severe threshold still marks 3 HP', () => {
+      const result = applyDamage({ incoming: thresholds.severe * 2, thresholds });
+      expect(result.severity).toBe('severe');
+      expect(result.hpMarked).toBe(3);
+    });
+
+    it('marks 4 HP at twice the Severe threshold when the table turns it on', () => {
+      const result = applyDamage({
+        incoming: thresholds.severe * 2,
+        thresholds,
+        massiveDamage: true,
+      });
+      expect(result.severity).toBe('massive');
+      expect(result.hpMarked).toBe(4);
+    });
+
+    it('still marks 3 HP just under twice the Severe threshold', () => {
+      const result = applyDamage({
+        incoming: thresholds.severe * 2 - 1,
+        thresholds,
+        massiveDamage: true,
+      });
+      expect(result.hpMarked).toBe(3);
+    });
+
+    it('lets an Armor Slot step massive damage back down to severe', () => {
+      const result = applyDamage({
+        incoming: thresholds.severe * 2,
+        thresholds,
+        massiveDamage: true,
+        armorSlotsMarked: 1,
+      });
+      expect(result.severity).toBe('severe');
+      expect(result.hpMarked).toBe(3);
+    });
+  });
 });

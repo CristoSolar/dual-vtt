@@ -80,10 +80,16 @@ export function rollDamage({
 }
 
 /** How much of a threshold band the damage landed in. */
-export type Severity = 'none' | 'minor' | 'major' | 'severe';
+export type Severity = 'none' | 'minor' | 'major' | 'severe' | 'massive';
 
-const SEVERITY_ORDER: readonly Severity[] = ['none', 'minor', 'major', 'severe'];
-const HP_BY_SEVERITY: Record<Severity, number> = { none: 0, minor: 1, major: 2, severe: 3 };
+const SEVERITY_ORDER: readonly Severity[] = ['none', 'minor', 'major', 'severe', 'massive'];
+const HP_BY_SEVERITY: Record<Severity, number> = {
+  none: 0,
+  minor: 1,
+  major: 2,
+  severe: 3,
+  massive: 4,
+};
 
 export interface ApplyDamageOptions {
   /** Total damage from a single attack or source, before Armor Slots (SRD p.42). */
@@ -106,13 +112,18 @@ export interface ApplyDamageOptions {
   immunities?: readonly IncomingDamageType[];
   /** Direct damage can't be reduced by marking Armor Slots (SRD p.40). */
   direct?: boolean;
+  /**
+   * The optional massive damage rule (SRD 2.0 p.50): damage of twice the Severe
+   * threshold or more marks 4 HP instead of 3. Off unless the table turns it on.
+   */
+  massiveDamage?: boolean;
 }
 
 export interface AppliedDamage {
   /** Damage after resistance, before Armor Slots reduce severity. */
   damageAfterResistance: number;
   severity: Severity;
-  /** Hit Points the target marks: 0-3. */
+  /** Hit Points the target marks: 0-3, or 4 under the optional massive damage rule. */
   hpMarked: number;
   resisted: boolean;
   immune: boolean;
@@ -147,6 +158,7 @@ export function applyDamage({
   resistances = [],
   immunities = [],
   direct = false,
+  massiveDamage = false,
 }: ApplyDamageOptions): AppliedDamage {
   const immune = covers(immunities, damageType);
   if (immune) {
@@ -165,6 +177,7 @@ export function applyDamage({
 
   let severity: Severity;
   if (damageAfterResistance <= 0) severity = 'none';
+  else if (massiveDamage && damageAfterResistance >= thresholds.severe * 2) severity = 'massive';
   else if (damageAfterResistance >= thresholds.severe) severity = 'severe';
   else if (damageAfterResistance >= thresholds.major) severity = 'major';
   else severity = 'minor';

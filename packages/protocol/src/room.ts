@@ -6,6 +6,7 @@ import {
   type LevelUpChoices,
   type Rng,
 } from '@daggerheart/rules';
+import { srd } from '@daggerheart/srd-data';
 import { z } from 'zod';
 
 import {
@@ -133,12 +134,24 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
 
 /**
  * The room as a given role is allowed to see it. The GM sees everything; a player
- * sees only the active scene, without GM-only tokens, and never receives the fog
- * regions that have not been revealed.
+ * sees only the active scene, without GM-only tokens, never receives the fog
+ * regions that have not been revealed, and never learns how hurt an adversary is.
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
-  return { ...state, map: mapForPlayer(state.map) };
+  return {
+    ...state,
+    map: mapForPlayer(state.map),
+    adversaryInstances: state.adversaryInstances.map(adversaryForPlayer),
+  };
+}
+
+/**
+ * What a player may know about an adversary in play: that it is there and what it
+ * is called. How hurt it is stays with the GM, who narrates it.
+ */
+function adversaryForPlayer(instance: AdversaryInstance): AdversaryInstance {
+  return { ...instance, hpMarked: 0, stressMarked: 0 };
 }
 
 /** Who is asking. The server derives this from the socket's session, never the client. */
@@ -204,9 +217,26 @@ export type { Countdown, SheetEffect, SheetState };
 function revealVisionFor(scene: Scene, token: Token, x: number, y: number): Scene {
   if (scene.visionMode !== 'auto' || token.kind !== 'pc' || !scene.fog.enabled) return scene;
   const centre = { x: x + token.width / 2, y: y + token.height / 2 };
-  const bounds = scene.image ?? { width: 0, height: 0 };
+  // Without a scene image there is no picture to bound the cast, so the fog grid's
+  // own extent stands in — a zero-sized bound collapses the polygon to nothing.
+  const bounds = scene.image ?? {
+    width: scene.fog.cols * scene.fog.cellSize,
+    height: scene.fog.rows * scene.fog.cellSize,
+  };
   const polygon = computeVisionPolygon(centre, token.visionRadius, scene.walls, bounds);
   return { ...scene, fog: reveal(scene.fog, cellsInPolygon(scene.fog, polygon)) };
+}
+
+/**
+ * Re-casts vision for every PC on the scene. Walls are what vision is blocked by, so
+ * opening a door or removing a wall has to expose what it was hiding straight away
+ * rather than waiting for somebody to take a step.
+ */
+function revealVisionForAll(scene: Scene): Scene {
+  return scene.tokens.reduce(
+    (current, token) => revealVisionFor(current, token, token.x, token.y),
+    scene,
+  );
 }
 
 /**
@@ -302,9 +332,10 @@ export function applyRoomEvent(
         return fail('unknownCountdown', 'no such countdown');
       }
       // An explicit nudge moves the countdown by a stated amount rather than by a
-      // roll outcome, which is how a GM ticks one by hand.
+      // roll outcome, which is how a GM ticks one by hand. A countdown that has
+      // already triggered is left alone, as it is on a roll outcome.
       const countdowns = state.countdowns.map((c) =>
-        c.id === event.id ? advanceCountdown(c, event.amount).countdown : c,
+        c.id === event.id && !c.triggered ? advanceCountdown(c, event.amount).countdown : c,
       );
       return ok({ ...state, countdowns });
     }
@@ -381,6 +412,9 @@ export function applyRoomEvent(
         }
       }
 
+      if (scene.tokens.some((t) => t.id === event.token.id)) {
+        return fail('tokenExists', 'a token with that id is already on this scene');
+      }
       const withToken = { ...scene, tokens: [...scene.tokens, event.token] };
       return ok(withScene(state, scene.id, revealVisionFor(withToken, event.token, event.token.x, event.token.y)));
     }
@@ -412,14 +446,18 @@ export function applyRoomEvent(
       if (denied) return denied;
       const target = state.adversaryInstances.find((a) => a.instanceId === event.instanceId);
       if (target === undefined) return fail('unknownAdversary', 'no such adversary');
+      // Clamped to the stat block: an adversary cannot be marked past its own track.
+      const block = srd().adversaries.find((a) => a.id === target.adversaryId);
+      const hpCap = block?.hp ?? 99;
+      const stressCap = block?.stress ?? 99;
       return ok({
         ...state,
         adversaryInstances: state.adversaryInstances.map((a) =>
           a.instanceId === event.instanceId
             ? {
                 ...a,
-                hpMarked: Math.max(0, event.hpMarked),
-                stressMarked: Math.max(0, event.stressMarked),
+                hpMarked: Math.min(hpCap, Math.max(0, event.hpMarked)),
+                stressMarked: Math.min(stressCap, Math.max(0, event.stressMarked)),
               }
             : a,
         ),
@@ -493,7 +531,7 @@ function applyCharacterEvent(
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
     case 'recallCard': {
-      const t = recallFromVault(sheet, event.cardId, event.recallCost, {
+      const t = recallFromVault(sheet, event.cardId, {
         duringRest: event.duringRest,
         vaulting: event.vaulting,
       });
@@ -540,7 +578,7 @@ function applyCharacterEvent(
         roll: t.outcome.roll,
         difficulty: event.request.difficulty,
         outcome: t.outcome.result.outcome,
-        experiences: event.request.experiences.map((e) => e.name),
+        experiences: [...event.request.experiences],
       };
 
       let next = withCharacter(state, event.characterId, t.sheet);
@@ -558,7 +596,8 @@ function applyCharacterEvent(
       const roll = makeDamageRoll(
         {
           dice: event.dice,
-          proficiency: event.proficiency,
+          // The character's own Proficiency, not a number the client chose.
+          proficiency: sheet.character.proficiency,
           modifier: event.modifier,
           critical: event.critical,
         },
@@ -711,28 +750,43 @@ function applyMapEvent(
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
       if (scene.walls.length >= 500) return fail('tooManyWalls', 'wall limit reached');
-      return ok(withScene(state, scene.id, { ...scene, walls: [...scene.walls, event.wall] }));
+      return ok(
+        withScene(
+          state,
+          scene.id,
+          revealVisionForAll({ ...scene, walls: [...scene.walls, event.wall] }),
+        ),
+      );
     }
 
     case 'removeWall': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
       return ok(
-        withScene(state, scene.id, {
-          ...scene,
-          walls: scene.walls.filter((wall) => wall.id !== event.wallId),
-        }),
+        withScene(
+          state,
+          scene.id,
+          revealVisionForAll({
+            ...scene,
+            walls: scene.walls.filter((wall) => wall.id !== event.wallId),
+          }),
+        ),
       );
     }
 
     case 'updateWall': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
+      // Covers opening a door, which is an update that stops blocking vision.
       return ok(
-        withScene(state, scene.id, {
-          ...scene,
-          walls: scene.walls.map((wall) => (wall.id === event.wall.id ? event.wall : wall)),
-        }),
+        withScene(
+          state,
+          scene.id,
+          revealVisionForAll({
+            ...scene,
+            walls: scene.walls.map((wall) => (wall.id === event.wall.id ? event.wall : wall)),
+          }),
+        ),
       );
     }
 

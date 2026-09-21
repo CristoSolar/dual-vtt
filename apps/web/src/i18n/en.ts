@@ -22,12 +22,14 @@ export const en: Record<keyof typeof es, string> = {
   'damage.severity.minor': 'minor',
   'damage.severity.major': 'major',
   'damage.severity.severe': 'severe',
+  'damage.severity.massive': 'massive',
 
   // ancestry slot ordinals (interpolated into validation.duplicateAncestrySlot)
   'slot.first': 'first',
   'slot.second': 'second',
   'effect.levelUpRejected': 'Level-up rejected: {message}',
   'effect.unknownMulticlass': 'That multiclass names an unknown class or domain.',
+  'effect.unknownExperience': 'That Experience is not on this character.',
   'effect.levelledUp': 'Levelled up to {level}.',
 
   'reject.notGameMaster': 'Only the GM can do that.',

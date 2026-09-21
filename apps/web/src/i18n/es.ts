@@ -23,12 +23,14 @@ export const es = {
   'damage.severity.minor': 'menor',
   'damage.severity.major': 'mayor',
   'damage.severity.severe': 'grave',
+  'damage.severity.massive': 'masivo',
 
   // ancestry slot ordinals (interpolated into validation.duplicateAncestrySlot)
   'slot.first': 'primera',
   'slot.second': 'segunda',
   'effect.levelUpRejected': 'Subida de nivel rechazada: {message}',
   'effect.unknownMulticlass': 'Ese multiclase nombra una clase o dominio desconocido.',
+  'effect.unknownExperience': 'Esa Experiencia no está en esta ficha.',
   'effect.levelledUp': 'Subiste al nivel {level}.',
 
   // server rejections (RoomError + gateway codes)

@@ -71,7 +71,9 @@ export function markHP(pools: ResourcePools, amount = 1): MarkHPResult {
     ...pools,
     hpMarked,
     hpMarkedNow,
-    deathMoveRequired: hpMarked >= pools.hpSlots,
+    // Only a hit that actually marked HP can push a character to their last one; a
+    // zero-damage hit on a full track must not re-fire the death move.
+    deathMoveRequired: hpMarkedNow > 0 && hpMarked >= pools.hpSlots,
   };
 }
 

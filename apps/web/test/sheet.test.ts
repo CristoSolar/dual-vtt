@@ -10,6 +10,7 @@ import {
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
+  recallCostOf,
   recallFromVault,
   sendToVault,
   spendSheetHope,
@@ -156,7 +157,7 @@ describe('duality rolls', () => {
         difficulty: 10,
         advantage: 0,
         disadvantage: 0,
-        experiences: [{ name: 'Blacksmith', modifier: 2 }],
+        experiences: ['Blacksmith'],
       },
       scriptedRng([5, 3]),
     );
@@ -179,7 +180,7 @@ describe('duality rolls', () => {
         difficulty: 10,
         advantage: 0,
         disadvantage: 0,
-        experiences: [{ name: 'Blacksmith', modifier: 2 }],
+        experiences: ['Blacksmith'],
       },
       scriptedRng([5, 3]),
     );
@@ -229,9 +230,11 @@ describe('loadout', () => {
     sheet = sendToVault(sheet, cardId).sheet;
     expect(sheet.vault).toContain(cardId);
 
-    const recalled = recallFromVault(sheet, cardId, 2, { duringRest: false });
+    // The cost is the card's own, read from the SRD rather than passed in.
+    const cost = recallCostOf(cardId);
+    const recalled = recallFromVault(sheet, cardId, { duringRest: false });
     expect(recalled.ok).toBe(true);
-    expect(recalled.sheet.stressMarked).toBe(2);
+    expect(recalled.sheet.stressMarked).toBe(cost);
     expect(recalled.sheet.loadout).toContain(cardId);
   });
 
@@ -241,7 +244,7 @@ describe('loadout', () => {
     if (cardId === undefined) throw new Error('no card');
 
     sheet = sendToVault(sheet, cardId).sheet;
-    const recalled = recallFromVault(sheet, cardId, 3, { duringRest: true });
+    const recalled = recallFromVault(sheet, cardId, { duringRest: true });
     expect(recalled.ok).toBe(true);
     expect(recalled.sheet.stressMarked).toBe(0);
   });
@@ -251,11 +254,11 @@ describe('loadout', () => {
     // Fill the loadout to its five-card maximum.
     sheet = { ...sheet, loadout: ['a', 'b', 'c', 'd', 'e'], vault: ['z'] };
 
-    const blocked = recallFromVault(sheet, 'z', 1, { duringRest: true });
+    const blocked = recallFromVault(sheet, 'z', { duringRest: true });
     expect(blocked.ok).toBe(false);
     expect(blocked.effect.message).toContain('full');
 
-    const swapped = recallFromVault(sheet, 'z', 1, { duringRest: true, vaulting: 'c' });
+    const swapped = recallFromVault(sheet, 'z', { duringRest: true, vaulting: 'c' });
     expect(swapped.ok).toBe(true);
     expect(swapped.sheet.loadout).toHaveLength(5);
     expect(swapped.sheet.vault).toContain('c');

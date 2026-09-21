@@ -69,10 +69,11 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     armorSlotsToMark: z.number().int().min(0).max(12),
   }),
   z.object({
+    // The Recall Cost is the card's, read from the SRD on the server — a client
+    // that sent its own could recall anything for free.
     type: z.literal('recallCard'),
     characterId,
     cardId: z.string().min(1),
-    recallCost: z.number().int().min(0).max(9),
     duringRest: z.boolean(),
     vaulting: z.string().min(1).optional(),
   }),
@@ -105,9 +106,9 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
       difficulty: z.number().int().min(0).max(60),
       advantage: z.number().int().min(0).max(10),
       disadvantage: z.number().int().min(0).max(10),
-      experiences: z
-        .array(z.object({ name: z.string().min(1), modifier: z.number().int() }))
-        .max(5),
+      // Names only. The modifiers come from the character's own Experiences, so an
+      // unbounded bonus cannot be dialled in from the client.
+      experiences: z.array(z.string().min(1)).max(5),
     }),
   }),
   z.object({
@@ -118,7 +119,7 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
       count: z.number().int().min(0).max(20),
       die: z.number().int().min(2).max(100),
     }),
-    proficiency: z.number().int().min(0).max(12),
+    // Proficiency is the character's, read from the sheet on the server.
     modifier: z.number().int().min(-20).max(99),
     critical: z.boolean(),
   }),

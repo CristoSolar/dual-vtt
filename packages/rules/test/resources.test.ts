@@ -62,6 +62,9 @@ describe('markHP', () => {
 
   it('requires a death move on marking the last Hit Point', () => {
     expect(markHP(pools, 2).deathMoveRequired).toBe(false);
+    // A hit that marks nothing cannot be what puts a character on their last HP.
+    expect(markHP({ ...pools, hpMarked: 6 }, 1).deathMoveRequired).toBe(false);
+    expect(markHP(pools, 0).deathMoveRequired).toBe(false);
     expect(markHP({ ...pools, hpMarked: 5 }, 1).deathMoveRequired).toBe(true);
   });
 });

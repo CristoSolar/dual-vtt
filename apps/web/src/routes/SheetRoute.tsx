@@ -148,7 +148,6 @@ export function SheetRoute({
             type: 'rollDamage',
             label: t('sheet.roll.damageLabel', { title: pending.title }),
             dice: pending.damage.dice,
-            proficiency: pending.damage.proficiency,
             modifier: pending.damage.modifier,
             critical: false,
           }),
@@ -179,7 +178,7 @@ export function SheetRoute({
         roll: result.roll,
         difficulty: request.difficulty,
         outcome: result.result.outcome,
-        experiences: request.experiences.map((e) => e.name),
+        experiences: [...request.experiences],
       }),
     );
 
@@ -236,7 +235,6 @@ export function SheetRoute({
           type: 'rollDamage',
           label,
           dice: damage.dice,
-          proficiency: damage.proficiency,
           modifier: damage.modifier,
           critical: false,
         }),
@@ -552,11 +550,10 @@ export function SheetRoute({
             onToggleRest={() => setDuringRest((current) => !current)}
             onRecall={(cardId, vaulting) =>
               run(
-                (s) => recallFromVault(s, cardId, recallCostOf(cardId), { duringRest, vaulting }),
+                (s) => recallFromVault(s, cardId, { duringRest, vaulting }),
                 forMe({
                   type: 'recallCard',
                   cardId,
-                  recallCost: recallCostOf(cardId),
                   duringRest,
                   ...(vaulting === undefined ? {} : { vaulting }),
                 }),

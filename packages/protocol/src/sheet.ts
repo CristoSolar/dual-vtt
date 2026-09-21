@@ -1,4 +1,5 @@
 import { CharacterSchema, MulticlassSchema, type Character } from '@daggerheart/character';
+import { srd } from '@daggerheart/srd-data';
 import { z } from 'zod';
 import {
   applyDamage,
@@ -103,6 +104,7 @@ export type SheetEffectCode =
   | 'swapNotAllowed'
   | 'levelUpRejected'
   | 'unknownMulticlass'
+  | 'unknownExperience'
   | 'levelledUp';
 
 /** What a mutation wants the UI to say about it, beyond the new state. */
@@ -255,7 +257,10 @@ export interface TakeDamageOptions {
   damageType: IncomingDamageType;
   /** Direct damage can't be reduced by marking Armor Slots (SRD p.40). */
   direct: boolean;
-  /** How many Armor Slots to mark against this hit. */
+  /**
+   * How many Armor Slots to mark against this hit. The SRD allows one per attack,
+   * so anything above that is capped rather than rejected.
+   */
   armorSlotsToMark: number;
 }
 
@@ -268,10 +273,11 @@ export interface TakeDamageResult extends SheetTransition {
  * engine how many Hit Points that leaves, then marks them.
  */
 export function takeDamage(sheet: SheetState, options: TakeDamageOptions): TakeDamageResult {
-  // Only slots that actually exist can be spent, and direct damage ignores them.
+  // Only slots that actually exist can be spent, direct damage ignores them, and an
+  // attack may be answered with at most one slot (SRD p.72).
   const marking = options.direct
     ? { sheet, effect: noEffect }
-    : markSheetArmorSlot(sheet, options.armorSlotsToMark);
+    : markSheetArmorSlot(sheet, Math.min(1, Math.max(0, options.armorSlotsToMark)));
   const slotsUsed = marking.sheet.armorSlotsMarked - sheet.armorSlotsMarked;
 
   const applied = applyDamage({
@@ -301,16 +307,24 @@ export interface RecallResult extends SheetTransition {
   ok: boolean;
 }
 
+/** A domain card's Recall Cost, from the SRD. Ids are the same in every locale. */
+export function recallCostOf(cardId: string): number {
+  return srd().domainCards.find((card) => card.id === cardId)?.recallCost ?? 0;
+}
+
 /**
  * Moves a card from the vault into the loadout. Outside a rest this marks Stress
  * equal to the card's Recall Cost; during a rest it is free (SRD p.9).
+ *
+ * The cost is the card's own, looked up here so the client and the server always
+ * charge the same thing.
  */
 export function recallFromVault(
   sheet: SheetState,
   cardId: string,
-  recallCost: number,
   options: { duringRest: boolean; vaulting?: string | undefined },
 ): RecallResult {
+  const recallCost = recallCostOf(cardId);
   const result = recallCard({
     loadout: sheet.loadout,
     vault: sheet.vault,
@@ -386,7 +400,8 @@ export interface DualityRollRequest {
   advantage: number;
   disadvantage: number;
   /** Experiences being spent, each costing 1 Hope (SRD p.38). */
-  experiences: readonly { name: string; modifier: number }[];
+  /** Names of the Experiences being leveraged; each costs a Hope. */
+  experiences: readonly string[];
 }
 
 export interface DualityRollOutcome {
@@ -409,13 +424,24 @@ export function makeDualityRoll(
   request: DualityRollRequest,
   rng: Rng,
 ): DualityRollTransition {
+  // Every Experience named must be one this character actually has: the modifier is
+  // read from the sheet, never taken from the request.
+  const leveraged = request.experiences.map((name) => sheet.character.experiences[name]);
+  if (leveraged.some((modifier) => modifier === undefined)) {
+    return {
+      sheet,
+      outcome: null,
+      effect: coded('unknownExperience', 'That Experience is not on this character.'),
+    };
+  }
+
   const hopeCost = request.experiences.length;
   const paid = spendSheetHope(sheet, hopeCost);
   if (hopeCost > 0 && paid.sheet === sheet) {
     return { sheet, outcome: null, effect: paid.effect };
   }
 
-  const experienceBonus = request.experiences.reduce((sum, e) => sum + e.modifier, 0);
+  const experienceBonus = leveraged.reduce<number>((sum, modifier) => sum + (modifier ?? 0), 0);
   const roll = rollDuality({
     modifiers: request.modifiers + experienceBonus,
     advantage: request.advantage,
