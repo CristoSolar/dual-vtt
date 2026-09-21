@@ -33,6 +33,8 @@ export interface MapCanvasProps {
   fogBrush: { radius: number; reveal: boolean } | null;
   onPaintFog: (x: number, y: number) => void;
   measuring: boolean;
+  /** Whether a dropped token lands on the grid. Off puts it exactly where it fell. */
+  snapping?: boolean;
   /** Set while the GM is placing a wall; a drag then draws a segment instead
    * of panning, same interaction shape as `measuring`. */
   drawingWall: boolean;
@@ -87,6 +89,7 @@ export function MapCanvas({
   fogBrush,
   onPaintFog,
   measuring,
+  snapping = true,
   drawingWall,
   onAddWall,
   onViewChange,
@@ -381,7 +384,12 @@ export function MapCanvas({
             }}
             onDragEnd={(x, y) => {
               const commit = throttle.current.end(x, y);
-              const snapped = snapToGrid(commit.x, commit.y, scene.grid);
+              const snapped = snapping
+                ? snapToGrid(commit.x, commit.y, scene.grid, {
+                    width: token.width,
+                    height: token.height,
+                  })
+                : { x: commit.x, y: commit.y };
               onMoveToken(token.id, snapped.x, snapped.y, true);
             }}
           />

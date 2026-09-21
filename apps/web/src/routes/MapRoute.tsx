@@ -85,6 +85,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
   const [measuring, setMeasuring] = useState(false);
+  const [snapping, setSnapping] = useState(true);
   const [drawingWall, setDrawingWall] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -362,6 +363,16 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           <button
             type="button"
             className="map-rail-button"
+            aria-pressed={snapping}
+            aria-label={t('map.snapToGrid')}
+            title={t('map.snapToGrid')}
+            onClick={() => setSnapping((value) => !value)}
+          >
+            <Icon name="select" size={20} />
+          </button>
+          <button
+            type="button"
+            className="map-rail-button"
             aria-pressed={measuring}
             aria-label={t('map.measureDistance')}
             title={t('map.measureDistance')}
@@ -393,6 +404,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
             fogBrush={fogBrush}
             onPaintFog={paintFog}
             measuring={measuring}
+            snapping={snapping}
             health={tokenHealth}
             zoomApi={zoomApi}
             onViewChange={setCanvasView}
