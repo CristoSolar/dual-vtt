@@ -9,6 +9,8 @@ import {
   sendToVault,
 } from '../src/sheet.js';
 
+import { srd } from '@daggerheart/srd-data';
+
 import { makeCharacter } from './helpers.js';
 
 const sheet = () => createSheet(makeCharacter());
@@ -44,6 +46,36 @@ describe('SheetEffect codes', () => {
     const { effect } = applyLevelUp(sheet(), { advancements: [] });
     expect(effect.code).toBe('levelUpRejected');
     expect(effect.message).not.toBeNull();
+  });
+
+  it('caps multiclass domain cards at half the character level', () => {
+    const base = sheet();
+    const multiclassed = {
+      ...base,
+      character: {
+        ...base.character,
+        level: 5,
+        multiclass: { classId: 'wizard', domainId: 'codex', subclassId: 'school-of-knowledge' },
+      },
+    };
+    const codex = srd().domainCards.filter((c) => c.domain === 'codex');
+    const tooHigh = codex.find((c) => c.level === 4);
+    const allowed = codex.find((c) => c.level <= 3);
+    if (tooHigh === undefined || allowed === undefined) throw new Error('no codex cards to test');
+
+    const rejected = applyLevelUp(multiclassed, {
+      advancements: ['domainCard', 'evasion'],
+      extraDomainCardId: tooHigh.id,
+    });
+    expect(rejected.ok).toBe(false);
+    expect(rejected.effect.code).toBe('cardTooHigh');
+    expect(rejected.effect.params).toEqual({ card: tooHigh.name, cap: 3 });
+
+    const accepted = applyLevelUp(multiclassed, {
+      advancements: ['domainCard', 'evasion'],
+      extraDomainCardId: allowed.id,
+    });
+    expect(accepted.ok).toBe(true);
   });
 
   it('a plain effect has code null', () => {

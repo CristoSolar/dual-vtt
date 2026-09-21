@@ -40,6 +40,7 @@ import {
   type DeathMoveOutcome,
   type LevelUpChoices,
   type Rng,
+  multiclassCardLevelCap,
 } from '@daggerheart/rules';
 
 /**
@@ -149,6 +150,8 @@ export type SheetEffectCode =
   | 'cardNotInLoadout'
   | 'swapNotAllowed'
   | 'levelUpRejected'
+  | 'unknownCard'
+  | 'cardTooHigh'
   | 'unknownMulticlass'
   | 'unknownExperience'
   | 'unknownArmor'
@@ -769,6 +772,34 @@ export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelU
   }
 
   const leveled = result.character;
+
+  // A multiclassed PC draws from their new domain only up to half their level,
+  // rounded up (SRD 2.0 p.54). The rules package works on ids alone, so the check
+  // lives here, where the card's domain and level can be looked up.
+  const gained = leveled.domainCards.filter((id) => !sheet.character.domainCards.includes(id));
+  const ownDomains = srd().classes.find((c) => c.id === sheet.character.classId)?.domains ?? [];
+  for (const id of gained) {
+    const card = srd().domainCards.find((c) => c.id === id);
+    if (card === undefined) {
+      return { sheet, ok: false, effect: coded('unknownCard', 'That domain card does not exist.') };
+    }
+    const fromMulticlass =
+      leveled.multiclass !== null &&
+      card.domain === leveled.multiclass.domainId &&
+      !ownDomains.includes(card.domain);
+    const cap = fromMulticlass ? multiclassCardLevelCap(leveled.level) : leveled.level;
+    if (card.level > cap) {
+      return {
+        sheet,
+        ok: false,
+        effect: coded(
+          'cardTooHigh',
+          `${card.name} is above the level ${cap} limit for that domain.`,
+          { card: card.name, cap },
+        ),
+      };
+    }
+  }
 
   // The rules package types a multiclass's ids as plain strings; the character model
   // requires real class and domain ids, so it is validated rather than cast.

@@ -28,6 +28,8 @@ export const en: Record<keyof typeof es, string> = {
   'slot.first': 'first',
   'slot.second': 'second',
   'effect.levelUpRejected': 'Level-up rejected: {message}',
+  'effect.unknownCard': 'That domain card does not exist.',
+  'effect.cardTooHigh': '{card} is above the level {cap} limit for that domain.',
   'effect.unknownMulticlass': 'That multiclass names an unknown class or domain.',
   'effect.unknownExperience': 'That Experience is not on this character.',
   'effect.levelledUp': 'Levelled up to {level}.',

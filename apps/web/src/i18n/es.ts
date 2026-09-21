@@ -29,6 +29,8 @@ export const es = {
   'slot.first': 'primera',
   'slot.second': 'segunda',
   'effect.levelUpRejected': 'Subida de nivel rechazada: {message}',
+  'effect.unknownCard': 'Esa carta de dominio no existe.',
+  'effect.cardTooHigh': '{card} supera el límite de nivel {cap} para ese dominio.',
   'effect.unknownMulticlass': 'Ese multiclase nombra una clase o dominio desconocido.',
   'effect.unknownExperience': 'Esa Experiencia no está en esta ficha.',
   'effect.levelledUp': 'Subiste al nivel {level}.',

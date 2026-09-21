@@ -4,6 +4,7 @@ import {
   tierForLevel,
   type Advancement,
   type Rng,
+  multiclassCardLevelCap,
 } from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -169,12 +170,19 @@ export function SheetRoute({
   const availableExtraCards = useMemo(() => {
     // This character's own domains, plus the multiclass one when they have taken it.
     const characterClass = srd().classes.find((c) => c.id === character.classId);
-    const domains = new Set<string>(characterClass?.domains ?? []);
+    const own = new Set<string>(characterClass?.domains ?? []);
+    const domains = new Set<string>(own);
     if (character.multiclass !== null) domains.add(character.multiclass.domainId);
     const held = new Set([...sheet.loadout, ...sheet.vault]);
+    // The multiclass domain only offers cards up to half the character's level,
+    // rounded up, so the list never shows one the server would refuse.
+    const capFor = (domain: string) =>
+      character.multiclass !== null && domain === character.multiclass.domainId && !own.has(domain)
+        ? multiclassCardLevelCap(character.level)
+        : character.level;
     return srd()
       .domainCards.filter(
-        (card) => domains.has(card.domain) && card.level <= character.level && !held.has(card.id),
+        (card) => domains.has(card.domain) && card.level <= capFor(card.domain) && !held.has(card.id),
       )
       .map((card) => ({ id: card.id, name: card.name, level: card.level }));
   }, [character.classId, character.multiclass, character.level, sheet.loadout, sheet.vault]);
