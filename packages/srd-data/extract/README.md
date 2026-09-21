@@ -23,15 +23,21 @@ docker run --rm -v "$PWD:/w" -w /w minidocks/poppler:latest \
 Then, from this directory:
 
 ```sh
-for g in gen-weapons gen-armor gen-classes gen-cards gen-adversaries \
+for g in gen-equipment gen-classes gen-heritage gen-cards gen-adversaries \
          gen-environments gen-loot gen-beastforms; do node "$g.mjs"; done
 ```
 
 Each script prints its entry counts and a `problems:` line. **`problems: 0` is the
 contract** — any parse anomaly is reported rather than silently dropped or guessed.
 
-`gen-weapons.mjs` and `gen-armor.mjs` differ from the rest: their tables are small
-and dense enough that the rows are transcribed inline, so they need no XML.
+`gen-equipment.mjs` writes `weapons.json` and `armor.json`. SRD 1.0's equipment
+tables were transcribed inline because they were short; 2.0's are not, at 315 weapons
+and 69 armors, so they are read off the page like everything else. Their cells are
+positioned blocks under a header row, so a row is rebuilt by matching cells to the
+column above them and to each other by height.
+
+`gen-heritage.mjs` writes `ancestries.json` and `communities.json`, which share a
+layout and a chapter boundary (both chapters print on page 38).
 
 `gen-classes.mjs` writes two files, `classes.json` and `subclasses.json`, because one
 pass over the Classes chapter produces both and they have to agree on ids. It carries

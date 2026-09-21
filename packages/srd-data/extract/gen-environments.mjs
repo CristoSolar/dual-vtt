@@ -6,7 +6,9 @@ const pages = readPages(new URL('./srd-bbox.xml', import.meta.url).pathname);
 
 // Environment stat blocks, Tier 1 through Tier 4.
 const lines = pages
-  .slice(51, 57)
+  // SRD 2.0 prints the environments on pages 160-182; the PDF's page numbering
+  // matches the printed one.
+  .slice(159, 182)
   .flatMap((columns) => columns.flat());
 
 const MINOR_WORDS = new Set(['of', 'the', 'and', 'in', 'a', 'an']);
@@ -32,7 +34,7 @@ const slug = (s) =>
     .replace(/^-|-$/g, '');
 
 const TYPE_LINE = /^Tier\s+(\d)\s+([A-Za-z]+)$/;
-const FEATURE = /^(.+?)\s[-–]\s(Action|Reaction|Passive):\s*(.*)$/;
+const FEATURE = /^(.+?)\s[-–]\s(Action|Reaction|Passive|Evolution):\s*(.*)$/;
 
 const isNoise = (l) => {
   const t = l.trim();
@@ -135,6 +137,9 @@ anchors.forEach((anchor, n) => {
   const features = [];
   if (featuresIdx !== -1) {
     for (const line of body.slice(featuresIdx + 1)) {
+      // Stops at the next chapter heading, so the last environment before one does
+      // not absorb it.
+      if (/^[A-Z][A-Z0-9’' &–-]{3,}$/.test(line)) break;
       const m = FEATURE.exec(line);
       if (m) {
         features.push({ name: m[1].trim(), type: m[2].toLowerCase(), text: m[3].trim() });

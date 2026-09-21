@@ -25,10 +25,7 @@ const readingKey = (pageIndex, block) => [pageIndex, block.xMin >= HALF ? 1 : 0,
 const before = (a, b) =>
   a[0] !== b[0] ? a[0] < b[0] : a[1] !== b[1] ? a[1] < b[1] : a[2] < b[2];
 
-/**
- * The Loot table runs straight into the Consumables table mid-page, so membership is
- * decided by whether a row falls before or after the "Consumables" heading.
- */
+/** Where a single-line heading sits, in reading order, or null if it is not there. */
 function findHeading(text) {
   for (let p = 0; p < pages.length; p++) {
     for (const block of pages[p].flat()) {
@@ -40,12 +37,14 @@ function findHeading(text) {
   return null;
 }
 
-const consumablesStart = findHeading('Consumables');
-if (consumablesStart === null) problems.push('could not locate the Consumables heading');
-
-function readTable(pageRange, label) {
+/**
+ * SRD 2.0 gives each of loot and consumables two tables — the core set's and an
+ * additional one. The core table's last rows share a page with the additional
+ * table's heading, so membership is decided by whether a row falls before or after
+ * that heading, not by which page it is on.
+ */
+function readTable(pageRange, table, label, splitAt) {
   const rows = [];
-  const wantConsumables = label === 'consumables';
 
   for (const pageIndex of pageRange) {
     const blocks = (pages[pageIndex] ?? []).flat();
@@ -66,9 +65,9 @@ function readTable(pageRange, label) {
       const roll = Number(rollBlock.lines[0]);
       if (roll < 1 || roll > 60) continue;
 
-      if (consumablesStart !== null) {
-        const isConsumable = !before(readingKey(pageIndex, rollBlock), consumablesStart);
-        if (isConsumable !== wantConsumables) continue;
+      if (splitAt !== null) {
+        const isAdditional = !before(readingKey(pageIndex, rollBlock), splitAt);
+        if (isAdditional !== (table === 'additional')) continue;
       }
 
       // The name sits just right of the roll; the description further right again.
@@ -95,7 +94,7 @@ function readTable(pageRange, label) {
         problems.push(`${label} roll ${roll}: empty name or description`);
         continue;
       }
-      rows.push({ roll, id: slug(name), name, text });
+      rows.push({ table, roll, id: slug(name), name, text });
     }
   }
 
@@ -103,20 +102,42 @@ function readTable(pageRange, label) {
   return rows;
 }
 
-// Loot: SRD pages 58-59. Consumables: SRD pages 60-61.
-const loot = readTable([29, 30, 31], 'loot');
-const consumables = readTable([30, 31, 32], 'consumables');
+// SRD 2.0: items on pages 75-79, consumables on 80-84, each split into the core
+// set's table and an additional one.
+const additionalItemsAt = findHeading('Additional Items');
+const additionalConsumablesAt = findHeading('Additional Consumables');
+if (additionalItemsAt === null) problems.push('could not locate the "Additional Items" heading');
+if (additionalConsumablesAt === null) {
+  problems.push('could not locate the "Additional Consumables" heading');
+}
+
+const ITEM_PAGES = [74, 75, 76, 77, 78];
+const CONSUMABLE_PAGES = [79, 80, 81, 82, 83];
+
+const loot = [
+  ...readTable(ITEM_PAGES, 'core', 'loot (core)', additionalItemsAt),
+  ...readTable(ITEM_PAGES, 'additional', 'loot (additional)', additionalItemsAt),
+];
+const consumables = [
+  ...readTable(CONSUMABLE_PAGES, 'core', 'consumables (core)', additionalConsumablesAt),
+  ...readTable(CONSUMABLE_PAGES, 'additional', 'consumables (additional)', additionalConsumablesAt),
+];
 
 for (const [label, rows] of [
   ['loot', loot],
   ['consumables', consumables],
 ]) {
-  const rolls = rows.map((r) => r.roll);
-  const dupes = [...new Set(rolls.filter((r, i) => rolls.indexOf(r) !== i))];
-  if (dupes.length > 0) problems.push(`${label}: duplicate rolls ${dupes.join(',')}`);
-  const missing = [];
-  for (let i = 1; i <= 60; i++) if (!rolls.includes(i)) missing.push(i);
-  if (missing.length > 0) problems.push(`${label}: missing rolls ${missing.join(',')}`);
+  for (const table of ['core', 'additional']) {
+    const rolls = rows.filter((r) => r.table === table).map((r) => r.roll);
+    const dupes = [...new Set(rolls.filter((r, i) => rolls.indexOf(r) !== i))];
+    if (dupes.length > 0) problems.push(`${label}/${table}: duplicate rolls ${dupes.join(',')}`);
+    const missing = [];
+    for (let i = 1; i <= 60; i++) if (!rolls.includes(i)) missing.push(i);
+    if (missing.length > 0) problems.push(`${label}/${table}: missing rolls ${missing.join(',')}`);
+  }
+  const ids = rows.map((r) => r.id);
+  const dupeIds = [...new Set(ids.filter((r, i) => ids.indexOf(r) !== i))];
+  if (dupeIds.length > 0) problems.push(`${label}: duplicate ids ${dupeIds.join(',')}`);
 }
 
 console.log('loot:', loot.length, '| consumables:', consumables.length);

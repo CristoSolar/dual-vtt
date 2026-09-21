@@ -1,5 +1,21 @@
 [
   {
+    "id": "aetheris",
+    "name": "Aetheris",
+    "features": [
+      {
+        "slot": "first",
+        "name": "Aura Consagrada",
+        "text": "Una vez por descanso largo, cuando un aliado a alcance Cercano tire con Miedo, puedes convertirla en una tirada con Esperanza."
+      },
+      {
+        "slot": "second",
+        "name": "Alas Celestiales",
+        "text": "Tienes alas que te permiten volar. Una vez por escena, mientras vuelas, puedes gastar una Esperanza en lugar de marcar una Ranura de Armadura."
+      }
+    ]
+  },
+  {
     "id": "clank",
     "name": "Clank",
     "features": [
@@ -11,7 +27,7 @@
       {
         "slot": "second",
         "name": "Eficiente",
-        "text": "Cuando tomes un descanso corto, puedes elegir una acción de descanso largo en lugar de una de descanso corto."
+        "text": "Cuando tomes un descanso corto, puedes elegir una movimiento de tiempo libre largo en lugar de una de descanso corto."
       }
     ]
   },
@@ -48,6 +64,22 @@
     ]
   },
   {
+    "id": "earthkin",
+    "name": "Terrígeno",
+    "features": [
+      {
+        "slot": "first",
+        "name": "Piel de Piedra",
+        "text": "Obtienes un bono permanente de +1 a tu Puntaje de Armadura y a tus umbrales de daño al crear el personaje."
+      },
+      {
+        "slot": "second",
+        "name": "Inamovible",
+        "text": "Mientras estés tocando el suelo, no puedes ser levantado ni movido contra tu voluntad."
+      }
+    ]
+  },
+  {
     "id": "elf",
     "name": "Elfo",
     "features": [
@@ -59,7 +91,23 @@
       {
         "slot": "second",
         "name": "Trance Celestial",
-        "text": "Durante un descanso, puedes entrar en trance para elegir una acción de tiempo libre adicional."
+        "text": "Durante un descanso, puedes entrar en trance para elegir una movimiento de tiempo libre adicional."
+      }
+    ]
+  },
+  {
+    "id": "emberkin",
+    "name": "Ascuígeno",
+    "features": [
+      {
+        "slot": "first",
+        "name": "A Prueba de Fuego",
+        "text": "Eres inmune al daño de llamas mágicas o mundanas."
+      },
+      {
+        "slot": "second",
+        "name": "Ignición",
+        "text": "Marca un Estrés para envolver tu arma primaria en llamas hasta el final de la escena. Mientras el arma arde, emite una luz brillante y obtienes un bono de 1d6 a las tiradas de daño con ella."
       }
     ]
   },
@@ -156,6 +204,22 @@
         "slot": "second",
         "name": "Alcance",
         "text": "Trata cualquier arma, habilidad, hechizo u otra característica que tenga alcance Cuerpo a Cuerpo como si tuviera alcance Muy Cercano en su lugar."
+      }
+    ]
+  },
+  {
+    "id": "gnome",
+    "name": "Gnomo",
+    "features": [
+      {
+        "slot": "first",
+        "name": "Dedos Ágiles",
+        "text": "Cuando hagas una Tirada de Destreza, puedes gastar 2 de Esperanza para repetir tu Dado de Esperanza."
+      },
+      {
+        "slot": "second",
+        "name": "Paso Parpadeante",
+        "text": "Una vez por escena, puedes teletransportarte a otro punto que puedas ver a alcance Lejano."
       }
     ]
   },
@@ -284,6 +348,38 @@
         "slot": "second",
         "name": "Ágil",
         "text": "Obtén un bonificador permanente de +1 a tu Evasión durante la creación de personaje."
+      }
+    ]
+  },
+  {
+    "id": "skykin",
+    "name": "Celígeno",
+    "features": [
+      {
+        "slot": "first",
+        "name": "Vendaval",
+        "text": "Marca un Estrés para conjurar una ráfaga de viento que te lleve a ti o a un aliado a alcance Muy Cercano hasta alcance Muy Lejano. Además, siempre puedes controlar la velocidad a la que caes."
+      },
+      {
+        "slot": "second",
+        "name": "Ojo de la Tormenta",
+        "text": "Gasta 2 de Esperanza para otorgarte a ti o a un aliado a alcance Cuerpo a Cuerpo un bono de +1 a la Evasión hasta que recibas daño Grave o uses esta habilidad de nuevo."
+      }
+    ]
+  },
+  {
+    "id": "tidekin",
+    "name": "Marígeno",
+    "features": [
+      {
+        "slot": "first",
+        "name": "Anfibio",
+        "text": "Puedes respirar y moverte con naturalidad bajo el agua."
+      },
+      {
+        "slot": "second",
+        "name": "Manantial de Vida",
+        "text": "Una vez por descanso, cuando tengas acceso a una pequeña cantidad de agua, puedes marcar un Estrés para despejar un Punto de Vida en ti o en un aliado a alcance Muy Cercano."
       }
     ]
   }

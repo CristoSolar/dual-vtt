@@ -19,6 +19,25 @@
     }
   },
   {
+    "id": "katana",
+    "name": "Katana",
+    "tier": 1,
+    "category": "primary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
     "id": "longsword",
     "name": "Espada Larga",
     "tier": 1,
@@ -48,6 +67,22 @@
     },
     "damageType": "physical",
     "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "brass-knuckles",
+    "name": "Puños de Latón",
+    "tier": 1,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 1
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
     "feature": null
   },
   {
@@ -172,6 +207,41 @@
     }
   },
   {
+    "id": "scimitar",
+    "name": "Cimitarra",
+    "tier": 1,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 1
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": null
+  },
+  {
+    "id": "twisted-dagger",
+    "name": "Daga Retorcida",
+    "tier": 1,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
+    }
+  },
+  {
     "id": "halberd",
     "name": "Alabarda",
     "tier": 1,
@@ -201,6 +271,41 @@
       "count": 1,
       "die": 8,
       "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "whipsword",
+    "name": "Espada Látigo",
+    "tier": 1,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "rope-dart",
+    "name": "Dardo con Cuerda",
+    "tier": 1,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 1
     },
     "damageType": "physical",
     "burden": "twoHanded",
@@ -274,6 +379,22 @@
     "feature": null
   },
   {
+    "id": "brightsword",
+    "name": "Espada Luminosa",
+    "tier": 1,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
     "id": "hallowed-axe",
     "name": "Hacha Consagrada",
     "tier": 1,
@@ -288,6 +409,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "shadowblade",
+    "name": "Hoja de Sombra",
+    "tier": 1,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physicalOrMagic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Otro Mundo",
+      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
+    }
   },
   {
     "id": "glowing-rings",
@@ -322,6 +462,25 @@
     "feature": null
   },
   {
+    "id": "enchanted-chakram",
+    "name": "Chakram Encantado",
+    "tier": 1,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 1
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Rebote",
+      "text": "Cuando lanzas esta arma, vuelve a tu mano. Cuando haces un ataque, puedes marcar un Estrés para dirigirlo también contra otra criatura dentro de alcance Muy Cercano del primer objetivo."
+    }
+  },
+  {
     "id": "returning-blade",
     "name": "Espada Retornable",
     "tier": 1,
@@ -338,6 +497,25 @@
     "feature": {
       "name": "Retornable",
       "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
+    }
+  },
+  {
+    "id": "casting-dagger",
+    "name": "Daga de Lanzamiento",
+    "tier": 1,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 0
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
@@ -388,7 +566,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "runelock-pistol",
+    "name": "Pistola de Llave Rúnica",
+    "tier": 1,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
@@ -406,6 +603,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "arcane-rifle",
+    "name": "Rifle Arcano",
+    "tier": 1,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryFar",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Apuntada",
+      "text": "Tu ataque tiene desventaja si el objetivo está dentro de alcance Muy Cercano de ti o dentro de alcance Cuerpo a Cuerpo de uno de tus aliados. Puedes marcar un Estrés para ignorar esta penalización."
+    }
   },
   {
     "id": "greatstaff",
@@ -446,6 +662,25 @@
     }
   },
   {
+    "id": "improved-katana",
+    "name": "Katana Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
     "id": "improved-longsword",
     "name": "Espada Larga Mejorada",
     "tier": 2,
@@ -475,6 +710,22 @@
     },
     "damageType": "physical",
     "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "improved-brass-knuckles",
+    "name": "Puños de Latón Mejorado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
     "feature": null
   },
   {
@@ -599,6 +850,41 @@
     }
   },
   {
+    "id": "improved-scimitar",
+    "name": "Cimitarra Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": null
+  },
+  {
+    "id": "improved-twisted-dagger",
+    "name": "Daga Retorcida Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
+    }
+  },
+  {
     "id": "improved-halberd",
     "name": "Alabarda Mejorada",
     "tier": 2,
@@ -628,6 +914,41 @@
       "count": 1,
       "die": 8,
       "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "improved-whipsword",
+    "name": "Espada Látigo Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "improved-rope-dart",
+    "name": "Dardo con Cuerda Mejorado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 4
     },
     "damageType": "physical",
     "burden": "twoHanded",
@@ -723,6 +1044,44 @@
     }
   },
   {
+    "id": "war-pick",
+    "name": "Pico de Guerra",
+    "tier": 2,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Letal",
+      "text": "Cuando infliges Daño Grave, el objetivo debe marcar un PV adicional."
+    }
+  },
+  {
+    "id": "cane-sword",
+    "name": "Bastón Espada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Retráctil",
+      "text": "La hoja puede ocultarse en la empuñadura para evitar ser detectada."
+    }
+  },
+  {
     "id": "urok-broadsword",
     "name": "Espada Ancha de Urok",
     "tier": 2,
@@ -742,6 +1101,44 @@
     }
   },
   {
+    "id": "bladed-fan",
+    "name": "Abanico con Filos",
+    "tier": 2,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Parada",
+      "text": "Cuando eres atacado, tira los dados de daño de esta arma. Si alguno de los dados de daño del atacante coincide en valor con los tuyos, esos resultados coincidentes se descartan de los dados de daño del atacante antes de totalizar el daño que recibes."
+    }
+  },
+  {
+    "id": "cyrurgiens-scalpel",
+    "name": "Bisturí del Cirujano",
+    "tier": 2,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Aterradora",
+      "text": "En un ataque exitoso, el objetivo debe marcar un Estrés."
+    }
+  },
+  {
     "id": "bladed-whip",
     "name": "Látigo con Filo",
     "tier": 2,
@@ -758,6 +1155,25 @@
     "feature": {
       "name": "Rápida",
       "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
+    "id": "javelins",
+    "name": "Jabalinas",
+    "tier": 2,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Reserva",
+      "text": "Puedes lanzar esta arma dentro de alcance Cercano haciendo una tirada de ataque con Destreza. No necesitas recuperarla, porque siempre llevas otra a mano."
     }
   },
   {
@@ -796,6 +1212,25 @@
     "feature": {
       "name": "Confiable",
       "text": "+1 a las tiradas de ataque"
+    }
+  },
+  {
+    "id": "lance",
+    "name": "Lanza de Caballería",
+    "tier": 2,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 5
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
     }
   },
   {
@@ -872,6 +1307,22 @@
     "feature": null
   },
   {
+    "id": "improved-brightsword",
+    "name": "Espada Luminosa Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
     "id": "improved-hallowed-axe",
     "name": "Hacha Consagrada Mejorada",
     "tier": 2,
@@ -886,6 +1337,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "improved-shadowblade",
+    "name": "Hoja de Sombra Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "physicalOrMagic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Otro Mundo",
+      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
+    }
   },
   {
     "id": "improved-glowing-rings",
@@ -920,6 +1390,25 @@
     "feature": null
   },
   {
+    "id": "improved-enchanted-chakram",
+    "name": "Chakram Encantado Mejorado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 4
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Rebote",
+      "text": "Cuando lanzas esta arma, vuelve a tu mano. Cuando haces un ataque, puedes marcar un Estrés para dirigirlo también contra otra criatura dentro de alcance Muy Cercano del primer objetivo."
+    }
+  },
+  {
     "id": "improved-returning-blade",
     "name": "Espada Retornable Mejorada",
     "tier": 2,
@@ -936,6 +1425,25 @@
     "feature": {
       "name": "Retornable",
       "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
+    }
+  },
+  {
+    "id": "improved-casting-dagger",
+    "name": "Daga de Lanzamiento Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
@@ -986,7 +1494,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+3."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "improved-runelock-pistol",
+    "name": "Pistola de Llave Rúnica Mejorada",
+    "tier": 2,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
@@ -1004,6 +1531,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "improved-arcane-rifle",
+    "name": "Rifle Arcano Mejorado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryFar",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Apuntada",
+      "text": "Tu ataque tiene desventaja si el objetivo está dentro de alcance Muy Cercano de ti o dentro de alcance Cuerpo a Cuerpo de uno de tus aliados. Puedes marcar un Estrés para ignorar esta penalización."
+    }
   },
   {
     "id": "improved-greatstaff",
@@ -1059,7 +1605,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Conocimiento, Lejano, d6+3."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "enchanted-shillelagh",
+    "name": "Garrote Encantado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
     }
   },
   {
@@ -1082,6 +1647,25 @@
     }
   },
   {
+    "id": "displacement-razor",
+    "name": "Navaja de Desplazamiento",
+    "tier": 2,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Omnipresente",
+      "text": "Puedes atacar a objetivos dentro de alcance Muy Lejano, pero debes hacerlo con desventaja."
+    }
+  },
+  {
     "id": "hammer-of-exota",
     "name": "Martillo de Exota",
     "tier": 2,
@@ -1098,6 +1682,79 @@
     "feature": {
       "name": "Eruptiva",
       "text": "En un ataque exitoso contra un objetivo dentro de alcance Cuerpo a Cuerpo, todos los demás adversarios dentro de alcance Muy Cercano deben tener éxito en una tirada de reacción (14) o recibir la mitad del daño."
+    }
+  },
+  {
+    "id": "spellbound-bangles",
+    "name": "Brazaletes Hechizados",
+    "tier": 2,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "fury-gem",
+    "name": "Gema de Furia",
+    "tier": 2,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Abrasadora",
+      "text": "Cuando obtienes el valor máximo en un dado de daño, el objetivo debe marcar un Estrés."
+    }
+  },
+  {
+    "id": "enchanted-lute",
+    "name": "Laúd Encantado",
+    "tier": 2,
+    "category": "primary",
+    "trait": "presence",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 3
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Vigorizante",
+      "text": "En un ataque exitoso, tira un d4. Con un resultado de 4, recupera un Estrés."
+    }
+  },
+  {
+    "id": "splintershaft-bow",
+    "name": "Arco de Astas Astilladas",
+    "tier": 2,
+    "category": "primary",
+    "trait": "agility",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "De Andanada",
+      "text": "Gasta una Esperanza para atacar a un grupo de criaturas dentro del alcance. Los objetivos contra los que tengas éxito reciben la mitad del daño."
     }
   },
   {
@@ -1215,6 +1872,25 @@
     }
   },
   {
+    "id": "advanced-katana",
+    "name": "Katana Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
     "id": "advanced-longsword",
     "name": "Espada Larga Avanzada",
     "tier": 3,
@@ -1244,6 +1920,22 @@
     },
     "damageType": "physical",
     "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "advanced-brass-knuckles",
+    "name": "Puños de Latón Avanzado",
+    "tier": 3,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 7
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
     "feature": null
   },
   {
@@ -1368,6 +2060,41 @@
     }
   },
   {
+    "id": "advanced-scimitar",
+    "name": "Cimitarra Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 7
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": null
+  },
+  {
+    "id": "advanced-twisted-dagger",
+    "name": "Daga Retorcida Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
+    }
+  },
+  {
     "id": "advanced-halberd",
     "name": "Alabarda Avanzada",
     "tier": 3,
@@ -1397,6 +2124,41 @@
       "count": 1,
       "die": 8,
       "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "advanced-whipsword",
+    "name": "Espada Látigo Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "advanced-rope-dart",
+    "name": "Dardo con Cuerda Avanzado",
+    "tier": 3,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 7
     },
     "damageType": "physical",
     "burden": "twoHanded",
@@ -1473,6 +2235,25 @@
     }
   },
   {
+    "id": "blitz-hammer",
+    "name": "Martillo Relámpago",
+    "tier": 3,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 7
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Aceleradora",
+      "text": "Una vez por escena, marca un Estrés para moverte a alcance Lejano y luego hacer un ataque. Obtienes un bono de +1 a tu Competencia en ese ataque."
+    }
+  },
+  {
     "id": "bravesword",
     "name": "Espada Valiente",
     "tier": 3,
@@ -1526,7 +2307,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Protectora",
-      "text": "+1 al Puntaje de Armadura"
+      "text": "+4 al Puntaje de Armadura"
+    }
+  },
+  {
+    "id": "platinum-estoc",
+    "name": "Estoque de Platino",
+    "tier": 3,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 7
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
     }
   },
   {
@@ -1587,6 +2387,63 @@
     }
   },
   {
+    "id": "soldiers-pike",
+    "name": "Pica de Soldado",
+    "tier": 3,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 5
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Afianzada",
+      "text": "Cuando un adversario dentro del alcance de esta arma te inflija daño, puedes marcar 2 de Estrés para obligarlo a marcar un Punto de Vida."
+    }
+  },
+  {
+    "id": "chained-scythe",
+    "name": "Guadaña Encadenada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 5
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
+    "id": "singing-sword",
+    "name": "Espada Cantarina",
+    "tier": 3,
+    "category": "primary",
+    "trait": "presence",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 5
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Reconfortante",
+      "text": "Cuando tengas un éxito crítico en un ataque, todos los PJ dentro de alcance Cercano obtienen una Esperanza."
+    }
+  },
+  {
     "id": "talon-blades",
     "name": "Cuchillas de Garra",
     "tier": 3,
@@ -1603,6 +2460,25 @@
     "feature": {
       "name": "Brutal",
       "text": "Cuando obtienes el valor máximo en un dado de daño, tira un dado de daño adicional."
+    }
+  },
+  {
+    "id": "bladed-star",
+    "name": "Estrella con Filos",
+    "tier": 3,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 7
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Rebotadora",
+      "text": "Cuando lanzas esta arma, vuelve a tu mano. En un ataque fallido, puedes repetir tu ataque con desventaja."
     }
   },
   {
@@ -1640,12 +2516,28 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Agilidad, Cuerpo a Cuerpo, d10+5."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
     "id": "advanced-arcane-gauntlets",
     "name": "Guanteletes Arcanos Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "advanced-brightsword",
+    "name": "Espada Luminosa Avanzada",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1674,6 +2566,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "advanced-shadowblade",
+    "name": "Hoja de Sombra Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physicalOrMagic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Otro Mundo",
+      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
+    }
   },
   {
     "id": "advanced-glowing-rings",
@@ -1708,6 +2619,25 @@
     "feature": null
   },
   {
+    "id": "advanced-enchanted-chakram",
+    "name": "Chakram Encantado Avanzado",
+    "tier": 3,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 7
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Rebote",
+      "text": "Cuando lanzas esta arma, vuelve a tu mano. Cuando haces un ataque, puedes marcar un Estrés para dirigirlo también contra otra criatura dentro de alcance Muy Cercano del primer objetivo."
+    }
+  },
+  {
     "id": "advanced-returning-blade",
     "name": "Espada Retornable Avanzada",
     "tier": 3,
@@ -1724,6 +2654,25 @@
     "feature": {
       "name": "Retornable",
       "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
+    }
+  },
+  {
+    "id": "advanced-casting-dagger",
+    "name": "Daga de Lanzamiento Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
@@ -1774,7 +2723,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+4."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "advanced-runelock-pistol",
+    "name": "Pistola de Llave Rúnica Avanzada",
+    "tier": 3,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
@@ -1792,6 +2760,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "advanced-arcane-rifle",
+    "name": "Rifle Arcano Avanzado",
+    "tier": 3,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryFar",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Apuntada",
+      "text": "Tu ataque tiene desventaja si el objetivo está dentro de alcance Muy Cercano de ti o dentro de alcance Cuerpo a Cuerpo de uno de tus aliados. Puedes marcar un Estrés para ignorar esta penalización."
+    }
   },
   {
     "id": "advanced-greatstaff",
@@ -1813,8 +2800,8 @@
     }
   },
   {
-    "id": "axe-of-fortunis",
-    "name": "Hacha de Fortunis",
+    "id": "rocket-maul",
+    "name": "Mazo Cohete",
     "tier": 3,
     "category": "primary",
     "trait": "strength",
@@ -1822,22 +2809,22 @@
     "damage": {
       "count": 1,
       "die": 10,
-      "modifier": 8
+      "modifier": 7
     },
     "damageType": "magic",
     "burden": "twoHanded",
     "feature": {
-      "name": "Afortunada",
-      "text": "En un ataque fallido, puedes marcar un Estrés para volver a tirar tu ataque."
+      "name": "Contundente",
+      "text": "En un ataque exitoso, puedes gastar una Esperanza para empujar al objetivo hasta alcance Lejano."
     }
   },
   {
-    "id": "blessed-anlace",
-    "name": "Anlace Bendito",
+    "id": "crystal-spear",
+    "name": "Lanza de Cristal",
     "tier": 3,
     "category": "primary",
-    "trait": "instinct",
-    "range": "melee",
+    "trait": "finesse",
+    "range": "veryClose",
     "damage": {
       "count": 1,
       "die": 10,
@@ -1846,89 +2833,70 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Curativa",
-      "text": "Durante el descanso, recupera automáticamente un Punto de Vida."
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
     }
   },
   {
-    "id": "ghostblade",
-    "name": "Espada Fantasma",
+    "id": "arc-wand",
+    "name": "Varita de Arco",
     "tier": 3,
     "category": "primary",
     "trait": "presence",
-    "range": "melee",
+    "range": "close",
     "damage": {
       "count": 1,
-      "die": 10,
-      "modifier": 7
-    },
-    "damageType": "physicalOrMagic",
-    "burden": "oneHanded",
-    "feature": {
-      "name": "De Otro Mundo",
-      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
-    }
-  },
-  {
-    "id": "runes-of-ruination",
-    "name": "Runas de Ruina",
-    "tier": 3,
-    "category": "primary",
-    "trait": "knowledge",
-    "range": "veryClose",
-    "damage": {
-      "count": 1,
-      "die": 20,
-      "modifier": 4
+      "die": 8,
+      "modifier": 6
     },
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Dolorosa",
-      "text": "Cada vez que hagas un ataque exitoso, debes marcar un Estrés."
+      "name": "Rebotante",
+      "text": "Marca 1 o más de Estrés para golpear a esa cantidad de objetivos dentro del alcance del ataque."
     }
   },
   {
-    "id": "widogast-pendant",
-    "name": "Colgante de Widogast",
+    "id": "rime-scepter",
+    "name": "Cetro de Escarcha",
     "tier": 3,
     "category": "primary",
     "trait": "knowledge",
     "range": "close",
     "damage": {
       "count": 1,
-      "die": 10,
-      "modifier": 5
+      "die": 8,
+      "modifier": 6
     },
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Curvatemporal",
-      "text": "Eliges el objetivo de tu ataque después de hacer tu tirada de ataque."
+      "name": "Congelante",
+      "text": "Cuando un ataque de esta arma haga que un objetivo marque 2 o más PV, queda temporalmente Inmovilizado."
     }
   },
   {
-    "id": "gilded-bow",
-    "name": "Arco Dorado",
+    "id": "gunblade",
+    "name": "Espada Pistola",
     "tier": 3,
     "category": "primary",
-    "trait": "finesse",
+    "trait": "agility",
     "range": "far",
     "damage": {
       "count": 1,
       "die": 6,
-      "modifier": 7
+      "modifier": 6
     },
     "damageType": "magic",
-    "burden": "twoHanded",
+    "burden": "oneHanded",
     "feature": {
-      "name": "Autocorrectiva",
-      "text": "Cuando obtienes un 1 en un dado de daño, este infligirá 6 de daño en su lugar."
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
-    "id": "firestaff",
-    "name": "Bastón de Fuego",
+    "id": "staff-of-augma",
+    "name": "Bastón de Augma",
     "tier": 3,
     "category": "primary",
     "trait": "instinct",
@@ -1939,48 +2907,10 @@
       "modifier": 7
     },
     "damageType": "magic",
-    "burden": "twoHanded",
-    "feature": {
-      "name": "Ardiente",
-      "text": "Cuando obtienes un 6 en un dado de daño, el objetivo debe marcar un Estrés."
-    }
-  },
-  {
-    "id": "mage-orb",
-    "name": "Orbe de Mago",
-    "tier": 3,
-    "category": "primary",
-    "trait": "knowledge",
-    "range": "far",
-    "damage": {
-      "count": 1,
-      "die": 6,
-      "modifier": 7
-    },
-    "damageType": "magic",
     "burden": "oneHanded",
     "feature": {
-      "name": "Poderosa",
-      "text": "En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
-    }
-  },
-  {
-    "id": "ilmaris-rifle",
-    "name": "Rifle de Ilmari",
-    "tier": 3,
-    "category": "primary",
-    "trait": "finesse",
-    "range": "veryFar",
-    "damage": {
-      "count": 1,
-      "die": 6,
-      "modifier": 6
-    },
-    "damageType": "magic",
-    "burden": "oneHanded",
-    "feature": {
-      "name": "De Recarga",
-      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
+      "name": "Catalizadora",
+      "text": "En un ataque exitoso, puedes marcar un Estrés para dar a un aliado dentro de alcance Cercano un bono de +3 a su siguiente tirada de ataque."
     }
   },
   {
@@ -2000,6 +2930,25 @@
     "feature": {
       "name": "Confiable",
       "text": "+1 a las tiradas de ataque"
+    }
+  },
+  {
+    "id": "legendary-katana",
+    "name": "Katana Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 12
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
     }
   },
   {
@@ -2032,6 +2981,22 @@
     },
     "damageType": "physical",
     "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "legendary-brass-knuckles",
+    "name": "Puños de Latón Legendario",
+    "tier": 4,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 10
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
     "feature": null
   },
   {
@@ -2156,6 +3121,41 @@
     }
   },
   {
+    "id": "legendary-scimitar",
+    "name": "Cimitarra Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 10
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": null
+  },
+  {
+    "id": "legendary-twisted-dagger",
+    "name": "Daga Retorcida Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perforante",
+      "text": "El daño infligido con esta arma trata el umbral Mayor del objetivo como si tuviera una penalización de −2."
+    }
+  },
+  {
     "id": "legendary-halberd",
     "name": "Alabarda Legendaria",
     "tier": 4,
@@ -2185,6 +3185,41 @@
       "count": 1,
       "die": 8,
       "modifier": 12
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "legendary-whipsword",
+    "name": "Espada Látigo Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "legendary-rope-dart",
+    "name": "Dardo con Cuerda Legendario",
+    "tier": 4,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 10
     },
     "damageType": "physical",
     "burden": "twoHanded",
@@ -2318,6 +3353,63 @@
     }
   },
   {
+    "id": "severed-dragon-claw",
+    "name": "Garra de Dragón Cercenada",
+    "tier": 4,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 11
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Destructiva",
+      "text": "−1 a Agilidad; en un ataque exitoso, todos los adversarios dentro de alcance Muy Cercano deben marcar un Estrés."
+    }
+  },
+  {
+    "id": "infinite-staff",
+    "name": "Bastón Infinito",
+    "tier": 4,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Extensible",
+      "text": "Puedes aumentar el alcance de esta arma hasta Muy Lejano. Sufres una penalización de −1 a las tiradas de ataque por cada paso que aumentes el alcance (como de Cuerpo a Cuerpo a Muy Cercano, de Muy Cercano a Cercano, o de Cercano a Lejano)."
+    }
+  },
+  {
+    "id": "bec-de-corbin",
+    "name": "Pico de Cuervo",
+    "tier": 4,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Devastadora",
+      "text": "Antes de hacer una tirada de ataque, puedes marcar un Estrés para usar un d20 como tu dado de daño."
+    }
+  },
+  {
     "id": "extended-polearm",
     "name": "Arma de Asta Extendida",
     "tier": 4,
@@ -2353,6 +3445,25 @@
     "feature": {
       "name": "De Agarre",
       "text": "En un ataque exitoso, puedes gastar una Esperanza para Inmovilizar al objetivo o arrastrarlo a alcance Cuerpo a Cuerpo contigo."
+    }
+  },
+  {
+    "id": "black-powder-serpentine",
+    "name": "Serpentina de Pólvora Negra",
+    "tier": 4,
+    "category": "primary",
+    "trait": "strength",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 12
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Incendiaria",
+      "text": "−1 a Agilidad; en un ataque exitoso, todas las criaturas dentro de alcance Muy Cercano del objetivo deben marcar un Punto de Vida."
     }
   },
   {
@@ -2394,6 +3505,44 @@
     }
   },
   {
+    "id": "clockwork-crossbow",
+    "name": "Ballesta de Relojería",
+    "tier": 4,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 11
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Rápida",
+      "text": "Cuando haces un ataque, puedes marcar un Estrés para dirigirlo contra otra criatura dentro del alcance."
+    }
+  },
+  {
+    "id": "arquebus",
+    "name": "Arcabuz",
+    "tier": 4,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 10
+    },
+    "damageType": "physical",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
+    }
+  },
+  {
     "id": "hand-cannon",
     "name": "Cañón de Mano",
     "tier": 4,
@@ -2409,12 +3558,28 @@
     "burden": "oneHanded",
     "feature": {
       "name": "De Recarga",
-      "text": "Después de hacer un ataque, tira un d6. Con un 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
     "id": "legendary-arcane-gauntlets",
     "name": "Guanteletes Arcanos Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 12
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": null
+  },
+  {
+    "id": "legendary-brightsword",
+    "name": "Espada Luminosa Legendaria",
     "tier": 4,
     "category": "primary",
     "trait": "strength",
@@ -2443,6 +3608,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "legendary-shadowblade",
+    "name": "Hoja de Sombra Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 9
+    },
+    "damageType": "physicalOrMagic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Otro Mundo",
+      "text": "En un ataque exitoso, puedes infligir daño físico o mágico."
+    }
   },
   {
     "id": "legendary-glowing-rings",
@@ -2477,6 +3661,25 @@
     "feature": null
   },
   {
+    "id": "legendary-enchanted-chakram",
+    "name": "Chakram Encantado Legendario",
+    "tier": 4,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 10
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Rebote",
+      "text": "Cuando lanzas esta arma, vuelve a tu mano. Cuando haces un ataque, puedes marcar un Estrés para dirigirlo también contra otra criatura dentro de alcance Muy Cercano del primer objetivo."
+    }
+  },
+  {
     "id": "legendary-returning-blade",
     "name": "Espada Retornable Legendaria",
     "tier": 4,
@@ -2493,6 +3696,25 @@
     "feature": {
       "name": "Retornable",
       "text": "Cuando esta arma es lanzada dentro de su alcance, aparece en tu mano inmediatamente después del ataque."
+    }
+  },
+  {
+    "id": "legendary-casting-dagger",
+    "name": "Daga de Lanzamiento Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
@@ -2543,7 +3765,26 @@
     "burden": "twoHanded",
     "feature": {
       "name": "Versátil",
-      "text": "Esta arma también puede usarse con estas estadísticas: Presencia, Cuerpo a Cuerpo, d8+6."
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
+    }
+  },
+  {
+    "id": "legendary-runelock-pistol",
+    "name": "Pistola de Llave Rúnica Legendaria",
+    "tier": 4,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 12
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Recarga",
+      "text": "Después de hacer un ataque, tira un d6. Con un resultado de 1, debes marcar un Estrés para recargar esta arma antes de poder dispararla de nuevo."
     }
   },
   {
@@ -2561,6 +3802,25 @@
     "damageType": "magic",
     "burden": "oneHanded",
     "feature": null
+  },
+  {
+    "id": "legendary-arcane-rifle",
+    "name": "Rifle Arcano Legendario",
+    "tier": 4,
+    "category": "primary",
+    "trait": "agility",
+    "range": "veryFar",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 12
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Apuntada",
+      "text": "Tu ataque tiene desventaja si el objetivo está dentro de alcance Muy Cercano de ti o dentro de alcance Cuerpo a Cuerpo de uno de tus aliados. Puedes marcar un Estrés para ignorar esta penalización."
+    }
   },
   {
     "id": "legendary-greatstaff",
@@ -2582,6 +3842,25 @@
     }
   },
   {
+    "id": "starmetal-blade",
+    "name": "Hoja de Metal Estelar",
+    "tier": 4,
+    "category": "primary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 10
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Serrada",
+      "text": "Cuando obtienes un 1 en un dado de daño, este infligirá 8 de daño en su lugar."
+    }
+  },
+  {
     "id": "sword-of-light-and-flame",
     "name": "Espada de Luz y Llama",
     "tier": 4,
@@ -2598,6 +3877,44 @@
     "feature": {
       "name": "Ardiente al Rojo",
       "text": "Esta arma corta a través de material sólido."
+    }
+  },
+  {
+    "id": "adders-fang",
+    "name": "Colmillo de Víbora",
+    "tier": 4,
+    "category": "primary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Venenosa",
+      "text": "Cuando inflijas daño Mayor o superior con esta arma, el objetivo se vuelve temporalmente Vulnerable."
+    }
+  },
+  {
+    "id": "demons-edge",
+    "name": "Filo del Demonio",
+    "tier": 4,
+    "category": "primary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 10
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Perturbadora",
+      "text": "Cuando derrotas a una criatura con esta arma, todos los adversarios dentro de alcance Cercano deben marcar un Estrés."
     }
   },
   {
@@ -2636,6 +3953,44 @@
     "feature": {
       "name": "Codiciosa",
       "text": "Gasta un puñado de oro para obtener un bono de +1 a tu Competencia en una tirada de daño."
+    }
+  },
+  {
+    "id": "storm-gods-greataxe",
+    "name": "Gran Hacha del Dios de la Tormenta",
+    "tier": 4,
+    "category": "primary",
+    "trait": "strength",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Rebotante",
+      "text": "Marca 1 o más de Estrés para golpear a esa cantidad de objetivos dentro del alcance del ataque."
+    }
+  },
+  {
+    "id": "ethereal-zweih-nder",
+    "name": "Mandoble Etéreo",
+    "tier": 4,
+    "category": "primary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 10,
+      "modifier": 9
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Etérea",
+      "text": "Debes marcar un Estrés para conjurar esta arma. Dura hasta el final de la escena."
     }
   },
   {
@@ -2696,6 +4051,25 @@
     }
   },
   {
+    "id": "gravity-arbalest",
+    "name": "Ballestón de Gravedad",
+    "tier": 4,
+    "category": "primary",
+    "trait": "knowledge",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "twoHanded",
+    "feature": {
+      "name": "Magnética",
+      "text": "Cuando haces un ataque con esta arma, puedes gastar una Esperanza para obligar a todos los adversarios dentro de alcance Muy Cercano del objetivo a hacer una Tirada de Reacción (16). Las criaturas que fallen deben marcar un Estrés y son arrastradas a alcance Cuerpo a Cuerpo del objetivo."
+    }
+  },
+  {
     "id": "wand-of-essek",
     "name": "Varita de Essek",
     "tier": 4,
@@ -2753,6 +4127,25 @@
     }
   },
   {
+    "id": "hatchet",
+    "name": "Hacha de Mano",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Seguimiento",
+      "text": "En un ataque exitoso con tu arma primaria dentro de alcance Cuerpo a Cuerpo, puedes marcar un Estrés para obtener un bono de +1 a tu Competencia en ese ataque."
+    }
+  },
+  {
     "id": "shortsword",
     "name": "Espada Corta",
     "tier": 1,
@@ -2768,7 +4161,26 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+2 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "offhand-brass-knuckles",
+    "name": "Puños de Latón de Mano Torpe",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
@@ -2787,7 +4199,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Protectora",
-      "text": "+1 al Puntaje de Armadura"
+      "text": "+4 al Puntaje de Armadura"
     }
   },
   {
@@ -2806,7 +4218,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Barrera",
-      "text": "+2 al Puntaje de Armadura; −1 a la Evasión"
+      "text": "+5 al Puntaje de Armadura; −1 a la Evasión."
     }
   },
   {
@@ -2825,7 +4237,83 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+2 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "throwing-knives",
+    "name": "Cuchillos Arrojadizos",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Reserva",
+      "text": "Puedes lanzar esta arma dentro de alcance Cercano haciendo una tirada de ataque con Destreza. No necesitas recuperarla, porque siempre llevas otra a mano."
+    }
+  },
+  {
+    "id": "fighting-cloak",
+    "name": "Capa de Combate",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Acolchada",
+      "text": "+5 a los umbrales de daño"
+    }
+  },
+  {
+    "id": "rune-shield",
+    "name": "Escudo Rúnico",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 0
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
+    }
+  },
+  {
+    "id": "focus-runes",
+    "name": "Runas de Foco",
+    "tier": 1,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 0
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Enfocada",
+      "text": "+1 al daño del arma primaria contra objetivos dentro de alcance Muy Cercano"
     }
   },
   {
@@ -2883,6 +4371,25 @@
     "feature": null
   },
   {
+    "id": "improved-hatchet",
+    "name": "Hacha de Mano Mejorada",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 2
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Seguimiento",
+      "text": "En un ataque exitoso con tu arma primaria dentro de alcance Cuerpo a Cuerpo, puedes marcar un Estrés para obtener un bono de +1 a tu Competencia en ese ataque."
+    }
+  },
+  {
     "id": "improved-shortsword",
     "name": "Espada Corta Mejorada",
     "tier": 2,
@@ -2898,7 +4405,26 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+3 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "improved-offhand-brass-knuckles",
+    "name": "Puños de Latón de Mano Torpe Mejorado",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 2
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
@@ -2917,7 +4443,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Protectora",
-      "text": "+2 al Puntaje de Armadura"
+      "text": "+4 al Puntaje de Armadura"
     }
   },
   {
@@ -2936,7 +4462,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Barrera",
-      "text": "+3 al Puntaje de Armadura; −1 a la Evasión"
+      "text": "+5 al Puntaje de Armadura; −1 a la Evasión."
     }
   },
   {
@@ -2955,7 +4481,83 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+3 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "improved-throwing-knives",
+    "name": "Cuchillos Arrojadizos Mejorado",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 2
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Reserva",
+      "text": "Puedes lanzar esta arma dentro de alcance Cercano haciendo una tirada de ataque con Destreza. No necesitas recuperarla, porque siempre llevas otra a mano."
+    }
+  },
+  {
+    "id": "improved-fighting-cloak",
+    "name": "Capa de Combate Mejorada",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 2
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Acolchada",
+      "text": "+5 a los umbrales de daño"
+    }
+  },
+  {
+    "id": "improved-rune-shield",
+    "name": "Escudo Rúnico Mejorado",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 2
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
+    }
+  },
+  {
+    "id": "improved-focus-runes",
+    "name": "Runas de Foco Mejorada",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 2
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Enfocada",
+      "text": "+1 al daño del arma primaria contra objetivos dentro de alcance Muy Cercano"
     }
   },
   {
@@ -3013,6 +4615,25 @@
     "feature": null
   },
   {
+    "id": "collapsible-baton",
+    "name": "Bastón Plegable",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "No Letal",
+      "text": "Cuando un objetivo fuera a marcar cualquier cantidad de Puntos de Vida por un ataque con esta arma, marca esa misma cantidad de Estrés en su lugar."
+    }
+  },
+  {
     "id": "spiked-shield",
     "name": "Escudo con Púas",
     "tier": 2,
@@ -3051,6 +4672,63 @@
     }
   },
   {
+    "id": "eldritch-vambrace",
+    "name": "Brazal Sobrenatural",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 0
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Desviadora",
+      "text": "Cuando eres atacado, puedes marcar una Ranura de Armadura para obtener un bono a tu Evasión igual a tu Puntaje de Armadura disponible contra ese ataque."
+    }
+  },
+  {
+    "id": "segmented-staff",
+    "name": "Bastón Segmentado",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "agility",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Doble Función",
+      "text": "+1 al Puntaje de Armadura; +1 al daño del arma primaria dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "razor-wire",
+    "name": "Alambre de Cuchillas",
+    "tier": 2,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 3
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Enredadora",
+      "text": "En un ataque exitoso con tu arma primaria contra un objetivo dentro de alcance Muy Cercano, puedes gastar una Esperanza para volverlo temporalmente Vulnerable."
+    }
+  },
+  {
     "id": "returning-axe",
     "name": "Hacha Retornable",
     "tier": 2,
@@ -3070,22 +4748,22 @@
     }
   },
   {
-    "id": "primer-shard",
-    "name": "Fragmento Primigenio",
-    "tier": 2,
+    "id": "advanced-hatchet",
+    "name": "Hacha de Mano Avanzada",
+    "tier": 3,
     "category": "secondary",
-    "trait": "instinct",
-    "range": "veryClose",
+    "trait": "agility",
+    "range": "melee",
     "damage": {
       "count": 1,
-      "die": 4,
-      "modifier": 0
+      "die": 8,
+      "modifier": 4
     },
     "damageType": "physical",
     "burden": "oneHanded",
     "feature": {
-      "name": "Bloqueo de Objetivo",
-      "text": "En un ataque exitoso, tu siguiente ataque contra el mismo objetivo con tu arma primaria tiene éxito automáticamente."
+      "name": "De Seguimiento",
+      "text": "En un ataque exitoso con tu arma primaria dentro de alcance Cuerpo a Cuerpo, puedes marcar un Estrés para obtener un bono de +1 a tu Competencia en ese ataque."
     }
   },
   {
@@ -3104,7 +4782,26 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+4 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "advanced-offhand-brass-knuckles",
+    "name": "Puños de Latón de Mano Torpe Avanzado",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
     }
   },
   {
@@ -3123,7 +4820,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Protectora",
-      "text": "+3 al Puntaje de Armadura"
+      "text": "+4 al Puntaje de Armadura"
     }
   },
   {
@@ -3142,7 +4839,7 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Barrera",
-      "text": "+4 al Puntaje de Armadura; −1 a la Evasión"
+      "text": "+5 al Puntaje de Armadura; −1 a la Evasión."
     }
   },
   {
@@ -3161,7 +4858,83 @@
     "burden": "oneHanded",
     "feature": {
       "name": "Emparejada",
-      "text": "+4 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "advanced-throwing-knives",
+    "name": "Cuchillos Arrojadizos Avanzado",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Reserva",
+      "text": "Puedes lanzar esta arma dentro de alcance Cercano haciendo una tirada de ataque con Destreza. No necesitas recuperarla, porque siempre llevas otra a mano."
+    }
+  },
+  {
+    "id": "advanced-fighting-cloak",
+    "name": "Capa de Combate Avanzada",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Acolchada",
+      "text": "+5 a los umbrales de daño"
+    }
+  },
+  {
+    "id": "advanced-rune-shield",
+    "name": "Escudo Rúnico Avanzado",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 4
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
+    }
+  },
+  {
+    "id": "advanced-focus-runes",
+    "name": "Runas de Foco Avanzada",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 4
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Enfocada",
+      "text": "+1 al daño del arma primaria contra objetivos dentro de alcance Muy Cercano"
     }
   },
   {
@@ -3238,6 +5011,63 @@
     }
   },
   {
+    "id": "tinkers-hammer",
+    "name": "Martillo del Artesano",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "strength",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 4
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Confianza",
+      "text": "+1 a las tiradas de ataque hechas con tu arma primaria"
+    }
+  },
+  {
+    "id": "vorpal-shard",
+    "name": "Esquirla Vorpal",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 0
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Marcadora",
+      "text": "Cuando falles un ataque con arma, puedes gastar una Esperanza para tener éxito en tu siguiente ataque con arma."
+    }
+  },
+  {
+    "id": "soul-chain",
+    "name": "Cadena de Almas",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 5
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Drenante",
+      "text": "En un ataque exitoso, puedes gastar una Esperanza para obligar al objetivo a marcar un Estrés. Si lo hace, tú recuperas un Estrés."
+    }
+  },
+  {
     "id": "powered-gauntlet",
     "name": "Guantelete Motorizado",
     "tier": 3,
@@ -3254,6 +5084,25 @@
     "feature": {
       "name": "Cargada",
       "text": "Marca un Estrés para obtener un bono de +1 a tu Competencia en un ataque con arma primaria."
+    }
+  },
+  {
+    "id": "war-dart",
+    "name": "Dardo de Guerra",
+    "tier": 3,
+    "category": "secondary",
+    "trait": "agility",
+    "range": "far",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 5
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Versátil",
+      "text": "Esta arma también puede usarse con estas estadísticas: Destreza, Cercano, d8+4."
     }
   },
   {
@@ -3276,11 +5125,49 @@
     }
   },
   {
+    "id": "legendary-hatchet",
+    "name": "Hacha de Mano Legendaria",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Seguimiento",
+      "text": "En un ataque exitoso con tu arma primaria dentro de alcance Cuerpo a Cuerpo, puedes marcar un Estrés para obtener un bono de +1 a tu Competencia en ese ataque."
+    }
+  },
+  {
     "id": "legendary-shortsword",
     "name": "Espada Corta Legendaria",
     "tier": 4,
     "category": "secondary",
     "trait": "agility",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Emparejada",
+      "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "legendary-offhand-brass-knuckles",
+    "name": "Puños de Latón de Mano Torpe Legendario",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "strength",
     "range": "melee",
     "damage": {
       "count": 1,
@@ -3349,6 +5236,82 @@
     "feature": {
       "name": "Emparejada",
       "text": "+5 al daño del arma primaria contra objetivos dentro de alcance Cuerpo a Cuerpo"
+    }
+  },
+  {
+    "id": "legendary-throwing-knives",
+    "name": "Cuchillos Arrojadizos Legendario",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "De Reserva",
+      "text": "Puedes lanzar esta arma dentro de alcance Cercano haciendo una tirada de ataque con Destreza. No necesitas recuperarla, porque siempre llevas otra a mano."
+    }
+  },
+  {
+    "id": "legendary-fighting-cloak",
+    "name": "Capa de Combate Legendaria",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Acolchada",
+      "text": "+5 a los umbrales de daño"
+    }
+  },
+  {
+    "id": "legendary-rune-shield",
+    "name": "Escudo Rúnico Legendario",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Protectora",
+      "text": "+4 al Puntaje de Armadura"
+    }
+  },
+  {
+    "id": "legendary-focus-runes",
+    "name": "Runas de Foco Legendaria",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Enfocada",
+      "text": "+1 al daño del arma primaria contra objetivos dentro de alcance Muy Cercano"
     }
   },
   {
@@ -3441,6 +5404,101 @@
     "feature": {
       "name": "Duplicada",
       "text": "Cuando haces un ataque con tu arma primaria, puedes infligir daño a otro objetivo dentro de alcance Cuerpo a Cuerpo."
+    }
+  },
+  {
+    "id": "void-needle",
+    "name": "Aguja del Vacío",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "finesse",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 6
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Invertida",
+      "text": "Cuando hagas una tirada de ataque con arma con Miedo, obtienes una Esperanza."
+    }
+  },
+  {
+    "id": "echo-blade",
+    "name": "Hoja de Eco",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "presence",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Duplicada",
+      "text": "Cuando haces un ataque con tu arma primaria, puedes infligir daño a otro objetivo dentro de alcance Cuerpo a Cuerpo."
+    }
+  },
+  {
+    "id": "m-bius-orb",
+    "name": "Orbe de Möbius",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "knowledge",
+    "range": "melee",
+    "damage": {
+      "count": 1,
+      "die": 8,
+      "modifier": 6
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Recursiva",
+      "text": "Cuando obtienes el valor máximo en un dado de daño, tira un dado de daño adicional y suma el resultado al daño total. Esta característica puede activarse repetidamente."
+    }
+  },
+  {
+    "id": "primer-shard",
+    "name": "Fragmento Primigenio",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "veryClose",
+    "damage": {
+      "count": 1,
+      "die": 4,
+      "modifier": 0
+    },
+    "damageType": "physical",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Bloqueo de Objetivo",
+      "text": "En un ataque exitoso, tu siguiente ataque contra el mismo objetivo con tu arma primaria tiene éxito automáticamente."
+    }
+  },
+  {
+    "id": "blackblood-tendril",
+    "name": "Zarcillo de Sangre Negra",
+    "tier": 4,
+    "category": "secondary",
+    "trait": "instinct",
+    "range": "close",
+    "damage": {
+      "count": 1,
+      "die": 6,
+      "modifier": 8
+    },
+    "damageType": "magic",
+    "burden": "oneHanded",
+    "feature": {
+      "name": "Ponzoñosa",
+      "text": "Cuando un objetivo marque cualquier cantidad de Puntos de Vida por un ataque que hayas tirado con Miedo, marca esa misma cantidad de Estrés."
     }
   },
   {

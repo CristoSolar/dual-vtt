@@ -57,12 +57,14 @@ describe.each(LOCALES)('completeness (%s)', (locale) => {
     }
   });
 
-  it('has 18 ancestries', () => {
-    expect(data.ancestries).toHaveLength(18);
+  it('has 24 ancestries', () => {
+    // Eighteen in the core set, plus the Aetheris, the Gnome and the four Elemental
+    // Kin (SRD 2.0).
+    expect(data.ancestries).toHaveLength(24);
   });
 
-  it('has 9 communities', () => {
-    expect(data.communities).toHaveLength(9);
+  it('has 15 communities', () => {
+    expect(data.communities).toHaveLength(15);
   });
 
   it('has 10 domains', () => {
@@ -209,7 +211,8 @@ describe.each(LOCALES)('stat blocks (%s)', (locale) => {
   });
 
   it('types every adversary and environment feature', () => {
-    const allowed = new Set(['action', 'reaction', 'passive']);
+    // 'evolution' is new in SRD 2.0: a one-shot feature gained mid-scene.
+    const allowed = new Set(['action', 'reaction', 'passive', 'evolution']);
     for (const entry of [...adversaries, ...environments]) {
       expect(entry.features.length, entry.id).toBeGreaterThan(0);
       for (const feature of entry.features) {
@@ -238,15 +241,19 @@ describe.each(LOCALES)('stat blocks (%s)', (locale) => {
 describe.each(LOCALES)('tables (%s)', (locale) => {
   const { loot, consumables, beastforms } = srdByLocale[locale];
 
-  it('has all 60 loot rolls and all 60 consumable rolls', () => {
+  it('has all 60 rolls in both the core and the additional table', () => {
+    // SRD 2.0 prints two d60 tables for each, so a roll is only unique within one.
     for (const [label, rows] of [
       ['loot', loot],
       ['consumables', consumables],
     ] as const) {
-      expect(rows, label).toHaveLength(60);
-      expect(rows.map((r) => r.roll), label).toEqual(
-        Array.from({ length: 60 }, (_, i) => i + 1),
-      );
+      expect(rows, label).toHaveLength(120);
+      for (const table of ['core', 'additional'] as const) {
+        const inTable = rows.filter((r) => r.table === table);
+        expect(inTable.map((r) => r.roll), `${label}/${table}`).toEqual(
+          Array.from({ length: 60 }, (_, i) => i + 1),
+        );
+      }
     }
   });
 

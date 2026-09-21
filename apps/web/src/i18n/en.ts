@@ -884,4 +884,5 @@ export const en: Record<keyof typeof es, string> = {
   'compendium.featureType.action': 'Action',
   'compendium.featureType.reaction': 'Reaction',
   'compendium.featureType.passive': 'Passive',
+  'compendium.featureType.evolution': 'Evolution',
 };

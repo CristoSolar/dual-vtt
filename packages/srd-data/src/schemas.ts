@@ -140,9 +140,12 @@ export const DomainCardSchema = z.object({
 });
 export type DomainCard = z.infer<typeof DomainCardSchema>;
 
-/** Adversary and environment features are typed by how they're used (SRD p.71). */
+/**
+ * Adversary and environment features are typed by how they're used (SRD 2.0 p.94).
+ * `evolution` is new in 2.0: a one-shot feature an adversary gains mid-scene.
+ */
 export const StatBlockFeatureSchema = FeatureSchema.extend({
-  type: z.enum(['action', 'reaction', 'passive']),
+  type: z.enum(['action', 'reaction', 'passive', 'evolution']),
   /**
    * The SRD prints no separate "Fear" feature type; a Fear feature is an Action or
    * Reaction whose text requires spending Fear (SRD p.37). Derived from that text.
@@ -222,6 +225,11 @@ export type Environment = z.infer<typeof EnvironmentSchema>;
 
 /** Roll on the d12-based tables to generate a random item (SRD p.58). */
 export const ItemSchema = z.object({
+  /**
+   * SRD 2.0 prints two independent d60 tables for each of loot and consumables, so
+   * a roll alone no longer identifies a row: `table` says which one to roll on.
+   */
+  table: z.enum(['core', 'additional']),
   roll: z.number().int().min(1).max(60),
   id: z.string().min(1),
   name: z.string().min(1),

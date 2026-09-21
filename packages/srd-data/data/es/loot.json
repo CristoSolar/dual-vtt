@@ -1,362 +1,842 @@
 [
   {
+    "table": "core",
     "roll": 1,
     "id": "premium-bedroll",
     "name": "Saco de Dormir Premium",
     "text": "Durante el descanso, eliminas automáticamente un Estrés."
   },
   {
+    "table": "core",
     "roll": 2,
     "id": "piper-whistle",
     "name": "Silbato del Flautista",
     "text": "Este silbato artesanal tiene un sonido distintivo. Cuando lo soplas, su tono agudo puede oírse en un radio de 1 milla."
   },
   {
+    "table": "core",
     "roll": 3,
     "id": "charging-quiver",
     "name": "Carcaj Cargado",
-    "text": "Cuando tienes éxito en un ataque con una flecha guardada en este carcaj, obtienes un bono a la tirada de daño igual a tu tier actual."
+    "text": "Cuando tienes éxito en un ataque con una flecha guardada en este carcaj, obtienes un bono a la tirada de daño igual a tu escalón actual."
   },
   {
+    "table": "core",
     "roll": 4,
     "id": "alistairs-torch",
     "name": "Antorcha de Alistair",
     "text": "Puedes encender esta antorcha mágica cuando quieras. La luz de su llama ilumina un espacio mucho mayor de lo que debería, lo suficiente para iluminar una cueva como si fuera de día."
   },
   {
+    "table": "core",
     "roll": 5,
     "id": "speaking-orbs",
     "name": "Orbes Parlantes",
     "text": "Este par de orbes permite a cualquier criatura que los sostenga comunicarse entre sí sin importar la distancia."
   },
   {
+    "table": "core",
     "roll": 6,
     "id": "manacles",
     "name": "Grilletes",
     "text": "Este par de esposas con cerradura viene con una llave."
   },
   {
+    "table": "core",
     "roll": 7,
     "id": "arcane-cloak",
     "name": "Capa Arcana",
     "text": "Una criatura con el rasgo Lanzamiento de Conjuros que use esta capa puede ajustar su color, textura y tamaño a voluntad."
   },
   {
+    "table": "core",
     "roll": 8,
     "id": "woven-net",
     "name": "Red Tejida",
     "text": "Puedes hacer una Tirada de Destreza usando esta red para atrapar a una criatura pequeña. Un objetivo atrapado puede liberarse con una Tirada de Ataque exitosa (16)."
   },
   {
+    "table": "core",
     "roll": 9,
     "id": "fire-jar",
     "name": "Jarra de Fuego",
     "text": "Puedes derramar el extraño contenido líquido de esta jarra para producir fuego al instante. El contenido se regenera cuando haces un descanso largo."
   },
   {
+    "table": "core",
     "roll": 10,
     "id": "suspended-rod",
     "name": "Vara Suspendida",
     "text": "Esta vara plana está grabada con runas. Cuando activas la vara, queda suspendida en el aire de inmediato. Hasta que se desactive, no puede moverse, no obedece las leyes de la gravedad y permanece en su lugar."
   },
   {
+    "table": "core",
     "roll": 11,
     "id": "glamour-stone",
     "name": "Piedra de Glamour",
     "text": "Activa esta piedra del tamaño de una canica para memorizar la apariencia de alguien que puedas ver. Gasta una Esperanza para recrear mágicamente esa apariencia sobre ti mismo como una ilusión."
   },
   {
+    "table": "core",
     "roll": 12,
     "id": "empty-chest",
     "name": "Cofre Vacío",
     "text": "Este cofre mágico parece vacío. Cuando pronuncias una palabra o acción de activación específica y lo abres, puedes ver los objetos guardados en su interior."
   },
   {
+    "table": "core",
     "roll": 13,
     "id": "companion-case",
     "name": "Estuche del Compañero",
     "text": "Este estuche puede contener a un animal compañero pequeño. Mientras el compañero esté dentro, el animal y el estuche son inmunes a todo daño y efectos dañinos."
   },
   {
+    "table": "core",
     "roll": 14,
     "id": "piercing-arrows",
     "name": "Flechas Perforantes",
     "text": "Tres veces por descanso, cuando tienes éxito en un ataque con una de estas flechas, puedes sumar tu Competencia a la tirada de daño."
   },
   {
+    "table": "core",
     "roll": 15,
     "id": "valorstone",
     "name": "Piedra del Valor",
     "text": "Puedes fijar esta piedra a una armadura que aún no tenga una característica. La armadura obtiene la siguiente característica. Resistente: Antes de marcar tu última Ranura de Armadura, tira un d6. Con un resultado de 6, reduces la gravedad en un umbral sin marcar una Ranura de Armadura."
   },
   {
+    "table": "core",
     "roll": 16,
     "id": "skeleton-key",
     "name": "Llave Maestra",
     "text": "Cuando usas esta llave para abrir una puerta cerrada, obtienes ventaja en la Tirada de Destreza."
   },
   {
+    "table": "core",
     "roll": 17,
     "id": "arcane-prism",
     "name": "Prisma Arcano",
     "text": "Coloca este prisma en un lugar de tu elección y actívalo. Todos los aliados dentro de alcance Cercano obtienen un bono de +1 a sus Tiradas de Lanzamiento de Conjuros. Mientras esté activado, el prisma no puede moverse. Una vez desactivado, no puede volver a activarse hasta tu próximo descanso largo."
   },
   {
+    "table": "core",
     "roll": 18,
     "id": "minor-stamina-potion-recipe",
     "name": "Receta de Poción Menor de Vigor",
-    "text": "Como acción de descanso, puedes usar el hueso de una criatura para elaborar una Poción Menor de Vigor."
+    "text": "Como movimiento de tiempo libre, puedes usar el hueso de una criatura para elaborar una Poción Menor de Vigor."
   },
   {
+    "table": "core",
     "roll": 19,
     "id": "minor-health-potion-recipe",
     "name": "Receta de Poción Menor de Vida",
-    "text": "Como acción de descanso, puedes usar un vial de sangre para elaborar una Poción Menor de Vida."
+    "text": "Como movimiento de tiempo libre, puedes usar un vial de sangre para elaborar una Poción Menor de Vida."
   },
   {
+    "table": "core",
     "roll": 20,
     "id": "homing-compasses",
     "name": "Brújulas Buscadoras",
     "text": "Estas dos brújulas apuntan una hacia la otra sin importar la distancia que las separe."
   },
   {
+    "table": "core",
     "roll": 21,
     "id": "corrector-sprite",
     "name": "Duende Corrector",
     "text": "Este pequeño duende se acomoda en el pliegue de tu oído y te susurra consejos útiles durante el combate. Una vez por descanso corto, puedes obtener ventaja en una tirada de ataque."
   },
   {
+    "table": "core",
     "roll": 22,
     "id": "gecko-gloves",
     "name": "Guantes de Geco",
     "text": "Puedes trepar por superficies verticales y caminar por techos."
   },
   {
+    "table": "core",
     "roll": 23,
     "id": "lorekeeper",
     "name": "Guardián de Saberes",
     "text": "Puedes guardar el nombre y los detalles de hasta tres criaturas hostiles dentro de este libro. Obtienes un bono de +1 a las tiradas de acción contra esas criaturas."
   },
   {
+    "table": "core",
     "roll": 24,
     "id": "vial-of-darksmoke-recipe",
     "name": "Receta de Vial de Humo Oscuro",
-    "text": "Como acción de descanso, puedes marcar un Estrés para elaborar un Vial de Humo Oscuro."
+    "text": "Como movimiento de tiempo libre, puedes marcar un Estrés para elaborar un Vial de Humo Oscuro."
   },
   {
+    "table": "core",
     "roll": 25,
     "id": "bloodstone",
     "name": "Piedra de Sangre",
     "text": "Puedes fijar esta piedra a un arma que aún no tenga una característica. El arma obtiene la siguiente característica. Brutal: Cuando tiras el valor máximo en un dado de daño, tira un dado de daño adicional."
   },
   {
+    "table": "core",
     "roll": 26,
     "id": "greatstone",
     "name": "Piedra Mayor",
     "text": "Puedes fijar esta piedra a un arma que aún no tenga una característica. El arma obtiene la siguiente característica. Poderosa: En un ataque exitoso, tira un dado de daño adicional y descarta el resultado más bajo."
   },
   {
+    "table": "core",
     "roll": 27,
     "id": "glider",
     "name": "Planeador",
     "text": "Mientras caes, puedes marcar un Estrés para desplegar este pequeño paracaídas y planear con seguridad hasta el suelo."
   },
   {
+    "table": "core",
     "roll": 28,
     "id": "ring-of-silence",
     "name": "Anillo del Silencio",
     "text": "Gasta una Esperanza para activar este anillo. Tus pasos serán silenciosos hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 29,
     "id": "calming-pendant",
     "name": "Colgante de Calma",
     "text": "Cuando fueras a marcar tu último Estrés, tira un d6. Con un resultado de 5 o más, no lo marcas."
   },
   {
+    "table": "core",
     "roll": 30,
     "id": "dual-flask",
     "name": "Frasco Doble",
     "text": "Este frasco puede contener dos líquidos distintos. Puedes alternar entre ellos accionando una pequeña palanca en su costado."
   },
   {
+    "table": "core",
     "roll": 31,
     "id": "bag-of-ficklesand",
     "name": "Bolsa de Arena Voluble",
     "text": "Puedes convencer a esta pequeña bolsa de arena de volverse mucho más pesada o más ligera con una Tirada de Presencia exitosa (10). Además, con una Tirada de Destreza exitosa (10), puedes soplar un poco de arena al rostro de un objetivo para volverlo temporalmente Vulnerable."
   },
   {
+    "table": "core",
     "roll": 32,
     "id": "ring-of-resistance",
     "name": "Anillo de Resistencia",
     "text": "Una vez por descanso largo, puedes activar este anillo tras un ataque exitoso en tu contra para reducir el daño a la mitad."
   },
   {
+    "table": "core",
     "roll": 33,
     "id": "phoenix-feather",
     "name": "Pluma de Fénix",
     "text": "Si llevas al menos una Pluma de Fénix contigo cuando caes inconsciente, obtienes un bono de +1 a la tirada que determinas para saber si ganas una cicatriz."
   },
   {
+    "table": "core",
     "roll": 34,
     "id": "box-of-many-goods",
     "name": "Caja de las Mil Riquezas",
     "text": "Una vez por descanso largo, puedes abrir esta pequeña caja y tirar un d12. Con un resultado de 1 a 6, está vacía. Con un resultado de 7 a 10, contiene un consumible común aleatorio. Con un resultado de 11 o 12, contiene dos consumibles comunes aleatorios."
   },
   {
+    "table": "core",
     "roll": 35,
     "id": "airblade-charm",
     "name": "Amuleto de Filo del Viento",
     "text": "Puedes fijar este amuleto a un arma con alcance Cuerpo a Cuerpo. Tres veces por descanso, puedes activar el amuleto y atacar a un objetivo dentro de alcance Cercano."
   },
   {
+    "table": "core",
     "roll": 36,
     "id": "portal-seed",
     "name": "Semilla de Portal",
     "text": "Puedes plantar esta semilla en el suelo para hacer crecer un portal en ese lugar. El portal estará listo para usarse en 24 horas. Puedes usar este portal para viajar a cualquier otro lugar donde hayas plantado una semilla de portal. Un portal puede destruirse infligiéndole cualquier cantidad de daño mágico."
   },
   {
+    "table": "core",
     "roll": 37,
     "id": "paragons-chain",
     "name": "Cadena del Paradigma",
-    "text": "Como acción de descanso, puedes meditar sobre un ideal o principio que valoras profundamente y enfocar tu voluntad en esta cadena. Una vez por descanso largo, puedes gastar una Esperanza para tirar un d20 como tu Dado de Esperanza en tiradas directamente relacionadas con ese principio."
+    "text": "Como movimiento de tiempo libre, puedes meditar sobre un ideal o principio que valoras profundamente y enfocar tu voluntad en esta cadena. Una vez por descanso largo, puedes gastar una Esperanza para tirar un d20 como tu Dado de Esperanza en tiradas directamente relacionadas con ese principio."
   },
   {
+    "table": "core",
     "roll": 38,
     "id": "elusive-amulet",
     "name": "Amuleto Escurridizo",
     "text": "Una vez por descanso largo, puedes activar este amuleto para volverte Oculto hasta que te muevas. Mientras estés Oculto de esta manera, permaneces sin ser visto incluso si un adversario se mueve a un lugar donde normalmente te vería."
   },
   {
+    "table": "core",
     "roll": 39,
     "id": "hopekeeper-locket",
     "name": "Relicario Guardián de la Esperanza",
     "text": "Durante un descanso largo, si tienes 6 de Esperanza, puedes gastar una Esperanza para imbuir este relicario con tu abundante resolución. Cuando tengas 0 de Esperanza, puedes usar el relicario para obtener una Esperanza al instante. El relicario debe volver a imbuirse antes de poder usarse de esta forma otra vez."
   },
   {
+    "table": "core",
     "roll": 40,
     "id": "infinite-bag",
     "name": "Bolsa Infinita",
     "text": "Cuando guardas objetos en esta bolsa, quedan almacenados en una dimensión de bolsillo que nunca se queda sin espacio. Puedes recuperar un objeto en cualquier momento."
   },
   {
+    "table": "core",
     "roll": 41,
     "id": "stride-relic",
     "name": "Reliquia del Ímpetu",
     "text": "Obtienes un bono de +1 a tu Agilidad. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 42,
     "id": "bolster-relic",
     "name": "Reliquia del Vigor",
     "text": "Obtienes un bono de +1 a tu Fuerza. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 43,
     "id": "control-relic",
     "name": "Reliquia del Dominio",
     "text": "Obtienes un bono de +1 a tu Destreza. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 44,
     "id": "attune-relic",
     "name": "Reliquia de la Sintonía",
     "text": "Obtienes un bono de +1 a tu Instinto. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 45,
     "id": "charm-relic",
     "name": "Reliquia del Carisma",
     "text": "Obtienes un bono de +1 a tu Presencia. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 46,
     "id": "enlighten-relic",
     "name": "Reliquia de la Iluminación",
     "text": "Obtienes un bono de +1 a tu Conocimiento. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 47,
     "id": "honing-relic",
     "name": "Reliquia del Perfeccionamiento",
     "text": "Obtienes un bono de +1 a una Experiencia de tu elección. Solo puedes llevar una reliquia."
   },
   {
+    "table": "core",
     "roll": 48,
     "id": "flickerfly-pendant",
     "name": "Colgante Luciérnaga",
     "text": "Mientras portes este colgante, tus armas con alcance Cuerpo a Cuerpo que infligen daño físico adquieren un brillo etéreo y pueden atacar objetivos dentro de alcance Muy Cercano."
   },
   {
+    "table": "core",
     "roll": 49,
     "id": "lakestrider-boots",
     "name": "Botas Caminantes del Lago",
     "text": "Puedes caminar sobre la superficie del agua como si fuera tierra firme."
   },
   {
+    "table": "core",
     "roll": 50,
     "id": "clay-companion",
     "name": "Compañero de Arcilla",
     "text": "Cuando esculpes esta bola de arcilla en un animal compañero de arcilla, este se comporta como ese animal. Por ejemplo, una araña de arcilla puede tejer telarañas de arcilla, mientras que un ave de arcilla puede volar. El compañero de arcilla conserva la memoria y la identidad a través de sus distintas formas, pero puede adoptar nuevos gestos con cada nueva forma."
   },
   {
+    "table": "core",
     "roll": 51,
     "id": "mythic-dust-recipe",
     "name": "Receta de Polvo Mítico",
-    "text": "Como acción de descanso, puedes usar un puñado de fino polvo dorado para elaborar Polvo Mítico."
+    "text": "Como movimiento de tiempo libre, puedes usar un puñado de fino polvo dorado para elaborar Polvo Mítico."
   },
   {
+    "table": "core",
     "roll": 52,
     "id": "shard-of-memory",
     "name": "Fragmento de Memoria",
     "text": "Una vez por descanso largo, puedes gastar 2 de Esperanza para recuperar una carta de dominio de tu bóveda sin pagar su Costo de Recuperación."
   },
   {
+    "table": "core",
     "roll": 53,
     "id": "gem-of-alacrity",
     "name": "Gema de la Prontitud",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Agilidad al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 54,
     "id": "gem-of-might",
     "name": "Gema del Poderío",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Fuerza al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 55,
     "id": "gem-of-precision",
     "name": "Gema de la Precisión",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Destreza al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 56,
     "id": "gem-of-insight",
     "name": "Gema de la Perspicacia",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Instinto al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 57,
     "id": "gem-of-audacity",
     "name": "Gema de la Audacia",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Presencia al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 58,
     "id": "gem-of-sagacity",
     "name": "Gema de la Sagacidad",
     "text": "Puedes fijar esta gema a un arma, lo que te permite usar tu Conocimiento al hacer un ataque con ella."
   },
   {
+    "table": "core",
     "roll": 59,
     "id": "ring-of-unbreakable-resolve",
     "name": "Anillo de Resolución Inquebrantable",
     "text": "Una vez por sesión, cuando el GM gasta un Miedo, puedes gastar 4 de Esperanza para anular los efectos de ese Miedo gastado."
   },
   {
+    "table": "core",
     "roll": 60,
     "id": "belt-of-unity",
     "name": "Cinturón de la Unidad",
     "text": "Una vez por sesión, puedes gastar 5 de Esperanza para liderar una Tirada en Equipo con tres PJ en lugar de dos."
+  },
+  {
+    "table": "additional",
+    "roll": 1,
+    "id": "caltrops",
+    "name": "Abrojos",
+    "text": "Puedes esparcir estos abrojos en un área a alcance Muy Cercano a tu alrededor. Una criatura que se apresure a través de esa área debe marcar un Estrés."
+  },
+  {
+    "table": "additional",
+    "roll": 2,
+    "id": "grapnel",
+    "name": "Garfio",
+    "text": "Obtienes ventaja en las tiradas de acción para escalar superficies verticales."
+  },
+  {
+    "table": "additional",
+    "roll": 3,
+    "id": "ball-bearings",
+    "name": "Rodamientos",
+    "text": "Esta bolsa contiene esferas de metal perfectamente lisas."
+  },
+  {
+    "table": "additional",
+    "roll": 4,
+    "id": "box-of-dragon-dust",
+    "name": "Caja de Polvo de Dragón",
+    "text": "Esta tabaquera está llena de un polvo combustible."
+  },
+  {
+    "table": "additional",
+    "roll": 5,
+    "id": "nighthawkers-ring",
+    "name": "Anillo del Halcón Nocturno",
+    "text": "Gasta una Esperanza para activar la gema de este anillo hasta el final de la escena. Mientras está activa, la gema cambia de color para indicar la cercanía de quien lo lleva a un tesoro oculto: colores cálidos si está cerca, fríos si está lejos."
+  },
+  {
+    "table": "additional",
+    "roll": 6,
+    "id": "elven-spyglass",
+    "name": "Catalejo Élfico",
+    "text": "Puedes usar este catalejo para magnificar tu visión cien veces."
+  },
+  {
+    "table": "additional",
+    "roll": 7,
+    "id": "gourmet-granules",
+    "name": "Gránulos Gourmet",
+    "text": "Este polvo sabroso vuelve delicioso y saludable cualquier alimento sobre el que se espolvoree, por insípido o podrido que esté."
+  },
+  {
+    "table": "additional",
+    "roll": 8,
+    "id": "collapsible-pole",
+    "name": "Pértiga Plegable",
+    "text": "Puedes desmontar esta pértiga de 5 metros en seis segmentos entrelazados de 1 metro."
+  },
+  {
+    "table": "additional",
+    "roll": 9,
+    "id": "blackwing-quill",
+    "name": "Pluma de Ala Negra",
+    "text": "A esta pluma de escribir nunca se le acaba la tinta ni necesita afilarse."
+  },
+  {
+    "table": "additional",
+    "roll": 10,
+    "id": "silees-folding-knife",
+    "name": "Navaja de Silee",
+    "text": "Esta hoja de 8 centímetros tiene un filo que corta con facilidad cualquier cosa salvo el mango en el que se guarda."
+  },
+  {
+    "table": "additional",
+    "roll": 11,
+    "id": "windup-toy",
+    "name": "Juguete de Cuerda",
+    "text": "Este pequeño artilugio mecánico tiene forma de cachorro de lobo estrige y puede programarse para hacer trucos sencillos."
+  },
+  {
+    "table": "additional",
+    "roll": 12,
+    "id": "loaded-dice",
+    "name": "Dados Cargados",
+    "text": "Puedes elegir el resultado de este juego de dados cargados con una Tirada de Destreza (14) exitosa. Si tiras con Miedo, quien esté mirando se da cuenta de que los dados están cargados."
+  },
+  {
+    "table": "additional",
+    "roll": 13,
+    "id": "hollowbark-horn",
+    "name": "Cuerno de Corteza Hueca",
+    "text": "Puedes soplar este cuerno para convocar a una pequeña criatura del bosque que realice una tarea sencilla."
+  },
+  {
+    "table": "additional",
+    "roll": 14,
+    "id": "self-tying-rope",
+    "name": "Cuerda que se Ata Sola",
+    "text": "Puedes ordenarle a esta cuerda que se ate o se desate sola."
+  },
+  {
+    "table": "additional",
+    "roll": 15,
+    "id": "thiefs-compass",
+    "name": "Brújula del Ladrón",
+    "text": "Esta brújula señala la salida más cercana cuando estás en interiores y la entrada más cercana cuando estás al aire libre."
+  },
+  {
+    "table": "additional",
+    "roll": 16,
+    "id": "travelers-bell",
+    "name": "Campana del Viajero",
+    "text": "Una vez por descanso largo, puedes tocar esta campana para abrir mágicamente el camino seguro más corto a través de terreno difícil durante 1 hora."
+  },
+  {
+    "table": "additional",
+    "roll": 17,
+    "id": "mandragorian-torch",
+    "name": "Antorcha Mandragoriana",
+    "text": "Esta antorcha emite una luz que solo quien la porta puede ver."
+  },
+  {
+    "table": "additional",
+    "roll": 18,
+    "id": "boots-of-supple-mystique",
+    "name": "Botas de Mística Sutil",
+    "text": "Mientras lleves estas botas, no dejas rastros ni huellas."
+  },
+  {
+    "table": "additional",
+    "roll": 19,
+    "id": "zephyrs-jar",
+    "name": "Tarro del Céfiro",
+    "text": "Puedes abrir este tarro vacío durante mal tiempo para capturar la tormenta y dejar el cielo despejado. La tormenta permanece dentro hasta que la liberes reabriendo el tarro."
+  },
+  {
+    "table": "additional",
+    "roll": 20,
+    "id": "returning-ring",
+    "name": "Anillo Retornante",
+    "text": "Cuando lanzas tu arma primaria mientras llevas este anillo, el arma aparece en tu mano inmediatamente después del ataque."
+  },
+  {
+    "table": "additional",
+    "roll": 21,
+    "id": "kingfishers-net",
+    "name": "Red del Martín Pescador",
+    "text": "Una vez por descanso largo, puedes usar esta red para sacar un pez vivo de cualquier cantidad de agua, por improbable que sea que esa agua tenga peces."
+  },
+  {
+    "table": "additional",
+    "roll": 22,
+    "id": "titans-girdle",
+    "name": "Cinturón del Titán",
+    "text": "Una vez por escena, puedes activar este cinturón para obtener un bono de +1 a tu Competencia en tu siguiente ataque."
+  },
+  {
+    "table": "additional",
+    "roll": 23,
+    "id": "iron-veil",
+    "name": "Velo de Hierro",
+    "text": "Esta cobertura de malla para la cabeza vuelve invisible a quien la lleva ante las criaturas feéricas."
+  },
+  {
+    "table": "additional",
+    "roll": 24,
+    "id": "furball-bag",
+    "name": "Bolsa de Bolas de Pelo",
+    "text": "Una vez por descanso, puedes sacar de esta bolsa 2d20 criaturas peludas inofensivas del tamaño de un gato, de origen y especie indeterminados."
+  },
+  {
+    "table": "additional",
+    "roll": 25,
+    "id": "whisperstep-anklet",
+    "name": "Tobillera del Paso Susurrante",
+    "text": "Esta tobillera vuelve silenciosos tus pasos mientras no te muevas más rápido que caminando."
+  },
+  {
+    "table": "additional",
+    "roll": 26,
+    "id": "enchanters-loupe",
+    "name": "Lupa del Encantador",
+    "text": "Puedes usar esta lupa para ver a través de ilusiones y encantamientos."
+  },
+  {
+    "table": "additional",
+    "roll": 27,
+    "id": "eschers-mirrorball",
+    "name": "Bola de Espejos de Escher",
+    "text": "Una vez por descanso largo, puedes ordenar a este orbe plateado del tamaño de un puño que capture en su superficie una imagen omnidireccional de lo que lo rodea. Esa imagen dura hasta tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 28,
+    "id": "cheaters-coin",
+    "name": "Moneda del Tramposo",
+    "text": "Cuando lanzas esta moneda, puedes gastar una Esperanza para decidir de qué lado cae."
+  },
+  {
+    "table": "additional",
+    "roll": 29,
+    "id": "gravewardens-bell",
+    "name": "Campana del Guardián de Tumbas",
+    "text": "Esta campana suena cuando un fantasma o una criatura no muerta se mueve a alcance Lejano de ella."
+  },
+  {
+    "table": "additional",
+    "roll": 30,
+    "id": "reliquary-of-the-sightless-saint",
+    "name": "Relicario del Santo Sin Vista",
+    "text": "Obtienes un bono de +1 a tu Dado de Esperanza cuando haces el movimiento de muerte Arriesgarlo Todo."
+  },
+  {
+    "table": "additional",
+    "roll": 31,
+    "id": "map-of-revelation",
+    "name": "Mapa de la Revelación",
+    "text": "Puedes sintonizar este mapa con una criatura a la vez. El mapa siempre muestra la ubicación de la criatura sintonizada."
+  },
+  {
+    "table": "additional",
+    "roll": 32,
+    "id": "dagginaes-obsidian-slate",
+    "name": "Tablilla de Obsidiana de Dagginae",
+    "text": "Esta lámina finísima de vidrio volcánico la usan los archivistas para tomar notas. Cualquier información grabada en su superficie desaparece, pero puede recuperarse con una orden que tú fijas."
+  },
+  {
+    "table": "additional",
+    "roll": 33,
+    "id": "gadimans-backpack",
+    "name": "Mochila de Gadiman",
+    "text": "Una vez por descanso, puedes gastar una Esperanza para conjurar dentro de este zurrón un objeto mundano de hasta unos 30 centímetros de lado."
+  },
+  {
+    "table": "additional",
+    "roll": 34,
+    "id": "eclipse-coin",
+    "name": "Moneda del Eclipse",
+    "text": "Una vez por descanso, lanza una moneda. Si sale cara, obtienes un bono de +1 a las tiradas de ataque hasta tu siguiente ataque exitoso. Si sale cruz, obtienes +1 a tu Evasión hasta que un ataque falle contra ti."
+  },
+  {
+    "table": "additional",
+    "roll": 35,
+    "id": "sorcerers-hat",
+    "name": "Sombrero del Hechicero",
+    "text": "Este sombrero cónico azul está cubierto de estrellas plateadas. Una vez por descanso, puedes lanzar un hechizo de tu bóveda con un Coste de Recuperación igual o menor a tu escalón. No funciona con cartas guardadas en la bóveda de forma permanente."
+  },
+  {
+    "table": "additional",
+    "roll": 36,
+    "id": "ghoulskin-gloves",
+    "name": "Guantes de Piel de Gul",
+    "text": "Cuando atacas con un arma física mientras llevas estos guantes, el daño se considera físico y mágico a la vez."
+  },
+  {
+    "table": "additional",
+    "roll": 37,
+    "id": "gloves-of-alacrity",
+    "name": "Guantes de Presteza",
+    "text": "Cuando fueras a marcar un Estrés para recargar un arma, no lo marcas."
+  },
+  {
+    "table": "additional",
+    "roll": 38,
+    "id": "insomniacs-periapt",
+    "name": "Amuleto del Insomne",
+    "text": "Cuando tomes un descanso sin recuperar Puntos de Vida ni Estrés, obtienes un bono de +2 a las tiradas de ataque y de daño hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 39,
+    "id": "wildriders-saddle",
+    "name": "Silla del Jinete Salvaje",
+    "text": "Esta silla otorga a cualquier animal sobre el que se ate la capacidad de entender las órdenes de quien lo monta."
+  },
+  {
+    "table": "additional",
+    "roll": 40,
+    "id": "soul-twin-circlets",
+    "name": "Diademas de Almas Gemelas",
+    "text": "Dos criaturas pueden llevar este par de diademas. Puedes gastar una Esperanza para intercambiar tu posición con quien lleve la otra diadema."
+  },
+  {
+    "table": "additional",
+    "roll": 41,
+    "id": "namers-oracle",
+    "name": "Oráculo del Nominador",
+    "text": "Una vez por sesión, puedes tirar este juego de dados rúnicos para revelar el nombre completo de la última persona a la que tocaste."
+  },
+  {
+    "table": "additional",
+    "roll": 42,
+    "id": "crucible-frames",
+    "name": "Lentes del Crisol",
+    "text": "Estas gafas revelan los puntos débiles de objetos y criaturas. Tres veces por descanso, puedes gastar una Esperanza para obtener ventaja en una tirada de ataque."
+  },
+  {
+    "table": "additional",
+    "roll": 43,
+    "id": "two-faced-aegis-brooch",
+    "name": "Broche Égida de Dos Caras",
+    "text": "Una vez por descanso, lanza una moneda. Si sale cara, te vuelves inmune al siguiente daño físico que recibas. Si sale cruz, te vuelves inmune al siguiente daño mágico que recibas."
+  },
+  {
+    "table": "additional",
+    "roll": 44,
+    "id": "knockback-bracelets",
+    "name": "Brazaletes de Repulsión",
+    "text": "En un ataque exitoso con arma, puedes empujar a tu objetivo hasta alcance Cercano desde donde estaba."
+  },
+  {
+    "table": "additional",
+    "roll": 45,
+    "id": "force-disc",
+    "name": "Disco de Fuerza",
+    "text": "Este disco bidimensional de fuerza mágica y brillo tenue tiene poco más de un metro de diámetro y está atado mágicamente a un guijarro. El disco siempre flota a un metro al norte del guijarro y a su misma altura. El guijarro tiene una masa igual a la centésima parte de la masa total que carga el disco."
+  },
+  {
+    "table": "additional",
+    "roll": 46,
+    "id": "molepaw-mittens",
+    "name": "Manoplas de Zarpa de Topo",
+    "text": "Gasta una Esperanza para nadar a través de la tierra como si fuera agua durante los próximos 10 minutos."
+  },
+  {
+    "table": "additional",
+    "roll": 47,
+    "id": "timekeepers-pendant",
+    "name": "Colgante del Guardián del Tiempo",
+    "text": "Puedes elegir un movimiento de tiempo libre adicional en cada descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 48,
+    "id": "iron-dagger-pendant",
+    "name": "Colgante de Daga de Hierro",
+    "text": "Una vez por descanso largo, puedes gastar una Esperanza para decirle al colgante el nombre de una criatura. El colgante tira suavemente de ti hacia la ubicación actual de esa criatura hasta tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 49,
+    "id": "collar-of-ascendancy",
+    "name": "Collar de Ascendencia",
+    "text": "Un animal que lleve este collar obtiene la capacidad de hablar y entender el habla común."
+  },
+  {
+    "table": "additional",
+    "roll": 50,
+    "id": "temporal-sanctuary",
+    "name": "Santuario Temporal",
+    "text": "Un PJ que tome un descanso en el santuario temporal puede elegir un movimiento de tiempo libre adicional."
+  },
+  {
+    "table": "additional",
+    "roll": 51,
+    "id": "heros-helm",
+    "name": "Yelmo del Héroe",
+    "text": "Cuando tengas un éxito crítico en un ataque, todos los aliados a alcance Cercano obtienen una Esperanza."
+  },
+  {
+    "table": "additional",
+    "roll": 52,
+    "id": "rings-of-friendship",
+    "name": "Anillos de la Amistad",
+    "text": "Dos criaturas pueden llevar este par de anillos con forma de serpiente enroscada. Puedes gastar la Esperanza de quien lleve el otro anillo (con su permiso) como si fuera tuya."
+  },
+  {
+    "table": "additional",
+    "roll": 53,
+    "id": "rings-of-camaraderie",
+    "name": "Anillos del Compañerismo",
+    "text": "Dos criaturas pueden llevar este par de anillos de madera. Puedes marcar el Estrés de quien lleve el otro anillo (con su permiso) como si fuera tuyo."
+  },
+  {
+    "table": "additional",
+    "roll": 54,
+    "id": "rings-of-alliance",
+    "name": "Anillos de la Alianza",
+    "text": "Dos criaturas pueden llevar este par de anillos de oro rosado. Una vez por sesión, puedes iniciar una Tirada en Equipo con quien lleve el otro anillo sin gastar Esperanza y sin que cuente para tu límite de Tiradas en Equipo por sesión."
+  },
+  {
+    "table": "additional",
+    "roll": 55,
+    "id": "phobophages-circlet",
+    "name": "Diadema del Fagófobo",
+    "text": "Cuando el GM gaste un Miedo, tira un d4. Una vez por escena, con un resultado de 4, recuperas un Estrés."
+  },
+  {
+    "table": "additional",
+    "roll": 56,
+    "id": "quillshawl",
+    "name": "Chal de Púas",
+    "text": "Si un adversario te ataca a alcance Cuerpo a Cuerpo, debe tener éxito en una Tirada de Reacción (12) o marcar un Punto de Vida."
+  },
+  {
+    "table": "additional",
+    "roll": 57,
+    "id": "warp-pendant",
+    "name": "Colgante de Distorsión",
+    "text": "Una vez por descanso, marca un Estrés para teletransportarte a un lugar que puedas ver con claridad."
+  },
+  {
+    "table": "additional",
+    "roll": 58,
+    "id": "portal-frames",
+    "name": "Marcos de Portal",
+    "text": "Este par de pequeños marcos ornamentados, uno rojo y otro azul, están conectados. Todo lo que entra por uno sale por el otro."
+  },
+  {
+    "table": "additional",
+    "roll": 59,
+    "id": "communion-relic",
+    "name": "Reliquia de Comunión",
+    "text": "Una vez por descanso, puedes gastar una Esperanza para usar la Experiencia de un aliado como si fuera tuya. Solo puedes llevar una reliquia."
+  },
+  {
+    "table": "additional",
+    "roll": 60,
+    "id": "augurs-relic",
+    "name": "Reliquia del Augur",
+    "text": "Una vez por descanso largo, puedes activar tu habilidad de Esperanza sin gastar Esperanza. Solo puedes llevar una reliquia."
   }
 ]

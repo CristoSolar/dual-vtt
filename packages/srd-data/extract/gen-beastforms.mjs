@@ -8,7 +8,8 @@ import { readPages } from './geo.mjs';
  */
 
 const pages = readPages(new URL('./srd-bbox.xml', import.meta.url).pathname);
-const lines = pages.slice(6, 9).flatMap((columns) => columns.flat());
+// SRD 2.0 prints the Beastform options on pages 15-18, inside the Druid's entry.
+const lines = pages.slice(14, 18).flatMap((columns) => columns.flat());
 
 const slug = (s) =>
   s

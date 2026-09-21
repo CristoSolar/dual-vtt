@@ -12,6 +12,7 @@ import {
   type DomainCard,
   type Environment,
   type Item,
+  type StatBlockFeature,
   type Subclass,
   type Weapon,
 } from '@daggerheart/srd-data';
@@ -34,7 +35,12 @@ function Field({ label, children }: { label: MessageKey; children: ReactNode }) 
 function FeatureList({
   features,
 }: {
-  features: readonly { name: string; text: string; type?: 'action' | 'reaction' | 'passive'; costsFear?: boolean }[];
+  features: readonly {
+    name: string;
+    text: string;
+    type?: StatBlockFeature['type'];
+    costsFear?: boolean;
+  }[];
 }) {
   return (
     <ul className="compendium-features">

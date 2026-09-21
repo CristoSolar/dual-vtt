@@ -492,7 +492,7 @@
     "domain": "bone",
     "type": "ability",
     "recallCost": 1,
-    "text": "Durante un descanso corto, puedes elegir en su lugar una jugada de tiempo libre de descanso largo. Puedes gastar una Esperanza para que un aliado haga lo mismo."
+    "text": "Durante un descanso corto, puedes elegir en su lugar una movimiento de tiempo libre de descanso largo. Puedes gastar una Esperanza para que un aliado haga lo mismo."
   },
   {
     "id": "bone-touched",
@@ -717,7 +717,7 @@
     "domain": "codex",
     "type": "spell",
     "recallCost": 3,
-    "text": "Cuando tengas unos minutos de calma para concentrarte, puedes gastar 2 de Esperanza para invocar tu Refugio Seguro, un gran hogar interdimensional donde tú y tus aliados podéis resguardaros. Al hacerlo, aparece una puerta mágica en algún punto dentro de distancia Cercana. Solo pueden entrar las criaturas que elijas. Una vez dentro, puedes hacer que la entrada sea invisible. Tú y cualquiera dentro siempre podéis salir. Una vez que te vayas, la puerta debe invocarse de nuevo. Cuando descanses en tu propio Refugio Seguro, puedes elegir una jugada de tiempo libre adicional."
+    "text": "Cuando tengas unos minutos de calma para concentrarte, puedes gastar 2 de Esperanza para invocar tu Refugio Seguro, un gran hogar interdimensional donde tú y tus aliados podéis resguardaros. Al hacerlo, aparece una puerta mágica en algún punto dentro de distancia Cercana. Solo pueden entrar las criaturas que elijas. Una vez dentro, puedes hacer que la entrada sea invisible. Tú y cualquiera dentro siempre podéis salir. Una vez que te vayas, la puerta debe invocarse de nuevo. Cuando descanses en tu propio Refugio Seguro, puedes elegir una movimiento de tiempo libre adicional."
   },
   {
     "id": "book-of-ronin",
@@ -1014,7 +1014,7 @@
     "domain": "grace",
     "type": "ability",
     "recallCost": 1,
-    "text": "Durante un descanso corto, cuando te tomas el tiempo de consolar a otro personaje mientras usas en él la jugada de tiempo libre Atender Heridas, despeja un Punto de Vida adicional en ese personaje. Al hacerlo, también despejas 2 Puntos de Vida."
+    "text": "Durante un descanso corto, cuando te tomas el tiempo de consolar a otro personaje mientras usas en él la movimiento de tiempo libre Atender Heridas, despeja un Punto de Vida adicional en ese personaje. Al hacerlo, también despejas 2 Puntos de Vida."
   },
   {
     "id": "through-your-eyes",
@@ -1437,7 +1437,7 @@
     "domain": "sage",
     "type": "ability",
     "recallCost": 1,
-    "text": "Como jugada de tiempo libre adicional que puedes elegir, tira un d6 para ver qué forrajeas. Trabaja con el GM para describirlo y añádelo a tu inventario como un consumible. Tu grupo puede llevar hasta cinco consumibles forrajeados a la vez. 1. Un alimento singular (Despeja 2 de Estrés) 2. Una hermosa reliquia (Gana 2 de Esperanza) 3. Una runa arcana (+2 a una Tirada de Lanzamiento) 4. Un vial curativo (Despeja 2 Puntos de Vida) 5. Un amuleto de la suerte (Vuelve a tirar cualquier dado) 6. Elige una de las opciones anteriores."
+    "text": "Como movimiento de tiempo libre adicional que puedes elegir, tira un d6 para ver qué forrajeas. Trabaja con el GM para describirlo y añádelo a tu inventario como un consumible. Tu grupo puede llevar hasta cinco consumibles forrajeados a la vez. 1. Un alimento singular (Despeja 2 de Estrés) 2. Una hermosa reliquia (Gana 2 de Esperanza) 3. Una runa arcana (+2 a una Tirada de Lanzamiento) 4. Un vial curativo (Despeja 2 Puntos de Vida) 5. Un amuleto de la suerte (Vuelve a tirar cualquier dado) 6. Elige una de las opciones anteriores."
   },
   {
     "id": "sage-touched",
@@ -1788,7 +1788,7 @@
     "domain": "valor",
     "type": "ability",
     "recallCost": 1,
-    "text": "Mientras lleves armadura puesta, obtienes un +1 a tu Puntuación de Armadura. Durante un descanso, cuando elijas reparar tu armadura como jugada de tiempo libre, tus aliados también despejan una Ranura de Armadura."
+    "text": "Mientras lleves armadura puesta, obtienes un +1 a tu Puntuación de Armadura. Durante un descanso, cuando elijas reparar tu armadura como movimiento de tiempo libre, tus aliados también despejan una Ranura de Armadura."
   },
   {
     "id": "rousing-strike",

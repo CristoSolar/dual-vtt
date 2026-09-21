@@ -1,362 +1,842 @@
 [
   {
+    "table": "core",
     "roll": 1,
     "id": "stride-potion",
     "name": "Poción de Zancada",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Agilidad."
   },
   {
+    "table": "core",
     "roll": 2,
     "id": "bolster-potion",
     "name": "Poción de Vigor",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Fuerza."
   },
   {
+    "table": "core",
     "roll": 3,
     "id": "control-potion",
     "name": "Poción de Control",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Destreza."
   },
   {
+    "table": "core",
     "roll": 4,
     "id": "attune-potion",
     "name": "Poción de Sintonía",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Instinto."
   },
   {
+    "table": "core",
     "roll": 5,
     "id": "charm-potion",
     "name": "Poción de Encanto",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Presencia."
   },
   {
+    "table": "core",
     "roll": 6,
     "id": "enlighten-potion",
     "name": "Poción de Iluminación",
     "text": "Ganas un bonificador de +1 a tu próxima Tirada de Conocimiento."
   },
   {
+    "table": "core",
     "roll": 7,
     "id": "minor-health-potion",
     "name": "Poción de Vida Menor",
     "text": "Recupera 1d4 PV."
   },
   {
+    "table": "core",
     "roll": 8,
     "id": "minor-stamina-potion",
     "name": "Poción de Vigor Menor",
     "text": "Elimina 1d4 de Estrés."
   },
   {
+    "table": "core",
     "roll": 9,
     "id": "grindletooth-venom",
     "name": "Veneno de Diente de Grindle",
     "text": "Puedes aplicar este veneno a un arma que infrinja daño físico para añadir un d6 a tu próxima tirada de daño con esa arma."
   },
   {
+    "table": "core",
     "roll": 10,
     "id": "varik-leaves",
     "name": "Hojas de Varik",
     "text": "Puedes comer este par de hojas para ganar de inmediato 2 de Esperanza."
   },
   {
+    "table": "core",
     "roll": 11,
     "id": "vial-of-moondrip",
     "name": "Frasco de Rocío Lunar",
     "text": "Cuando bebes el contenido de este frasco, puedes ver en total oscuridad hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 12,
     "id": "unstable-arcane-shard",
     "name": "Esquirla Arcana Inestable",
     "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 1d20 de daño mágico."
   },
   {
+    "table": "core",
     "roll": 13,
     "id": "potion-of-stability",
     "name": "Poción de Estabilidad",
     "text": "Puedes beber esta poción para elegir una maniobra de descanso adicional."
   },
   {
+    "table": "core",
     "roll": 14,
     "id": "improved-grindletooth-venom",
     "name": "Veneno de Diente de Grindle Mejorado",
     "text": "Puedes aplicar este veneno a un arma que infrinja daño físico para añadir un d8 a tu próxima tirada de daño con esa arma."
   },
   {
+    "table": "core",
     "roll": 15,
     "id": "morphing-clay",
     "name": "Arcilla Transmutadora",
     "text": "Puedes gastar una Esperanza para usar esta arcilla, alterando tu rostro lo suficiente para volverte irreconocible hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 16,
     "id": "vial-of-darksmoke",
     "name": "Frasco de Humo Oscuro",
     "text": "Cuando un adversario te ataca, usa este frasco y tira una cantidad de d6 igual a tu Agilidad. Suma el resultado más alto a tu Evasión contra ese ataque."
   },
   {
+    "table": "core",
     "roll": 17,
     "id": "jumping-root",
     "name": "Raíz Saltarina",
     "text": "Come esta raíz para saltar hasta el alcance Lejano una vez sin necesidad de tirar dados."
   },
   {
+    "table": "core",
     "roll": 18,
     "id": "snap-powder",
     "name": "Polvo Restallante",
     "text": "Marca un Estrés y recupera un PV."
   },
   {
+    "table": "core",
     "roll": 19,
     "id": "health-potion",
     "name": "Poción de Vida",
     "text": "Recupera 1d4+1 PV."
   },
   {
+    "table": "core",
     "roll": 20,
     "id": "stamina-potion",
     "name": "Poción de Vigor",
     "text": "Elimina 1d4+1 de Estrés."
   },
   {
+    "table": "core",
     "roll": 21,
     "id": "armor-stitcher",
     "name": "Restauradora de Armadura",
     "text": "Puedes usar esta herramienta para gastar cualquier cantidad de Esperanza y eliminar esa misma cantidad de Ranuras de Armadura."
   },
   {
+    "table": "core",
     "roll": 22,
     "id": "gill-salve",
     "name": "Ungüento de Branquias",
     "text": "Puedes aplicar este ungüento en tu cuello para respirar bajo el agua durante una cantidad de minutos igual a tu nivel."
   },
   {
+    "table": "core",
     "roll": 23,
     "id": "replication-parchment",
     "name": "Pergamino de Réplica",
     "text": "Al tocar este trozo de pergamino con otro, puedes copiar a la perfección el contenido del segundo pergamino. Una vez usado, este pergamino se convierte en papel corriente."
   },
   {
+    "table": "core",
     "roll": 24,
     "id": "improved-arcane-shard",
     "name": "Esquirla Arcana Mejorada",
     "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 2d20 de daño mágico."
   },
   {
+    "table": "core",
     "roll": 25,
     "id": "major-stride-potion",
     "name": "Poción de Zancada Mayor",
     "text": "Ganas un bonificador de +1 a tu Agilidad hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 26,
     "id": "major-bolster-potion",
     "name": "Poción de Vigor Mayor",
     "text": "Ganas un bonificador de +1 a tu Fuerza hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 27,
     "id": "major-control-potion",
     "name": "Poción de Control Mayor",
     "text": "Ganas un bonificador de +1 a tu Destreza hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 28,
     "id": "major-attune-potion",
     "name": "Poción de Sintonía Mayor",
     "text": "Ganas un bonificador de +1 a tu Instinto hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 29,
     "id": "major-charm-potion",
     "name": "Poción de Encanto Mayor",
     "text": "Ganas un bonificador de +1 a tu Presencia hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 30,
     "id": "major-enlighten-potion",
     "name": "Poción de Iluminación Mayor",
     "text": "Ganas un bonificador de +1 a tu Conocimiento hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 31,
     "id": "blood-of-the-yorgi",
     "name": "Sangre del Yorgi",
     "text": "Puedes beber esta sangre para desaparecer de donde estás y reaparecer al instante en un punto que puedas ver dentro del alcance Muy Lejano."
   },
   {
+    "table": "core",
     "roll": 32,
     "id": "homets-secret-potion",
     "name": "Poción Secreta de Homet",
     "text": "Después de beber esta poción, tu próximo ataque exitoso se convierte automáticamente en éxito crítico."
   },
   {
+    "table": "core",
     "roll": 33,
     "id": "redthorn-saliva",
     "name": "Saliva de Espina Roja",
     "text": "Puedes aplicar esta saliva a un arma que infrinja daño físico para añadir un d12 a tu próxima tirada de daño con esa arma."
   },
   {
+    "table": "core",
     "roll": 34,
     "id": "channelstone",
     "name": "Piedra Canalizadora",
     "text": "Puedes usar esta piedra para sacar un hechizo o grimorio de tu bóveda, usarlo una vez y devolverlo a tu bóveda."
   },
   {
+    "table": "core",
     "roll": 35,
     "id": "mythic-dust",
     "name": "Polvo Mítico",
     "text": "Puedes aplicar este polvo a un arma que infrinja daño mágico para añadir un d12 a tu próxima tirada de daño con esa arma."
   },
   {
+    "table": "core",
     "roll": 36,
     "id": "acidpaste",
     "name": "Pasta Ácida",
     "text": "Esta pasta corroe muros y otras superficies entre destellos brillantes."
   },
   {
+    "table": "core",
     "roll": 37,
     "id": "hopehold-flare",
     "name": "Bengala del Refugio de Esperanza",
     "text": "Cuando usas esta bengala, tus aliados dentro del alcance Cercano tiran un d6 cuando gastan una Esperanza. Con un resultado de 6, obtienen el efecto de esa Esperanza sin gastarla. La bengala dura hasta el final de la escena."
   },
   {
+    "table": "core",
     "roll": 38,
     "id": "major-arcane-shard",
     "name": "Esquirla Arcana Mayor",
     "text": "Puedes hacer una Tirada de Destreza para arrojar esta esquirla a un grupo de adversarios dentro del alcance Lejano. Los objetivos contra los que tengas éxito reciben 4d20 de daño mágico."
   },
   {
+    "table": "core",
     "roll": 39,
     "id": "featherbone",
     "name": "Hueso de Pluma",
     "text": "Puedes usar este hueso para controlar tu velocidad de caída durante una cantidad de minutos igual a tu nivel."
   },
   {
+    "table": "core",
     "roll": 40,
     "id": "circle-of-the-void",
     "name": "Círculo del Vacío",
     "text": "Marca un Estrés para crear un vacío que se extiende hasta el alcance Lejano. Ninguna magia puede lanzarse dentro del vacío, y las criaturas dentro de él son inmunes al daño mágico."
   },
   {
+    "table": "core",
     "roll": 41,
     "id": "sun-tree-sap",
     "name": "Savia del Árbol Solar",
     "text": "Consume esta savia para tirar un d6. Con un resultado de 5–6, recupera 2 PV. Con un resultado de 2–4, elimina 3 de Estrés. Con un resultado de 1, atraviesas el velo de la muerte y regresas transformado, ganando una cicatriz."
   },
   {
+    "table": "core",
     "roll": 42,
     "id": "dripfang-poison",
     "name": "Veneno de Colmillo Goteante",
     "text": "Una criatura que consuma este veneno recibe 8d10 de daño mágico directo."
   },
   {
+    "table": "core",
     "roll": 43,
     "id": "major-health-potion",
     "name": "Poción de Vida Mayor",
     "text": "Recupera 1d4+2 PV."
   },
   {
+    "table": "core",
     "roll": 44,
     "id": "major-stamina-potion",
     "name": "Poción de Vigor Mayor",
     "text": "Elimina 1d4+2 de Estrés."
   },
   {
+    "table": "core",
     "roll": 45,
     "id": "ogre-musk",
     "name": "Almizcle de Ogro",
     "text": "Puedes usar este almizcle para impedir que cualquiera te rastree por medios mundanos o mágicos hasta tu próximo descanso."
   },
   {
+    "table": "core",
     "roll": 46,
     "id": "wingsprout",
     "name": "Brote de Alas",
     "text": "Ganas alas mágicas que te permiten volar durante una cantidad de minutos igual a tu nivel."
   },
   {
+    "table": "core",
     "roll": 47,
     "id": "jar-of-lost-voices",
     "name": "Frasco de Voces Perdidas",
     "text": "Puedes abrir este frasco para liberar un eco ensordecedor de voces durante una cantidad de minutos igual a tu Instinto. Las criaturas dentro del alcance Lejano que no estén preparadas para el sonido reciben 6d8 de daño mágico."
   },
   {
+    "table": "core",
     "roll": 48,
     "id": "dragonbloom-tea",
     "name": "Té de Flor de Dragón",
     "text": "Puedes beber este té para desatar un ataque de aliento de fuego. Haz una Tirada de Instinto contra todos los adversarios frente a ti dentro del alcance Cercano. Los objetivos contra los que tengas éxito reciben d20 de daño físico usando tu Competencia."
   },
   {
+    "table": "core",
     "roll": 49,
     "id": "bridge-seed",
     "name": "Semilla del Puente",
     "text": "Gruesas enredaderas crecen desde tu ubicación hasta un punto que elijas dentro del alcance Lejano, permitiéndote trepar por ellas o cruzarlas. Las enredaderas se disipan en tu próximo descanso corto."
   },
   {
+    "table": "core",
     "roll": 50,
     "id": "sleeping-sap",
     "name": "Savia del Sueño",
     "text": "Puedes beber esta poción para caer en un sueño equivalente a un descanso largo completo. Al despertar, eliminas todo el Estrés."
   },
   {
+    "table": "core",
     "roll": 51,
     "id": "feast-of-xuria",
     "name": "Banquete de Xuria",
     "text": "Puedes comer esta comida para recuperar todos tus PV, eliminar todo el Estrés y ganar 1d4 de Esperanza."
   },
   {
+    "table": "core",
     "roll": 52,
     "id": "bonding-honey",
     "name": "Miel Aglutinante",
     "text": "Esta miel puede usarse para pegar dos objetos entre sí de forma permanente."
   },
   {
+    "table": "core",
     "roll": 53,
     "id": "shrinking-potion",
     "name": "Poción Reductora",
     "text": "Puedes beber esta poción para reducir tu tamaño a la mitad hasta que decidas abandonar esta forma o llegue tu próximo descanso. Mientras estés en esta forma, tienes un bonificador de +2 a Agilidad y una penalización de −1 a tu Competencia."
   },
   {
+    "table": "core",
     "roll": 54,
     "id": "growing-potion",
     "name": "Poción de Crecimiento",
     "text": "Puedes beber esta poción para duplicar tu tamaño hasta que decidas abandonar esta forma o llegue tu próximo descanso. Mientras estés en esta forma, tienes un bonificador de +2 a Fuerza y un bonificador de +1 a tu Competencia."
   },
   {
+    "table": "core",
     "roll": 55,
     "id": "knowledge-stone",
     "name": "Piedra del Conocimiento",
     "text": "Si mueres mientras sostienes esta piedra, un aliado puede tomar una carta de tu equipo activo y colocarla en su equipo activo o en su bóveda. Después de que tomen ese conocimiento, la piedra se desmorona."
   },
   {
+    "table": "core",
     "roll": 56,
     "id": "sweet-moss",
     "name": "Musgo Dulce",
     "text": "Puedes consumir este musgo durante un descanso para recuperar 1d10 PV o eliminar 1d10 de Estrés."
   },
   {
+    "table": "core",
     "roll": 57,
     "id": "blinding-orb",
     "name": "Orbe Cegador",
     "text": "Puedes activar este orbe para crear un destello de luz brillante. Todos los objetivos dentro del alcance Cercano quedan Vulnerables hasta que marquen un PV."
   },
   {
+    "table": "core",
     "roll": 58,
     "id": "death-tea",
     "name": "Té de la Muerte",
     "text": "Después de beber este té, matas al instante a tu objetivo cuando logras un éxito crítico en un ataque. Si no logras un éxito crítico en un ataque antes de tu próximo descanso largo, mueres."
   },
   {
+    "table": "core",
     "roll": 59,
     "id": "mirror-of-marigold",
     "name": "Espejo de Marigold",
     "text": "Cuando recibes daño, puedes gastar una Esperanza para anular ese daño, tras lo cual el espejo se hace pedazos."
   },
   {
+    "table": "core",
     "roll": 60,
     "id": "stardrop",
     "name": "Lágrima de Estrella",
     "text": "Puedes usar esta lágrima de estrella para invocar una tormenta de cometas que infrinja 8d20 de daño físico a todos los objetivos dentro del alcance Muy Lejano."
+  },
+  {
+    "table": "additional",
+    "roll": 1,
+    "id": "warding-candle",
+    "name": "Vela de Protección",
+    "text": "Puedes encender esta vela para llenar un área a alcance Cercano con un halo de luz. Una criatura fuera del halo no puede entrar en él si alberga malas intenciones hacia una criatura que esté dentro. La vela arde durante una hora."
+  },
+  {
+    "table": "additional",
+    "roll": 2,
+    "id": "iridian-dust",
+    "name": "Polvo Iridio",
+    "text": "Este polvo multicolor se adhiere a todo e impide que las criaturas cubiertas por él queden Ocultas."
+  },
+  {
+    "table": "additional",
+    "roll": 3,
+    "id": "verglasian-seed",
+    "name": "Semilla Verglasiana",
+    "text": "Puedes usar esta esquirla de hielo para congelar al instante un área de agua de hasta alcance Cercano."
+  },
+  {
+    "table": "additional",
+    "roll": 4,
+    "id": "cupbearers-bezoar",
+    "name": "Bezoar del Copero",
+    "text": "Puedes tragar este bezoar para volverte inmune a los venenos hasta tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 5,
+    "id": "mossmantle-potion",
+    "name": "Poción Manto de Musgo",
+    "text": "Puedes beber este té para camuflarte a la perfección en entornos naturales hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 6,
+    "id": "lyrebird-lozenge",
+    "name": "Pastilla del Ave Lira",
+    "text": "Puedes disolver esta pastilla en la boca para imitar a la perfección cualquier voz que hayas oído hasta el final de la escena."
+  },
+  {
+    "table": "additional",
+    "roll": 7,
+    "id": "vial-of-featherfall",
+    "name": "Vial de Caída de Pluma",
+    "text": "Puedes beber esta poción para ignorar el daño por caída durante los próximos 10 minutos."
+  },
+  {
+    "table": "additional",
+    "roll": 8,
+    "id": "chimeric-saliva",
+    "name": "Saliva Quimérica",
+    "text": "Puedes aplicar esta saliva a un arma que inflija daño físico para cambiar su tipo de daño a mágico hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 9,
+    "id": "packet-of-space-dust",
+    "name": "Sobre de Polvo Espacial",
+    "text": "Este polvo vuelve más ligero que el aire todo lo que cubre. Un sobre contiene polvo suficiente para cubrir el contenido de una cesta de picnic, y el efecto dura una hora."
+  },
+  {
+    "table": "additional",
+    "roll": 10,
+    "id": "pipeweed",
+    "name": "Hierba de Pipa",
+    "text": "Cuando elijas el movimiento de tiempo libre Recuperar Estrés durante un descanso corto, puedes fumar esta hoja no embriagante para recuperar un Estrés adicional. Los demás PJ que hayan elegido el movimiento Recuperar Estrés también obtienen este beneficio."
+  },
+  {
+    "table": "additional",
+    "roll": 11,
+    "id": "deathseers-powder",
+    "name": "Polvo del Vidente de Muertos",
+    "text": "Puedes espolvorear este polvo sobre un cadáver reciente para conjurar una repetición espectral de su último minuto de vida."
+  },
+  {
+    "table": "additional",
+    "roll": 12,
+    "id": "slayers-salt",
+    "name": "Sal del Cazador",
+    "text": "Puedes esparcir esta sal en línea sobre alféizares o umbrales para crear una barrera mágica que las criaturas no muertas no pueden cruzar hasta que la línea se rompa."
+  },
+  {
+    "table": "additional",
+    "roll": 13,
+    "id": "yakamel-milk",
+    "name": "Leche de Yakamel",
+    "text": "Después de consumir esta leche, la próxima vez que recuperes 1 o más Puntos de Vida, recuperas un Punto de Vida adicional."
+  },
+  {
+    "table": "additional",
+    "roll": 14,
+    "id": "glowmoss-mushroom",
+    "name": "Hongo de Musgo Luminoso",
+    "text": "Puedes partir este hongo en trozos, lo que hace que brille de un azul intenso hasta tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 15,
+    "id": "red-ooze-oil",
+    "name": "Aceite de Cieno Rojo",
+    "text": "Puedes untar tu arma con este aceite. El siguiente ataque exitoso que hagas con ella inflige 1d8 de daño mágico adicional y deja al objetivo temporalmente Incendiado. Mientras esté Incendiado, el objetivo recibe 1d4 de daño mágico cuando toma el foco."
+  },
+  {
+    "table": "additional",
+    "roll": 16,
+    "id": "instant-camp",
+    "name": "Campamento Instantáneo",
+    "text": "Puedes desplegar esta pequeña caja mecánica hasta convertirla en una tienda de campaña con espacio seguro para seis personas. La tienda se pliega al final de tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 17,
+    "id": "bundle-of-spiderlegs",
+    "name": "Manojo de Patas de Araña",
+    "text": "Puedes comer estas patas de araña para caminar por las paredes hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 18,
+    "id": "ciscan-fog-bottle",
+    "name": "Botella de Niebla Ciscana",
+    "text": "Puedes romper este frasco para llenar el área a alcance Cercano con una bruma mágica. Una criatura que entre en la bruma recupera un Estrés y queda Oculta."
+  },
+  {
+    "table": "additional",
+    "roll": 19,
+    "id": "snapthorn-seed",
+    "name": "Semilla de Espina Chasqueante",
+    "text": "Puedes lanzar esta semilla a un punto que puedas ver. Estalla en una maraña de lianas que Inmoviliza temporalmente a todas las criaturas a alcance Cercano de ese punto."
+  },
+  {
+    "table": "additional",
+    "roll": 20,
+    "id": "sprite-bottle",
+    "name": "Botella de Duende",
+    "text": "Cuando marques tu último Punto de Vida, esta botella se hace añicos y libera al duende que contiene. El duende recupera todos tus Puntos de Vida antes de desvanecerse del Reino Mortal."
+  },
+  {
+    "table": "additional",
+    "roll": 21,
+    "id": "gravity-bomb",
+    "name": "Bomba de Gravedad",
+    "text": "Puedes lanzar este orbe mecánico del tamaño de un durazno a un punto a alcance Lejano. Implosiona y arrastra a todas las criaturas y objetos a alcance Cercano de ese punto hasta alcance Cuerpo a Cuerpo con él."
+  },
+  {
+    "table": "additional",
+    "roll": 22,
+    "id": "gossip-flower",
+    "name": "Flor Chismosa",
+    "text": "Puedes plantar esta semilla en la tierra. Crece al instante como una pequeña flor que registra todo lo que oye durante hasta una semana. Al arrancarla, la flor recita en tiempo real lo que registró y luego se marchita."
+  },
+  {
+    "table": "additional",
+    "roll": 23,
+    "id": "displacement-token",
+    "name": "Ficha de Desplazamiento",
+    "text": "Puedes tragar esta ficha para conjurar dos ilusiones de ti mismo que puedes controlar. Cada ilusión dura hasta que reciba daño o hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 24,
+    "id": "night-hags-dust",
+    "name": "Polvo de la Bruja Nocturna",
+    "text": "Puedes soplar este polvo en la cara de un adversario para impedirle recuperar Estrés hasta tu siguiente descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 25,
+    "id": "self-sewing-thread",
+    "name": "Hilo que se Cose Solo",
+    "text": "Puedes usar este hilo para recuperar un Punto de Vida o 2 Ranuras de Armadura."
+  },
+  {
+    "table": "additional",
+    "roll": 26,
+    "id": "stonemasons-fortune",
+    "name": "Fortuna del Cantero",
+    "text": "Cuando arrojas este ladrillo gris al suelo, crece al instante hasta formar un muro de piedra sólida de 2 metros de alto, 3 de ancho y medio metro de grosor."
+  },
+  {
+    "table": "additional",
+    "roll": 27,
+    "id": "mnemonic-potion",
+    "name": "Poción Mnemónica",
+    "text": "Puedes beber esta poción para Aprovechar una Experiencia sin gastar una Esperanza."
+  },
+  {
+    "table": "additional",
+    "roll": 28,
+    "id": "salamander-salve",
+    "name": "Ungüento de Salamandra",
+    "text": "Puedes aplicar este ungüento sobre tu piel para volverte inmune al calor hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 29,
+    "id": "green-ooze-oil",
+    "name": "Aceite de Cieno Verde",
+    "text": "Puedes untar tu arma con este aceite. El siguiente ataque exitoso que hagas con ella inflige 1d8 de daño mágico adicional y deja al objetivo temporalmente Corroído. Mientras esté Corroído, el objetivo sufre una penalización de −2 a sus umbrales de daño."
+  },
+  {
+    "table": "additional",
+    "roll": 30,
+    "id": "sunlight-orb",
+    "name": "Orbe de Luz Solar",
+    "text": "Puedes hacer añicos este orbe para que el área a alcance Muy Lejano parezca un día soleado durante las próximas 24 horas."
+  },
+  {
+    "table": "additional",
+    "roll": 31,
+    "id": "moonlight-orb",
+    "name": "Orbe de Luz de Luna",
+    "text": "Puedes hacer añicos este orbe para que el área a alcance Muy Lejano parezca una noche de luna durante las próximas 24 horas."
+  },
+  {
+    "table": "additional",
+    "roll": 32,
+    "id": "midas-flask",
+    "name": "Frasco de Midas",
+    "text": "Puedes verter este pequeño frasco de líquido alquímico sobre un objeto mundano para transmutarlo al instante en un puñado de oro."
+  },
+  {
+    "table": "additional",
+    "roll": 33,
+    "id": "staff-of-reversal",
+    "name": "Bastón de Reversión",
+    "text": "Puedes romper este bastón contra el suelo para revertir una transformación o un efecto mágico a alcance Lejano."
+  },
+  {
+    "table": "additional",
+    "roll": 34,
+    "id": "berserkers-brew",
+    "name": "Brebaje del Berserker",
+    "text": "Cuando bebes este trago, obtienes un bono a tu Fuerza y una penalización a tu Destreza y a tu Conocimiento iguales a tu Instinto (mínimo 1). Este efecto dura hasta que hagas un movimiento de muerte o hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 35,
+    "id": "emberite-shard",
+    "name": "Esquirla de Emberita",
+    "text": "Elige un punto a alcance Lejano. Todos los objetivos a alcance Cercano de ese punto deben tener éxito en una Tirada de Reacción (16) o recibir 3d6 de daño mágico y quedar temporalmente En Llamas. Mientras esté En Llamas, una criatura debe tirar un d4 cada vez que haga una tirada de acción. Con un resultado de 1, marca un Punto de Vida. Con un resultado de 4, se libra de la condición En Llamas."
+  },
+  {
+    "table": "additional",
+    "roll": 36,
+    "id": "arcticite-shard",
+    "name": "Esquirla de Articita",
+    "text": "Elige un punto a alcance Lejano. Todos los objetivos a alcance Cercano de ese punto deben tener éxito en una Tirada de Reacción (16) o recibir 3d6 de daño mágico y quedar temporalmente Inmovilizados por el hielo."
+  },
+  {
+    "table": "additional",
+    "roll": 37,
+    "id": "fulgurite-shard",
+    "name": "Esquirla de Fulgurita",
+    "text": "Elige un punto a alcance Lejano. Todos los objetivos a alcance Cercano de ese punto deben tener éxito en una Tirada de Reacción (16) o recibir 3d6 de daño mágico y marcar 1d4 de Estrés mientras los rayos crepitan por la zona."
+  },
+  {
+    "table": "additional",
+    "roll": 38,
+    "id": "demiurges-draught",
+    "name": "Pócima del Demiurgo",
+    "text": "Puedes beber esta pócima para obtener un bono de +1 a tu Competencia en tu siguiente tirada de ataque exitosa."
+  },
+  {
+    "table": "additional",
+    "roll": 39,
+    "id": "cockerel-claw-tea",
+    "name": "Té de Garra de Gallo",
+    "text": "Puedes beber este té para refrescar tus habilidades como si hubieras tomado un descanso largo."
+  },
+  {
+    "table": "additional",
+    "roll": 40,
+    "id": "potion-of-vigilance",
+    "name": "Poción de Vigilancia",
+    "text": "Puedes beber esta poción para obtener un bono de +1 a tu Evasión hasta que marques un Punto de Vida."
+  },
+  {
+    "table": "additional",
+    "roll": 41,
+    "id": "cacophonous-concoction",
+    "name": "Brebaje Cacofónico",
+    "text": "Cuando bebes esta poción, todo lo que digas o hagas durante la próxima hora se vuelve imposible de relatar para quien lo presencie. Cualquier intento de comunicar lo que vio, oyó o percibió sale distorsionado o sin sentido."
+  },
+  {
+    "table": "additional",
+    "roll": 42,
+    "id": "nightmare-mead",
+    "name": "Hidromiel de Pesadilla",
+    "text": "Puedes beber esta poción para descubrir el miedo más profundo de la siguiente persona con la que cruces la mirada. Cuando lo hagas, el GM obtiene un Miedo."
+  },
+  {
+    "table": "additional",
+    "roll": 43,
+    "id": "stake-of-abjuration",
+    "name": "Estaca de Abjuración",
+    "text": "Puedes clavar esta estaca en el suelo y hacer una proclama. Hasta tu siguiente descanso, una criatura a alcance Lejano de la estaca que transgreda esa proclama debe marcar un Estrés. La estaca dura hasta tu siguiente descanso y luego se hace añicos."
+  },
+  {
+    "table": "additional",
+    "roll": 44,
+    "id": "psychopomps-shroud",
+    "name": "Sudario del Psicopompo",
+    "text": "Puedes colocar este sudario sobre el cadáver de una criatura fallecida hace poco. El espíritu de la criatura entra en el sudario y se convierte en tu asistente espectral hasta el amanecer siguiente, cuando cruza el velo de la muerte y se lleva el sudario consigo."
+  },
+  {
+    "table": "additional",
+    "roll": 45,
+    "id": "phial-of-deep-ink",
+    "name": "Ampolla de Tinta Profunda",
+    "text": "Puedes beber esta botella de tinta para transformarte en un cefalópodo de aproximadamente tu tamaño durante la próxima hora. Obtienes piel gomosa, huesos blandos, la capacidad de respirar bajo el agua y nuevas extremidades hasta sumar ocho."
+  },
+  {
+    "table": "additional",
+    "roll": 46,
+    "id": "mesmers-tonic",
+    "name": "Tónico del Mesmerista",
+    "text": "Cuando bebes este tónico, lo único que puedes oír hasta tu siguiente descanso son los pensamientos superficiales de las criaturas a alcance Muy Cercano."
+  },
+  {
+    "table": "additional",
+    "roll": 47,
+    "id": "invisibility-potion",
+    "name": "Poción de Invisibilidad",
+    "text": "Estás Oculto hasta que inflijas daño a otra criatura o hasta tu siguiente descanso."
+  },
+  {
+    "table": "additional",
+    "roll": 48,
+    "id": "formoid-serum",
+    "name": "Suero Formoide",
+    "text": "Puedes beber esta poción para convertirte en un enjambre de 16 millones de hormigas hasta el final de la escena. Conservas y puedes usar todo tu equipo, tu botín y tus habilidades."
+  },
+  {
+    "table": "additional",
+    "roll": 49,
+    "id": "steelskin-salve",
+    "name": "Ungüento de Piel de Acero",
+    "text": "Puedes aplicar este ungüento sobre tu piel para obtener un bono a tus umbrales de daño igual a tu escalón hasta el final de la escena."
+  },
+  {
+    "table": "additional",
+    "roll": 50,
+    "id": "godlings-pomelo",
+    "name": "Pomelo del Semidiós",
+    "text": "Puedes comer esta fruta cítrica para recuperar todos tus Puntos de Vida y tu Estrés."
+  },
+  {
+    "table": "additional",
+    "roll": 51,
+    "id": "snakeskin-spirit",
+    "name": "Licor de Piel de Serpiente",
+    "text": "Puedes beber esta poción para mudar la capa externa de tu piel y curar una cicatriz."
+  },
+  {
+    "table": "additional",
+    "roll": 52,
+    "id": "magic-users-malison",
+    "name": "Maldición del Usuario de Magia",
+    "text": "Cuando liberes el alma atrapada de este lanzador de hechizos, puedes lanzar un hechizo de una carta de tu bóveda como si estuviera en tu equipo activo. No funciona con cartas guardadas en la bóveda de forma permanente."
+  },
+  {
+    "table": "additional",
+    "roll": 53,
+    "id": "quintessential-severant",
+    "name": "Segador Quintaesencial",
+    "text": "Puedes usar esta hoja mágica para cortar un vínculo mágico o metafísico, como un encantamiento, un contrato, una atadura mágica o un juramento divino. Cuando lo hagas, la hoja se hace añicos."
+  },
+  {
+    "table": "additional",
+    "roll": 54,
+    "id": "mask-of-the-echoed-self",
+    "name": "Máscara del Yo Reflejado",
+    "text": "Puedes llevar esta máscara durante tu siguiente subida de nivel para intercambiar los valores de cualquiera de tus rasgos. Cuando lo hagas, la máscara se convierte en tu rostro permanente."
+  },
+  {
+    "table": "additional",
+    "roll": 55,
+    "id": "necroprancers-bell",
+    "name": "Campana del Nigromante Danzante",
+    "text": "Puedes romper esta campana oxidada y sin badajo contra el suelo para convocar a un corcel esquelético que sale de la tierra y te sirve hasta el amanecer siguiente."
+  },
+  {
+    "table": "additional",
+    "roll": 56,
+    "id": "drakemantle",
+    "name": "Manto de Dragón",
+    "text": "Puedes usar esta piel encantada de dragón anciano para obtener rasgos dracónicos hasta el final de la escena, cuando la piel cae hecha jirones. Hasta entonces, puedes volar y obtienes un bono de +5 a tus umbrales de daño y de +1 a tu Competencia."
+  },
+  {
+    "table": "additional",
+    "roll": 57,
+    "id": "gamblers-fallacy",
+    "name": "Falacia del Jugador",
+    "text": "Puedes gastar cualquier cantidad de puñados de oro metiéndolos en este tarro de cerámica con ranura y forma de cerdo. Cuando lanzas el tarro a un punto a alcance Lejano, estalla e inflige 1d20 de daño mágico por cada puñado de oro gastado a todas las criaturas a alcance Cercano de ese punto. Todo el oro del tarro se destruye."
+  },
+  {
+    "table": "additional",
+    "roll": 58,
+    "id": "lionheart-tonic",
+    "name": "Tónico de Corazón de León",
+    "text": "Puedes beber este tónico para obtener un bono de +1 a tu Competencia hasta que tires con Miedo."
+  },
+  {
+    "table": "additional",
+    "roll": 59,
+    "id": "tears-of-the-undying-hero",
+    "name": "Lágrimas del Héroe Imperecedero",
+    "text": "Cuando bebes esta poción, la muerte no puede tocarte hasta tu siguiente descanso largo. Cuando fueras a marcar tu último Punto de Vida, en lugar de hacer un movimiento de muerte, haces una última tirada de acción antes de caer en un sueño sin sueños hasta que un aliado elija el movimiento de tiempo libre Atender Heridas para recuperar tus Puntos de Vida."
+  },
+  {
+    "table": "additional",
+    "roll": 60,
+    "id": "featherstep-potion",
+    "name": "Poción de Paso de Pluma",
+    "text": "Puedes beber esta poción para que te broten pequeñas alas en los tobillos, que te dan un bono a tu Evasión igual a tu escalón hasta tu siguiente descanso."
   }
 ]

@@ -1,5 +1,37 @@
 [
   {
+    "id": "duneborne",
+    "name": "Duneborne",
+    "feature": {
+      "name": "Oasis",
+      "text": "During a short rest, you or an ally can reroll a die used for a downtime move and take the higher result."
+    }
+  },
+  {
+    "id": "freeborne",
+    "name": "Freeborne",
+    "feature": {
+      "name": "Unbound",
+      "text": "Once per session when you roll with Fear, you can change it into a roll with Hope instead."
+    }
+  },
+  {
+    "id": "frostborne",
+    "name": "Frostborne",
+    "feature": {
+      "name": "Hardy",
+      "text": "When you take a rest, you clear a Hit Point."
+    }
+  },
+  {
+    "id": "hearthborne",
+    "name": "Hearthborne",
+    "feature": {
+      "name": "Close-Knit",
+      "text": "Once per long rest, you can spend any number of Hope to grant an ally within Far range an equal number of Hope."
+    }
+  },
+  {
     "id": "highborne",
     "name": "Highborne",
     "feature": {
@@ -20,7 +52,15 @@
     "name": "Orderborne",
     "feature": {
       "name": "Dedicated",
-      "text": "Record three sayings or values your upbringing instilled in you. Once per rest, when you describe how you're embodying one of these principles through your current action, you can roll a d20 as your Hope Die."
+      "text": "Record three sayings or values your upbringing instilled in you. Once per rest, when you describe how you’re embodying one of these principles through your current action, you can roll a d20 as your Hope Die."
+    }
+  },
+  {
+    "id": "reborne",
+    "name": "Reborne",
+    "feature": {
+      "name": "Found Family",
+      "text": "Once per rest, you can spend a Hope to use an ally’s Experience as if it were your own. When you do so, describe how your time with that ally prepared you for this moment. When you join a new community or rediscover your old one, you can permanently trade this card for that one instead."
     }
   },
   {
@@ -52,7 +92,7 @@
     "name": "Underborne",
     "feature": {
       "name": "Low-Light Living",
-      "text": "When you're in an area with low light or heavy shadow, you have advantage on rolls to hide, investigate, or perceive details within that area."
+      "text": "When you’re in an area with low light or heavy shadow, you have advantage on rolls to hide, investigate, or perceive details within that area."
     }
   },
   {
@@ -60,7 +100,15 @@
     "name": "Wanderborne",
     "feature": {
       "name": "Nomadic Pack",
-      "text": "Add a Nomadic Pack to your inventory. Once per session, you can spend a Hope to reach into this pack and pull out a mundane item that's useful to your situation. Work with the GM to figure out what item you take out."
+      "text": "Add a Nomadic Pack to your inventory. Once per session, you can spend a Hope to reach into this pack and pull out a mundane item that’s useful to your situation. Work with the GM to figure out what item you take out."
+    }
+  },
+  {
+    "id": "warborne",
+    "name": "Warborne",
+    "feature": {
+      "name": "Brave Face",
+      "text": "Once per session when you would be forced to mark a Stress, you can spend a Hope instead.."
     }
   },
   {

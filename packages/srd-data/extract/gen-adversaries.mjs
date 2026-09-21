@@ -5,8 +5,10 @@ import { readPages } from './geo.mjs';
 const pages = readPages(new URL('./srd-bbox.xml', import.meta.url).pathname);
 
 // Adversary stat blocks run from the Tier 1 section through the end of Tier 4.
+// SRD 2.0 prints them on pages 97-159, and the PDF's numbering matches the printed
+// one, so these are plain zero-based indices into that range.
 const lines = pages
-  .slice(37, 51)
+  .slice(96, 159)
   .flatMap((columns) => columns.flat());
 
 // Stat-block headings are set in all caps; restore normal casing for display.
@@ -30,14 +32,17 @@ const slug = (s) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+// SRD 2.0 prints "Stress: None" for adversaries with no Stress track at all.
 const STATS =
-  /^Difficulty:\s*(\d+)\s*\|\s*Thresholds:\s*(None|\d+\s*\/\s*(?:\d+|None))\s*\|\s*HP:\s*(\d+)\s*\|\s*Stress:\s*(\d+)/;
+  /^Difficulty:\s*(\d+)\s*\|\s*Thresholds:\s*(None|\d+\s*\/\s*(?:\d+|None))\s*\|\s*HP:\s*(\d+)\s*\|\s*Stress:\s*(\d+|None)/;
 // The attack modifier is usually flat, but a few adversaries roll for it (e.g. the
-// Outer Realms Abomination's "ATK: +2d4").
-const ATK = /^ATK:\s*([+\-−])\s*(\d+(?:d\d+)?)\s*\|\s*(.+?):\s*(.+?)\s*\|\s*(.+)$/;
+// Outer Realms Abomination's "ATK: +2d4"). The sign may be set as a hyphen, a minus
+// or an en dash depending on the page.
+const ATK = /^ATK:\s*([+\-−–])\s*(\d+(?:d\d+)?)\s*\|\s*(.+?):\s*(.+?)\s*\|\s*(.+)$/;
 const TIER_HEADER = /^TIER (\d) ADVERSARIES/;
 const TYPE_LINE = /^Tier\s+(\d)\s+([A-Za-z]+)(?:\s*\((\d+)\/HP\))?$/;
-const FEATURE = /^(.+?)\s[-–]\s(Action|Reaction|Passive):\s*(.*)$/;
+// SRD 2.0 adds Evolution, a one-shot feature an adversary gains mid-scene.
+const FEATURE = /^(.+?)\s[-–]\s(Action|Reaction|Passive|Evolution):\s*(.*)$/;
 
 const RANGES = {
   Melee: 'melee',
@@ -190,11 +195,14 @@ for (const anchor of anchors) {
     .replace(/ {2,}/g, ' ')
     .trim();
 
-  // Features: everything from FEATURES onward, rejoining wrapped lines.
+  // Features: everything from FEATURES onward, rejoining wrapped lines, and
+  // stopping at the next chapter heading — the last block before one would
+  // otherwise swallow the heading and the prose beneath it.
   const featuresIdx = body.findIndex((l) => l === 'FEATURES');
   const features = [];
   if (featuresIdx !== -1) {
     for (const line of body.slice(featuresIdx + 1)) {
+      if (/^[A-Z][A-Z0-9’' &–-]{3,}$/.test(line)) break;
       const m = FEATURE.exec(line);
       if (m) {
         features.push({ name: m[1].trim(), type: m[2].toLowerCase(), text: m[3].trim() });
@@ -219,7 +227,7 @@ for (const anchor of anchors) {
     difficulty: Number(difficulty),
     thresholds,
     hp: Number(hp),
-    stress: Number(stress),
+    stress: stress === 'None' ? 0 : Number(stress),
     attackModifier,
     standardAttack: {
       name: atkName.trim(),

@@ -898,4 +898,5 @@ export const es = {
   'compendium.featureType.action': 'Acción',
   'compendium.featureType.reaction': 'Reacción',
   'compendium.featureType.passive': 'Pasiva',
+  'compendium.featureType.evolution': 'Evolución',
 } as const;

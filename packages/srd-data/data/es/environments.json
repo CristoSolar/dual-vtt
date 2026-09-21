@@ -36,6 +36,72 @@
     ]
   },
   {
+    "id": "abandoned-mine",
+    "name": "Mina Abandonada",
+    "tier": 1,
+    "type": "traversal",
+    "description": "Un laberinto retorcido de túneles en desuso excavados en la roca madre por una cuadrilla minera condenada.",
+    "impulses": "Envenenar al grupo con gases mortales, retumbar y derrumbarse, separar al grupo, desorientarlos",
+    "difficulty": 11,
+    "potentialAdversaries": "Arañas de Urdimbre Oscura (Reptadora de Urdimbre Oscura, Tejedora de Urdimbre Oscura, Crías de Urdimbre Oscura), Fantasmas de Mineros (Poltergeist, Fuegos Fatuos)",
+    "features": [
+      {
+        "name": "Oscuridad Absoluta",
+        "type": "passive",
+        "text": "No hay luz alguna, natural ni de otro tipo, en estos túneles mineros subterráneos. Pregunta a los PJ qué usan para alumbrarse o cómo se orientan en la oscuridad. Los PJ sin una fuente de luz confiable hacen sus tiradas de acción y de reacción con desventaja. ¿Qué combustible usa la fuente de luz del grupo y cuánto durará? ¿Qué atención indeseada atrae la luz?",
+        "costsFear": false
+      },
+      {
+        "name": "Laberinto",
+        "type": "passive",
+        "text": "El grupo debe completar una Cuenta Atrás de Progreso (4) para encontrar el camino a través de las minas. Cada vez que un PJ tira con Esperanza mientras busca el camino, descubre una de las curiosidades siguientes. • Una veta sin explotar de metales preciosos o gemas • Diversas herramientas de minería, incluida una vagoneta rota (pero reparable) hecha de adamantina • Ecos psíquicos del trágico final de los mineros • Los cadáveres resecos de mineros que se perdieron en los túneles • Restos harapientos de seda de araña de urdimbre oscura ¿Qué extraían aquí los mineros? ¿Quién del grupo sabe orientarse bajo tierra? ¿Qué es lo que más temen los PJ que pueda pasarles aquí abajo?",
+        "costsFear": false
+      },
+      {
+        "name": "En la Telaraña",
+        "type": "action",
+        "text": "Gasta un Miedo para invocar a una Reina de Urdimbre Oscura dentro de su guarida cubierta de hilos. Cae del techo a alcance Cercano de un PJ y toma el foco de inmediato. ¿Cómo aprovecha la Reina de Urdimbre Oscura su guarida? ¿Qué restos de sus comidas anteriores puede encontrar el grupo aquí?",
+        "costsFear": true
+      },
+      {
+        "name": "Derrumbe Inminente",
+        "type": "reaction",
+        "text": "Cuenta Atrás (2). La primera vez que los PJ tiren con Miedo, describe cómo el suelo vibra sutilmente mientras las rocas se desplazan sobre sus cabezas y activa la cuenta atrás. Avanza cuando un PJ tira con Miedo. Cuando se dispara, cada PJ debe superar una Tirada de Reacción de Agilidad o sufrir 1d8+3 de daño físico y quedar temporalmente Inmovilizado por los escombros. ¿Qué otras señales de inestabilidad ofrece la mina al grupo? ¿A qué nuevos peligros expone al grupo la nueva configuración del sistema de túneles?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "alchemists-abandoned-workshop",
+    "name": "Taller Abandonado del Alquimista",
+    "tier": 1,
+    "type": "exploration",
+    "description": "Un laboratorio alimentado por rayos, construido por un científico que buscaba el secreto de la inmortalidad.",
+    "impulses": "Romper la barrera entre la vida y la muerte, atraer los rayos desde los cielos, forzar la maquinaria al límite",
+    "difficulty": 11,
+    "potentialAdversaries": "Sobras del Laboratorio (Constructo, Elemental Menor de Fuego, Zombi Coloso de Retazos, Enjambre de Ratas)",
+    "features": [
+      {
+        "name": "Gabinete de Curiosidades",
+        "type": "passive",
+        "text": "Los estantes, armarios y mesas del taller están atiborrados de cachivaches macabros, incluidas partes de cuerpos en frascos de formol e instrumentos quirúrgicos ensangrentados. Una vez por escena, un PJ puede hacer una Tirada de Instinto para buscar algo útil en el caos. ¿Qué estudiaba el alquimista? ¿Qué olor te abruma mientras rebuscas entre sus cosas?",
+        "costsFear": false
+      },
+      {
+        "name": "Maquinaria Extraña",
+        "type": "passive",
+        "text": "El taller contiene numerosas piezas de tecnología estrafalaria e instrumental científico. Un PJ puede hacer una Tirada de Conocimiento para intentar averiguar cómo funciona. Con un éxito, consigue ponerla en marcha. Con un fallo, rompe algo y sufre 1d8+4 de daño mágico directo al recibir una descarga eléctrica y quedar empapado en sustancias cáusticas. ¿Qué hacen estas máquinas? ¿Qué miden estos instrumentos?",
+        "costsFear": false
+      },
+      {
+        "name": "¡Está Vivo!",
+        "type": "action",
+        "text": "Cuenta Atrás de Consecuencia (6). Una tormenta eléctrica se acumula sobre el taller, amenazando con sacudir el pararrayos instalado en su tejado. Activa la cuenta atrás y narra cómo aumenta el poder de la tormenta cada vez que avanza, lo que ocurre cuando un PJ hace una tirada de acción. Cuando se dispara, un rayo golpea el pararrayos y sobrecarga la maquinaria del taller, que estalla tras resucitar uno de los proyectos abandonados del alquimista. Cada objetivo a alcance Cercano de la maquinaria debe superar una Tirada de Reacción de Agilidad o sufrir 1d10 de daño mágico. Invoca un Experimento Fallido en un punto del taller y gana un Miedo por cada PJ a alcance Muy Cercano de él. ¿Qué intentaba lograr el alquimista con este experimento? ¿De dónde sacó los materiales?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
     "id": "ambushed",
     "name": "Ambushed",
     "tier": 1,
@@ -146,6 +212,192 @@
         "type": "action",
         "text": "Gasta un Miedo para que el punto de apoyo de un PJ falle, precipitándolo hacia el suelo. Si no es rescatado en la siguiente acción, cae al suelo y la cuenta sube 2. El PJ sufre 1d12 de daño físico si la cuenta está entre 8 y 12, 2d12 entre 4 y 7, y 3d12 si está en 3 o menos. ¿Cómo se puede notar que muchos otros han caído aquí antes? ¿Qué vive en estas paredes y podría intentar asustar a los aventureros para hacerlos caer y conseguir una comida fácil?",
         "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "corrupted-swamp",
+    "name": "Pantano Corrompido",
+    "tier": 1,
+    "type": "traversal",
+    "description": "Una extensión miserable de agua viscosa, criaturas tóxicas y podredumbre.",
+    "impulses": "Corromper, enfatizar la putrefacción, revelar lo retorcido y antinatural, enfermar",
+    "difficulty": 11,
+    "potentialAdversaries": "Cualquier No Muerto (Esqueleto, Zombi, Guardián Espectral), Rata Gigante, Cieno Verde, Zarza Enredante",
+    "features": [
+      {
+        "name": "Fiebre del Pantano",
+        "type": "passive",
+        "text": "Al final de un descanso largo, cada PJ debe superar una Tirada de Reacción de Fuerza o recibir un Dado de Enfermedad d4, empezando con el valor 1 hacia arriba. Si un PJ falla esta tirada y ya tiene un Dado de Enfermedad, aumenta su valor en 1, hasta un máximo de 4. Un PJ con un Dado de Enfermedad recibe una penalización a sus tiradas de acción igual a su valor. Cuando un PJ con un Dado de Enfermedad fuera a despejar un Punto de Vida, puede reducir en 1 el valor de su Dado de Enfermedad en su lugar. Cuando el valor del dado fuera a bajar a 0, retíralo. ¿El pantano rebosa de vida, está lleno de podredumbre, o ambas cosas? ¿Qué fuerza corrompió este pantano y qué señales de su origen perduran?",
+        "costsFear": false
+      },
+      {
+        "name": "Chapoteo y Fatiga",
+        "type": "passive",
+        "text": "Cuando un PJ se mueve como parte de una acción, solo puede desplazarse hasta alcance Muy Cercano. Las tiradas de acción hechas para moverse más lejos que alcance Muy Cercano tienen desventaja. Antes de tirar, un PJ puede marcar Estrés para eliminar esta desventaja. ¿Qué criaturas, vivas o no, acechan bajo la turbia superficie del agua? ¿Dónde o cómo encuentran los PJ alivio de estas aguas hediondas?",
+        "costsFear": false
+      },
+      {
+        "name": "Floración Pútrida",
+        "type": "action",
+        "text": "Gasta un Miedo para cubrir un área a alcance Lejano con polen nocivo. Cada objetivo en esa área debe superar una Tirada de Reacción de Fuerza o Instinto o sufrir 1d6+3 de daño mágico y quedar Vulnerable hasta el final de la escena. ¿Cómo se nota que las plantas que emiten este polen son carnívoras? ¿Qué pesadillas o ensoñaciones evoca el aroma del polen?",
+        "costsFear": true
+      },
+      {
+        "name": "Luces Danzantes",
+        "type": "action",
+        "text": "Al comienzo de un descanso, puedes gastar un Miedo para que unas esferas flotantes hechicen a los exhaustos y atraigan a un PJ hacia el interior del pantano. Otro PJ puede usar una movimiento de tiempo libre para hacer una tirada de acción y buscarlo. Con un éxito, ambos PJ regresan al campamento y pueden elegir movimientos de tiempo libre con normalidad. Con un fallo —o si nadie lo busca—, el PJ perdido regresa horas después, cubierto de lodo y cosas peores, y no puede elegir movimientos de tiempo libre hasta su siguiente descanso. ¿Qué ve el PJ perdido en las luces que lo arrastra hacia la oscuridad? ¿Qué otros destellos de sorprendente belleza encuentran los PJ aquí?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "cursed-graveyard",
+    "name": "Cementerio Maldito",
+    "tier": 1,
+    "type": "exploration",
+    "description": "Un camposanto extenso lleno de lápidas desmoronadas, árboles retorcidos poseídos por los muertos y criptas cubiertas de musgo y hiedra.",
+    "impulses": "Enterrarlos dos metros bajo tierra, ahogar con niebla, atraer con promesas de tesoros sepultados, desatar a los muertos inquietos",
+    "difficulty": 11,
+    "potentialAdversaries": "Espíritus Corrompidos (Defensor de Raíces Profundas, Fantasma), Muertos Vivientes (Esqueleto Guerrero, Horda de Zombis, Zombi Coloso de Retazos)",
+    "features": [
+      {
+        "name": "Hay Sitio para Uno Más",
+        "type": "passive",
+        "text": "Si un PJ marca su último Punto de Vida mientras está en el cementerio, se convierte en Espectro en lugar de hacer una acción de muerte. Mientras es un Espectro, un PJ puede comunicarse con los vivos pero no puede interactuar con el mundo físico, y debe permanecer a alcance Cercano de su cadáver o cruzar el velo de la muerte. Esta condición se elimina cuando el PJ despeja un Punto de Vida. ¿Qué información o experiencia nueva obtiene un PJ al convertirse en espectro? ¿Cómo puede el grupo reunir el espíritu del PJ con su carne? ¿Qué pasa si el ritual sale mal?",
+        "costsFear": false
+      },
+      {
+        "name": "Tierra Consagrada",
+        "type": "passive",
+        "text": "En el centro del cementerio hay una capilla en apariencia intacta. Con una Tirada de Instinto exitosa, un PJ puede descubrir que esta estructura está consagrada contra los moradores del camposanto. Mientras están dentro de la capilla, los PJ tienen ventaja en las tiradas de acción para combatir o ahuyentar espíritus y no muertos. ¿Quién consagró este lugar y qué fue de esa persona? ¿Qué reliquias sagradas pueden hallarse aquí?",
+        "costsFear": false
+      },
+      {
+        "name": "Miasma Brumoso",
+        "type": "action",
+        "text": "Gasta un Miedo para llenar un área a alcance Lejano con una niebla ectoplásmica y baja que rezuma desde la tierra empapada. Cuando un PJ tira con Miedo mientras está en el miasma, debe marcar Estrés. ¿Qué horrores ven los PJ en la niebla? ¿Qué olor desorientador emite el miasma?",
+        "costsFear": true
+      },
+      {
+        "name": "Los Muertos se Alzan",
+        "type": "action",
+        "text": "Gasta un Miedo para que unas manos no muertas broten del suelo bajo un PJ. El objetivo debe superar una Tirada de Reacción de Agilidad o Presencia o marcar Estrés y quedar temporalmente Inmovilizado mientras las manos lo aferran. ¿Quiénes eran estas personas en vida? ¿Por qué fueron enterradas aquí? ¿Por qué no permanecen muertas?",
+        "costsFear": true
+      },
+      {
+        "name": "Los Muertos No Mueren Fácil",
+        "type": "reaction",
+        "text": "Cuando un adversario fuera a marcar su último Punto de Vida, tira un d6. Con un resultado de 5 o 6, el adversario no lo marca. ¿Quién ordenó a esta tierra que rechazara la muerte? ¿De qué forma regresan distintos los muertos aquí?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "grand-feast",
+    "name": "Gran Banquete",
+    "tier": 1,
+    "type": "social",
+    "description": "Una celebración para toda la comunidad con muchísima bebida, comida y diversión.",
+    "impulses": "Reunir a todo el mundo, celebrar una ocasión memorable, fomentar el desenfreno festivo",
+    "difficulty": 11,
+    "potentialAdversaries": "Asesino Aprendiz, Guardia, Mercader, Noble Mezquino, Mercenario de Espada, Espía",
+    "features": [
+      {
+        "name": "Lenguas Sueltas y Amistades Rápidas",
+        "type": "passive",
+        "text": "Todo el mundo está aquí para pasarla bien. Los PJ tienen ventaja en las Tiradas de Presencia para socializar con otros invitados. ¿Qué celebra todo el mundo? ¿Dónde es la fiesta? ¿Quién paga la cuenta?",
+        "costsFear": false
+      },
+      {
+        "name": "El Entretenimiento de la Velada",
+        "type": "action",
+        "text": "El anfitrión del banquete da inicio a la parte de la velada dedicada al entretenimiento. Cada PJ puede hacer una tirada de acción para iniciar una actuación, una competencia u otra distracción desenfadada. Un PJ que tenga éxito se convierte en Invitado de Honor. Hasta que termine el banquete, un Invitado de Honor puede reclamar un obsequio del anfitrión y luego eliminar la condición. ¿Qué desea ver u oír el anfitrión más que ninguna otra cosa? ¿Qué puede ofrecer a los PJ a cambio?",
+        "costsFear": false
+      },
+      {
+        "name": "“Siempre Hay Uno…”",
+        "type": "action",
+        "text": "Gasta un Miedo para Atrapar a un PJ en una conversación con la persona más insoportable de la fiesta hasta que el PJ tenga éxito en una tirada de acción para librarse de este agujero negro social. Mientras está Atrapado, un PJ no puede hacer tiradas de acción salvo para intentar eliminar esta condición. Cuando un PJ Atrapado falla una tirada de acción, debe marcar Estrés. ¿Qué hace tan insoportable a este pesado? ¿Qué cosa que le importa al PJ desprecia o desestima constantemente el pesado? ¿De qué tema aburrido o espantoso no puede parar de hablar?",
+        "costsFear": true
+      },
+      {
+        "name": "Última Ronda",
+        "type": "reaction",
+        "text": "Tras una larga noche, los asistentes empiezan a marcharse. Cuando concluye el banquete, todos los PJ que participaron en los festejos despejan todo su Estrés y ganan una Esperanza. Además, cada Invitado de Honor despeja todos sus Puntos de Vida y gana una Esperanza adicional, y luego elimina la condición. Cada PJ que se excedió debe superar una Tirada de Reacción de Fuerza o quedar con Resaca hasta su siguiente descanso. Mientras tiene Resaca, un PJ recibe una penalización de −1 a sus tiradas de acción. ¿Qué historias descabelladas se cuentan los PJ entre sí mientras se van de la fiesta? ¿A quiénes ven los PJ acaramelados de forma inesperada al terminar?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "hold-the-line",
+    "name": "Resistir la Línea",
+    "tier": 1,
+    "type": "event",
+    "description": "El grupo debe repeler múltiples oleadas de enemigos el tiempo suficiente para que un aliado complete un objetivo importante.",
+    "impulses": "Estrellar oleadas de enemigos contra las costas del grupo, no dejarlos respirar, apuntar a su protegido",
+    "difficulty": 11,
+    "potentialAdversaries": "Guardias, Cuchillas Dentadas, Piratas, Esqueletos, Zombis",
+    "features": [
+      {
+        "name": "Guardaespaldas",
+        "type": "passive",
+        "text": "Los PJ deben proteger a un PNJ (su “Protegido”) el tiempo suficiente para que el Protegido complete una tarea, como terminar un ritual mágico o reparar un dispositivo mecánico. Al comienzo de la escena, activa una Cuenta Atrás de Tarea con un valor igual al número de PJ en la escena. Avanza cuando los PJ derrotan una oleada de adversarios. Cuando se dispara, el Protegido completa su tarea. ¿A quién protegen los PJ y qué intenta hacer el Protegido? ¿Quién quiere detenerlo? ¿Qué pasará si el Protegido no logra completar su tarea?",
+        "costsFear": false
+      },
+      {
+        "name": "“¡No Debo Fallar!”",
+        "type": "passive",
+        "text": "Cuando aparece la primera oleada de adversarios, coloca una Cuenta Atrás de Determinación junto al Protegido con un valor igual al número de PJ en la escena. Cuando un adversario ataca al Protegido, el ataque tiene éxito automáticamente y hace avanzar la Cuenta Atrás de Determinación. Cuando se dispara, el Protegido huye, muere o queda incapacitado. ¿Por qué es tan importante esta tarea para el Protegido? ¿Qué tiene el poder de quebrar su determinación?",
+        "costsFear": false
+      },
+      {
+        "name": "Multitudes Enjambrantes",
+        "type": "passive",
+        "text": "Todos los adversarios ganan la característica “Implacable (2)”: pueden tomar el foco hasta dos veces por turno del GM. Gasta Miedo como de costumbre para darles el foco. ¿De dónde viene este nuevo poder de estos enemigos? ¿Hay alguna forma de cortarles el acceso a él?",
+        "costsFear": false
+      },
+      {
+        "name": "Oleadas tras Oleadas",
+        "type": "reaction",
+        "text": "Cuando no haya adversarios en la escena, invoca una oleada de adversarios a alcance Lejano del Protegido. Cada oleada se compone de dos Esbirros de Escalón 1 por cada PJ en la escena. ¿De dónde salen estos adversarios? ¿Quién los dirige desde las sombras?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "local-festival",
+    "name": "Festival Local",
+    "tier": 1,
+    "type": "social",
+    "description": "Plebeyos y nobles por igual se congregan desde toda la zona para una celebración de una semana.",
+    "impulses": "Expresar la cultura y la historia locales, forjar nuevas relaciones, reforzar la comunidad",
+    "difficulty": 11,
+    "potentialAdversaries": "Seguridad del Festival (Guardia con Espada, Capitán de la Guardia), Personalidades Locales (Plebeyo, Mercader, Noble Mezquino), Maleantes Varios (Bandido de Cuchilla Dentada, Lacayo)",
+    "features": [
+      {
+        "name": "Recuerda, Recuerda",
+        "type": "passive",
+        "text": "Esta época del año marca un aniversario importante o un evento astronómico, como la fundación del pueblo o el solsticio de verano. Con una Tirada de Conocimiento exitosa, un PJ puede responder una de las preguntas siguientes (o dos, si obtiene un éxito crítico). Con un fallo, responde una pregunta, pero tú decides qué parte de su respuesta es inexacta y ganas un Miedo. • El festival celebra un cultivo o una exportación que es fundamental para la economía local. ¿Cuál es? • ¿Por qué no se celebró el festival el año pasado? • Este festival se parece a otro que se celebra en una región vecina. ¿Qué los diferencia? ¿Qué celebran los lugareños? ¿Por qué es famoso el festival? ¿Cómo oyeron hablar de él los PJ por primera vez?",
+        "costsFear": false
+      },
+      {
+        "name": "Maquinaciones Políticas",
+        "type": "passive",
+        "text": "Mientras todos están reunidos en un mismo lugar, los lugareños aprovechan para sofocar rencillas, conseguir nuevos negocios y navegar la política local. Un PJ puede meter las narices en los asuntos ajenos haciendo una Tirada de Presencia. Con un éxito, establece un contacto con una personalidad local que puede darle un trabajo, compartir información importante o hacerle presentaciones útiles. Con un fallo, debe marcar Estrés. ¿Qué nueva crisis está en boca de todos? ¿Por qué esta comunidad no puede resolver el problema por su cuenta? ¿Qué recompensa pueden ofrecer a los PJ a cambio de su ayuda?",
+        "costsFear": false
+      },
+      {
+        "name": "“¡Que Comiencen los Juegos!”",
+        "type": "action",
+        "text": "Uno de los eventos emblemáticos del festival es una competencia deportiva o una serie de juegos. Si uno o más PJ se lanzan al ruedo, presenta competidores rivales a los que deban enfrentarse. Para alzarse con la victoria, los PJ deben completar una Cuenta Atrás de Progreso (5) ganando pruebas o sumando puntos antes de que sus rivales completen una Cuenta Atrás de Consecuencia (5). ¿Qué habilidades o capacidades pone a prueba esta competencia? ¿Qué gana el vencedor? ¿Por qué fracasar no es una opción para los PJ ni para sus rivales?",
+        "costsFear": false
+      },
+      {
+        "name": "Leyenda Local",
+        "type": "action",
+        "text": "El festival culmina con la llegada de una figura del folclore local que cumple deberes especiales para la comunidad, como repartir dulces a los niños, burlarse de la aristocracia o bendecir las cosechas del año próximo. Si los PJ muestran a esta figura la deferencia y el respeto debidos, reciben una bendición apropiada, como una profecía críptica o un abalorio mágico, y ganan 1d4 Esperanza para repartir entre el grupo. Si insultan a la figura, sufren 1d6+2 de daño mágico mientras esta los maldice, y tú ganas un Miedo. ¿Es una entidad única o un manto que pasa de persona a persona? ¿Qué forma distintiva posee? ¿Cuál es la fuente de su poder para conceder dones y maleficios?",
+        "costsFear": false
       }
     ]
   },
@@ -264,6 +516,78 @@
     ]
   },
   {
+    "id": "raiding-party",
+    "name": "Partida de Saqueo",
+    "tier": 1,
+    "type": "event",
+    "description": "Un barco pirata vomita su tripulación sobre un pueblo portuario o una aldea costera para saquear y pillar.",
+    "impulses": "Prenderle fuego, abrumar con velocidad y números, llevarse todo lo que no esté clavado al suelo",
+    "difficulty": 11,
+    "potentialAdversaries": "Tripulación del Barco (Capitán Pirata, Saqueadores Piratas, Rufián Pirata)",
+    "features": [
+      {
+        "name": "Levantar a los Lugareños",
+        "type": "passive",
+        "text": "Cuenta Atrás de Progreso (5). Cuando aparecen los piratas por primera vez, activa la cuenta atrás. Avanza cuando un PJ tiene éxito en una tirada de acción para frenar el caos y la destrucción del asalto pirata. Cuando se dispara, los lugareños se inspiran con las acciones del grupo y se unen a la lucha contra los piratas. Cada PJ gana un Dado de Moral d6, que puede gastar para sumarlo a una tirada de acción, de reacción o de daño. ¿De qué otras formas amenazan o ponen en peligro los piratas al pueblo además de atacar a sus habitantes? ¿De qué defensas pueden aprovecharse los PJ?",
+        "costsFear": false
+      },
+      {
+        "name": "Parlamento",
+        "type": "passive",
+        "text": "Con una Tirada de Conocimiento exitosa, un PJ conoce lo suficiente de la ley pirata como para exigir un parlamento con el Capitán Pirata. Una vez declarado el parlamento, el capitán detiene el combate para permitir que un PJ pida la paz o negocie los términos de la rendición con una Tirada de Presencia. ¿Por qué respetan estos piratas a este capitán lo suficiente como para seguirlo? ¿Qué les importa más que el botín mal habido?",
+        "costsFear": false
+      },
+      {
+        "name": "“¡Disparen los Cañones!”",
+        "type": "action",
+        "text": "Gasta hasta 3 Miedo para que el barco pirata dispare sus cañones sobre el combate. Por cada Miedo gastado, elige un punto en cualquier lugar del campo de batalla. Cada PJ a alcance Cercano de uno o más de esos puntos debe hacer una Tirada de Reacción de Agilidad. Los objetivos que fallen sufren 1d8+3 de daño físico. Los objetivos que tengan éxito deben marcar Estrés o sufrir la mitad del daño. ¿Qué daños colaterales causan estas balas de cañón? ¿Qué vidas ponen en peligro de forma temeraria?",
+        "costsFear": false
+      },
+      {
+        "name": "Tomar Cautivos",
+        "type": "reaction",
+        "text": "Cuando sea derrotado un número de piratas igual al número de PJ en la escena, tira un d6. Con un resultado de 5 o 6, los piratas cambian de táctica, capturan lugareños y se retiran al barco para poder pedir un rescate por los cautivos más adelante. Activa una Cuenta Atrás de Consecuencia (4). Avanza cuando un PJ hace una tirada de acción. Cuando se dispara, los piratas zarpan con sus víctimas. ¿A quiénes consideran los piratas los mejores cautivos, y por qué? ¿Qué quieren a cambio de devolverlos?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "beach-day",
+    "name": "Día de Playa",
+    "tier": 2,
+    "type": "social",
+    "description": "El grupo se toma un descanso de su aventura para relajarse en un asentamiento costero.",
+    "impulses": "Evocar imágenes de arena y oleaje, darles un respiro, prepararlos para el conflicto que se avecina",
+    "difficulty": 14,
+    "potentialAdversaries": "Ninguno",
+    "features": [
+      {
+        "name": "Descanso y Relajación",
+        "type": "passive",
+        "text": "El grupo se encuentra en un lugar donde las preocupaciones y los conflictos del mundo exterior se desvanecen. Cuando los PJ descansan aquí, ganan una movimiento de tiempo libre adicional, el GM no gana Miedo y ninguna cuenta atrás a largo plazo avanza. ¿Qué es lo que hace tan relajante a este lugar? ¿Te recuerda a algún sitio donde hayas estado antes?",
+        "costsFear": false
+      },
+      {
+        "name": "“Nuestra Historia Hasta Ahora…”",
+        "type": "passive",
+        "text": "Una vez por escena, cuando un PJ rememora un momento memorable de la campaña conversando con otro PJ, ambos ganan una Esperanza. ¿Qué sonidos, olores o sensaciones evoca el recuerdo en tu mente? ¿Cómo te cambió para siempre ese momento, o cambió tu opinión sobre tu compañero?",
+        "costsFear": false
+      },
+      {
+        "name": "Problemas Locales",
+        "type": "action",
+        "text": "Gasta un Miedo para interrumpir el descanso de un PJ con una complicación menor, como una pandilla de playeros malhumorados, un admirador demasiado entusiasta o una quemadura de sol realmente fea. El PJ debe resolver la situación con elegancia o marcar Estrés por la vergüenza o la frustración resultante. ¿Por qué atrae su atención este PJ? ¿Qué les importa más a los lugareños que estos aventureros recién llegados?",
+        "costsFear": true
+      },
+      {
+        "name": "Desfile de Moda",
+        "type": "reaction",
+        "text": "Cuando el grupo se prepare para su primer día en la playa, pide a cada jugador que describa cómo cambia su PJ su atuendo para adaptarlo al entorno. El GM entrega al PJ con el look más fresco un Dado de Estilo d6 que puede gastarse para sumarlo a cualquier tirada de acción o de reacción. ¿Cuál es la moda de esta zona? ¿Dónde consiguen los PJ sus nuevas prendas y accesorios playeros?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
     "id": "cult-ritual",
     "name": "Cult Ritual",
     "tier": 2,
@@ -296,6 +620,78 @@
         "type": "reaction",
         "text": "Si el líder del ritual es objetivo de un ataque o un hechizo, un aliado a distancia Muy Cercana puede marcar Estrés para convertirse en el objetivo de ese ataque o hechizo en su lugar. ¿Cómo se siente ver tal devoción puesta al servicio del miedo y la dominación?",
         "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "deadly-dungeon",
+    "name": "Mazmorra Mortal",
+    "tier": 2,
+    "type": "exploration",
+    "description": "Una red subterránea con poca luz de túneles y cámaras repleta de monstruos, trampas y tesoros.",
+    "impulses": "Devorar los recursos del grupo, hacer saltar la trampa, tentarlos con tesoros, lanzarles monstruos, desorientarlos",
+    "difficulty": 14,
+    "potentialAdversaries": "Moradores de la Mazmorra (Acechatrasgos, Cieno Verde, Burla Voraz, Devoraóxido), Aventureros Rivales (Peleador Gigante, Ladrón Enmascarado, Mago de Guerra)",
+    "features": [
+      {
+        "name": "Vueltas y Revueltas",
+        "type": "passive",
+        "text": "Cuenta Atrás (6). Cuando el grupo entra en la mazmorra, activa la cuenta atrás. Avanza cuando un PJ tiene éxito en una tirada de acción para recorrer los pasadizos. Cuando se dispara, los PJ alcanzan la parte más profunda, oscura y mejor defendida de la mazmorra. ¿Qué recompensa yace en el corazón del laberinto? ¿Quién construyó este laberinto para protegerla?",
+        "costsFear": false
+      },
+      {
+        "name": "Bolsillos Profundos",
+        "type": "passive",
+        "text": "Una vez por descanso, los PJ pueden encontrar un alijo de tesoros dentro de la mazmorra, ya sea sobre los cadáveres de exploradores anteriores o tras puertas ocultas. Con una tirada exitosa para recorrer la mazmorra, un PJ puede gastar hasta 5 Esperanza para tirar ese número de d6. Cada resultado obtenido otorga al grupo el siguiente botín o equipo: 1. Gemas sueltas, joyas, baratijas o monedas por valor de un puñado de oro 2. Un objeto o consumible común 3. Un objeto o consumible poco común 4. Un objeto o consumible raro 5. Un objeto o consumible legendario 6. Un arma o una armadura del escalón del grupo ¿Cómo eran sus dueños anteriores? ¿Cómo planean los PJ sacar de la mazmorra los objetos que se han apropiado?",
+        "costsFear": false
+      },
+      {
+        "name": "Monstruo Errante",
+        "type": "reaction",
+        "text": "Cuando el grupo entre en una nueva zona de la mazmorra, puedes gastar un Miedo para invocar 1d4 adversarios del escalón del grupo o inferior a alcance Lejano y tirar un d6. Con un resultado de 1 o 2, los PJ notan señales de advertencia y pueden prepararse para el encuentro; el primer PJ que haga una tirada de acción gana ventaja en ella. Con un resultado de 3 o 4, el combate transcurre con normalidad. Con un resultado de 5 o 6, los adversarios sorprenden a los PJ y toman el foco de inmediato, y tú ganas un Miedo. ¿Cómo llegaron estas criaturas hasta aquí? ¿Qué estaban haciendo cuando los PJ se toparon con ellas?",
+        "costsFear": true
+      },
+      {
+        "name": "Trampas Traicioneras",
+        "type": "reaction",
+        "text": "Cuando un PJ falla una tirada de acción para recorrer la mazmorra, activa una trampa o un peligro, como un foso con púas, un pasillo de cuchillas oscilantes o una sala cerrada que se llena lentamente de agua. El grupo debe tener éxito en una tirada de acción grupal para desactivarla, desarmarla o escapar de ella. Con un fallo, cada PJ que participó en la tirada de acción grupal sufre 2d6+3 de daño físico o mágico (a elección del GM). ¿Qué clase de trampas y peligros llenan esta mazmorra? ¿Qué te dice su construcción sobre quien las diseñó? ¿Se ha activado alguna antes de la llegada del grupo?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "duel",
+    "name": "Duelo",
+    "tier": 2,
+    "type": "event",
+    "description": "Un adversario desafía a uno de los PJ a un combate singular mientras el resto del grupo lo asiste desde la banda.",
+    "impulses": "Centrarse en un PJ, provocarlo para que se sobreexponga, infligir una derrota humillante, apartar al resto del grupo",
+    "difficulty": "special",
+    "potentialAdversaries": "Cualquiera",
+    "features": [
+      {
+        "name": "“Exijo Satisfacción.”",
+        "type": "passive",
+        "text": "Cuando un adversario desafía a un PJ a un combate uno contra uno, el PJ elige si acepta. Si rechaza el desafío, debe marcar Estrés y tú ganas un Miedo. Si un PJ acepta el desafío de un adversario, activa una Cuenta Atrás de Progreso (6) y una Cuenta Atrás de Consecuencia (4). Si la Cuenta Atrás de Progreso se dispara primero, el PJ gana el Duelo y obtiene un favor o una concesión de su adversario. Si la Cuenta Atrás de Consecuencia se dispara primero, el adversario gana el Duelo y reclama un favor o una concesión del PJ. ¿Por qué fue elegido este PJ? ¿Qué espera ganar si resulta victorioso?",
+        "costsFear": false
+      },
+      {
+        "name": "Fuerza Relativa",
+        "type": "passive",
+        "text": "La Dificultad de este entorno es igual a la del adversario que lanzó el desafío. ¿Quién lanza el desafío? ¿Por qué lucha?",
+        "costsFear": false
+      },
+      {
+        "name": "Reglas del Enfrentamiento",
+        "type": "passive",
+        "text": "Durante el Duelo, el PJ desafiado es el único que puede hacer tiradas de acción. Los demás PJ solo pueden asistir al PJ desafiado de forma indirecta: pueden Ayudar a un Aliado, iniciar tiradas de acción grupales o Tiradas en Equipo, y usar cualquiera de sus características que no afecte directamente al adversario que lanzó el desafío. ¿Dónde tiene lugar este conflicto? ¿Cómo ofrece el entorno al resto del grupo la oportunidad de ayudar a su aliado sin interferir?",
+        "costsFear": false
+      },
+      {
+        "name": "Trucos Sucios",
+        "type": "action",
+        "text": "Gasta un Miedo para que el adversario retador o uno de sus aliados haga trampa. Un PJ puede notar su maniobra rastrera con una Tirada de Reacción de Instinto exitosa y responder de la misma forma. ¿Qué está prohibido en este conflicto? ¿Cómo tuerce el aliado del adversario las reglas sin romperlas, o cómo las rompe sin que lo pillen? ¿Cómo pueden los PJ reequilibrar la balanza?",
+        "costsFear": true
       }
     ]
   },
@@ -372,6 +768,84 @@
     ]
   },
   {
+    "id": "heist",
+    "name": "Golpe",
+    "tier": 2,
+    "type": "event",
+    "description": "El grupo debe acceder a un lugar oculto o bien protegido para hacerse con la información o los objetos que guarda.",
+    "impulses": "Obligar al grupo a prepararse, separarlos, levantar obstáculos, atraparlos dentro, agotar sus recursos",
+    "difficulty": 14,
+    "potentialAdversaries": "Capitán de la Guardia, Minotauro Demoledor, Guardián de Secretos, Guardián Espectral",
+    "features": [
+      {
+        "name": "Trabajo Preparatorio",
+        "type": "passive",
+        "text": "Antes del Golpe, cada PJ tiene la oportunidad de reunir una información clave, vigilar el lugar o conseguir una herramienta o un recurso útil. Da a cada jugador la oportunidad de describir un obstáculo que espera encontrar y cómo se prepara para superarlo, y luego pídele una tirada de acción. Con un éxito, obtiene la información o el recurso que buscaba. Con un éxito con Miedo, resulta menos útil de lo que esperaba (por ejemplo, descubre la ubicación de un punto de acceso oculto pero averigua que forzarlo será probablemente difícil y ruidoso). ¿Cómo obtiene el PJ esta ventaja? ¿Va por su cuenta o pide ayuda? ¿Qué complicaciones imprevistas surgen durante el golpe en sí?",
+        "costsFear": false
+      },
+      {
+        "name": "Infiltración",
+        "type": "passive",
+        "text": "Establece el objetivo del Golpe e inicia dos cuentas atrás dinámicas: una Cuenta Atrás de Progreso (12) que represente el avance del grupo hacia su objetivo y una Cuenta Atrás de Consecuencia (10) que represente el riesgo creciente de ser descubiertos y capturados. Haz avanzar ambas según la tabla de Avance de Cuentas Atrás Dinámicas a medida que los PJ hacen tiradas de acción para completar el Golpe. Si la Cuenta Atrás de Progreso se dispara primero, da el foco a este entorno para usar la característica “Exfiltración”. Si la Cuenta Atrás de Consecuencia se dispara primero, gana 1d4 Miedo, da el foco a este entorno y usa la característica “Dar la Alarma”. ¿Qué busca el grupo y dónde se encuentra? ¿Qué obstáculos inesperados encontrarán? ¿Qué pasa si atrapan al grupo?",
+        "costsFear": false
+      },
+      {
+        "name": "Ya Lo Veía Venir",
+        "type": "passive",
+        "text": "Una vez por sesión, un PJ puede gastar una Esperanza para explicar cómo se preparó para la situación actual y revelar una información clave (como la ubicación de un pasadizo oculto o la contraseña de una zona restringida) o sacar un objeto útil (como el uniforme de un cultista que estaba sin vigilancia o un consumible común escondido en su bota). ¿Qué preparó el PJ de antemano? ¿Cómo sabía que lo necesitaría? ¿Qué le costó organizarlo, o a quién le debe un favor?",
+        "costsFear": false
+      },
+      {
+        "name": "Exfiltración",
+        "type": "reaction",
+        "text": "Cuando la Cuenta Atrás de Progreso se dispara, el grupo se hace con el objeto del Golpe y debe tener éxito en una tirada de acción grupal para escapar sin que lo capturen. Con un fallo, cada PJ sufre 2d12 de daño físico directo y debe marcar Estrés. ¿Qué hace que salir sea todavía más peligroso que entrar? ¿Qué acontecimientos imprevistos frustran el plan de fuga original del grupo?",
+        "costsFear": false
+      },
+      {
+        "name": "Dar la Alarma",
+        "type": "reaction",
+        "text": "Cuando la Cuenta Atrás de Consecuencia se dispara, el grupo es descubierto y el lugar entra en Alerta Máxima. Invoca un número de adversarios de Escalón 2 igual al número de PJ en la escena y dale el foco a uno de inmediato. Mientras este entorno está en Alerta Máxima, todos los adversarios ganan un bono de +1 a su Dificultad. ¿Qué hace a estos adversarios especialmente aptos para custodiar este lugar? ¿Qué saben de este sitio que les da ventaja?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "masquerade-ball",
+    "name": "Baile de Máscaras",
+    "tier": 2,
+    "type": "social",
+    "description": "Una gala de la alta sociedad donde juerguistas enmascarados intercambian secretos y favores.",
+    "impulses": "Bailar toda la noche, comer y ser felices, cerrar tratos secretos, intercambiar información valiosa",
+    "difficulty": 14,
+    "potentialAdversaries": "Agentes (Ladrón Enmascarado, Asesino Maestro, Espía), Juerguistas (Cortesana, Barón Mercader, Consejero Real)",
+    "features": [
+      {
+        "name": "Disfraz Obligatorio",
+        "type": "passive",
+        "text": "Se espera que todos los asistentes al baile lleguen disfrazados. Los PJ tienen ventaja en las Tiradas de Presencia para convencer a otros de que son alguien —o algo— que no son. ¿De qué van disfrazados los PJ? ¿Qué revelan sus disfraces sobre su verdadero yo?",
+        "costsFear": false
+      },
+      {
+        "name": "“¿Me Concedes esta Pieza?”",
+        "type": "passive",
+        "text": "Mientras baila, un PJ puede hacer una Tirada de Agilidad en lugar de una Tirada de Presencia para influir en los demás. ¿Qué tienen de notable o singular los bailes que están de moda aquí? ¿Dónde aprendieron los PJ a bailarlos?",
+        "costsFear": false
+      },
+      {
+        "name": "Identidad Equivocada",
+        "type": "action",
+        "text": "Una persona muy importante confunde a un PJ con alguien todavía más importante. El objetivo puede seguirle el juego al malentendido con una Tirada de Reacción de Presencia. Con un éxito, el PJ puede pedirle al personaje importante que le haga un favor, le transmita una información clave o le presente a alguien. Con un fallo, el PJ marca Estrés al descubrirse su verdadera identidad, y lo amenazan con echarlo de la fiesta. ¿Con quién lo confunde el personaje importante? ¿Qué puertas abre su error? ¿Qué peligros trae consigo?",
+        "costsFear": false
+      },
+      {
+        "name": "Capa y Daga",
+        "type": "action",
+        "text": "Gasta un Miedo para que un agente intente robar algo valioso o asesinar a alguien importante. Un PJ puede hacer una Tirada de Instinto para intentar detectarlo antes de que logre su objetivo. Con un éxito, el PJ tiene la oportunidad de intervenir. Con un fallo con Miedo, el PJ queda implicado por error en el crimen. ¿Para quién trabaja el agente? ¿Por qué lo enviaron al baile de máscaras?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
     "id": "mountain-pass",
     "name": "Mountain Pass",
     "tier": 2,
@@ -408,6 +882,192 @@
     ]
   },
   {
+    "id": "ocean-voyage",
+    "name": "Travesía Oceánica",
+    "tier": 2,
+    "type": "traversal",
+    "description": "Los PJ consiguen pasaje hacia un destino lejano ofreciendo su trabajo a cambio.",
+    "impulses": "Revelar lo que acecha bajo las olas, enviarlos en la dirección equivocada, hundir el barco, agotar sus recursos",
+    "difficulty": 14,
+    "potentialAdversaries": "Moradores de las Profundidades (Anguilas Eléctricas, Kraken, Tiburón, Sirena), Piratas (Capitán Pirata, Saqueadores Piratas)",
+    "features": [
+      {
+        "name": "Mar Abierto",
+        "type": "passive",
+        "text": "Cuenta Atrás (8). Llegar a su destino exige que el grupo complete la Cuenta Atrás de Mar Abierto. Avanza cuando un PJ tiene éxito en una tirada de acción para ayudar en la travesía del barco. ¿Hacia dónde se dirige el barco? ¿De qué peligros de la ruta habla la tripulación en voz baja?",
+        "costsFear": false
+      },
+      {
+        "name": "Escasean las Provisiones",
+        "type": "passive",
+        "text": "La primera vez que un PJ obtenga un fallo con Miedo en esta travesía, la tripulación descubre que la comida y el agua dulce de la bodega del barco han sido arruinadas por plagas y moho. Hasta que el grupo llegue a su destino, un PJ que haga una tirada de acción para avanzar la Cuenta Atrás de Mar Abierto debe superar antes una Tirada de Reacción de Fuerza o marcar Estrés. ¿Qué pasó con las provisiones? ¿Qué medidas drásticas toma la tripulación para asegurarse de no morir todos de hambre y sed?",
+        "costsFear": false
+      },
+      {
+        "name": "“¡Piratas!”",
+        "type": "action",
+        "text": "Gasta un Miedo para que un tripulante en la cofa avise de velas negras en el horizonte. Inicia una Cuenta Atrás de Consecuencia (4). Si se dispara antes de que el grupo llegue a su destino, los piratas alcanzan el barco y lo abordan. Gana un Miedo y luego invoca un Capitán Pirata y tres Hordas de Saqueadores Piratas a alcance Cercano del grupo. ¿Reconoce el capitán el barco que los persigue? ¿Por qué prácticas poco caballerosas son famosos los piratas de esta zona?",
+        "costsFear": true
+      },
+      {
+        "name": "Mal Tiempo",
+        "type": "reaction",
+        "text": "Cuando la Cuenta Atrás de Mar Abierto avance hasta un número impar, tira un d6. Con un resultado de 4 o más, el barco se topa con una zona de mal tiempo, como un banco de niebla que dificulta la navegación o una borrasca que amenaza con volcar el barco. Cada PJ debe superar una tirada de reacción usando un rasgo relevante elegido por el GM o marcar 1d4 de Estrés. ¿Qué hace que este clima sea distinto a todo lo que los PJ han vivido antes? ¿Cómo se coordinan con la tripulación para abrirse paso a través de este peligro?",
+        "costsFear": false
+      },
+      {
+        "name": "Aquí Hay Monstruos",
+        "type": "reaction",
+        "text": "Cuando la Cuenta Atrás de Mar Abierto avance hasta un número par, tira un d6. Con un resultado de 4 o más, invoca 1d4 Moradores de las Profundidades. ¿Qué atrae a estas criaturas hacia el barco? ¿Hay alguna forma de ahuyentarlas sin combatir?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "vast-desert",
+    "name": "Desierto Inmenso",
+    "tier": 2,
+    "type": "traversal",
+    "description": "Una extensión reseca de dunas de arena, salares desolados y formaciones rocosas talladas por el viento.",
+    "impulses": "Deshidratar, mostrar una belleza desolada, amenazar con el peligro en el horizonte",
+    "difficulty": 14,
+    "potentialAdversaries": "Excavador Ácido, Saqueadores del Desierto (Bandidos de Cuchilla Dentada), Tiburón de Arena, Sierpe de Arena",
+    "features": [
+      {
+        "name": "Arenas Infinitas",
+        "type": "passive",
+        "text": "Cuenta Atrás (8). Para cruzar el desierto, el grupo debe completar la cuenta atrás. Avanza cada vez que un PJ tiene éxito en una tirada de acción para orientarse en esta extensión aparentemente infinita. ¿Cómo viajan los PJ por el desierto? Además de las distancias extremas y la falta de agua, ¿qué hace que esta zona sea difícil de cruzar?",
+        "costsFear": false
+      },
+      {
+        "name": "Reserva de Agua",
+        "type": "passive",
+        "text": "Cuando el grupo inicia su travesía, coloca sobre este bloque de estadísticas un número de fichas igual a 1 + el número de PJ en la escena. Retira una ficha al final de cada descanso largo o cuando un PJ falle una tirada de acción para orientarse en el desierto. Cuando fuera a retirarse una ficha pero no quede ninguna, cada PJ debe marcar un Punto de Vida y Estrés. Un PJ puede añadir una ficha a este bloque de estadísticas usando una movimiento de tiempo libre y superando una Tirada de Conocimiento para buscar agua. ¿Qué clase de flora o accidentes del terreno que conservan agua han oído los PJ que pueden hallarse en este desierto? ¿Cómo recogen y transportan los PJ el agua que encuentran?",
+        "costsFear": false
+      },
+      {
+        "name": "Arenas Movedizas",
+        "type": "passive",
+        "text": "Las dunas siempre cambiantes y el viento azotador hacen difícil seguir el rastro de las criaturas en este entorno. Las tiradas de acción para rastrear criaturas por el desierto se hacen con desventaja. ¿Cómo cambian las dunas y el paisaje cada vez que los héroes descansan? ¿Qué cubre o descubre el viento?",
+        "costsFear": false
+      },
+      {
+        "name": "Tormenta Eléctrica",
+        "type": "action",
+        "text": "Gasta un Miedo para que un aguacero torrencial empape la tierra. Cada PJ debe buscar refugio de la tormenta o recoger agua de lluvia. Cada PJ que busca refugio marca Estrés. Los PJ que recogen agua de lluvia hacen una tirada de acción grupal. • Con un éxito con Esperanza, añade 1d4 fichas a la Reserva de Agua. • Con un éxito con Miedo, añade 1 ficha a la Reserva de Agua. • Con un fallo con Esperanza, cada PJ que participó en la tirada de acción grupal marca Estrés. • Con un fallo con Miedo, cada PJ que participó en la tirada de acción grupal marca Estrés, y el PJ que sacó el resultado más bajo sufre 2d8+4 de daño físico por la tormenta. ¿Cómo ven los héroes la tormenta mientras avanza desde kilómetros de distancia? ¿Es una tormenta natural o antinatural? ¿Cómo se nota?",
+        "costsFear": true
+      },
+      {
+        "name": "Tormenta de Arena",
+        "type": "action",
+        "text": "Gasta un Miedo para invocar una tormenta de arena que desoriente y hostigue a los viajeros. Cada PJ sufre 2d6+3 de daño físico. Hasta que la tormenta de arena se disipe, un PJ que haga una tirada de acción debe superar una Tirada de Reacción de Agilidad para esquivar el remolino de piedras y escombros o sufrir 2d6+3 de daño físico. ¿Qué visten los habitantes de este desierto para resistir las tormentas de arena? ¿Cómo están diseñadas las viviendas que encuentra el grupo aquí para soportar los vientos?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "witchs-hut",
+    "name": "Choza de la Bruja",
+    "tier": 2,
+    "type": "exploration",
+    "description": "Una choza rústica y sin ventanas asentada sobre dos enormes patas de gallina.",
+    "impulses": "Darles escalofríos, retenerlos hasta que la bruja regrese, encerrarlos dentro, trasladarse a otro lugar, tentarlos con rarezas mágicas",
+    "difficulty": 14,
+    "potentialAdversaries": "Choza con Patas de Gallina, Defensas Encantadas (Gárgola, Burla Voraz, Espantapájaros), Valdenhax, Las Víctimas de la Bruja (Calabazas Sonrientes, Mordedores Gorrorrojo)",
+    "features": [
+      {
+        "name": "Más Grande por Dentro",
+        "type": "passive",
+        "text": "Aunque el exterior de la choza es una cabaña rústica de una sola habitación, el interior es una mansión siempre cambiante de esplendor inquietante, repleta de numerosos dormitorios, bibliotecas y jardines interiores, entre otras instalaciones misteriosas. ¿Hay algún patrón en la forma en que la choza se reorganiza? ¿Cuál es el lugar más sorprendente que podrían encontrar aquí los PJ?",
+        "costsFear": false
+      },
+      {
+        "name": "Colección de Muñecas Siniestras",
+        "type": "passive",
+        "text": "Cuenta Atrás (5). Por toda la choza, los PJ pueden ver muchísimas muñecas de porcelana o de madera con ojos extrañamente vivaces. Cuando el grupo entra por primera vez en la línea de visión de una muñeca, activa la cuenta atrás. Avanza cuando un PJ falla una tirada o tira con Miedo. Cuando se dispara, las muñecas cobran vida y atacan. Invoca un número de muñecas vivientes (Mordedores Gorrorrojo) igual al doble del número de PJ. ¿Quiénes eran estas muñecas antes? ¿Hay alguna forma de liberarlas de su cautiverio?",
+        "costsFear": false
+      },
+      {
+        "name": "Brebaje de Brujas",
+        "type": "passive",
+        "text": "La choza contiene un taller con todas las herramientas o componentes que una bruja pudiera necesitar, incluido un gran caldero de hierro sobre un fuego humeante. Un PJ que quiera usar el taller puede hacer una Tirada de Lanzamiento para elaborar una poción mágica o un veneno de la tabla de Consumibles. • Cualquier fallo: El experimento le estalla en la cara, literalmente. El PJ sufre 2d10+2 de daño mágico. • Cualquier éxito: El PJ tira un número de d12 igual a 1 + su escalón, suma los resultados y obtiene el consumible que corresponda a ese valor en la tabla de Consumibles. Si obtuvo un éxito crítico, puede volver a tirar cualquier d12 que muestre un resultado de 1. ¿En qué clase de brebajes se especializa la bruja dueña de esta choza? ¿Qué haría la bruja si encontrara a los PJ usando sus cosas?",
+        "costsFear": false
+      },
+      {
+        "name": "Desplazados",
+        "type": "reaction",
+        "text": "El tiempo transcurre de forma distinta dentro de la Choza de la Bruja. Cuando la puerta de la choza se cierra, tira un d6. Con un resultado de 4 o más, la choza se traslada a otro lugar —a menudo imposiblemente lejano— que solo se revela a los PJ cuando vuelven a abrir la puerta. ¿Por qué se traslada la choza tan a menudo? ¿Adónde desea llevar a los PJ? ¿Hay alguna forma de dirigirla a un lugar concreto?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "archmages-tower",
+    "name": "Torre del Archimago",
+    "tier": 3,
+    "type": "exploration",
+    "description": "Una aguja imposiblemente alta que perfora los cielos y resuena con un poder inmenso.",
+    "impulses": "Acumular energía mágica, agotar a los intrusos, revelar lo desconocido, desatar ráfagas de poder mágico",
+    "difficulty": 16,
+    "potentialAdversaries": "Creaciones Alquímicas (Quimera, Lamia, Mantícora), Archimago",
+    "features": [
+      {
+        "name": "Defensas Místicas",
+        "type": "passive",
+        "text": "Cuenta Atrás (12). Para escalar la torre, los PJ deben completar la cuenta atrás. Con un fallo o una tirada con Miedo, activan una de las muchas trampas y peligros arcanos del archimago y sufren 3d10 de daño mágico. Con un fallo con Miedo, el daño infligido gana un bono igual al nivel del PJ. ¿Qué te dicen los diseños de las defensas del archimago sobre su área de especialización concreta? ¿Qué estilo o florituras distintivas comparten todas las trampas y peligros?",
+        "costsFear": false
+      },
+      {
+        "name": "Nido del Archimago",
+        "type": "passive",
+        "text": "La planta superior de la torre es un laboratorio, biblioteca y taller de múltiples cámaras que contiene todo lo necesario para estudiar la magia en sus formas más elevadas. Un PJ con un rasgo de Lanzamiento puede hacer una Tirada de Conocimiento para participar en la investigación del archimago. Con un éxito, gana un bono de +1 a sus Tiradas de Lanzamiento hasta su siguiente descanso largo. Con un fallo, su investigación sale mal y sufre 3d8+4 de daño mágico. ¿Qué parte del nido te llama? ¿Qué te revelan las notas del archimago?",
+        "costsFear": false
+      },
+      {
+        "name": "Adversarios Amalgamados",
+        "type": "reaction",
+        "text": "Gasta un Miedo para invocar dos adversarios a alcance Cercano de un PJ. Cada adversario puede usar las características del otro como si fueran propias. ¿Qué criaturas ha elegido combinar el archimago? ¿Qué espera aprender al hacerlo?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "astral-realm",
+    "name": "Reino Astral",
+    "tier": 3,
+    "type": "traversal",
+    "description": "Un reino psíquico de energía y emoción, donde quienes tienen un espíritu fuerte pueden remodelar las reglas de la realidad.",
+    "impulses": "Atacar sus psiques, invocar sus miedos subconscientes, distorsionar sus percepciones",
+    "difficulty": 16,
+    "potentialAdversaries": "Demonio de la Desesperación, Chispa Elemental, Sacerdote del Dolor, Vampiros Psíquicos (Vampiro Ancestral, Hijos de la Noche)",
+    "features": [
+      {
+        "name": "Experiencia Extracorporal",
+        "type": "passive",
+        "text": "Como el grupo no está físicamente en este reino, las Tiradas de Fuerza, Agilidad y Destreza fallan automáticamente. Además, cuando un personaje fuera a marcar un Punto de Vida, debe perder una Esperanza o marcar Estrés en su lugar. Si un personaje no puede marcar Estrés, debe hacer una acción de muerte. ¿En qué se diferencia la proyección de tu imagen mental de tu apariencia física? ¿Cuál de las dos consideras el “verdadero” tú?",
+        "costsFear": false
+      },
+      {
+        "name": "Manifestaciones Mentales",
+        "type": "passive",
+        "text": "Con una Tirada de Conocimiento exitosa, los PJ pueden alterar el entorno psíquico, por ejemplo invirtiendo la gravedad o conjurando una escalera que se ensambla sola a toda velocidad. Un PJ puede usar una manifestación mental una vez por escena para ganar ventaja en una tirada para recorrer el Reino Astral. ¿La construcción que manifiestas es un recuerdo de la vida real o un producto de tu imaginación? ¿En qué detalle clave te concentras para hacerla más estable?",
+        "costsFear": false
+      },
+      {
+        "name": "La Materia Es Ilusión",
+        "type": "passive",
+        "text": "Cuenta Atrás (10). El tiempo y la distancia son relativos aquí, y el mero hecho de moverse por el espacio exige un acto de voluntad. Para cruzar el Reino Astral, el grupo debe completar la cuenta atrás usando solo Tiradas de Conocimiento, Instinto o Presencia. Con un fallo con Miedo, un PJ sufre 3d8 de daño mágico directo. ¿Piensas o sientes tu camino a través de este lugar? ¿Qué diferencia supone eso aquí?",
+        "costsFear": false
+      },
+      {
+        "name": "Adversarios Astrales",
+        "type": "passive",
+        "text": "Los adversarios del Reino Astral son inmunes al daño físico, ya que son proyecciones psíquicas en lugar de carne y hueso. ¿En qué se diferencia la forma astral de un adversario de su forma física? ¿Por qué se sienten atraídas estas proyecciones psíquicas hacia los PJ?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
     "id": "burning-heart-of-the-woods",
     "name": "Burning Heart of the Woods",
     "tier": 3,
@@ -420,7 +1080,7 @@
       {
         "name": "Chaos Magic Locus",
         "type": "passive",
-        "text": "Cuando un PJ hace una Tirada de Conjuro, debe tirar dos Dados de Miedo y quedarse con el resultado más alto. ¿Cómo se siente lanzar magia en este lugar tocado por el caos? ¿Qué temes que ocurra si pierdes el control del hechizo?",
+        "text": "Cuando un PJ hace una Tirada de Lanzamiento, debe tirar dos Dados de Miedo y quedarse con el resultado más alto. ¿Cómo se siente lanzar magia en este lugar tocado por el caos? ¿Qué temes que ocurra si pierdes el control del hechizo?",
         "costsFear": false
       },
       {
@@ -486,6 +1146,126 @@
     ]
   },
   {
+    "id": "crystal-wasteland",
+    "name": "Yermo de Cristal",
+    "tier": 3,
+    "type": "traversal",
+    "description": "Un paisaje áspero y ajeno que brilla con torres de cristal reluciente.",
+    "impulses": "Cortarlos hasta lo más hondo, fracturar sus psiques, mostrarles su verdadero reflejo",
+    "difficulty": 16,
+    "potentialAdversaries": "Vuelaparpadeo Adulto, Constructos, Chispa Elemental, Guardianes de la Bóveda, Espectros Susurrantes",
+    "features": [
+      {
+        "name": "Resonancia Armónica",
+        "type": "passive",
+        "text": "Los cristales de aquí reverberan con energía mágica. Un PJ puede usar una movimiento de tiempo libre para intentar Sintonizarse con el entorno con una Tirada de Lanzamiento exitosa. Mientras está Sintonizado, el PJ tiene ventaja en las Tiradas de Lanzamiento dentro del Yermo de Cristal. La condición se elimina cuando el PJ abandona el Yermo de Cristal. ¿Cómo altera la sintonía con este lugar tu experiencia sensorial de él? ¿Qué sonido o canción de tu infancia evoca este lugar?",
+        "costsFear": false
+      },
+      {
+        "name": "Anomalías Gravitatorias",
+        "type": "action",
+        "text": "Fenómenos extraños y localizados salpican el paisaje, distorsionando la distancia y la dirección. Gasta un Miedo para alterar la gravedad en un punto elegido. Cada objetivo a alcance Cercano de ese punto debe hacer una Tirada de Reacción de Saber para calcular su nueva trayectoria. Los objetivos que fallen sufren 3d8+4 de daño físico al ser lanzados hacia arriba y hacia fuera. Los objetivos que tengan éxito deben marcar Estrés o sufrir la mitad del daño. ¿Qué se siente mientras tu cuerpo y tu mente luchan por recuperar el equilibrio? ¿Hay alguna forma de usar esto a tu favor?",
+        "costsFear": true
+      },
+      {
+        "name": "Reflejo Arcano",
+        "type": "action",
+        "text": "Gasta un Miedo para que cualquier número de PJ vislumbre en el cristal un reflejo de quienes fueron o podrían llegar a ser. Cada objetivo debe hacer una Tirada de Reacción de Instinto. Los objetivos que tengan éxito ven una visión de su mejor versión y pueden sustituir una Experiencia. Los objetivos que fallen ven una visión de su oscuro pasado —o de un futuro aún más oscuro— y deben marcar Estrés. Ganas un Miedo por cada objetivo que haya fallado. ¿A quién ven los PJ al otro lado del cristal? ¿Cómo los hace sentir?",
+        "costsFear": true
+      },
+      {
+        "name": "Terreno Afilado como una Navaja",
+        "type": "reaction",
+        "text": "Cuando un PJ falla una tirada para recorrer el yermo, debe hacer una Tirada de Reacción de Destreza. Con un fallo, se corta con los bordes afilados del terreno. Esquirlas de cristal mágico quedan incrustadas en su herida y crecen lentamente, Cristalizándolo. Activa una Cuenta Atrás de Cristal (1) para ese PJ. Hasta que elimine la condición con una Tirada de Conocimiento exitosa, un PJ Cristalizándose hace avanzar su Cuenta Atrás de Cristal al comienzo de cada descanso y recibe una penalización a su Evasión igual a su valor. La cuenta atrás termina cuando se elimina la condición. ¿Qué aspecto tiene el cristal mientras crece? ¿Qué se siente?",
+        "costsFear": false
+      },
+      {
+        "name": "Mezcla Psíquica",
+        "type": "reaction",
+        "text": "Cuando los PJ hagan un descanso largo, puedes gastar un Miedo para intercambiar sus psiques. Recoge todas las hojas de personaje de los jugadores, luego barájalas y repártelas al azar. Cada hoja de personaje viene con las cartas de Dominio y las ayudas de juego de ese PJ. Un PJ puede recuperar su psique con una Tirada de Conocimiento exitosa, momento en el que intercambia hojas con el jugador que tiene su hoja de personaje original. ¿Qué se siente al estar en la piel de otra persona? Si pudieras elegir quedarte como esa persona en un solo aspecto, ¿cuál sería?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "dragons-lair",
+    "name": "Guarida del Dragón",
+    "tier": 3,
+    "type": "exploration",
+    "description": "Una colección de oro, joyas y artefactos en el corazón de un volcán activo.",
+    "impulses": "Atraer hacia los niveles inferiores, hacer imposible el escape, tentar con tesoros, despertar al dragón",
+    "difficulty": 16,
+    "potentialAdversaries": "Los Esbirros del Dragón (Draco, Guiverno), Dragón de Fuego Joven",
+    "features": [
+      {
+        "name": "El Dragón Despierta",
+        "type": "passive",
+        "text": "Cuenta Atrás de Consecuencia (8). El dragón que reunió este tesoro duerme en algún lugar sobre, bajo o cerca del botín. Cuando los PJ entran en la guarida, activa la cuenta atrás. Cuando se dispara, el dragón despierta y cada PJ debe superar una Tirada de Reacción de Presencia o marcar Estrés. Ganas un Miedo por cada Estrés marcado de esta forma. ¿Dónde duerme este dragón? ¿Con qué sueña?",
+        "costsFear": false
+      },
+      {
+        "name": "Montón de Tesoros",
+        "type": "passive",
+        "text": "En el corazón de la guarida se alza una montaña de tesoros. Si el grupo desea localizar el tesoro, debe completar una Cuenta Atrás de Progreso (12). Cuando se dispara, el grupo puede hacer avanzar la Cuenta Atrás de Consecuencia para rebuscar en el montón de tesoros tirando un número de d12 igual a 1 + su escalón en la tabla de Objetos o de Consumibles (a su elección). ¿Cómo se enteró el grupo de esta colección? ¿Qué esperan encontrar aquí?",
+        "costsFear": false
+      },
+      {
+        "name": "Actividad Volcánica",
+        "type": "action",
+        "text": "Gasta un Miedo para desencadenar una erupción volcánica. Cada personaje debe hacer una Tirada de Reacción de Agilidad. Los objetivos que fallen son abrasados por chorros de lava y llamas mientras la tierra se resquebraja a su alrededor y sufren 3d8+5 de daño físico. Los objetivos que tengan éxito sufren la mitad del daño. ¿Qué vías de salida bloquea la nueva configuración del volcán? ¿Cómo se protegen los PJ del calor sofocante?",
+        "costsFear": true
+      },
+      {
+        "name": "Perros Guardianes",
+        "type": "reaction",
+        "text": "Cuando un PJ falle una tirada para recorrer la guarida, puedes gastar un Miedo para invocar 1d6 Dracos y hasta dos Guivernos, que aparecen a alcance Cercano de un PJ y toman el foco de inmediato. ¿Por qué sirven estas criaturas al dragón dormido? ¿Qué señales encuentra el grupo que anticipan su presencia?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "megastorm",
+    "name": "Megatormenta",
+    "tier": 3,
+    "type": "event",
+    "description": "Un fenómeno meteorológico extremo se manifiesta de repente y obliga al grupo a equilibrar su propia supervivencia con la seguridad de los demás.",
+    "impulses": "Soplar vientos huracanados, ahogar con aludes de lodo, derrumbar estructuras, inundar, arrojar escombros, iluminar el cielo",
+    "difficulty": 16,
+    "potentialAdversaries": "Elemental Mayor de Agua, Titán de la Tormenta",
+    "features": [
+      {
+        "name": "Frente Tormentoso",
+        "type": "passive",
+        "text": "Cuenta Atrás (8). Cuando llega la tormenta, activa la cuenta atrás. Avanza cuando un PJ tira con Esperanza. Cuando se dispara, la tormenta se dispersa o se desplaza a otra zona. ¿Cuál es el lugar más seguro para capear la tormenta? ¿Por qué están dispuestas a arriesgar la vida las personas de aquí?",
+        "costsFear": false
+      },
+      {
+        "name": "Condiciones Peligrosas",
+        "type": "passive",
+        "text": "El viento extremo, la niebla y la capa de nubes de la Megatormenta hacen difícil desplazarse por toda la zona. Los PJ no pueden moverse como parte de una tirada de acción sin superar una Tirada de Reacción de Agilidad. ¿Quién más se ha perdido en el torbellino? ¿Cómo puedes sacarlos de ahí?",
+        "costsFear": false
+      },
+      {
+        "name": "Ciclón Explosivo",
+        "type": "action",
+        "text": "Gasta un Miedo para invocar un fenómeno meteorológico extremo, como una tormenta eléctrica o un tornado, en un punto de tu elección. Cada objetivo a alcance Cercano de ese punto debe superar una tirada de reacción usando un rasgo que tú elijas para evitar ser golpeado por el granizo, lanzado por los aires, alcanzado por un rayo o un efecto similar. Los objetivos que fallen sufren 2d10+2 de daño de un tipo que tú elijas. ¿Es este el peor clima que han vivido los PJ? ¿Qué pueden usar los PJ en los alrededores inmediatos para protegerse?",
+        "costsFear": true
+      },
+      {
+        "name": "Corazón de la Tormenta",
+        "type": "action",
+        "text": "Gasta un Miedo para revelar la batería viviente de la Megatormenta. Invoca un Gigante de la Tormenta o un Elemental Mayor de Agua a alcance Lejano de un PJ y dale el foco de inmediato. Hasta que este adversario sea derrotado, la cuenta atrás de “Frente Tormentoso” no avanza. Cuando este adversario es derrotado, la Megatormenta termina. ¿Esta criatura conjuró la tormenta para sus propios fines, o sirve a una entidad aún mayor? ¿Por qué eligió este lugar para su destrucción?",
+        "costsFear": true
+      },
+      {
+        "name": "Pánico en las Calles",
+        "type": "action",
+        "text": "La Megatormenta siembra el miedo y el caos entre los lugareños. Describe cómo la tormenta pone en peligro a un PNJ. Si el PJ que toma el foco a continuación no usa su acción para rescatar al PNJ en peligro, ganas un Miedo. ¿Quién se está aprovechando de la situación? ¿Quién se supone que manda aquí, y qué le ocurrió?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
     "id": "pitched-battle",
     "name": "Pitched Battle",
     "tier": 3,
@@ -518,6 +1298,114 @@
         "type": "action",
         "text": "Convoca a un Caballero del Reino, un número de Esbirros de Nivel 3 igual al número de PJs, y dos adversarios de tu elección a distancia Lejana de un PJ elegido, como refuerzos. El Caballero del Reino toma el protagonismo de inmediato. ¿A quién apuntan primero? ¿Qué formación adoptan?",
         "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "sunken-citadel",
+    "name": "Ciudadela Sumergida",
+    "tier": 3,
+    "type": "exploration",
+    "description": "Las ruinas sumergidas de una civilización perdida hace mucho, repletas de tecnología antigua y magia oscura.",
+    "impulses": "Atraerlos a lo profundo, ahogarlos, revelar maravillas antiguas",
+    "difficulty": 16,
+    "potentialAdversaries": "Sirénidos Malditos, Morador de las Profundidades, Plesiosaurio",
+    "features": [
+      {
+        "name": "Entorno Submarino",
+        "type": "passive",
+        "text": "Este entorno está bajo el agua (consulta las reglas de “Moverse y Combatir bajo el Agua” en la página 168 del libro básico). Además de esas reglas, una criatura que respira aire lleva la cuenta de su reserva con una Cuenta Atrás de Reserva de Aire. Su valor inicial es igual a 3 + su escalón, y avanza cuando realiza una acción. Si un PJ falla una tirada de acción o tira con Miedo, puedes usar una acción del GM para hacer avanzar su cuenta atrás una vez más. Si la tirada es un fallo con Miedo, puedes hacerla avanzar dos veces en su lugar. Una vez que su cuenta atrás se dispara, un PJ debe marcar Estrés cada vez que realice una acción bajo el agua hasta que salga a la superficie. ¿Has conocido alguna vez a alguien que se ahogara? ¿En qué piensas para mantener la calma y estirar tu reserva de aire?",
+        "costsFear": false
+      },
+      {
+        "name": "Bolsas de Aire",
+        "type": "passive",
+        "text": "Un PJ puede reiniciar su Cuenta Atrás de Reserva de Aire a su valor inicial localizando una bolsa de aire con una Tirada de Conocimiento o de Instinto exitosa. ¿Qué señales o estructuras buscas? ¿Qué se siente al saber que esta podría ser la última bocanada que tomes?",
+        "costsFear": false
+      },
+      {
+        "name": "Tecnología Perdida",
+        "type": "passive",
+        "text": "Las ruinas están talladas con extrañas runas mágicas y sembradas de tecnología perdida. Un PJ puede hacer una Tirada de Conocimiento para aprender información útil sobre esta civilización perdida a partir de cualquier runa o dispositivo que encuentre. ¿Quiénes llamaban hogar a este lugar? ¿Cómo funcionaba su tecnología? ¿Por qué fueron destruidos al final y arrojados a las profundidades?",
+        "costsFear": false
+      },
+      {
+        "name": "Moradores de las Profundidades",
+        "type": "action",
+        "text": "Gasta un Miedo para invocar hasta dos Moradores de las Profundidades y 1d6 Sirénidos Malditos que intentan someter a los PJ a su voluntad. Estos adversarios aparecen a alcance Cercano de un PJ, y luego uno toma el foco de inmediato. ¿Por qué permanecen estas criaturas aquí, entre las ruinas? ¿No quieren o no pueden resucitar esta civilización otrora próspera?",
+        "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "upscale-casino",
+    "name": "Casino de Lujo",
+    "tier": 3,
+    "type": "social",
+    "description": "Una sala de juego resplandeciente donde mercaderes y nobles acomodados acuden a dilapidar sus fortunas.",
+    "impulses": "Mantener el premio gordo justo fuera de su alcance, deslumbrarlos con el espectáculo, aprovecharse de sus vicios",
+    "difficulty": 16,
+    "potentialAdversaries": "Seguridad Automatizada (Guardianes de la Bóveda), Apostadores (Cortesana, Barón Mercader, Noble Mezquino, Espía)",
+    "features": [
+      {
+        "name": "Brillo y Glamour",
+        "type": "passive",
+        "text": "El espectáculo abrumador de este lugar puede embelesar incluso al cliente más hastiado. Mientras están aquí, todos los PJ tienen desventaja en las tiradas de reacción provocadas por un empleado o un cliente habitual del casino. ¿Qué tienen de maravilloso los adornos del casino? ¿Son realmente mágicos o simplemente prodigios mundanos llevados a un extremo imposible?",
+        "costsFear": false
+      },
+      {
+        "name": "La Fortuna Favorece a los Audaces",
+        "type": "passive",
+        "text": "Una vez por descanso largo, un PJ puede apostar cualquier cantidad de oro declarando cuánto quiere arriesgar y tirando su Dado de Esperanza. Con un resultado de 7 o más, el PJ gana una cantidad igual y duplica su dinero. Con un resultado de 6 o menos, lo pierde todo. ¿A qué juego decide jugar el PJ? ¿Qué reglas de la casa tiene este casino? ¿Hay algo además de oro que los PJ estén dispuestos a arriesgar?",
+        "costsFear": false
+      },
+      {
+        "name": "La Banca Siempre Gana",
+        "type": "reaction",
+        "text": "Cuando un adversario falla una tirada, puedes gastar un Miedo para convertirla en un éxito. ¿Está este lugar bendecido con una fortuna imposible, o hay algo que maldice a todo el que cruza sus puertas?",
+        "costsFear": true
+      },
+      {
+        "name": "Seguridad Automatizada",
+        "type": "reaction",
+        "text": "Cuando un PJ intenta hacer trampa en un juego del casino y falla, debe marcar Estrés al activar el destacamento de seguridad mecánica del casino. Gana un Miedo e invoca un Guardián de la Bóveda: Carcelero y una Torreta por cada PJ, además de un Guardián de la Bóveda: Centinela. Todos los adversarios aparecen a alcance Lejano de los PJ, y el Guardián de la Bóveda: Centinela toma el foco de inmediato. ¿Quién construyó estas máquinas? ¿Por qué son preferibles a los seres vivos?",
+        "costsFear": false
+      },
+      {
+        "name": "El Patio de Juegos del Demonio",
+        "type": "reaction",
+        "text": "Si los PJ derrotan a la seguridad automatizada del casino o intentan marcharse con ganancias robadas, puedes gastar una cantidad de Miedo igual al número de PJ para invocar al verdadero dueño del casino, un Demonio de la Avaricia, a alcance Cercano de un PJ. El Demonio toma el foco de inmediato y bloquea la salida del grupo a toda costa. ¿Cómo ocultó el demonio su influencia hasta ahora? ¿Cómo cambia el propio casino para revelar su verdadera naturaleza?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "volcanic-eruption",
+    "name": "Erupción Volcánica",
+    "tier": 3,
+    "type": "event",
+    "description": "Una explosión de calor y roca fundida que solo deja tras de sí desolación calcinada.",
+    "impulses": "Sembrar el pánico por todas partes, cortar las salidas, aislar, hacerlos correr en busca de refugio, separar al grupo",
+    "difficulty": 16,
+    "potentialAdversaries": "Chispa Elemental, Elemental de Lava (Elemental Mayor de Tierra), Dragón Volcánico",
+    "features": [
+      {
+        "name": "Suelo Inestable",
+        "type": "passive",
+        "text": "El suelo de aquí es irregular, propenso a derrumbarse y cambia constantemente. Los PJ que fallen una Tirada de Agilidad para moverse deben marcar un Punto de Vida y quedan temporalmente Inmovilizados. ¿Qué formas y colores extraños ven los PJ en la lava enfriada? ¿Cómo mantienen el equilibrio los habitantes cercanos sobre esa superficie resbaladiza y reluciente?",
+        "costsFear": false
+      },
+      {
+        "name": "Erupción Violenta",
+        "type": "action",
+        "text": "Gasta un Miedo para que el suelo entre en erupción en un punto de tu elección, escupiendo lava por el aire y esparciéndola por el terreno. Todos los objetivos a alcance Muy Cercano de ese punto pierden una Esperanza y sufren 3d8+3 de daño físico. El área a alcance Muy Cercano del punto de erupción se convierte en lava hasta el final de la escena. Una criatura que se mueva hacia la lava o a través de ella sufre 3d8+3 de daño físico. Hasta el final de la escena, puedes gastar un Miedo para ampliar el área de lava un paso (por ejemplo, de Muy Cercano a Cercano o de Cercano a Lejano). ¿Qué hace que la lava parezca viva? ¿Cómo pueden los PJ predecir su comportamiento?",
+        "costsFear": true
+      },
+      {
+        "name": "Liberar Gas Tóxico",
+        "type": "action",
+        "text": "Gasta un Miedo para abrir una fisura que eructe gas tóxico en un punto de tu elección, creando una nube que cubre todo lo que hay a alcance Lejano. Mientras está dentro de la nube, un PJ debe llevar la cuenta de su reserva de aire con una Cuenta Atrás de Reserva de Aire. Su valor inicial es igual a 3 + su escalón, y avanza cuando realiza una acción. Si un PJ falla una tirada de acción o tira con Miedo, puedes usar una acción del GM para hacer avanzar su cuenta atrás una vez más. Si la tirada es un fallo con Miedo, puedes hacerla avanzar dos veces en su lugar. Una vez que la cuenta atrás termina, un PJ debe marcar Estrés cada vez que realice una acción dentro del gas hasta que escape de la nube. ¿Qué señales ves que indican la presencia de gas tóxico? ¿Qué sabor persiste en la boca de los PJ que inhalan el gas?",
+        "costsFear": true
       }
     ]
   },
@@ -560,6 +1448,48 @@
         "type": "reaction",
         "text": "En un resultado con Miedo, puedes pedirle al PJ que describa cuál de sus miedos evoca el Reino del Caos mientras una visión de la realidad se deshace y se reconstituye ante él. El PJ pierde una Esperanza. Si es su última Esperanza, ganas un Miedo. ¿Qué momento ve? Si es un recuerdo, ¿cómo lo distorsiona este lugar? ¿Qué tan difícil será conservar el recuerdo real?",
         "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "convergence-the-city-of-portals",
+    "name": "Convergencia, la Ciudad de los Portales",
+    "tier": 4,
+    "type": "social",
+    "description": "Una metrópolis inmensa situada en el nexo de la creación, donde se reúnen figuras influyentes de todos los reinos.",
+    "impulses": "Enfrentarlos a costumbres ajenas, deslumbrarlos con una variedad infinita, tentarlos con lo imposible",
+    "difficulty": 20,
+    "potentialAdversaries": "Figuras de Poder (Archinecromante, Señor Demoníaco Berzug, Señor de la Guerra Titán de Fuego, Alto Serafín, Monarca, Oráculo de la Perdición, Señor Vampiro), Viajeros y Residentes (Cualquiera)",
+    "features": [
+      {
+        "name": "Abundan las Imposibilidades",
+        "type": "passive",
+        "text": "Convergencia es un nexo de dioses, monstruos, alienígenas y toda clase de saltadores de dimensiones. Como la vida mortal suele estar por debajo del interés de estos seres, los PJ tienen desventaja en las tiradas de acción para influir en ellos, a menos que tengan algo con que presionarlos o sepan qué le importa al PNJ. ¿Qué clase de ser domina la ciudad en este momento? ¿Qué costumbres extrañas practica? ¿Qué PJ está más confundido u ofendido por ellas, y qué PJ las adopta como propias?",
+        "costsFear": false
+      },
+      {
+        "name": "Hacia el Multiverso",
+        "type": "passive",
+        "text": "La ciudad de Convergencia tiene un portal o una puerta a cada reino de la existencia. ¿Adónde (o a cuándo) quiere ir el grupo? ¿Dónde está ese portal y quién controla esa zona?",
+        "costsFear": false
+      },
+      {
+        "name": "Inventario Infinito",
+        "type": "passive",
+        "text": "Esta ciudad tiene la solución a cualquier problema, si consigues encontrarla. Un PJ que busque un objeto concreto de propiedades prodigiosas puede hacer una Tirada de Instinto o de Presencia para hallarlo en el mercado pandimensional de la ciudad. • Éxito crítico: El PJ encuentra el objeto perfecto, y el mercader que lo tiene solo quiere a cambio algo que el PJ considera intrascendente. • Éxito con Esperanza: El PJ encuentra el objeto perfecto y puede cambiarlo por algo de valor equivalente. • Éxito con Miedo: El PJ encuentra el objeto perfecto, pero el mercader que lo tiene solo lo cambiará por algo que el grupo no puede darle… todavía. • Cualquier fallo: El PJ debe marcar Estrés tras embarcarse en una búsqueda inútil y volver con las manos vacías. El PJ puede marcar Estrés adicional para convertir este resultado en un éxito con Miedo. ¿Quién tiene el objeto que necesita el grupo? ¿Qué quiere a cambio?",
+        "costsFear": false
+      },
+      {
+        "name": "No Hagas Olas",
+        "type": "passive",
+        "text": "Cuenta Atrás (6). Como en Convergencia todo es posible, la ciudad mantiene una burocracia laberíntica que emite y hace cumplir ordenanzas sobre todos los intercambios e interacciones entre los reinos. Cuando el grupo llega a Convergencia, activa la cuenta atrás. Avanza cuando un PJ hace algo que altera el delicado equilibrio político de la ciudad. Cuando se dispara, los PJ quedan En Busca y Captura hasta que limpien su nombre ante las autoridades. Cuando un PJ En Busca y Captura tira con Miedo, puedes invocar 1d4 Agentes Temporales que aparecen a alcance Muy Cercano, toman el foco de inmediato e intentan detener al grupo. ¿Qué ha hecho el grupo (o qué planea hacer) que atrae la atención y la ira de los funcionarios de la ciudad? ¿Cómo pueden arreglar el problema que causaron?",
+        "costsFear": false
+      },
+      {
+        "name": "Una Oferta que No Puedes Rechazar",
+        "type": "action",
+        "text": "Convergencia alberga una frágil red de facciones rivales. Gasta un Miedo para que una de ellas ofrezca al grupo una solución fácil a un problema difícil a cambio de su lealtad. Si el grupo se niega, cada PJ debe marcar Estrés, y no podrán recurrir a esa facción en busca de ayuda en el futuro. ¿Qué facción ofrece su apoyo al grupo? ¿Contra quién quieren que el grupo actúe?",
+        "costsFear": true
       }
     ]
   },
@@ -654,6 +1584,42 @@
     ]
   },
   {
+    "id": "moon-kingdom",
+    "name": "Reino Lunar",
+    "tier": 4,
+    "type": "exploration",
+    "description": "Las ruinas misteriosas, luminosas y aisladas de un reino lunar perdido hace mucho, que resuena con magia olvidada y tecnología antigua.",
+    "impulses": "Difuminar la línea entre el sueño y la realidad, dejar que la consciencia fluya y refluya como la marea, susurrar ecos de una opulencia antigua",
+    "difficulty": 20,
+    "potentialAdversaries": "Fauna Local (Criptipolillas, Yufos), Espíritu de la Reina Lunar (Archinecromante), Reliquias Redespertadas (Constructos, Guardianes de la Bóveda)",
+    "features": [
+      {
+        "name": "Atmósfera Onírica",
+        "type": "passive",
+        "text": "Todo en el Reino Lunar se siente onírico e ingrávido. Un salto te lleva lejos, y el sonido es apagado. El aire está lleno de un polvo cristalino iridiscente que se desplaza en respuesta a los pensamientos o las emociones y que puede registrar recuerdos del pasado o visiones del futuro. Una vez por escena, un PJ puede hacer una Tirada de Instinto para leer las impresiones psíquicas dejadas por sucesos pasados. ¿Qué aromas o sensaciones etéreas experimentan los PJ? ¿Cómo afecta la atmósfera a las interacciones entre ellos?",
+        "costsFear": false
+      },
+      {
+        "name": "Ruinas Silenciosas",
+        "type": "passive",
+        "text": "La imponente arquitectura plateada y azul de la capital está intacta, pero cubierta de flora bioluminiscente que palpita al compás de las mareas lunares. Un PJ que supere una Tirada de Destreza puede recolectar una planta lunar sin matarla. Un PJ que coma una o más plantas lunares vivas gana un bono de +1 a las Tiradas de Lanzamiento hasta su siguiente descanso largo. ¿A qué flora terrestre se parecen estas plantas lunares? ¿A qué saben y cómo afectan físicamente a quien las come?",
+        "costsFear": false
+      },
+      {
+        "name": "Astrologio Lunar",
+        "type": "passive",
+        "text": "En lo alto de la torre más alta de la capital se encuentra una máquina de sueños de cristal capaz de reproducir la historia. Un PJ que supere una Tirada de Conocimiento puede reparar la máquina. Una vez reparada, un PJ que supere una Tirada de Presencia puede manejarla para conocer la historia del auge y la caída del Reino Lunar. • Éxito crítico: El PJ recibe información clara sobre sucesos y figuras clave de la historia del Reino Lunar y gana 1d4 Esperanza, que puede repartir entre los PJ con quienes comparta sus visiones. • Éxito con Esperanza: El PJ recibe información clara sobre sucesos y figuras clave de la historia del Reino Lunar. • Cualquier tirada con Miedo: El PJ recibe destellos y sensaciones breves relacionados con el final cataclísmico del reino. Si la tirada fue un fallo, el PJ sufre 4d10+5 de daño mágico mientras las visiones asaltan su psique. ¿Qué aspecto tiene esta maquinaria y cómo funciona? ¿Qué aprenden los PJ sobre la historia del Reino Lunar?",
+        "costsFear": false
+      },
+      {
+        "name": "La Tumba de la Reina Lunar",
+        "type": "reaction",
+        "text": "La última gobernante del Reino Lunar ha sido preservada en un ataúd de selenita en lo más profundo de la ciudadela. Con una tirada con Miedo para investigar su cámara, su sombra maligna despierta y ataca al grupo. Invoca el Espíritu de la Reina Lunar (Archinecromante) junto a su ataúd y dale el foco de inmediato. ¿Quién la enterró aquí, y por qué? ¿Puede ser resucitada, o destruir su espíritu es el único camino posible?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
     "id": "necromancers-ossuary",
     "name": "Necromancer’s Ossuary",
     "tier": 4,
@@ -690,8 +1656,92 @@
       {
         "name": "They Just Keep Coming!",
         "type": "action",
-        "text": "Gasta un Miedo para convocar a 1d6 Zombis Podridos, dos Zombis Perfeccionados, o una Legión de Zombis, que aparecen a distancia Cercana de un PJ elegido. ¿Quiénes eran estas personas antes de convertirse en peones del nigromante? ¿Qué vestigios de esas vidas quedan para que los héroes los vean? GUÍA ADICIONAL PARA EL GM Esta sección ofrece orientación adicional para preparar y dirigir una sesión de Daggerheart. MOMENTOS NARRATIVOS En la narración, un momento clave es un instante que cambia el rumbo de la historia: un giro en el mundo, una acción o reacción significativa, una revelación emocional o una decisión importante. Túrnense con los jugadores, narrando un momento clave y luego dejando que reaccionen y lleven la escena adelante con sus propios momentos. Al preparar una sesión, planifica en función de los momentos que dan forma a cada escena o secuencia, en lugar de guionizar de antemano intercambios o detalles específicos. PREPARACIÓN DE ENCUENTROS DE COMBATE Construye los obstáculos que enfrentan los PJs en torno a la pregunta “¿Qué ayuda a contar la historia?”. Enemigos, entornos y peligros son las herramientas para intensificar la tensión y crear drama. Asegúrate de que el combate se use para dar a los jugadores más información sobre la historia que se desarrolla, revelando el mundo, la trama o los personajes. BATALLAS Y NARRATIVA Las batallas dinámicas crean suspenso al forzar a los jugadores a elegir entre sus diversos objetivos, involucrando las motivaciones y debilidades de sus personajes, y creando el crisol donde los jugadores forjan a sus personajes en héroes legendarios. Al preparar encuentros de combate: • Considera la función narrativa de la batalla • Basa los movimientos de los adversarios en sus motivaciones • Usa entornos dinámicos para dar vida al campo de batalla • Añade enemigos que puedan interactuar con las características y habilidades especiales de los PJs RECOMPENSAS DE SESIÓN Recompensa a los jugadores al final de una sesión con: • Información útil • Ganchos narrativos • Botín • Oro • Acceso a nuevo equipo o mejoras CREACIÓN DE ESCENAS Cada vez que empieces una sesión, llegues a un nuevo lugar o cambies la situación, comunica a los jugadores lo que necesitan saber pensando con todos tus sentidos y compartiendo algo único o inesperado sobre la ficción. CÓMO MANTENER A TUS JUGADORES INVOLUCRADOS Mantén a tus jugadores involucrados mediante: • Rotar el protagonismo entre los PJs • Enlazar elementos narrativos • Involucrar a los jugadores más callados • Usar ayudas visuales • Fomentar el juego sin guion • Confrontar a los PJs con conflictos internos y externos • Elevar las apuestas gastando Miedo • Añadir objetivos distintos al desgaste dentro del combate (ver Tabla de Objetivos Aleatorios en la página siguiente) TABLA 1d12 DE BATALLAS POR FASES Crea batallas cambiando la naturaleza de sus enemigos o su entorno a mitad del combate: • Cambiar los términos del enfrentamiento • Alterar el entorno • Evolucionar a la oposición USO DEL TIEMPO LIBRE Usa las escenas de tiempo libre como una válvula de escape para variar la intensidad de la historia y dar a los PJs espacio para respirar. Empodera a tus jugadores para que enmarquen sus propias escenas de tiempo libre. Pregunta a los jugadores cómo se ve mientras atienden sus heridas o se relajan juntos, animándolos a tomar la iniciativa y colaborar con otros jugadores cuyos personajes estén involucrados. Objetivo: Adquirir (obtener o robar) un objeto u objetos importantes. Capturar a uno o más de los oponentes. Activar un dispositivo mágico. Incriminar a un personaje o dañar su reputación. Empujar al oponente hacia un rincón o punto de emboscada. Detener un ritual mágico, una ceremonia legal o un hechizo con límite de tiempo. Contener la línea: evitar que el enemigo llegue a una zona o grupo específico. Plantar evidencia o un dispositivo de rastreo en un objetivo. Asegurar una ubicación específica antes de que llegue otro grupo. Acosar al oponente para agotar sus recursos o mantenerlo ocupado. Destruir una pieza de arquitectura, una estatua, un santuario o un arma. Investigar una situación para confirmar o desmentir información existente. PROYECTOS DURANTE EL TIEMPO LIBRE La jugada de tiempo libre Trabajar en un Proyecto requiere más aporte del GM que otras jugadas de tiempo libre y es más adecuada para empresas a largo plazo que los PJs deseen emprender. Estos proyectos suelen rastrearse mediante una Cuenta de Progreso. Al decidir el valor inicial de la cuenta, considera la complejidad del proyecto, la disponibilidad de herramientas relevantes y el impacto del proyecto en la historia. Los proyectos simples avanzan su cuenta cada vez que un jugador usa la jugada Trabajar en un Proyecto, pero los proyectos complejos requieren una tirada. TIEMPO LIBRE EXTENDIDO Cuando adelantas la historia a través de un periodo extenso, usa montajes para ilustrar el paso del tiempo. Ganas 1d6 de Miedo por PJ y avanzas cualquier cuenta a largo plazo según corresponda. MARCOS DE CAMPAÑA Un marco de campaña ofrece inspiración, herramientas y mecánicas para apoyar un tipo particular de historia en la mesa. Cada marco de campaña tiene una calificación de complejidad que indica cuánto se desvían o amplían sus mecánicas respecto a las reglas base de Daggerheart. Cada marco de campaña incluye las siguientes secciones. • Una propuesta para presentar a los jugadores • Sugerencias y orientación sobre tono, sensación, temas y referencias • Una visión general de los antecedentes de la campaña • Orientación para encajar comunidades, ascendencias y clases en el escenario • Principios en los que enfocarse jugadores y GMs durante la campaña • Distinciones únicas del escenario • Un incidente detonante para lanzar la campaña • Mecánicas especiales para usar durante la campaña • Preguntas a considerar durante la sesión cero Puedes encontrar el mapa de cada marco de campaña en el apéndice del manual básico o en www.daggerheart.com/downloads. El Páramo Marchito Cuando una nación invasora ataca a una antigua deidad del bosque, un crecimiento virulento se propaga por toda la tierra. Diseñado por Carlos Cisco, Rowan Hall y Spenser Starke CALIFICACIÓN DE COMPLEJIDAD: LA PROPUESTA Lee esta sección a tus jugadores para presentarles la campaña. Fanewick fue alguna vez un lugar de gran abundancia y paz, peligroso para quienes no conocían la tierra, pero un cuerno de la abundancia para quienes respetaban sus costumbres. Cuando Haven invadió las tierras salvajes y forzó a la región a una primavera eterna, una peligrosa floración conocida como el Páramo Marchito se afianzó y ahora amenaza la vida de todos los que habitan allí. En una campaña del Páramo Marchito, interpretarás a héroes improbables de orígenes humildes que deben afrontar su nuevo deber de salvar al pueblo de Fanewick de una corrupción peligrosa. TONO Y SENSACIÓN Aventurero, Dinámico, Épico, Heroico, Emocionante, Inquietante, Fantasioso TEMAS Choque cultural, El fin justifica los medios, Duelo, La gente contra la naturaleza, Transformación y cambio, Supervivencia REFERENCIAS La princesa Mononoke, La leyenda de Zelda, El cristal oscuro, Nausicaä del Valle del Viento VISIÓN GENERAL Si tu grupo decide jugar esta campaña, dale a tus jugadores la siguiente información antes de la creación de personajes. Fanewick es una tierra salvaje e indómita, evitada durante mucho tiempo por fuerzas externas. Los bosques son oscuros y retorcidos, llenos de Divinidades Menores que realizan pequeños milagros y servicios para sus habitantes, pero que también son igual de propensos a desviar a los viajeros de senderos estrechos hacia su ruina. Extensiones de campo aparentemente inofensivas ocultan pantanos que devoran ejércitos enteros, consumiendo artillería pesada tan rápido como esta cruza la frontera. Esta naturaleza salvaje forja a gente resistente, lo bastante audaz para criar familias donde otros no se atreven, y que sigue estrictamente las reglas particulares que los mantienen a salvo. Estos Habitantes del Páramo permanecieron aislados de las guerras de sus vecinos hasta que la peste obligó al pueblo de Haven a actos desesperados. Haven fue alguna vez la fuerza más poderosa de la región; durante siglos, los altos muros de piedra hacia la capital llevaron la frase “La Puerta sin Dioses”. Aunque el significado original ha sido •",
+        "text": "Gasta un Miedo para convocar a 1d6 Zombis Podridos, dos Zombis Perfeccionados, o una Legión de Zombis, que aparecen a distancia Cercana de un PJ elegido. ¿Quiénes eran estas personas antes de convertirse en peones del nigromante? ¿Qué vestigios de esas vidas quedan para que los héroes los vean? GUÍA ADICIONAL PARA EL GM Esta sección ofrece orientación adicional para preparar y dirigir una sesión de Daggerheart. MOMENTOS NARRATIVOS En la narración, un momento clave es un instante que cambia el rumbo de la historia: un giro en el mundo, una acción o reacción significativa, una revelación emocional o una decisión importante. Túrnense con los jugadores, narrando un momento clave y luego dejando que reaccionen y lleven la escena adelante con sus propios momentos. Al preparar una sesión, planifica en función de los momentos que dan forma a cada escena o secuencia, en lugar de guionizar de antemano intercambios o detalles específicos. PREPARACIÓN DE ENCUENTROS DE COMBATE Construye los obstáculos que enfrentan los PJs en torno a la pregunta “¿Qué ayuda a contar la historia?”. Enemigos, entornos y peligros son las herramientas para intensificar la tensión y crear drama. Asegúrate de que el combate se use para dar a los jugadores más información sobre la historia que se desarrolla, revelando el mundo, la trama o los personajes. BATALLAS Y NARRATIVA Las batallas dinámicas crean suspenso al forzar a los jugadores a elegir entre sus diversos objetivos, involucrando las motivaciones y debilidades de sus personajes, y creando el crisol donde los jugadores forjan a sus personajes en héroes legendarios. Al preparar encuentros de combate: • Considera la función narrativa de la batalla • Basa los movimientos de los adversarios en sus motivaciones • Usa entornos dinámicos para dar vida al campo de batalla • Añade enemigos que puedan interactuar con las características y habilidades especiales de los PJs RECOMPENSAS DE SESIÓN Recompensa a los jugadores al final de una sesión con: • Información útil • Ganchos narrativos • Botín • Oro • Acceso a nuevo equipo o mejoras CREACIÓN DE ESCENAS Cada vez que empieces una sesión, llegues a un nuevo lugar o cambies la situación, comunica a los jugadores lo que necesitan saber pensando con todos tus sentidos y compartiendo algo único o inesperado sobre la ficción. CÓMO MANTENER A TUS JUGADORES INVOLUCRADOS Mantén a tus jugadores involucrados mediante: • Rotar el protagonismo entre los PJs • Enlazar elementos narrativos • Involucrar a los jugadores más callados • Usar ayudas visuales • Fomentar el juego sin guion • Confrontar a los PJs con conflictos internos y externos • Elevar las apuestas gastando Miedo • Añadir objetivos distintos al desgaste dentro del combate (ver Tabla de Objetivos Aleatorios en la página siguiente) TABLA 1d12 DE BATALLAS POR FASES Crea batallas cambiando la naturaleza de sus enemigos o su entorno a mitad del combate: • Cambiar los términos del enfrentamiento • Alterar el entorno • Evolucionar a la oposición USO DEL TIEMPO LIBRE Usa las escenas de tiempo libre como una válvula de escape para variar la intensidad de la historia y dar a los PJs espacio para respirar. Empodera a tus jugadores para que enmarquen sus propias escenas de tiempo libre. Pregunta a los jugadores cómo se ve mientras atienden sus heridas o se relajan juntos, animándolos a tomar la iniciativa y colaborar con otros jugadores cuyos personajes estén involucrados. Objetivo: Adquirir (obtener o robar) un objeto u objetos importantes. Capturar a uno o más de los oponentes. Activar un dispositivo mágico. Incriminar a un personaje o dañar su reputación. Empujar al oponente hacia un rincón o punto de emboscada. Detener un ritual mágico, una ceremonia legal o un hechizo con límite de tiempo. Contener la línea: evitar que el enemigo llegue a una zona o grupo específico. Plantar evidencia o un dispositivo de rastreo en un objetivo. Asegurar una ubicación específica antes de que llegue otro grupo. Acosar al oponente para agotar sus recursos o mantenerlo ocupado. Destruir una pieza de arquitectura, una estatua, un santuario o un arma. Investigar una situación para confirmar o desmentir información existente. PROYECTOS DURANTE EL TIEMPO LIBRE La movimiento de tiempo libre Trabajar en un Proyecto requiere más aporte del GM que otras movimientos de tiempo libre y es más adecuada para empresas a largo plazo que los PJs deseen emprender. Estos proyectos suelen rastrearse mediante una Cuenta de Progreso. Al decidir el valor inicial de la cuenta, considera la complejidad del proyecto, la disponibilidad de herramientas relevantes y el impacto del proyecto en la historia. Los proyectos simples avanzan su cuenta cada vez que un jugador usa la jugada Trabajar en un Proyecto, pero los proyectos complejos requieren una tirada. TIEMPO LIBRE EXTENDIDO Cuando adelantas la historia a través de un periodo extenso, usa montajes para ilustrar el paso del tiempo. Ganas 1d6 de Miedo por PJ y avanzas cualquier cuenta a largo plazo según corresponda. MARCOS DE CAMPAÑA Un marco de campaña ofrece inspiración, herramientas y mecánicas para apoyar un tipo particular de historia en la mesa. Cada marco de campaña tiene una calificación de complejidad que indica cuánto se desvían o amplían sus mecánicas respecto a las reglas base de Daggerheart. Cada marco de campaña incluye las siguientes secciones. • Una propuesta para presentar a los jugadores • Sugerencias y orientación sobre tono, sensación, temas y referencias • Una visión general de los antecedentes de la campaña • Orientación para encajar comunidades, ascendencias y clases en el escenario • Principios en los que enfocarse jugadores y GMs durante la campaña • Distinciones únicas del escenario • Un incidente detonante para lanzar la campaña • Mecánicas especiales para usar durante la campaña • Preguntas a considerar durante la sesión cero Puedes encontrar el mapa de cada marco de campaña en el apéndice del manual básico o en www.daggerheart.com/downloads. El Páramo Marchito Cuando una nación invasora ataca a una antigua deidad del bosque, un crecimiento virulento se propaga por toda la tierra. Diseñado por Carlos Cisco, Rowan Hall y Spenser Starke CALIFICACIÓN DE COMPLEJIDAD: LA PROPUESTA Lee esta sección a tus jugadores para presentarles la campaña. Fanewick fue alguna vez un lugar de gran abundancia y paz, peligroso para quienes no conocían la tierra, pero un cuerno de la abundancia para quienes respetaban sus costumbres. Cuando Haven invadió las tierras salvajes y forzó a la región a una primavera eterna, una peligrosa floración conocida como el Páramo Marchito se afianzó y ahora amenaza la vida de todos los que habitan allí. En una campaña del Páramo Marchito, interpretarás a héroes improbables de orígenes humildes que deben afrontar su nuevo deber de salvar al pueblo de Fanewick de una corrupción peligrosa. TONO Y SENSACIÓN Aventurero, Dinámico, Épico, Heroico, Emocionante, Inquietante, Fantasioso TEMAS Choque cultural, El fin justifica los medios, Duelo, La gente contra la naturaleza, Transformación y cambio, Supervivencia REFERENCIAS La princesa Mononoke, La leyenda de Zelda, El cristal oscuro, Nausicaä del Valle del Viento VISIÓN GENERAL Si tu grupo decide jugar esta campaña, dale a tus jugadores la siguiente información antes de la creación de personajes. Fanewick es una tierra salvaje e indómita, evitada durante mucho tiempo por fuerzas externas. Los bosques son oscuros y retorcidos, llenos de Divinidades Menores que realizan pequeños milagros y servicios para sus habitantes, pero que también son igual de propensos a desviar a los viajeros de senderos estrechos hacia su ruina. Extensiones de campo aparentemente inofensivas ocultan pantanos que devoran ejércitos enteros, consumiendo artillería pesada tan rápido como esta cruza la frontera. Esta naturaleza salvaje forja a gente resistente, lo bastante audaz para criar familias donde otros no se atreven, y que sigue estrictamente las reglas particulares que los mantienen a salvo. Estos Habitantes del Páramo permanecieron aislados de las guerras de sus vecinos hasta que la peste obligó al pueblo de Haven a actos desesperados. Haven fue alguna vez la fuerza más poderosa de la región; durante siglos, los altos muros de piedra hacia la capital llevaron la frase “La Puerta sin Dioses”. Aunque el significado original ha sido •",
         "costsFear": true
+      }
+    ]
+  },
+  {
+    "id": "realm-of-the-dead",
+    "name": "Reino de los Muertos",
+    "tier": 4,
+    "type": "traversal",
+    "description": "Una extensión aparentemente infinita de aguas quietas sin color ni risas.",
+    "impulses": "Ahogar en la desesperación, drenar la vida, tentar con un sueño eterno",
+    "difficulty": 20,
+    "potentialAdversaries": "Cualquiera (ver “Moradores Tocados por la Muerte”)",
+    "features": [
+      {
+        "name": "Mar de Penumbra",
+        "type": "passive",
+        "text": "Este reino es un océano plateado sin límites cubierto por una penumbra gris, sin estrellas ni horizonte visibles. La corriente sutil tira inexorablemente de las piernas de los PJ, pero es demasiado suave como para perturbar la superficie lisa y espejada del agua. Las tiradas de acción para recorrer este reino tienen desventaja. ¿Qué peligros yacen bajo la superficie? ¿Cómo se encuentra el borde de un mundo sin fin, y qué hay más allá?",
+        "costsFear": false
+      },
+      {
+        "name": "La Carga de la Vigilia",
+        "type": "passive",
+        "text": "Aquí es imposible dormir. Cuando el grupo descansa, cada PJ solo puede elegir una movimiento de tiempo libre. ¿Qué pensamientos mantienen despiertos a los PJ aquí? ¿Cómo pueden apoyarse entre sí sin sucumbir ellos mismos a la desesperanza?",
+        "costsFear": false
+      },
+      {
+        "name": "Moradores Tocados por la Muerte",
+        "type": "passive",
+        "text": "Todas las criaturas mortales pasan tarde o temprano por este lugar en su viaje al más allá, pero quienes se demoran o vagan quedan deformados y mutados por la penumbra. Cualquier adversario que el grupo encuentre aquí está Desvanecido. Describe cómo su tiempo aquí lo ha retorcido en algo peor que la muerte. Cuando un PJ sufre daño por el ataque de un adversario Desvanecido, también debe marcar Estrés. Si un PJ es derrotado aquí, se convierte en un adversario Desvanecido controlado por el GM en lugar de hacer una acción de muerte. ¿Por qué se niegan estas criaturas a seguir adelante? ¿Hay algún patrón en las formas a las que la penumbra las reduce?",
+        "costsFear": false
+      },
+      {
+        "name": "El Frío de la Muerte",
+        "type": "action",
+        "text": "Gasta un Miedo para obligar a un PJ a hacer una Tirada de Reacción de Presencia mientras el Mar de Penumbra le drena el calor de la sangre y los huesos. Con un fallo, sufre 4d10 de daño mágico directo. Con un éxito, debe marcar Estrés. ¿Qué se siente cuando te arrancan a la fuerza las ganas de vivir? ¿Cómo te concentras a través de la desesperación?",
+        "costsFear": true
+      },
+      {
+        "name": "Abandonad Toda Esperanza",
+        "type": "reaction",
+        "text": "Cuando un PJ gasta Esperanza en el Reino de los Muertos, debe tirar un d6. Con un resultado impar, debe gastar una Esperanza adicional o perder el beneficio de la Esperanza que ya gastó. ¿Qué remordimientos te roen al borde de la consciencia mientras estás aquí? ¿Qué recuerdos te atan todavía al Reino Mortal?",
+        "costsFear": false
+      }
+    ]
+  },
+  {
+    "id": "time-court",
+    "name": "Tribunal del Tiempo",
+    "tier": 4,
+    "type": "event",
+    "description": "Uno o más PJ son arrancados a la fuerza de la línea temporal y juzgados por crímenes contra la continuidad.",
+    "impulses": "Hallar la verdad, impartir justicia, anular sus poderes",
+    "difficulty": 20,
+    "potentialAdversaries": "Juez (Monarca), Jurado (Coro Sagrado), Verdugos (Agentes Temporales)",
+    "features": [
+      {
+        "name": "Fuera del Tiempo",
+        "type": "passive",
+        "text": "El juicio tiene lugar en una dimensión de bolsillo que existe más allá de la influencia de los demás reinos. Mientras están aquí, los PJ no pueden usar sus características ni sus habilidades. Cada jugador debe poner sus cartas de Dominio en su bóveda. ¿Qué más, además de la sala del tribunal, reside en esta dimensión de bolsillo? ¿Qué poderes mantienen la barrera universal que protege este lugar?",
+        "costsFear": false
+      },
+      {
+        "name": "Juicio con Jurado",
+        "type": "passive",
+        "text": "Al final del proceso, un jurado vota si absolver o condenar al grupo. Cuando se abra la sesión, haz que la fiscalía presente su caso contra los PJ e inicia una Cuenta Atrás (9). Avanza cuando un PJ hace una tirada de acción. Cuando se dispara, los PJ y el GM tiran sus Dados de Juicio. Si el resultado total del grupo iguala o supera el del GM, el jurado los absuelve. ¿Qué PJ son juzgados? ¿De qué se los acusa? ¿Qué penas podría acarrear un veredicto de culpabilidad?",
+        "costsFear": false
+      },
+      {
+        "name": "Abogado de la Defensa",
+        "type": "passive",
+        "text": "Un PJ puede hacer una tirada de acción para argumentar su inocencia (como una Tirada de Conocimiento para interpretar la letra de la ley, una Tirada de Presencia para apelar a las emociones del jurado o una Tirada de Instinto para señalar los agujeros del caso de la fiscalía). Con un éxito, el grupo gana un Dado de Juicio d6. Con un éxito crítico, gana dos. Con un fallo, la fiscalía rebate el argumento del PJ y tú ganas un Dado de Juicio d6. ¿Cuál es la parte más débil del caso de la fiscalía? ¿Cuál es la parte más fuerte de la defensa del grupo?",
+        "costsFear": false
+      },
+      {
+        "name": "Abogado de la Acusación",
+        "type": "action",
+        "text": "La fiscalía presenta una prueba incriminatoria (como el testimonio de un testigo presencial, los resultados de un análisis o una prueba material tomada de la escena del crimen), y tú ganas un Dado de Juicio d6. Un PJ puede marcar Estrés para intentar rebatir la prueba con una Tirada de Reacción de Conocimiento, Instinto o Presencia. Con un éxito, el grupo gana el Dado de Juicio en tu lugar. Con un fallo, tú ganas un Dado de Juicio d6 adicional. ¿Quién dirige la acusación y cuál es su relación con el Consejo del Tiempo? ¿De qué magia o tecnología depende este tribunal para presentar y registrar pruebas?",
+        "costsFear": false
+      },
+      {
+        "name": "“¡Orden en la Sala!”",
+        "type": "reaction",
+        "text": "Cuando los PJ intenten escapar o poner fin al juicio por la fuerza, invoca un número de Agentes Temporales igual al número de PJ en la escena a alcance Cercano y dale el foco a uno de inmediato. ¿Merece respeto la autoridad de este tribunal? ¿Qué justifica su control sobre la línea temporal, además del poderío del Consejo del Tiempo y sus agentes?",
+        "costsFear": false
       }
     ]
   }

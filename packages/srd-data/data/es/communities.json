@@ -1,5 +1,37 @@
 [
   {
+    "id": "duneborne",
+    "name": "Nacido de las Dunas",
+    "feature": {
+      "name": "Oasis",
+      "text": "Durante un descanso corto, tú o un aliado podéis repetir un dado usado para un movimiento de tiempo libre y quedaros con el resultado más alto."
+    }
+  },
+  {
+    "id": "freeborne",
+    "name": "Nacido Libre",
+    "feature": {
+      "name": "Sin Ataduras",
+      "text": "Una vez por sesión, cuando tires con Miedo, puedes convertirla en una tirada con Esperanza."
+    }
+  },
+  {
+    "id": "frostborne",
+    "name": "Nacido de la Escarcha",
+    "feature": {
+      "name": "Recio",
+      "text": "Cuando tomes un descanso, despejas un Punto de Vida."
+    }
+  },
+  {
+    "id": "hearthborne",
+    "name": "Nacido del Hogar",
+    "feature": {
+      "name": "Unido",
+      "text": "Una vez por descanso largo, puedes gastar cualquier cantidad de Esperanza para otorgar a un aliado a alcance Lejano esa misma cantidad de Esperanza."
+    }
+  },
+  {
     "id": "highborne",
     "name": "Alta Cuna",
     "feature": {
@@ -21,6 +53,14 @@
     "feature": {
       "name": "Devoto",
       "text": "Anota tres dichos o valores que tu crianza te inculcó. Una vez por descanso, cuando describas cómo estás encarnando uno de estos principios a través de tu acción actual, puedes tirar un d20 como tu Dado de Esperanza."
+    }
+  },
+  {
+    "id": "reborne",
+    "name": "Renacido",
+    "feature": {
+      "name": "Familia Elegida",
+      "text": "Una vez por descanso, puedes gastar una Esperanza para usar la Experiencia de un aliado como si fuera tuya. Cuando lo hagas, describe cómo el tiempo pasado con ese aliado te preparó para este momento. Cuando te unas a una comunidad nueva o redescubras la tuya, puedes cambiar esta carta por aquella de forma permanente."
     }
   },
   {
@@ -61,6 +101,14 @@
     "feature": {
       "name": "Fardo Nómada",
       "text": "Añade un Fardo Nómada a tu inventario. Una vez por sesión, puedes gastar una Esperanza para rebuscar en este fardo y sacar un objeto mundano útil para tu situación. Trabaja con el DJ para determinar qué objeto sacas."
+    }
+  },
+  {
+    "id": "warborne",
+    "name": "Nacido de la Guerra",
+    "feature": {
+      "name": "Cara Valiente",
+      "text": "Una vez por sesión, cuando fueras a verte obligado a marcar un Estrés, puedes gastar una Esperanza en su lugar."
     }
   },
   {

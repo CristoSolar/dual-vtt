@@ -1,5 +1,19 @@
 [
   {
+    "id": "mage-robes",
+    "name": "Túnica de Mago",
+    "tier": 1,
+    "baseThresholds": {
+      "major": 4,
+      "severe": 10
+    },
+    "baseScore": 2,
+    "feature": {
+      "name": "Encantada",
+      "text": "Obtienes un bono a tus umbrales de daño igual a tu rasgo de Lanzamiento."
+    }
+  },
+  {
     "id": "gambeson-armor",
     "name": "Armadura de Gambesón",
     "tier": 1,
@@ -14,6 +28,20 @@
     }
   },
   {
+    "id": "brigandine-armor",
+    "name": "Armadura de Brigantina",
+    "tier": 1,
+    "baseThresholds": {
+      "major": 6,
+      "severe": 12
+    },
+    "baseScore": 3,
+    "feature": {
+      "name": "Forrada",
+      "text": "Marca un Estrés para anular el daño Menor."
+    }
+  },
+  {
     "id": "leather-armor",
     "name": "Armadura de Cuero",
     "tier": 1,
@@ -23,6 +51,20 @@
     },
     "baseScore": 3,
     "feature": null
+  },
+  {
+    "id": "scale-mail-armor",
+    "name": "Armadura de Escamas",
+    "tier": 1,
+    "baseThresholds": {
+      "major": 7,
+      "severe": 14
+    },
+    "baseScore": 3,
+    "feature": {
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
+    }
   },
   {
     "id": "chainmail-armor",
@@ -36,6 +78,20 @@
     "feature": {
       "name": "Pesada",
       "text": "−1 a la Evasión"
+    }
+  },
+  {
+    "id": "banded-armor",
+    "name": "Armadura de Bandas",
+    "tier": 1,
+    "baseThresholds": {
+      "major": 8,
+      "severe": 16
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Voluminosa",
+      "text": "−1 a la Evasión; cuando recibas daño Grave, debes marcar un Estrés."
     }
   },
   {
@@ -53,6 +109,20 @@
     }
   },
   {
+    "id": "improved-mage-robes",
+    "name": "Túnica de Mago Mejorada",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 6,
+      "severe": 15
+    },
+    "baseScore": 3,
+    "feature": {
+      "name": "Encantada",
+      "text": "Obtienes un bono a tus umbrales de daño igual a tu rasgo de Lanzamiento."
+    }
+  },
+  {
     "id": "improved-gambeson-armor",
     "name": "Armadura de Gambesón Mejorada",
     "tier": 2,
@@ -67,6 +137,20 @@
     }
   },
   {
+    "id": "improved-brigandine-armor",
+    "name": "Armadura de Brigantina Mejorada",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 9,
+      "severe": 19
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Forrada",
+      "text": "Marca un Estrés para anular el daño Menor."
+    }
+  },
+  {
     "id": "improved-leather-armor",
     "name": "Armadura de Cuero Mejorada",
     "tier": 2,
@@ -76,6 +160,20 @@
     },
     "baseScore": 4,
     "feature": null
+  },
+  {
+    "id": "improved-scale-mail-armor",
+    "name": "Armadura de Escamas Mejorada",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 23
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
+    }
   },
   {
     "id": "improved-chainmail-armor",
@@ -92,6 +190,20 @@
     }
   },
   {
+    "id": "improved-banded-armor",
+    "name": "Armadura de Bandas Mejorada",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 27
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Voluminosa",
+      "text": "−1 a la Evasión; cuando recibas daño Grave, debes marcar un Estrés."
+    }
+  },
+  {
     "id": "improved-full-plate-armor",
     "name": "Armadura de Placas Completa Mejorada",
     "tier": 2,
@@ -103,6 +215,62 @@
     "feature": {
       "name": "Muy Pesada",
       "text": "−2 a la Evasión; −1 a Agilidad"
+    }
+  },
+  {
+    "id": "enchanters-robes",
+    "name": "Túnica del Encantador",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 9,
+      "severe": 20
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Mnemónica",
+      "text": "Una vez por escena, puedes recuperar una carta de dominio de tu bóveda sin pagar su Coste de Recuperación."
+    }
+  },
+  {
+    "id": "hawkguards-mantle",
+    "name": "Manto del Guardián Halcón",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 9,
+      "severe": 20
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Planeadora",
+      "text": "Puedes planear hasta alcance Lejano y eres inmune al daño por caída."
+    }
+  },
+  {
+    "id": "spidersilk-tunic",
+    "name": "Túnica de Seda de Araña",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 9,
+      "severe": 20
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Trepamuros",
+      "text": "+1 a la Evasión; puedes caminar por las paredes con la misma facilidad que por el suelo."
+    }
+  },
+  {
+    "id": "stormthread-habit",
+    "name": "Hábito de Hilo de Tormenta",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 9,
+      "severe": 20
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Absorbente",
+      "text": "Una vez por escena, cuando recibas daño mágico, puedes recuperar una Ranura de Armadura."
     }
   },
   {
@@ -176,6 +344,20 @@
     }
   },
   {
+    "id": "wyrdwood-splint-armor",
+    "name": "Armadura de Tablillas de Madera Fatídica",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 10,
+      "severe": 21
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "De Paso Veloz",
+      "text": "No puedes ser Inmovilizado y puedes moverte hasta alcance Lejano como parte de una tirada de acción."
+    }
+  },
+  {
     "id": "rosewild-armor",
     "name": "Armadura Rosewild",
     "tier": 2,
@@ -187,6 +369,48 @@
     "feature": {
       "name": "Esperanzadora",
       "text": "Cuando fueras a gastar una Esperanza, puedes marcar una Ranura de Armadura en su lugar."
+    }
+  },
+  {
+    "id": "trollhide-cuirass",
+    "name": "Coraza de Piel de Trol",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 23
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Autorreparable",
+      "text": "Cuando tomes un descanso, recupera una Ranura de Armadura."
+    }
+  },
+  {
+    "id": "gilded-sunplate",
+    "name": "Placa Solar Dorada",
+    "tier": 2,
+    "baseThresholds": {
+      "major": 12,
+      "severe": 26
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Resplandeciente",
+      "text": "Una vez por escena, cuando gastes Esperanza, puedes recuperar una Ranura de Armadura."
+    }
+  },
+  {
+    "id": "advanced-mage-robes",
+    "name": "Túnica de Mago Avanzada",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 8,
+      "severe": 22
+    },
+    "baseScore": 4,
+    "feature": {
+      "name": "Encantada",
+      "text": "Obtienes un bono a tus umbrales de daño igual a tu rasgo de Lanzamiento."
     }
   },
   {
@@ -204,6 +428,20 @@
     }
   },
   {
+    "id": "advanced-brigandine-armor",
+    "name": "Armadura de Brigantina Avanzada",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 26
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Forrada",
+      "text": "Marca un Estrés para anular el daño Menor."
+    }
+  },
+  {
     "id": "advanced-leather-armor",
     "name": "Armadura de Cuero Avanzada",
     "tier": 3,
@@ -213,6 +451,20 @@
     },
     "baseScore": 5,
     "feature": null
+  },
+  {
+    "id": "advanced-scale-mail-armor",
+    "name": "Armadura de Escamas Avanzada",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 30
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
+    }
   },
   {
     "id": "advanced-chainmail-armor",
@@ -226,6 +478,20 @@
     "feature": {
       "name": "Pesada",
       "text": "−1 a la Evasión"
+    }
+  },
+  {
+    "id": "advanced-banded-armor",
+    "name": "Armadura de Bandas Avanzada",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 15,
+      "severe": 34
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Voluminosa",
+      "text": "−1 a la Evasión; cuando recibas daño Grave, debes marcar un Estrés."
     }
   },
   {
@@ -243,6 +509,48 @@
     }
   },
   {
+    "id": "granminsters-finery",
+    "name": "Galas de Granminster",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 27
+    },
+    "baseScore": 2,
+    "feature": {
+      "name": "Magnífica",
+      "text": "Obtienes un bono a tu Puntaje de Armadura igual a tu Presencia."
+    }
+  },
+  {
+    "id": "spiked-plate-armor",
+    "name": "Armadura de Placas con Púas",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 10,
+      "severe": 25
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Afilada",
+      "text": "En un ataque exitoso contra un objetivo dentro de alcance Cuerpo a Cuerpo, añade un d4 a la tirada de daño."
+    }
+  },
+  {
+    "id": "astral-raiment",
+    "name": "Vestidura Astral",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 27
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Estelar",
+      "text": "Marca un Estrés para obtener ventaja en una Tirada de Lanzamiento."
+    }
+  },
+  {
     "id": "bellamoi-fine-armor",
     "name": "Armadura Fina Bellamoi",
     "tier": 3,
@@ -254,6 +562,20 @@
     "feature": {
       "name": "Dorada",
       "text": "+1 a Presencia"
+    }
+  },
+  {
+    "id": "cloverweave-cloak",
+    "name": "Capa de Trama de Trébol",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 11,
+      "severe": 27
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Favorecida por la Fortuna",
+      "text": "Una vez por escena, puedes convertir un fallo con Esperanza en un éxito con Miedo."
     }
   },
   {
@@ -271,17 +593,45 @@
     }
   },
   {
-    "id": "spiked-plate-armor",
-    "name": "Armadura de Placas con Púas",
+    "id": "skywardens-lamellar",
+    "name": "Laminar del Guardián del Cielo",
     "tier": 3,
     "baseThresholds": {
-      "major": 10,
-      "severe": 25
+      "major": 11,
+      "severe": 27
     },
     "baseScore": 5,
     "feature": {
-      "name": "Afilada",
-      "text": "En un ataque exitoso contra un objetivo dentro de alcance Cuerpo a Cuerpo, añade un d4 a la tirada de daño."
+      "name": "Vigilante",
+      "text": "+2 a la Evasión"
+    }
+  },
+  {
+    "id": "bloodstone-plate-armor",
+    "name": "Armadura de Placas de Sanguinaria",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 35
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Sedienta de Sangre",
+      "text": "Cuando tengas un éxito crítico en un ataque con arma dentro de alcance Cuerpo a Cuerpo, recupera un Punto de Vida."
+    }
+  },
+  {
+    "id": "deep-forged-coral-armor",
+    "name": "Armadura de Coral Forjada en lo Profundo",
+    "tier": 3,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 35
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Acuática",
+      "text": "Puedes respirar bajo el agua y obtienes ventaja en las Tiradas de Agilidad mientras estés sumergido."
     }
   },
   {
@@ -327,6 +677,20 @@
     }
   },
   {
+    "id": "legendary-mage-robes",
+    "name": "Túnica de Mago Legendaria",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 10,
+      "severe": 31
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Encantada",
+      "text": "Obtienes un bono a tus umbrales de daño igual a tu rasgo de Lanzamiento."
+    }
+  },
+  {
     "id": "legendary-gambeson-armor",
     "name": "Armadura de Gambesón Legendaria",
     "tier": 4,
@@ -341,6 +705,20 @@
     }
   },
   {
+    "id": "legendary-brigandine-armor",
+    "name": "Armadura de Brigantina Legendaria",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 35
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Forrada",
+      "text": "Marca un Estrés para anular el daño Menor."
+    }
+  },
+  {
     "id": "legendary-leather-armor",
     "name": "Armadura de Cuero Legendaria",
     "tier": 4,
@@ -350,6 +728,20 @@
     },
     "baseScore": 6,
     "feature": null
+  },
+  {
+    "id": "legendary-scale-mail-armor",
+    "name": "Armadura de Escamas Legendaria",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 15,
+      "severe": 39
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Estorbosa",
+      "text": "−1 a Destreza"
+    }
   },
   {
     "id": "legendary-chainmail-armor",
@@ -363,6 +755,20 @@
     "feature": {
       "name": "Pesada",
       "text": "−1 a la Evasión"
+    }
+  },
+  {
+    "id": "legendary-banded-armor",
+    "name": "Armadura de Bandas Legendaria",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 17,
+      "severe": 43
+    },
+    "baseScore": 7,
+    "feature": {
+      "name": "Voluminosa",
+      "text": "−1 a la Evasión; cuando recibas daño Grave, debes marcar un Estrés."
     }
   },
   {
@@ -380,17 +786,17 @@
     }
   },
   {
-    "id": "dunamis-silkchain",
-    "name": "Cadena de Seda Dunamis",
+    "id": "full-fortified-armor",
+    "name": "Armadura Totalmente Fortificada",
     "tier": 4,
     "baseThresholds": {
-      "major": 13,
-      "severe": 36
+      "major": 15,
+      "severe": 40
     },
-    "baseScore": 7,
+    "baseScore": 4,
     "feature": {
-      "name": "Ralentitemporal",
-      "text": "Marca una Ranura de Armadura para tirar un d4 y sumar su resultado como bono a tu Evasión contra un ataque entrante."
+      "name": "Fortificada",
+      "text": "Cuando marcas una Ranura de Armadura, reduces la severidad de un ataque en dos umbrales en lugar de uno."
     }
   },
   {
@@ -408,6 +814,20 @@
     }
   },
   {
+    "id": "darkweave-shroud",
+    "name": "Sudario de Trama Oscura",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 36
+    },
+    "baseScore": 5,
+    "feature": {
+      "name": "Caminante Fantasmal",
+      "text": "Una vez por descanso, marca un Estrés para moverte hasta alcance Cercano a través de objetos sólidos."
+    }
+  },
+  {
     "id": "emberwoven-armor",
     "name": "Armadura Entretejida de Ascuas",
     "tier": 4,
@@ -422,17 +842,17 @@
     }
   },
   {
-    "id": "full-fortified-armor",
-    "name": "Armadura Totalmente Fortificada",
+    "id": "godbound-laminar",
+    "name": "Laminar Atada a los Dioses",
     "tier": 4,
     "baseThresholds": {
-      "major": 15,
-      "severe": 40
+      "major": 13,
+      "severe": 36
     },
-    "baseScore": 4,
+    "baseScore": 6,
     "feature": {
-      "name": "Fortificada",
-      "text": "Cuando marcas una Ranura de Armadura, reduces la severidad de un ataque en dos umbrales en lugar de uno."
+      "name": "Divina",
+      "text": "Cuando marques una Ranura de Armadura, obtienes una Esperanza."
     }
   },
   {
@@ -447,6 +867,76 @@
     "feature": {
       "name": "Buscaverdad",
       "text": "Esta armadura brilla cuando otra criatura dentro de alcance Cercano dice una mentira."
+    }
+  },
+  {
+    "id": "circle-forged-dreadplate",
+    "name": "Placa del Pavor Forjada en Círculo",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 14,
+      "severe": 38
+    },
+    "baseScore": 6,
+    "feature": {
+      "name": "Maldita",
+      "text": "Cuando marques cualquier cantidad de Puntos de Vida por un ataque, tira un d4. Con un resultado de 4, el atacante debe marcar esa misma cantidad de Estrés."
+    }
+  },
+  {
+    "id": "rune-forged-exosuit",
+    "name": "Exotraje Forjado con Runas",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 12,
+      "severe": 39
+    },
+    "baseScore": 7,
+    "feature": {
+      "name": "Sintonizada",
+      "text": "La cantidad máxima de cartas de dominio en tu equipo activo se reduce en una, pero obtienes un bono a tus umbrales de daño igual a tu escalón."
+    }
+  },
+  {
+    "id": "dunamis-silkchain",
+    "name": "Cadena de Seda Dunamis",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 36
+    },
+    "baseScore": 7,
+    "feature": {
+      "name": "Ralentitemporal",
+      "text": "Marca una Ranura de Armadura para tirar un d4 y sumar su resultado como bono a tu Evasión contra un ataque entrante."
+    }
+  },
+  {
+    "id": "hallowed-heroplate",
+    "name": "Heroplaca Consagrada",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 13,
+      "severe": 35
+    },
+    "baseScore": 7,
+    "feature": {
+      "name": "Bendecida",
+      "text": "Una vez por descanso largo, puedes gastar cualquier cantidad de Esperanza antes de hacer el movimiento de muerte Arriesgarlo Todo. Obtienes un bono al resultado de tu Dado de Esperanza igual a la cantidad de Esperanza gastada."
+    }
+  },
+  {
+    "id": "resonant-harness",
+    "name": "Arnés Resonante",
+    "tier": 4,
+    "baseThresholds": {
+      "major": 15,
+      "severe": 40
+    },
+    "baseScore": 7,
+    "feature": {
+      "name": "Vítrea",
+      "text": "Cuando fueras a recibir daño Grave o superior, puedes marcar 2 Ranuras de Armadura para anular ese daño. Si lo haces, sufres una penalización de −5 a tus umbrales de daño hasta que decidas reparar tu armadura como un movimiento de tiempo libre."
     }
   },
   {
