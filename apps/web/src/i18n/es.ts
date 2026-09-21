@@ -322,6 +322,20 @@ export const es = {
   'sheet.deathMove.blazeOfGlory': 'Última Gloria',
   'sheet.deathMove.avoidDeath': 'Evitar la Muerte',
   'sheet.deathMove.riskItAll': 'Arriesgarlo Todo',
+  'sheet.deathMove.blazeOfGloryAction': 'Salir en llamas de gloria',
+  'sheet.deathMove.avoidDeathAction': 'Evitar la muerte',
+  'sheet.deathMove.riskItAllAction': 'Arriesgarlo todo',
+  'sheet.deathMove.confirm': 'Confirmar: no hay vuelta atrás',
+  'sheet.deathMove.prefer': 'Si sobrevives, despejar primero',
+  'sheet.deathMove.preferHP': 'Puntos de Vida',
+  'sheet.deathMove.preferStress': 'Estrés',
+  'sheet.deathMove.decideLater': 'Decidir en la mesa',
+  'effect.diedInBlazeOfGlory': 'Saliste en llamas de gloria.',
+  'effect.riskedAndLost': 'El Dado de Miedo fue más alto. El viaje termina aquí.',
+  'effect.riskedAndSurvived': 'Sigues en pie: despejaste {hp} de Vida y {stress} de Estrés.',
+  'effect.unconscious': 'Quedas inconsciente. Dado de Esperanza: {hopeDie}.',
+  'effect.scarred': 'Quedas inconsciente y con una cicatriz. Dado de Esperanza: {hopeDie}.',
+  'effect.lastScar': 'Se tacha la última ranura de Esperanza. El viaje termina aquí.',
   'sheet.deathMove.resolveHint': 'Resuélvelo en la mesa.',
 
   // character sheet: level-up dialog
@@ -502,6 +516,9 @@ export const es = {
   // character sheet: route
   'sheet.route.unnamedCharacter': 'Personaje sin nombre',
   'sheet.route.vulnerable': 'Vulnerable',
+  'sheet.route.unconscious': 'Inconsciente',
+  'sheet.route.dead': 'El viaje terminó',
+  'sheet.route.scars': 'Cicatrices: {count} ranura(s) de Esperanza tachadas para siempre.',
   'sheet.route.exportPdf': 'Exportar PDF',
   'sheet.route.charactersLink': 'Personajes',
   'sheet.route.levelUp': 'Subir de nivel',
@@ -841,7 +858,16 @@ export const es = {
     'no da nada — o, si era largo, solo lo que habría dado uno corto (SRD 2.0 p.52).',
   'help.rules.death.title': 'Movimiento de Muerte',
   'help.rules.death.body':
-    'Cuando un personaje marca su último Punto de Vida disponible, cae y su jugador debe elegir un Movimiento de Muerte de inmediato: Salida Gloriosa acepta la muerte del personaje a cambio de un último acto decisivo con éxito garantizado, Esquivar la Muerte lo mantiene con vida pero tacha permanentemente una casilla de Esperanza —reduciendo su máximo— y el personaje se retira cuando todas quedan tachadas, y Arriesgarlo Todo lanza una tirada de Dualidad: si el Dado de Esperanza es mayor, limpia Puntos de Vida y Estrés igual a su resultado; si el Dado de Miedo es mayor, el personaje muere; si coinciden, limpia todos los Puntos de Vida y todo el Estrés. La elección es del jugador, no del DJ, y define el tono de la escena que sigue (SRD p. 42).',
+    'Marcar tu último Punto de Vida obliga a hacer un movimiento de muerte, y la ' +
+    'elección no tiene vuelta atrás. Salir en llamas de gloria permite una última ' +
+    'acción que tiene éxito crítico automático, y después el personaje se va. Evitar ' +
+    'la muerte lo deja inconsciente: tira el Dado de Esperanza y, si sale igual o ' +
+    'menor a su nivel, recibe una cicatriz y se tacha una ranura de Esperanza para ' +
+    'siempre; al tachar la última, el viaje termina. Despierta cuando un aliado le ' +
+    'despeja un Punto de Vida o cuando la party termina un descanso largo. ' +
+    'Arriesgarlo todo tira los Dados de Dualidad: si Esperanza es mayor sigue en pie y ' +
+    'despeja su valor repartido entre Vida y Estrés a su gusto; si son iguales despeja ' +
+    'todo; si Miedo es mayor, cruza el velo (SRD 2.0 p.53).',
   'help.rules.conditions.title': 'Condiciones',
   'help.rules.conditions.body':
     'Oculto describe a un personaje que los adversarios no pueden ver ni atacar directamente hasta que se revele o sea descubierto. Inmovilizado impide moverse, pero el personaje todavía puede actuar con normalidad mientras dura la condición. Vulnerable, que también se activa al marcar todo el Estrés disponible, hace que cualquier tirada en contra del personaje o adversario afectado tenga ventaja hasta que la condición se elimine. Las tres se quitan por la narración, una habilidad concreta o el fin del efecto que las causó (SRD p. 41).',

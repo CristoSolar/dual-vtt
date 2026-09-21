@@ -277,6 +277,109 @@ describe('what a player is allowed to see', () => {
   });
 });
 
+describe('death moves', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  /** Marks every Hit Point, which is what forces the move. */
+  function downed(state: RoomState, who: Actor): RoomState {
+    const slots = state.characters[who.id]?.character.hpSlots ?? 6;
+    return apply(state, GM, { type: 'markHP', characterId: who.id, amount: slots });
+  }
+
+  it('ends the character on a blaze of glory', () => {
+    const next = apply(downed(room, ALEX), ALEX, {
+      type: 'deathMove',
+      characterId: ALEX.id,
+      choice: 'blazeOfGlory',
+      prefer: 'hp',
+    });
+    expect(next.characters[ALEX.id]?.dead).toBe(true);
+  });
+
+  it('drops the character unconscious when they avoid death', () => {
+    const next = apply(downed(room, ALEX), ALEX, {
+      type: 'deathMove',
+      characterId: ALEX.id,
+      choice: 'avoidDeath',
+      prefer: 'hp',
+    });
+    const sheet = next.characters[ALEX.id];
+    // A level-1 character is scarred only on a 1, so this may go either way; what
+    // is certain is that they are down but not gone.
+    expect(sheet?.dead).toBe(false);
+    expect(sheet?.unconscious).toBe(true);
+    expect(sheet?.scars).toBeLessThanOrEqual(1);
+  });
+
+  it('wakes an unconscious character when an ally clears a Hit Point', () => {
+    let next = apply(downed(room, ALEX), ALEX, {
+      type: 'deathMove',
+      characterId: ALEX.id,
+      choice: 'avoidDeath',
+      prefer: 'hp',
+    });
+    expect(next.characters[ALEX.id]?.unconscious).toBe(true);
+
+    next = apply(next, GM, { type: 'clearHP', characterId: ALEX.id, amount: 1 });
+    expect(next.characters[ALEX.id]?.unconscious).toBe(false);
+  });
+
+  it('wakes everyone when the party takes a long rest', () => {
+    let next = apply(downed(room, ALEX), ALEX, {
+      type: 'deathMove',
+      characterId: ALEX.id,
+      choice: 'avoidDeath',
+      prefer: 'hp',
+    });
+    next = apply(next, GM, { type: 'beginRest', kind: 'long' });
+    expect(next.characters[ALEX.id]?.unconscious).toBe(false);
+  });
+
+  it('logs a Risk It All, since the whole table watches that roll', () => {
+    const result = applyRoomEvent(
+      downed(room, ALEX),
+      ALEX,
+      { type: 'deathMove', characterId: ALEX.id, choice: 'riskItAll', prefer: 'hp' },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('the death move was rejected');
+    expect(result.entries).toHaveLength(1);
+    expect(result.state.rollLog[0]?.label).toBe('Risk It All');
+  });
+
+  it('refuses a death move for a character who is already gone', () => {
+    const gone = apply(downed(room, ALEX), ALEX, {
+      type: 'deathMove',
+      characterId: ALEX.id,
+      choice: 'blazeOfGlory',
+      prefer: 'hp',
+    });
+    expect(
+      refusal(gone, ALEX, {
+        type: 'deathMove',
+        characterId: ALEX.id,
+        choice: 'riskItAll',
+        prefer: 'hp',
+      }),
+    ).toBe('characterIsGone');
+  });
+
+  it('refuses a death move a player makes for somebody else', () => {
+    expect(
+      refusal(downed(room, SAM), ALEX, {
+        type: 'deathMove',
+        characterId: SAM.id,
+        choice: 'avoidDeath',
+        prefer: 'hp',
+      }),
+    ).toBe('notYourCharacter');
+  });
+});
+
 describe('downtime', () => {
   let room: RoomState;
   beforeEach(() => {

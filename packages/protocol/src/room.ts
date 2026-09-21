@@ -49,6 +49,7 @@ import {
   gainSheetGold,
   gainSheetHope,
   applyDowntime,
+  makeDeathMove,
   makeDamageRoll,
   makeDualityRoll,
   markSheetArmorSlot,
@@ -59,6 +60,7 @@ import {
   spendSheetGold,
   spendSheetHope,
   takeDamage,
+  wake,
   type SheetEffect,
   type SheetState,
 } from './sheet.js';
@@ -83,6 +85,9 @@ export type GameMaster = z.infer<typeof GameMasterSchema>;
 
 /** Which rest the party is taking (SRD 2.0 p.52). */
 export const RestKindSchema = z.enum(['short', 'long']);
+
+/** Which death move a character makes when their last Hit Point is marked. */
+export const DeathMoveChoiceSchema = z.enum(['blazeOfGlory', 'avoidDeath', 'riskItAll']);
 
 /** The downtime moves a character can spend their two on. */
 export const DowntimeMoveSchema = z.enum([
@@ -221,6 +226,7 @@ export type RoomError =
   | 'mustRestLong'
   | 'moveNotAvailable'
   | 'noMovesLeft'
+  | 'characterIsGone'
   | 'rejected';
 
 export type RoomResult =
@@ -345,6 +351,7 @@ export function applyRoomEvent(
     case 'recallCard':
     case 'vaultCard':
     case 'downtimeMove':
+    case 'deathMove':
     case 'levelUp':
     case 'rollDuality':
     case 'rollDamage': {
@@ -444,8 +451,15 @@ export function applyRoomEvent(
       const countdowns =
         event.kind === 'long' ? advanceOnRest(state.countdowns).countdowns : state.countdowns;
 
+      // A long rest brings anyone unconscious back round (SRD 2.0 p.53).
+      const characters =
+        event.kind === 'long'
+          ? Object.fromEntries(Object.entries(state.characters).map(([id, s]) => [id, wake(s)]))
+          : state.characters;
+
       return ok({
         ...state,
+        characters,
         rest: { kind: event.kind, movesLeft },
         consecutiveShortRests: event.kind === 'short' ? state.consecutiveShortRests + 1 : 0,
         fear: gainFear(state.fear, fear),
@@ -595,7 +609,13 @@ function applyCharacterEvent(
     }
     case 'clearHP': {
       const t = clearSheetHP(sheet, event.amount);
-      return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
+      // "They return to consciousness when an ally clears 1 or more of their marked
+      // Hit Points" (SRD 2.0 p.53).
+      const healed = t.sheet.hpMarked < sheet.hpMarked;
+      return ok(
+        withCharacter(state, event.characterId, healed ? wake(t.sheet) : t.sheet),
+        t.effect,
+      );
     }
     case 'markStress': {
       const t = markSheetStress(sheet, event.amount);
@@ -649,6 +669,29 @@ function applyCharacterEvent(
       if (!t.ok) return fail('rejected', t.effect.message ?? 'recall rejected');
       return ok(withCharacter(state, event.characterId, t.sheet), t.effect);
     }
+    case 'deathMove': {
+      if (sheet.dead) return fail('characterIsGone', 'that character\u2019s journey has ended');
+      const t = makeDeathMove(sheet, event.choice, event.prefer, rng);
+      const entry: RollEntry | null =
+        t.outcome.choice === 'riskItAll'
+          ? {
+              kind: 'duality',
+              id: `${now.toString(36)}-${event.characterId}-death`,
+              at: now,
+              by: rollerName,
+              label: 'Risk It All',
+              roll: t.outcome.roll,
+              difficulty: 0,
+              outcome: t.outcome.died ? 'failureFear' : 'successHope',
+              experiences: [],
+            }
+          : null;
+      const next = withCharacter(state, event.characterId, t.sheet);
+      return entry === null
+        ? ok(next, t.effect)
+        : ok(appendEntries(next, [entry]), t.effect, [entry]);
+    }
+
     case 'downtimeMove': {
       const rest = state.rest;
       if (rest === null) return fail('notResting', 'the party is not resting');

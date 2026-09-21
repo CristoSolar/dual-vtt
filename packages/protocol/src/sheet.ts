@@ -2,7 +2,10 @@ import { CharacterSchema, MulticlassSchema, type Character } from '@daggerheart/
 import { srd } from '@daggerheart/srd-data';
 import { z } from 'zod';
 import {
+  MAX_HOPE,
   applyDamage,
+  avoidDeath,
+  blazeOfGlory,
   clearArmorSlot,
   clearHP,
   clearStress,
@@ -13,8 +16,10 @@ import {
   markHP,
   markStress,
   recallCard,
+  riskItAll,
   rollDamage,
   rollDuality,
+  splitClears,
   resolveActionRoll,
   spendGold,
   spendHope,
@@ -27,6 +32,8 @@ import {
   type Gold,
   type GoldUnit,
   type IncomingDamageType,
+  type DeathMoveChoice,
+  type DeathMoveOutcome,
   type LevelUpChoices,
   type Rng,
 } from '@daggerheart/rules';
@@ -58,6 +65,20 @@ export const SheetStateSchema = z.object({
   gold: GoldSchema,
   loadout: z.array(z.string()),
   vault: z.array(z.string()),
+  /**
+   * Hope slots crossed out by scars from avoiding death. Crossing out the last one
+   * ends the character's journey (SRD 2.0 p.53). Defaulted so a sheet claimed
+   * before death moves existed still parses.
+   */
+  scars: z.number().int().min(0).max(MAX_HOPE).default(0),
+  /**
+   * Set by avoiding death. While unconscious a character cannot act and cannot be
+   * targeted; they wake when an ally clears a Hit Point or the party finishes a
+   * long rest.
+   */
+  unconscious: z.boolean().default(false),
+  /** Set when a death move ended the character. */
+  dead: z.boolean().default(false),
 });
 
 /**
@@ -78,6 +99,9 @@ export function createSheet(character: Character): SheetState {
     stressMarked: 0,
     hope: character.hope,
     armorSlotsMarked: 0,
+    scars: 0,
+    unconscious: false,
+    dead: false,
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
     loadout: [...character.domainCards],
@@ -106,6 +130,12 @@ export type SheetEffectCode =
   | 'levelUpRejected'
   | 'unknownMulticlass'
   | 'unknownExperience'
+  | 'diedInBlazeOfGlory'
+  | 'riskedAndLost'
+  | 'riskedAndSurvived'
+  | 'unconscious'
+  | 'scarred'
+  | 'lastScar'
   | 'levelledUp';
 
 /** What a mutation wants the UI to say about it, beyond the new state. */
@@ -306,6 +336,89 @@ export function takeDamage(sheet: SheetState, options: TakeDamageOptions): TakeD
 
 export interface RecallResult extends SheetTransition {
   ok: boolean;
+}
+
+export interface DeathMoveTransition extends SheetTransition {
+  outcome: DeathMoveOutcome;
+}
+
+/**
+ * Makes a death move (SRD 2.0 p.53).
+ *
+ * Blazing out and losing a Risk It All both end the character; avoiding death drops
+ * them unconscious and may cost a Hope slot for good. Surviving a Risk It All clears
+ * the Hope Die's worth, split the way the player asked for.
+ */
+export function makeDeathMove(
+  sheet: SheetState,
+  choice: DeathMoveChoice,
+  prefer: 'hp' | 'stress',
+  rng: Rng,
+): DeathMoveTransition {
+  if (choice === 'blazeOfGlory') {
+    const outcome = blazeOfGlory();
+    return {
+      sheet: { ...sheet, dead: true },
+      outcome,
+      effect: coded('diedInBlazeOfGlory', 'Went out in a blaze of glory.'),
+    };
+  }
+
+  if (choice === 'avoidDeath') {
+    const outcome = avoidDeath(sheet.character.level, sheet.scars, rng);
+    const scars = sheet.scars + (outcome.scarred ? 1 : 0);
+    return {
+      sheet: {
+        ...sheet,
+        scars,
+        unconscious: !outcome.died,
+        dead: outcome.died,
+        // A crossed-out slot is gone, so Hope in hand cannot sit above what is left.
+        hope: Math.min(sheet.hope, MAX_HOPE - scars),
+      },
+      outcome,
+      effect: outcome.died
+        ? coded('lastScar', 'The last Hope slot is crossed out; the journey ends here.')
+        : coded(
+            outcome.scarred ? 'scarred' : 'unconscious',
+            outcome.scarred ? 'Unconscious, and scarred.' : 'Unconscious.',
+            { hopeDie: outcome.hopeDie },
+          ),
+    };
+  }
+
+  const outcome = riskItAll(rng);
+  if (outcome.died) {
+    return {
+      sheet: { ...sheet, dead: true },
+      outcome,
+      effect: coded('riskedAndLost', 'The Fear Die was higher; the journey ends here.'),
+    };
+  }
+
+  // A match clears both tracks outright; otherwise the Hope Die is divided.
+  const split =
+    outcome.clears === null
+      ? { hp: sheet.hpMarked, stress: sheet.stressMarked }
+      : splitClears(outcome.clears, prefer, sheet.hpMarked, sheet.stressMarked);
+
+  return {
+    sheet: {
+      ...sheet,
+      hpMarked: sheet.hpMarked - split.hp,
+      stressMarked: sheet.stressMarked - split.stress,
+    },
+    outcome,
+    effect: coded('riskedAndSurvived', 'Still standing.', {
+      hp: split.hp,
+      stress: split.stress,
+    }),
+  };
+}
+
+/** Waking from unconsciousness, which an ally's healing or a long rest does. */
+export function wake(sheet: SheetState): SheetState {
+  return sheet.unconscious ? { ...sheet, unconscious: false } : sheet;
 }
 
 /**

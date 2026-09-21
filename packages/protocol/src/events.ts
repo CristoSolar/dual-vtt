@@ -4,6 +4,7 @@ import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
 import { RollEntrySchema } from './rollLog.js';
 import {
+  DeathMoveChoiceSchema,
   DowntimeMoveSchema,
   RestKindSchema,
   RoomStateSchema,
@@ -84,6 +85,17 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     vaulting: z.string().min(1).optional(),
   }),
   z.object({ type: z.literal('vaultCard'), characterId, cardId: z.string().min(1) }),
+  z.object({
+    // Made when the last Hit Point is marked. The dice are the server's.
+    type: z.literal('deathMove'),
+    characterId,
+    choice: DeathMoveChoiceSchema,
+    /**
+     * Which track a surviving Risk It All should clear first; the Hope Die's
+     * remainder spills into the other. Ignored by the other two moves.
+     */
+    prefer: z.enum(['hp', 'stress']).default('hp'),
+  }),
   z.object({
     // One of this character's two downtime moves. The rest must be open, and how
     // much it restores is rolled on the server.

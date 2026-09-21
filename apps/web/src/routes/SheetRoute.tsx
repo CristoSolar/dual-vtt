@@ -45,6 +45,7 @@ import {
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
+  makeDeathMove,
   recallFromVault,
   sendToVault,
   spendSheetGold,
@@ -311,6 +312,10 @@ export function SheetRoute({
             {vulnerable ? (
               <span className="badge warn"> {t('sheet.route.vulnerable')}</span>
             ) : null}
+            {sheet.unconscious ? (
+              <span className="badge warn"> {t('sheet.route.unconscious')}</span>
+            ) : null}
+            {sheet.dead ? <span className="badge warn"> {t('sheet.route.dead')}</span> : null}
           </p>
         </div>
         <div className="row">
@@ -411,11 +416,15 @@ export function SheetRoute({
                 onClear={() => run((s) => clearSheetStress(s), forMe({ type: 'clearStress', amount: 1 }))}
               />
             </div>
+            {sheet.scars > 0 ? (
+              <p className="muted">{t('sheet.route.scars', { count: sheet.scars })}</p>
+            ) : null}
             <div className="mt-4">
               <HopeRow
                 label={t('sheet.roll.hopeLabel')}
                 marked={sheet.hope}
-                total={MAX_HOPE}
+                // Scars cross out Hope slots for good, so the track gets shorter.
+                total={MAX_HOPE - sheet.scars}
                 fillLabel={t('sheet.route.hopeFill')}
                 onMark={() => run((s) => gainSheetHope(s), forMe({ type: 'gainHope', amount: 1 }))}
                 onClear={() => run((s) => spendSheetHope(s), forMe({ type: 'spendHope', amount: 1 }))}
@@ -638,7 +647,20 @@ export function SheetRoute({
         />
       ) : null}
 
-      {showDeathMove ? <DeathMoveDialog onClose={() => setShowDeathMove(false)} /> : null}
+      {showDeathMove ? (
+        <DeathMoveDialog
+          onChoose={(choice, prefer) =>
+            run(
+              (s) => {
+                const t = makeDeathMove(s, choice, prefer, rng);
+                return { sheet: t.sheet, effect: t.effect };
+              },
+              forMe({ type: 'deathMove', choice, prefer }),
+            )
+          }
+          onClose={() => setShowDeathMove(false)}
+        />
+      ) : null}
 
       {showLevelUp ? (
         <LevelUpDialog

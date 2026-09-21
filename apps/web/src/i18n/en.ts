@@ -309,6 +309,20 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.deathMove.blazeOfGlory': 'Blaze of Glory',
   'sheet.deathMove.avoidDeath': 'Avoid Death',
   'sheet.deathMove.riskItAll': 'Risk It All',
+  'sheet.deathMove.blazeOfGloryAction': 'Go out in a blaze of glory',
+  'sheet.deathMove.avoidDeathAction': 'Avoid death',
+  'sheet.deathMove.riskItAllAction': 'Risk it all',
+  'sheet.deathMove.confirm': 'Confirm: there is no coming back',
+  'sheet.deathMove.prefer': 'If you survive, clear first',
+  'sheet.deathMove.preferHP': 'Hit Points',
+  'sheet.deathMove.preferStress': 'Stress',
+  'sheet.deathMove.decideLater': 'Decide at the table',
+  'effect.diedInBlazeOfGlory': 'You went out in a blaze of glory.',
+  'effect.riskedAndLost': 'The Fear Die was higher. The journey ends here.',
+  'effect.riskedAndSurvived': 'Still standing: cleared {hp} Hit Points and {stress} Stress.',
+  'effect.unconscious': 'You fall unconscious. Hope Die: {hopeDie}.',
+  'effect.scarred': 'You fall unconscious, and scarred. Hope Die: {hopeDie}.',
+  'effect.lastScar': 'The last Hope slot is crossed out. The journey ends here.',
   'sheet.deathMove.resolveHint': 'Resolve it at the table.',
 
   // character sheet: level-up dialog
@@ -489,6 +503,9 @@ export const en: Record<keyof typeof es, string> = {
   // character sheet: route
   'sheet.route.unnamedCharacter': 'Unnamed character',
   'sheet.route.vulnerable': 'Vulnerable',
+  'sheet.route.unconscious': 'Unconscious',
+  'sheet.route.dead': 'The journey ended',
+  'sheet.route.scars': 'Scars: {count} Hope slot(s) crossed out for good.',
   'sheet.route.exportPdf': 'Export PDF',
   'sheet.route.charactersLink': 'Characters',
   'sheet.route.levelUp': 'Level up',
@@ -824,7 +841,15 @@ export const en: Record<keyof typeof es, string> = {
     'one would have (SRD 2.0 p.52).',
   'help.rules.death.title': 'Death move',
   'help.rules.death.body':
-    'When a character marks their last available Hit Point, they fall and their player must immediately choose a death move: Blaze of Glory accepts the character\'s death in exchange for one final, guaranteed-success act, Avoid Death keeps them alive but permanently crosses out one Hope slot — lowering their maximum Hope — and the character retires once every slot is crossed out, and Risk It All rolls the Duality Dice: if the Hope die is higher, clear Hit Points and Stress equal to its result; if the Fear die is higher, the character dies; if they match, clear all Hit Points and all Stress. The choice belongs to the player, not the GM, and it sets the tone for the scene that follows (SRD p. 42).',
+    'Marking your last Hit Point forces a death move, and the choice is binding. ' +
+    'Blaze of Glory takes one final action that automatically critically succeeds, ' +
+    'and then the character is gone. Avoid Death drops them unconscious: roll the ' +
+    'Hope Die, and at or below their level they take a scar, crossing out a Hope slot ' +
+    'for good — cross out the last one and the journey ends. They wake when an ally ' +
+    'clears a Hit Point or the party finishes a long rest. Risk It All rolls the ' +
+    'Duality Dice: Hope higher and they stay up, clearing its value split between Hit ' +
+    'Points and Stress as they like; matching dice clear everything; Fear higher and ' +
+    'they cross through the veil (SRD 2.0 p.53).',
   'help.rules.conditions.title': 'Conditions',
   'help.rules.conditions.body':
     'Hidden describes a character adversaries can\'t see or directly target until they\'re revealed or discovered. Restrained prevents a character from moving, though they can still act normally while the condition lasts. Vulnerable, which also triggers when a character marks every available Stress, gives any roll against the affected character or adversary advantage until the condition is removed. All three are cleared by the fiction, a specific feature, or the end of whatever effect caused them (SRD p. 41).',
