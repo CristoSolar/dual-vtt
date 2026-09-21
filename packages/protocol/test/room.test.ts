@@ -182,6 +182,7 @@ describe('rolls are server-side and read from the sheet', () => {
           advantage: 0,
           disadvantage: 0,
           helpDice: 0,
+          reaction: false,
           experiences: [],
         },
       },
@@ -197,6 +198,35 @@ describe('rolls are server-side and read from the sheet', () => {
     expect(withFear || withHope).toBe(true);
   });
 
+  it('earns no Hope or Fear on a reaction roll', () => {
+    const result = applyRoomEvent(
+      room,
+      ALEX,
+      {
+        type: 'rollDuality',
+        characterId: ALEX.id,
+        request: {
+          label: 'Dodge',
+          modifiers: 0,
+          difficulty: 5,
+          advantage: 0,
+          disadvantage: 0,
+          helpDice: 0,
+          reaction: true,
+          experiences: [],
+        },
+      },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('the reaction roll was rejected');
+    expect(result.state.fear).toBe(room.fear);
+    expect(result.state.characters[ALEX.id]?.hope).toBe(room.characters[ALEX.id]?.hope);
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
+    expect(entry.reaction).toBe(true);
+  });
+
   it('refuses a roll naming an Experience the character does not have', () => {
     expect(
       refusal(room, ALEX, {
@@ -209,6 +239,7 @@ describe('rolls are server-side and read from the sheet', () => {
           advantage: 0,
           disadvantage: 0,
           helpDice: 0,
+          reaction: false,
           experiences: ['Dragon Rider'],
         },
       }),

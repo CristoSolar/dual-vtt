@@ -240,6 +240,7 @@ export function SheetRoute({
         difficulty: request.difficulty,
         outcome: result.result.outcome,
         experiences: [...request.experiences],
+        reaction: request.reaction ?? false,
       }),
     );
 

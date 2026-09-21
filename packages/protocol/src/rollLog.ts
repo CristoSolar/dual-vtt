@@ -54,6 +54,8 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     difficulty: z.number().int(),
     outcome: ActionOutcomeSchema,
     experiences: z.array(z.string()),
+    /** Reactions read differently: they earn no Hope or Fear. */
+    reaction: z.boolean().default(false),
   }),
   z.object({
     kind: z.literal('attack'),

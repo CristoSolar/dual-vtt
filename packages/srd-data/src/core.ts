@@ -16,6 +16,13 @@ export const RangeSchema = z.enum(['melee', 'veryClose', 'close', 'far', 'veryFa
 export type Range = z.infer<typeof RangeSchema>;
 
 /** physical (phy) or magic (mag) — SRD p.39, "Damage Types". */
+/**
+ * What an attack deals. Three related vocabularies exist and mean different things:
+ * this one is a single type, `WeaponDamageTypeSchema` adds `physicalOrMagic` for a
+ * weapon whose feature lets the wielder pick each hit, and the rules package's
+ * `IncomingDamageType` adds `both` for damage that is physical and magic at once,
+ * which a target must resist on both counts to reduce.
+ */
 export const DamageTypeSchema = z.enum(['physical', 'magic']);
 export type DamageType = z.infer<typeof DamageTypeSchema>;
 

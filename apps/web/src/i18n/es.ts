@@ -513,6 +513,11 @@ export const es = {
   'sheet.roll.helpDiceHint':
     'Ayudar a un Aliado cuesta 1 Esperanza a quien ayuda. Cada aliado tira un dado de ' +
     'ventaja y se suma solo el más alto. Es la única forma de tirar más de un dado de ventaja.',
+  'sheet.roll.isAction': 'Tirada de acción',
+  'sheet.roll.isReaction': 'Tirada de reacción',
+  'sheet.roll.reactionHint':
+    'Una reacción no genera Esperanza ni Miedo, y un crítico no despeja Estrés; ' +
+    'sí anula los efectos que un éxito normal dejaría en pie.',
   'sheet.roll.useExperience': 'Usar una Experiencia (1 Esperanza cada una)',
   'sheet.roll.spendingHope': 'Gastando {cost} de Esperanza de {hope}.',
   'sheet.roll.notEnoughHopeInline': 'No tienes suficiente Esperanza.',

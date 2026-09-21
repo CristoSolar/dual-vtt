@@ -380,6 +380,7 @@ describe('GM panel renders', () => {
           difficulty: 10,
           outcome: 'successHope',
           experiences: [],
+          reaction: false,
         },
       ],
     };

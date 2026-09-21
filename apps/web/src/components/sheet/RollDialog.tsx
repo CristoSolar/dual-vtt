@@ -37,6 +37,8 @@ export function RollDialog({
   const [disadvantage, setDisadvantage] = useState(0);
   /** Allies spending a Hope to help. Each rolls a die; the best one counts. */
   const [helpDice, setHelpDice] = useState(0);
+  /** A reaction earns no Hope or Fear, which changes what the roll is worth. */
+  const [reaction, setReaction] = useState(false);
   const [chosen, setChosen] = useState<readonly string[]>([]);
 
   const selected = experiences.filter((e) => chosen.includes(e.name));
@@ -110,6 +112,13 @@ export function RollDialog({
             <p className="muted">{t('sheet.roll.helpDiceHint')}</p>
           </div>
 
+          <div className="mt-3">
+            <button type="button" aria-pressed={reaction} onClick={() => setReaction((v) => !v)}>
+              {reaction ? t('sheet.roll.isReaction') : t('sheet.roll.isAction')}
+            </button>
+            <p className="muted">{t('sheet.roll.reactionHint')}</p>
+          </div>
+
           {experiences.length > 0 ? (
             <fieldset>
               <legend>{t('sheet.roll.useExperience')}</legend>
@@ -143,6 +152,7 @@ export function RollDialog({
                 advantage,
                 disadvantage,
                 helpDice,
+                reaction,
                 experiences: selectedNames,
               })
             }

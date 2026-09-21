@@ -21,6 +21,7 @@ import {
   rollDuality,
   splitClears,
   resolveActionRoll,
+  resolveReactionRoll,
   spendGold,
   spendHope,
   vaultCard,
@@ -655,6 +656,12 @@ export interface DualityRollRequest {
   experiences: readonly string[];
   /** Advantage dice from allies using Help an Ally. Optional; defaults to none. */
   helpDice?: number;
+  /**
+   * A reaction roll rather than an action roll. Reactions generate no Hope or
+   * Fear, and a critical clears no Stress, but it does negate the effects a mere
+   * success would have left standing (SRD 2.0 p.48).
+   */
+  reaction?: boolean;
 }
 
 export interface DualityRollOutcome {
@@ -702,6 +709,31 @@ export function makeDualityRoll(
     helpDice: request.helpDice ?? 0,
     rng,
   });
+  if (request.reaction === true) {
+    // A reaction pays for its Experiences but earns nothing back: no Hope, no Fear,
+    // and no Stress cleared on a critical.
+    const reaction = resolveReactionRoll(roll, request.difficulty);
+    const result: ActionResult = {
+      outcome: reaction.critical
+        ? 'criticalSuccess'
+        : reaction.success
+          ? roll.withHope
+            ? 'successHope'
+            : 'successFear'
+          : roll.withHope
+            ? 'failureHope'
+            : 'failureFear',
+      success: reaction.success,
+      critical: reaction.critical,
+      withHope: roll.withHope,
+      criticalDamage: reaction.critical,
+      hopeGained: 0,
+      fearGained: 0,
+      stressCleared: 0,
+    };
+    return { sheet: paid.sheet, outcome: { roll, result }, effect: noEffect };
+  }
+
   const result = resolveActionRoll(roll, request.difficulty);
 
   let next = paid.sheet;

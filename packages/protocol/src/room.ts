@@ -851,6 +851,7 @@ function applyCharacterEvent(
               difficulty: 0,
               outcome: t.outcome.died ? 'failureFear' : 'successHope',
               experiences: [],
+              reaction: false,
             }
           : null;
       const next = withCharacter(state, event.characterId, t.sheet);
@@ -935,6 +936,7 @@ function applyCharacterEvent(
         difficulty: event.request.difficulty,
         outcome: t.outcome.result.outcome,
         experiences: [...event.request.experiences],
+        reaction: event.request.reaction,
       };
 
       let next = withCharacter(state, event.characterId, t.sheet);

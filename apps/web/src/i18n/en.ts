@@ -497,6 +497,11 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.roll.helpDiceHint':
     'Help an Ally costs the helper 1 Hope. Each ally rolls an advantage die and only ' +
     'the highest counts. It is the one way to roll more than one advantage die.',
+  'sheet.roll.isAction': 'Action roll',
+  'sheet.roll.isReaction': 'Reaction roll',
+  'sheet.roll.reactionHint':
+    'A reaction earns no Hope or Fear, and a critical clears no Stress; it does ' +
+    'negate the effects a plain success would have left standing.',
   'sheet.roll.useExperience': 'Use an Experience (1 Hope each)',
   'sheet.roll.spendingHope': 'Spending {cost} Hope of {hope}.',
   'sheet.roll.notEnoughHopeInline': 'Not enough Hope.',
