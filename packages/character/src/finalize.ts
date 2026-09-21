@@ -98,6 +98,7 @@ export function finalize(state: CreationState): Character {
     severe: thresholds.severe,
     thresholds,
 
+    subclassTier: 'foundation',
     domainCards: [...state.domainCardIds],
     multiclass: null,
     advancementsTaken: [],

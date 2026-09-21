@@ -765,6 +765,7 @@ export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelU
     thresholds: { major: leveled.major, severe: leveled.severe },
     domainCards: [...leveled.domainCards],
     multiclass,
+    subclassTier: leveled.subclassTier,
     advancementsTaken: [...leveled.advancementsTaken],
   };
 

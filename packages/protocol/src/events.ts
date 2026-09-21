@@ -152,6 +152,8 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
         })
         .optional(),
       domainCardId: z.string().min(1).optional(),
+      /** The card the 'domainCard' advancement grants, separate from step four's. */
+      extraDomainCardId: z.string().min(1).optional(),
     }),
   }),
   z.object({

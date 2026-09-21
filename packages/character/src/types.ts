@@ -220,6 +220,13 @@ export const CharacterSchema = z
     severe: z.number().int(),
     thresholds: z.object({ major: z.number().int(), severe: z.number().int() }),
 
+    /**
+     * How far the character has taken their subclass: everyone starts with the
+     * foundation, and the 'subclass' advancement takes the next card (SRD 2.0
+     * p.54). Defaulted so a character created before this still parses.
+     */
+    subclassTier: z.enum(['foundation', 'specialization', 'mastery']).default('foundation'),
+
     domainCards: z.array(z.string().min(1)),
     multiclass: MulticlassSchema.nullable(),
     advancementsTaken: z.array(AdvancementSchema),

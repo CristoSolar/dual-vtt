@@ -1,4 +1,5 @@
 import { MAX_HOPE, tierForLevel, type Advancement, type Rng } from '@daggerheart/rules';
+import { srd } from '@daggerheart/srd-data';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -153,6 +154,23 @@ export function SheetRoute({
     if (text !== null) setToast(text);
     if (effect.deathMoveRequired) setShowDeathMove(true);
   };
+
+  /**
+   * Cards the additional-card advancement could take: this character's domains, at
+   * or below their level, and not already held.
+   */
+  const availableExtraCards = useMemo(() => {
+    // This character's own domains, plus the multiclass one when they have taken it.
+    const characterClass = srd().classes.find((c) => c.id === character.classId);
+    const domains = new Set<string>(characterClass?.domains ?? []);
+    if (character.multiclass !== null) domains.add(character.multiclass.domainId);
+    const held = new Set([...sheet.loadout, ...sheet.vault]);
+    return srd()
+      .domainCards.filter(
+        (card) => domains.has(card.domain) && card.level <= character.level && !held.has(card.id),
+      )
+      .map((card) => ({ id: card.id, name: card.name, level: card.level }));
+  }, [character.classId, character.multiclass, character.level, sheet.loadout, sheet.vault]);
 
   // In a campaign the rules run on the server, so the sentence that goes with a
   // change arrives separately from the state it changed.
@@ -717,6 +735,8 @@ export function SheetRoute({
           level={character.level}
           experienceNames={experiences.map((e) => e.name)}
           traitNames={view.traits.map((trait) => trait.trait)}
+          subclassTier={character.subclassTier}
+          availableCards={availableExtraCards}
           onApply={(choices) => {
             const levelUpChoices = {
               advancements: choices.advancements as Advancement[],
@@ -725,6 +745,9 @@ export function SheetRoute({
               ...(choices.newExperienceName === ''
                 ? {}
                 : { newExperienceName: choices.newExperienceName }),
+              ...(choices.extraDomainCardId === ''
+                ? {}
+                : { extraDomainCardId: choices.extraDomainCardId }),
             };
             run(
               (s) => applyLevelUp(s, levelUpChoices),

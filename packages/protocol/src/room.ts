@@ -910,6 +910,9 @@ function applyCharacterEvent(
         choices.newExperienceName = event.choices.newExperienceName;
       }
       if (event.choices.multiclass !== undefined) choices.multiclass = event.choices.multiclass;
+      if (event.choices.extraDomainCardId !== undefined) {
+        choices.extraDomainCardId = event.choices.extraDomainCardId;
+      }
       if (event.choices.domainCardId !== undefined) {
         choices.domainCardId = event.choices.domainCardId;
       }

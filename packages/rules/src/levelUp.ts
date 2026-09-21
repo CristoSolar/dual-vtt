@@ -75,6 +75,8 @@ export interface Character {
   severe: number;
   /** Ids of domain cards acquired. */
   domainCards: readonly string[];
+  /** How far the subclass has been taken: foundation, specialization, or mastery. */
+  subclassTier: 'foundation' | 'specialization' | 'mastery';
   /** The additional class taken through multiclassing, or null. */
   multiclass: Multiclass | null;
   /** Advancements taken so far, for options that can only be taken once per tier. */
@@ -94,6 +96,11 @@ export interface LevelUpChoices {
   multiclass?: Multiclass;
   /** Id of the domain card acquired in step four. */
   domainCardId?: string;
+  /**
+   * Id of the extra card the 'domainCard' advancement grants, which is separate
+   * from step four's.
+   */
+  extraDomainCardId?: string;
 }
 
 export interface TierAchievement {
@@ -126,6 +133,19 @@ export function levelUp(
     return {
       ok: false,
       error: `level-up spends exactly ${SLOTS_PER_LEVEL} advancement slots (got ${slotsSpent})`,
+    };
+  }
+
+  // "Then cross out this tier's multiclass option" and, the other way round,
+  // "cross out the upgraded subclass advancement option in this tier" (SRD 2.0
+  // p.54), so the two cannot both be taken.
+  if (
+    choices.advancements.includes('multiclass') &&
+    choices.advancements.includes('subclass')
+  ) {
+    return {
+      ok: false,
+      error: 'multiclassing and upgrading a subclass rule each other out',
     };
   }
 
@@ -165,7 +185,7 @@ export function levelUp(
   }
 
   // STEP TWO: advancements.
-  let { evasion, hpSlots, stressSlots, multiclass } = character;
+  let { evasion, hpSlots, stressSlots, multiclass, subclassTier } = character;
   let traits = { ...character.traits };
   const domainCards = [...character.domainCards];
 
@@ -211,14 +231,31 @@ export function levelUp(
         }
         break;
       }
-      case 'domainCard':
-        // The extra card is chosen alongside step four's card by the caller.
+      case 'domainCard': {
+        // "You can choose an additional domain card at or below your level"
+        // (SRD 2.0 p.54). It is a second card, not the one step four grants.
+        const extra = choices.extraDomainCardId;
+        if (extra === undefined) {
+          return { ok: false, error: 'the additional domain card advancement needs a card' };
+        }
+        if (domainCards.includes(extra)) {
+          return { ok: false, error: `already holding ${extra}` };
+        }
+        domainCards.push(extra);
         break;
+      }
       case 'evasion':
         evasion += 1;
         break;
-      case 'subclass':
+      case 'subclass': {
+        // "If you have only the foundation card, take a specialization; if you have
+        // a specialization already, take a mastery" (SRD 2.0 p.54).
+        if (subclassTier === 'mastery') {
+          return { ok: false, error: 'this subclass is already at mastery' };
+        }
+        subclassTier = subclassTier === 'foundation' ? 'specialization' : 'mastery';
         break;
+      }
       case 'proficiency':
         proficiency += 1;
         break;
@@ -252,6 +289,7 @@ export function levelUp(
       severe,
       domainCards,
       multiclass,
+      subclassTier,
       advancementsTaken: [...character.advancementsTaken, ...choices.advancements],
     },
   };

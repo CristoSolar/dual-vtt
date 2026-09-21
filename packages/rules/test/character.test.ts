@@ -147,6 +147,7 @@ describe('levelUp', () => {
     severe: 14,
     domainCards: [],
     multiclass: null,
+    subclassTier: 'foundation' as const,
     advancementsTaken: [],
   };
 
@@ -282,5 +283,65 @@ describe('levelUp', () => {
     expect(levelUp({ ...base, level: 10 }, { advancements: ['evasion', 'hitPoint'] }).ok).toBe(
       false,
     );
+  });
+});
+
+describe('the advancements that used to do nothing', () => {
+  const base = {
+    level: 1,
+    proficiency: 1,
+    evasion: 10,
+    hpSlots: 6,
+    stressSlots: 6,
+    experiences: { Blacksmith: 2, Survivor: 2 },
+    traits: { agility: 2, strength: 1, finesse: 1, instinct: 0, presence: 0, knowledge: -1 },
+    markedTraits: [],
+    major: 7,
+    severe: 14,
+    domainCards: ['a', 'b'],
+    multiclass: null,
+    subclassTier: 'foundation' as const,
+    advancementsTaken: [],
+  };
+
+  it('takes the additional domain card, separately from step four', () => {
+    const result = levelUp(base, {
+      advancements: ['domainCard', 'evasion'],
+      extraDomainCardId: 'c',
+      domainCardId: 'd',
+    });
+    if (!result.ok) throw new Error(result.error);
+    expect(result.character.domainCards).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('refuses the additional card when none was chosen, or when already held', () => {
+    expect(levelUp(base, { advancements: ['domainCard', 'evasion'] }).ok).toBe(false);
+    expect(
+      levelUp(base, { advancements: ['domainCard', 'evasion'], extraDomainCardId: 'a' }).ok,
+    ).toBe(false);
+  });
+
+  it('walks the subclass from foundation to specialization to mastery', () => {
+    const first = levelUp(base, { advancements: ['subclass', 'evasion'] });
+    if (!first.ok) throw new Error(first.error);
+    expect(first.character.subclassTier).toBe('specialization');
+
+    const second = levelUp(first.character, { advancements: ['subclass', 'evasion'] });
+    if (!second.ok) throw new Error(second.error);
+    expect(second.character.subclassTier).toBe('mastery');
+
+    // There is no card after mastery.
+    expect(levelUp(second.character, { advancements: ['subclass', 'evasion'] }).ok).toBe(false);
+  });
+
+  it('refuses multiclassing and upgrading a subclass in the same level-up', () => {
+    const result = levelUp(
+      { ...base, level: 5 },
+      {
+        advancements: ['multiclass', 'subclass'],
+        multiclass: { classId: 'bard', domainId: 'grace', subclassId: 'troubadour' },
+      },
+    );
+    expect(result.ok).toBe(false);
   });
 });

@@ -14,11 +14,16 @@ interface LevelUpDialogProps {
   level: number;
   experienceNames: readonly string[];
   traitNames: readonly string[];
+  /** Cards this character could take, for the additional-card advancement. */
+  availableCards: readonly { id: string; name: string; level: number }[];
+  /** How far the subclass has been taken already, so the dialog can name the next card. */
+  subclassTier: 'foundation' | 'specialization' | 'mastery';
   onApply: (choices: {
     advancements: Advancement[];
     traitsToIncrease: string[];
     experiencesToIncrease: string[];
     newExperienceName: string;
+    extraDomainCardId: string;
   }) => void;
   onClose: () => void;
 }
@@ -40,6 +45,8 @@ export function LevelUpDialog({
   level,
   experienceNames,
   traitNames,
+  availableCards,
+  subclassTier,
   onApply,
   onClose,
 }: LevelUpDialogProps) {
@@ -47,6 +54,7 @@ export function LevelUpDialog({
   const [traits, setTraits] = useState<string[]>([]);
   const [experiences, setExperiences] = useState<string[]>([]);
   const [newExperience, setNewExperience] = useState('');
+  const [extraCard, setExtraCard] = useState('');
 
   const spent = advancements.reduce((sum, a) => sum + ADVANCEMENT_SLOT_COST[a], 0);
 
@@ -61,6 +69,15 @@ export function LevelUpDialog({
     }
     if (advancements.includes('experience') && experiences.length !== 2) {
       return t('sheet.levelUp.needExperiences');
+    }
+    if (advancements.includes('domainCard') && extraCard === '') {
+      return t('sheet.levelUp.needCard');
+    }
+    if (advancements.includes('subclass') && subclassTier === 'mastery') {
+      return t('sheet.levelUp.subclassAtMastery');
+    }
+    if (advancements.includes('subclass') && advancements.includes('multiclass')) {
+      return t('sheet.levelUp.subclassOrMulticlass');
     }
     return null;
   })();
@@ -167,6 +184,36 @@ export function LevelUpDialog({
         />
       </div>
 
+      {advancements.includes('domainCard') ? (
+        <div className="mt-3">
+          <label htmlFor="extra-card">{t('sheet.levelUp.extraCard')}</label>
+          <select
+            id="extra-card"
+            value={extraCard}
+            onChange={(event) => setExtraCard(event.target.value)}
+          >
+            <option value="">{t('sheet.levelUp.pickCard')}</option>
+            {availableCards.map((card) => (
+              <option key={card.id} value={card.id}>
+                {card.name} · {t('sheet.levelUp.cardLevel', { level: card.level })}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
+
+      {advancements.includes('subclass') ? (
+        <p className="muted">
+          {t(
+            subclassTier === 'foundation'
+              ? 'sheet.levelUp.takesSpecialization'
+              : subclassTier === 'specialization'
+                ? 'sheet.levelUp.takesMastery'
+                : 'sheet.levelUp.subclassAtMastery',
+          )}
+        </p>
+      ) : null}
+
       {incomplete !== null ? <p className="field-error">{incomplete}</p> : null}
 
       <button
@@ -178,6 +225,7 @@ export function LevelUpDialog({
             traitsToIncrease: traits,
             experiencesToIncrease: experiences,
             newExperienceName: newExperience.trim(),
+            extraDomainCardId: extraCard,
           })
         }
       >
