@@ -186,6 +186,7 @@ export const es = {
 
   // auth state
   'auth.invalidCredentials': 'Usuario o contraseña incorrectos.',
+  'auth.sessionExpired': 'Tu sesión caducó (el servidor se reinició). Vuelve a iniciar sesión.',
   'auth.unexpectedResponse': 'El servidor respondió algo inesperado.',
   'auth.wrongCurrentPassword': 'La contraseña actual no es correcta.',
 

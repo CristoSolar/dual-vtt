@@ -174,6 +174,7 @@ export const en: Record<keyof typeof es, string> = {
   'players.resetPassword': 'Reset password',
 
   'auth.invalidCredentials': 'Incorrect username or password.',
+  'auth.sessionExpired': 'Your session expired (the server restarted). Sign in again.',
   'auth.unexpectedResponse': 'The server responded with something unexpected.',
   'auth.wrongCurrentPassword': 'The current password is incorrect.',
 

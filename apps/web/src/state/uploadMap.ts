@@ -1,5 +1,7 @@
 import type { SceneImage } from '@daggerheart/protocol';
 
+import { t } from '../i18n/index.js';
+
 import { SERVER_URL } from './useCampaign.js';
 
 /** Images the server will accept. It re-checks the bytes regardless of this list. */
@@ -52,6 +54,12 @@ export async function uploadImage(file: File, token: string | null): Promise<Sce
     headers: { 'content-type': file.type, authorization: `Bearer ${token}` },
     body: file,
   });
+
+  // Sessions are in memory, so a server restart invalidates a token the tab is
+  // still holding. Say that, instead of passing the server's bare "unauthorized".
+  if (response.status === 401) {
+    throw new Error(t('auth.sessionExpired'));
+  }
 
   if (!response.ok) {
     const body: unknown = await response.json().catch(() => null);
