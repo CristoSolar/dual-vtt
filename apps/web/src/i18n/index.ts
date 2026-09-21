@@ -1,5 +1,5 @@
 import type { ValidationError } from '@daggerheart/character';
-import type { RollEntry, SheetEffect } from '@daggerheart/protocol';
+import type { EffectMessage, RollEntry } from '@daggerheart/protocol';
 import { LOCALES, setLocale as setSrdLocale, type Locale } from '@daggerheart/srd-data';
 import { useSyncExternalStore } from 'react';
 
@@ -74,11 +74,17 @@ export function t(key: MessageKey, params?: Record<string, string | number>): st
   });
 }
 
-const KNOWN_SEVERITIES = new Set(['minor', 'major', 'severe']);
+const KNOWN_SEVERITIES = new Set(['minor', 'major', 'severe', 'massive']);
 const KNOWN_GOLD_UNITS = new Set(['handfuls', 'bags', 'chests']);
 
-/** Localized text for a sheet transition, or null when there is nothing to say. */
-export function describeEffect(effect: SheetEffect): string | null {
+/**
+ * Localized text for a sheet transition, or null when there is nothing to say.
+ *
+ * Takes the wire shape, which types `code` as a plain string: the same effect can
+ * come from the local reducer or from a server that may be a version ahead, and an
+ * unrecognised code falls through to its raw key rather than failing to compile.
+ */
+export function describeEffect(effect: EffectMessage): string | null {
   const parts: string[] = [];
   if (effect.stressBecameHP) parts.push(t('effect.stressBecameHP'));
   if (effect.vulnerable) parts.push(t('effect.vulnerable'));
@@ -93,7 +99,8 @@ export function describeEffect(effect: SheetEffect): string | null {
     if (typeof unit === 'string' && KNOWN_GOLD_UNITS.has(unit)) {
       params.unit = t(`sheet.route.unit.${unit}` as MessageKey);
     }
-    parts.push(t(`effect.${effect.code}` as MessageKey, params));
+    const key = `effect.${effect.code}` as MessageKey;
+    parts.push(key in es ? t(key, params) : (effect.message ?? key));
   }
   if (parts.length > 0) return parts.join(' ');
   return effect.message;

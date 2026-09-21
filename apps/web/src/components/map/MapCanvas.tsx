@@ -150,6 +150,8 @@ export function MapCanvas({
   };
 
   const painting = fogBrush !== null && isGameMaster;
+  /** True between pointer-down and pointer-up while the fog brush is active. */
+  const paintingStroke = useRef(false);
 
   const onStagePointerDown = (event: Konva.KonvaEventObject<PointerEvent>) => {
     const stage = stageRef.current;
@@ -158,6 +160,7 @@ export function MapCanvas({
     const point = toScene(pointer);
 
     if (painting) {
+      paintingStroke.current = true;
       onPaintFog(point.x, point.y);
       return;
     }
@@ -178,7 +181,13 @@ export function MapCanvas({
     if (!pointer) return;
     const point = toScene(pointer);
 
-    if (painting && stageRef.current?.isDragging() === false) return;
+    // Dragging the brush paints a stroke. The old guard asked the stage whether it
+    // was dragging, but the stage is not draggable while painting, so it always
+    // answered no and every move was discarded — one dab per click.
+    if (painting && paintingStroke.current) {
+      onPaintFog(point.x, point.y);
+      return;
+    }
     if (measureLine !== null) setMeasureLine({ ...measureLine, to: point });
     if (wallDraft !== null) setWallDraft({ ...wallDraft, to: point });
   };
@@ -203,6 +212,7 @@ export function MapCanvas({
       onPointerDown={onStagePointerDown}
       onPointerMove={onStagePointerMove}
       onPointerUp={() => {
+        paintingStroke.current = false;
         setMeasureLine(null);
         if (wallDraft !== null) {
           const dx = wallDraft.to.x - wallDraft.from.x;
@@ -213,6 +223,13 @@ export function MapCanvas({
             onAddWall(wallDraft.from.x, wallDraft.from.y, wallDraft.to.x, wallDraft.to.y);
           }
           setWallDraft(null);
+        }
+      }}
+      onDragMove={(event) => {
+        // Reported during the pan, not only at its end: a popover positioned from
+        // `view` was frozen in place until the drag finished.
+        if (event.target === stageRef.current) {
+          setView((current) => ({ ...current, x: event.target.x(), y: event.target.y() }));
         }
       }}
       onDragEnd={(event) => {
@@ -464,7 +481,14 @@ function TokenShape({
       onClick={onSelect}
       onTap={onSelect}
       onDragMove={(event) => onDragMove(event.target.x(), event.target.y())}
-      onDragEnd={(event) => onDragEnd(event.target.x(), event.target.y())}
+      onDragEnd={(event) => {
+        onDragEnd(event.target.x(), event.target.y());
+        // Konva moves the node itself during a drag, outside React. Put it back
+        // where the state says it is: the authoritative position arrives as a
+        // patch, and a refused or snapped-away move would otherwise leave the
+        // token sitting wherever it was dropped, for good.
+        event.target.position({ x: token.x, y: token.y });
+      }}
       opacity={token.hidden ? 0.55 : 1}
     >
       {/*

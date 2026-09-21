@@ -166,6 +166,12 @@ export function registerGateway(
       if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'rejected');
 
       broadcastPatches(io, seat.campaignId, outcome);
+      // The patch tells the whole table what changed; the effect tells the one
+      // player who acted what it meant — a forced death move, Stress that became
+      // HP, a payment they could not make.
+      if (outcome.effect !== null && outcome.effect !== undefined) {
+        socket.emit(CHANNEL.effect, outcome.effect);
+      }
       if (outcome.entries.length > 0) {
         io.to(channelFor(seat.campaignId)).emit(CHANNEL.rolled, { entries: outcome.entries });
       }

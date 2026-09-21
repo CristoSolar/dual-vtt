@@ -1,5 +1,5 @@
 import { MAX_HOPE, type Advancement, type Rng } from '@daggerheart/rules';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
@@ -50,6 +50,7 @@ import {
   spendSheetHope,
   takeDamage,
   type DualityRollOutcome,
+  type EffectMessage,
   type SheetEffect,
   type SheetState,
   type TakeDamageOptions,
@@ -67,6 +68,12 @@ interface SheetRouteProps {
   characterId?: string;
   send?: (event: RoomEvent) => void;
   sharedLog?: readonly RollEntry[] | undefined;
+  /**
+   * The effect of this player's last accepted intent, as the server reported it.
+   * Offline the same information comes straight back from the reducer; in a
+   * campaign it arrives here, and without it a death move would never be offered.
+   */
+  lastEffect?: { id: number; effect: EffectMessage } | null;
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -88,6 +95,7 @@ export function SheetRoute({
   characterId,
   send,
   sharedLog,
+  lastEffect = null,
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -113,14 +121,31 @@ export function SheetRoute({
   ) => {
     if (online && intent !== undefined) {
       send(intent);
+      // The server answers with an `effect`, handled by the subscription below.
       return;
     }
     const effect = update(transition);
     if (effect === null) return;
+    announce(effect);
+  };
+
+  /** Says what an accepted change meant, wherever the rules actually ran. */
+  const announce = (effect: EffectMessage) => {
     const text = describeEffect(effect);
     if (text !== null) setToast(text);
     if (effect.deathMoveRequired) setShowDeathMove(true);
   };
+
+  // In a campaign the rules run on the server, so the sentence that goes with a
+  // change arrives separately from the state it changed.
+  const seenEffectId = useRef<number | null>(null);
+  useEffect(() => {
+    if (lastEffect === null || lastEffect.id === seenEffectId.current) return;
+    seenEffectId.current = lastEffect.id;
+    announce(lastEffect.effect);
+    // `announce` closes over setState only, so it is stable enough to leave out.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastEffect]);
 
   /** Builds a character intent for the character this sheet is showing. */
   const forMe = <T extends Record<string, unknown>>(event: T) =>

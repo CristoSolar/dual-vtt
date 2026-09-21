@@ -12,6 +12,7 @@ import {
   type RoomState,
   type RollEntry,
   type SheetState,
+  type SheetEffect,
 } from '@daggerheart/protocol';
 import { seededRng, type Rng } from '@daggerheart/rules';
 
@@ -38,6 +39,8 @@ export interface ApplyOutcome {
   patch: RoomPatch;
   playerPatch: RoomPatch;
   entries: readonly RollEntry[];
+  /** What to tell the acting client beyond the new state. Null when there is nothing. */
+  effect?: SheetEffect | null;
   error?: string;
   message?: string;
 }
@@ -213,7 +216,12 @@ export class CampaignStore {
     campaign.state = result.state;
     campaign.rollCount += rollsThisEvent;
     campaign.updatedAt = this.now();
-    return { ok: true, ...patchesFor(before, result.state), entries: result.entries };
+    return {
+      ok: true,
+      ...patchesFor(before, result.state),
+      entries: result.entries,
+      effect: result.effect,
+    };
   }
 
   restore(records: readonly SerializedCampaign[]): void {

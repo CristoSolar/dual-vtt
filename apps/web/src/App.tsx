@@ -161,6 +161,18 @@ function Shell() {
 
       {guideOpen ? <GuideDialog role={account.role} onClose={closeGuide} /> : null}
 
+      {/* A dropped socket used to show nothing at all: the sheet kept taking clicks
+          that reached no server. This stays up for as long as the room is out of
+          reach, unlike the toasts below, which are dismissible one-shots. */}
+      {campaign.activeCampaignId !== null && campaign.status !== 'connected' ? (
+        <div className="connection-banner" role="status" aria-live="polite">
+          <span className="connection-dot" aria-hidden="true" />
+          {campaign.status === 'error'
+            ? t('campaign.offline')
+            : t('campaign.reconnecting')}
+        </div>
+      ) : null}
+
       {campaign.error !== null ? (
         <Toast message={campaign.error} onDismiss={campaign.dismissError} />
       ) : campaign.lastRoll !== null ? (
@@ -293,6 +305,7 @@ function Shell() {
                 characterId={account.id}
                 send={campaign.send}
                 sharedLog={campaign.room?.rollLog}
+                lastEffect={campaign.lastEffect}
               />
             )
           }

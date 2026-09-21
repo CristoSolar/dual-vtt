@@ -358,13 +358,18 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
       {selected !== null ? (
         <div className="map-selection-bar">
           <strong>{selected.name}</strong>
-          <button
-            type="button"
-            aria-pressed={selected.showRings}
-            onClick={() => updateSelected({ showRings: !selected.showRings })}
-          >
-            {selected.showRings ? t('map.hideRings') : t('map.showRings')}
-          </button>
+          {/* Range rings are part of the shared token, so only the GM can turn them
+              on. The button used to be shown to players too, where every click was
+              refused by the server with nothing on screen to explain it. */}
+          {isGameMaster ? (
+            <button
+              type="button"
+              aria-pressed={selected.showRings}
+              onClick={() => updateSelected({ showRings: !selected.showRings })}
+            >
+              {selected.showRings ? t('map.hideRings') : t('map.showRings')}
+            </button>
+          ) : null}
         </div>
       ) : null}
 

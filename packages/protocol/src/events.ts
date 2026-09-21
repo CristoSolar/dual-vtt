@@ -17,6 +17,8 @@ export const CHANNEL = {
   roomPatch: 'roomPatch',
   rolled: 'rolled',
   rejected: 'rejected',
+  /** Sent only to the socket whose intent produced it. */
+  effect: 'effect',
 } as const;
 
 const amount = z.number().int().min(1).max(99);
@@ -251,6 +253,22 @@ export type RejectedMessage = z.infer<typeof RejectedSchema>;
 
 export const RolledSchema = z.object({ entries: z.array(RollEntrySchema) });
 export type RolledMessage = z.infer<typeof RolledSchema>;
+
+/**
+ * What the server wants the acting client to say about an intent it accepted:
+ * the death move a hit forced, the Stress that became HP, the shortfall that
+ * stopped a payment. The room patch carries the new state; this carries the
+ * sentence that goes with it, and reaches nobody but the actor.
+ */
+export const EffectMessageSchema = z.object({
+  vulnerable: z.boolean(),
+  deathMoveRequired: z.boolean(),
+  stressBecameHP: z.boolean(),
+  message: z.string().nullable(),
+  code: z.string().nullable(),
+  params: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
+});
+export type EffectMessage = z.infer<typeof EffectMessageSchema>;
 
 /**
  * Computes the slice-level diff between two room states by reference. Every reducer

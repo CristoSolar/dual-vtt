@@ -1,12 +1,14 @@
 import {
   CampaignSummarySchema,
   CHANNEL,
+  EffectMessageSchema,
   RejectedSchema,
   RolledSchema,
   RoomPatchSchema,
   RoomStateSchema,
   applyRoomPatch,
   type CampaignSummary,
+  type EffectMessage,
   type RoomEvent,
   type RoomState,
   type SheetState,
@@ -44,6 +46,13 @@ export interface CampaignConnection {
   /** The most recent roll broadcast to the room, for a live "so-and-so rolled" toast. */
   lastRoll: { id: string; message: string } | null;
   dismissLastRoll: () => void;
+  /**
+   * The effect of this account's most recent accepted intent — what the sheet
+   * would have reported offline. Carries an id so a repeat of the same effect
+   * still counts as a new one.
+   */
+  lastEffect: { id: number; effect: EffectMessage } | null;
+  dismissLastEffect: () => void;
   /** True while `createCampaign`/`addPlayer` is in flight — disable the form on
    * this, not just field validation, or a double-click fires the request twice. */
   pending: boolean;
@@ -77,6 +86,8 @@ export function useCampaign(
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
   const [lastRoll, setLastRoll] = useState<{ id: string; message: string } | null>(null);
+  const [lastEffect, setLastEffect] = useState<{ id: number; effect: EffectMessage } | null>(null);
+  const effectCount = useRef(0);
   const [pending, setPending] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
@@ -111,6 +122,8 @@ export function useCampaign(
     socket.on('connect', () => {
       setStatus('connected');
       setError(null);
+      // Rejoining is this handler's job alone. `join()` used to emit as well, which
+      // sent two joins for the first connection of every session.
       const saved = loadActiveCampaignId(storage);
       if (saved !== null) socket.emit(CHANNEL.joinCampaign, { campaignId: saved });
     });
@@ -133,7 +146,21 @@ export function useCampaign(
     socket.on(CHANNEL.roomPatch, (payload: unknown) => {
       const parsed = RoomPatchSchema.safeParse(payload);
       if (!parsed.success) return;
-      setRoom((current) => (current === null ? current : applyRoomPatch(current, parsed.data)));
+      setRoom((current) => {
+        if (current !== null) return applyRoomPatch(current, parsed.data);
+        // A patch with nothing to apply it to means this client missed the full
+        // state. Ask for it again rather than silently dropping the change.
+        const saved = loadActiveCampaignId(storage);
+        if (saved !== null) socket.emit(CHANNEL.joinCampaign, { campaignId: saved });
+        return current;
+      });
+    });
+
+    socket.on(CHANNEL.effect, (payload: unknown) => {
+      const parsed = EffectMessageSchema.safeParse(payload);
+      if (!parsed.success) return;
+      effectCount.current += 1;
+      setLastEffect({ id: effectCount.current, effect: parsed.data });
     });
 
     socket.on(CHANNEL.rolled, (payload: unknown) => {
@@ -171,7 +198,10 @@ export function useCampaign(
           headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
           body: JSON.stringify({ name }),
         });
-        if (!response.ok) return null;
+        if (!response.ok) {
+          setError(t('campaign.createFailed'));
+          return null;
+        }
         const parsed = CampaignSummarySchema.safeParse(await response.json());
         if (!parsed.success) return null;
         await refreshCampaigns();
@@ -193,7 +223,13 @@ export function useCampaign(
           headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
           body: JSON.stringify({ username }),
         });
-        if (response.ok) await refreshCampaigns();
+        if (response.ok) {
+          await refreshCampaigns();
+        } else {
+          // A 404 here is the ordinary case: the GM typed a username that has no
+          // account. Saying nothing made it look like the player had been added.
+          setError(response.status === 404 ? t('campaign.noSuchPlayer') : t('campaign.addPlayerFailed'));
+        }
         return response.ok;
       } finally {
         setPending(false);
@@ -219,7 +255,10 @@ export function useCampaign(
     (campaignId: string) => {
       storage.setItem(ACTIVE_CAMPAIGN_KEY, campaignId);
       setActiveCampaignId(campaignId);
-      ensureSocket()?.emit(CHANNEL.joinCampaign, { campaignId });
+      const socket = ensureSocket();
+      // A socket that is still connecting will join from its 'connect' handler,
+      // which reads the id just stored; emitting here too would join twice.
+      if (socket?.connected === true) socket.emit(CHANNEL.joinCampaign, { campaignId });
     },
     [storage, ensureSocket],
   );
@@ -243,6 +282,7 @@ export function useCampaign(
 
   const dismissError = useCallback(() => setError(null), []);
   const dismissLastRoll = useCallback(() => setLastRoll(null), []);
+  const dismissLastEffect = useCallback(() => setLastEffect(null), []);
 
   const role = useMemo<'gm' | 'player' | null>(() => {
     if (activeCampaignId === null || accountId === null) return null;
@@ -261,6 +301,8 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      lastEffect,
+      dismissLastEffect,
       pending,
       refreshCampaigns,
       createCampaign,
@@ -281,6 +323,8 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      lastEffect,
+      dismissLastEffect,
       pending,
       refreshCampaigns,
       createCampaign,

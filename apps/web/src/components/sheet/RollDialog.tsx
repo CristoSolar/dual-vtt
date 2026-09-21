@@ -66,7 +66,9 @@ export function RollDialog({
                 type="number"
                 value={difficulty}
                 min={1}
-                onChange={(event) => setDifficulty(Number(event.target.value))}
+                // Clearing a number input reads as an empty string, which would
+                // otherwise roll against a Difficulty of 0.
+                onChange={(event) => setDifficulty(Math.max(1, Number(event.target.value) || 1))}
               />
             </div>
             <div>

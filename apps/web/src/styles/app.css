@@ -870,6 +870,41 @@ button.link {
   color: var(--c-text-faint);
 }
 
+/* ======================================================= connection banner */
+
+/* Sits under the top bar and stays for as long as the room is out of reach, so a
+   player can tell a dead socket from a quiet table. */
+.connection-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  background: color-mix(in srgb, var(--c-stress-bright) 14%, var(--c-surface-2));
+  border-bottom: var(--size-rule) solid var(--c-stress-bright);
+  color: var(--c-text);
+  font-size: var(--fs-sm);
+}
+
+.connection-dot {
+  width: var(--sp-2);
+  height: var(--sp-2);
+  border-radius: 50%;
+  background: var(--c-stress-bright);
+  animation: connection-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes connection-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connection-dot {
+    animation: none;
+  }
+}
+
 /* =================================================================== errors */
 
 .errors {

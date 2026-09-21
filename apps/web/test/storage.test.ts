@@ -80,3 +80,26 @@ describe('guide seen flag', () => {
     expect(() => markGuideSeen(broken, 'u1')).not.toThrow();
   });
 });
+
+describe('an unreadable draft', () => {
+  it('is set aside instead of being written over', () => {
+    const storage = fakeStorage();
+    const key = 'daggerheart-vtt:creation:c-1';
+    storage.setItem(key, '{ this is not a creation state');
+
+    // The wizard starts fresh...
+    expect(loadCreation(storage, 'c-1')).toBeNull();
+    // ...but the draft it could not read is still recoverable by hand.
+    expect(storage.getItem(`${key}:unreadable`)).toBe('{ this is not a creation state');
+  });
+
+  it('does not throw when the copy cannot be written', () => {
+    const readOnly: StorageLike = {
+      getItem: () => 'not json',
+      setItem: () => { throw new Error('quota'); },
+      removeItem: () => {},
+    };
+    expect(() => loadCreation(readOnly, 'c-1')).not.toThrow();
+    expect(loadCreation(readOnly, 'c-1')).toBeNull();
+  });
+});

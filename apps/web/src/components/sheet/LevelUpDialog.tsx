@@ -50,6 +50,21 @@ export function LevelUpDialog({
 
   const spent = advancements.reduce((sum, a) => sum + ADVANCEMENT_SLOT_COST[a], 0);
 
+  /**
+   * Why the choices are not ready yet, or null when they are. Spending both slots
+   * was the only condition before, so picking "traits" and naming no trait built a
+   * level-up the server then refused.
+   */
+  const incomplete: string | null = (() => {
+    if (advancements.includes('traits') && traits.length !== 2) {
+      return t('sheet.levelUp.needTraits');
+    }
+    if (advancements.includes('experience') && experiences.length !== 2) {
+      return t('sheet.levelUp.needExperiences');
+    }
+    return null;
+  })();
+
   const toggle = (advancement: Advancement) => {
     setAdvancements((current) =>
       current.includes(advancement)
@@ -58,10 +73,15 @@ export function LevelUpDialog({
     );
   };
 
-  const toggleIn = (list: string[], value: string, limit: number): string[] =>
-    list.includes(value)
-      ? list.filter((v) => v !== value)
-      : [...list, value].slice(-limit);
+  /**
+   * Adds or removes a choice, refusing to go past the limit. It used to drop the
+   * oldest pick to make room, so a third click silently undid the first.
+   */
+  const toggleIn = (list: string[], value: string, limit: number): string[] => {
+    if (list.includes(value)) return list.filter((v) => v !== value);
+    if (list.length >= limit) return list;
+    return [...list, value];
+  };
 
   // Multiclassing isn't representable by the character model yet, so it isn't offered.
   const offered = (Object.keys(ADVANCEMENT_LABEL_KEYS) as Advancement[]).filter(
@@ -147,9 +167,11 @@ export function LevelUpDialog({
         />
       </div>
 
+      {incomplete !== null ? <p className="field-error">{incomplete}</p> : null}
+
       <button
         type="button"
-        disabled={spent !== SLOTS_PER_LEVEL}
+        disabled={spent !== SLOTS_PER_LEVEL || incomplete !== null}
         onClick={() =>
           onApply({
             advancements,

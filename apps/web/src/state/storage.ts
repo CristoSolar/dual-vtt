@@ -25,13 +25,26 @@ export function saveCreation(storage: StorageLike, campaignId: string, state: Cr
   storage.setItem(inProgressKey(campaignId), serialize(state));
 }
 
-/** Restores an in-progress creation, or null if there is none or it is unreadable. */
+/**
+ * Restores an in-progress creation, or null if there is none or it is unreadable.
+ *
+ * An unreadable draft is moved aside rather than left in place: the wizard starts
+ * fresh and immediately auto-saves over this key, so without the move a draft that
+ * failed to parse — a schema change, a half-written value — would be destroyed
+ * with nothing to recover it from.
+ */
 export function loadCreation(storage: StorageLike, campaignId: string): CreationState | null {
   const raw = storage.getItem(inProgressKey(campaignId));
   if (raw === null) return null;
   try {
     return deserialize(raw);
   } catch {
+    try {
+      storage.setItem(`${inProgressKey(campaignId)}:unreadable`, raw);
+    } catch {
+      // Out of quota: nothing more to do, and losing the copy is not worth
+      // blocking the wizard over.
+    }
     return null;
   }
 }

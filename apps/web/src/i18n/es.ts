@@ -161,6 +161,9 @@ export const es = {
   'players.createFailed': 'No se pudo crear el jugador.',
   'players.resetPrompt': 'Nueva contraseña temporal para este jugador:',
   'players.resetFailed': 'No se pudo resetear la contraseña.',
+  'players.created': 'Cuenta creada para {username}.',
+  'players.resetTitle': 'Restablecer la contraseña de {username}',
+  'players.resetDone': 'Contraseña restablecida. {username} deberá cambiarla al entrar.',
   'players.title': 'Jugadores',
   'players.subtitle': 'Crea una cuenta para cada jugador de tu mesa.',
   'players.createPlayer': 'Crear jugador',
@@ -331,6 +334,8 @@ export const es = {
   'sheet.levelUp.newExperienceLabel':
     'Nueva Experiencia (los niveles {levels} otorgan una a +{modifier})',
   'sheet.levelUp.confirm': 'Confirmar subida de nivel',
+  'sheet.levelUp.needTraits': 'Elegí dos rasgos para subir.',
+  'sheet.levelUp.needExperiences': 'Elegí dos Experiencias para subir.',
   'sheet.levelUp.advancement.traits': 'Aumenta dos Rasgos',
   'sheet.levelUp.advancement.hitPoint': 'Añade una ranura de Punto de Vida',
   'sheet.levelUp.advancement.stress': 'Añade una ranura de Estrés',
@@ -684,6 +689,12 @@ export const es = {
   // campaign connection (state/useCampaign.ts)
   'campaign.connectFailed': 'No se pudo conectar con el servidor.',
   'campaign.unreadableState': 'El servidor envió un estado que este cliente no puede leer.',
+  'campaign.reconnecting': 'Reconectando con la mesa…',
+  'campaign.offline': 'Sin conexión con la mesa. Los cambios no se están guardando.',
+  'campaign.offlineTitle': 'Sin conexión',
+  'campaign.createFailed': 'No se pudo crear la campaña.',
+  'campaign.noSuchPlayer': 'No existe una cuenta con ese nombre de usuario.',
+  'campaign.addPlayerFailed': 'No se pudo agregar a esa persona a la campaña.',
 
   // first-run guide
   'guide.title': 'Bienvenido a Dual VTT',

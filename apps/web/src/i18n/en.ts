@@ -150,6 +150,9 @@ export const en: Record<keyof typeof es, string> = {
   'players.createFailed': 'Could not create the player.',
   'players.resetPrompt': 'New temporary password for this player:',
   'players.resetFailed': 'Could not reset the password.',
+  'players.created': 'Account created for {username}.',
+  'players.resetTitle': 'Reset {username}’s password',
+  'players.resetDone': 'Password reset. {username} must change it on their next sign-in.',
   'players.title': 'Players',
   'players.subtitle': 'Create an account for each player at your table.',
   'players.createPlayer': 'Create player',
@@ -318,6 +321,8 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.levelUp.newExperienceLabel':
     'New Experience (levels {levels} grant one at +{modifier})',
   'sheet.levelUp.confirm': 'Confirm level up',
+  'sheet.levelUp.needTraits': 'Pick two traits to raise.',
+  'sheet.levelUp.needExperiences': 'Pick two Experiences to raise.',
   'sheet.levelUp.advancement.traits': 'Increase two Traits',
   'sheet.levelUp.advancement.hitPoint': 'Add a Hit Point slot',
   'sheet.levelUp.advancement.stress': 'Add a Stress slot',
@@ -670,6 +675,12 @@ export const en: Record<keyof typeof es, string> = {
   // campaign connection (state/useCampaign.ts)
   'campaign.connectFailed': 'Could not connect to the server.',
   'campaign.unreadableState': 'The server sent state this client cannot read.',
+  'campaign.reconnecting': 'Reconnecting to the table…',
+  'campaign.offline': 'Not connected to the table. Changes are not being saved.',
+  'campaign.offlineTitle': 'Offline',
+  'campaign.createFailed': 'The campaign could not be created.',
+  'campaign.noSuchPlayer': 'There is no account with that username.',
+  'campaign.addPlayerFailed': 'That person could not be added to the campaign.',
 
   // first-run guide
   'guide.title': 'Welcome to Dual VTT',
