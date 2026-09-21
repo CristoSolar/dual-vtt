@@ -186,6 +186,30 @@ const ok = (
   entries: readonly RollEntry[] = [],
 ): RoomResult => ({ ok: true, state, effect, entries });
 
+/**
+ * Seats a claimed character in the room.
+ *
+ * "You start a campaign with 1 Fear per PC in the party" (SRD 2.0 p.87). Parties
+ * assemble over several sessions, so the Fear arrives with each new PC rather than
+ * all at once at some moment the app cannot observe. Replacing a character that was
+ * already claimed adds nothing: the party has not grown.
+ */
+export function claimCharacterInRoom(
+  state: RoomState,
+  accountId: string,
+  sheet: SheetState,
+): RoomState {
+  const isNewToTheParty = state.characters[accountId] === undefined;
+  return {
+    ...state,
+    characters: { ...state.characters, [accountId]: sheet },
+    players: state.players.map((player) =>
+      player.id === accountId ? { ...player, characterId: accountId } : player,
+    ),
+    fear: isNewToTheParty ? gainFear(state.fear, 1) : state.fear,
+  };
+}
+
 /** True when this actor may mutate the given character. */
 export function canControlCharacter(state: RoomState, actor: Actor, characterId: string): boolean {
   // The GM can act on any character; a player only on the one they claimed.

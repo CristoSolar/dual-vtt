@@ -41,6 +41,12 @@ export interface RollDualityOptions {
   hopeDie?: number;
   /** Size of the Fear Die. Defaults to 12. */
   fearDie?: number;
+  /**
+   * Advantage dice from allies using Help an Ally — the one case where a roll
+   * carries more than one. Any number of allies may help; the acting player adds
+   * only the highest of all the advantage dice, their own included (SRD 2.0 p.49).
+   */
+  helpDice?: number;
   rng: Rng;
 }
 
@@ -60,9 +66,11 @@ export function advantageDisadvantage(
  * Rolls the Duality Dice. Outcome needs a Difficulty, so this returns the roll and
  * you pass it to `resolveActionRoll` / `resolveReactionRoll`.
  *
- * Multiple advantage sources each roll a d6; only the highest is added, matching
- * Help an Ally ("that player only adds the highest result", SRD p.38). Disadvantage
- * mirrors this with the highest result subtracted.
+ * Sources cancel one for one, and whatever survives grants exactly one die:
+ * "Regardless of how many sources grant them advantage or disadvantage, a player
+ * never rolls more than one advantage or disadvantage die on the same roll"
+ * (SRD 2.0 p.49). Help an Ally is the stated exception, and arrives as `helpDice`:
+ * those dice join the advantage pool and the highest of the pool is added.
  */
 export function rollDuality(options: RollDualityOptions): DualityRoll {
   const {
@@ -71,22 +79,27 @@ export function rollDuality(options: RollDualityOptions): DualityRoll {
     disadvantage = 0,
     hopeDie = 12,
     fearDie = 12,
+    helpDice = 0,
     rng,
   } = options;
 
   const net = advantageDisadvantage(advantage, disadvantage);
+  // However many sources survive the cancelling, they are worth one die — plus one
+  // per ally helping, which is the exception the SRD carves out.
+  const advantageDice = (net.advantage > 0 ? 1 : 0) + Math.max(0, Math.trunc(helpDice));
+  const disadvantageDice = net.disadvantage > 0 ? 1 : 0;
 
   const hope = rollDie(hopeDie, rng);
   const fear = rollDie(fearDie, rng);
 
   let advantageRoll: number | null = null;
-  for (let i = 0; i < net.advantage; i++) {
+  for (let i = 0; i < advantageDice; i++) {
     const result = rollDie(6, rng);
     if (advantageRoll === null || result > advantageRoll) advantageRoll = result;
   }
 
   let disadvantageRoll: number | null = null;
-  for (let i = 0; i < net.disadvantage; i++) {
+  for (let i = 0; i < disadvantageDice; i++) {
     const result = rollDie(6, rng);
     if (disadvantageRoll === null || result > disadvantageRoll) disadvantageRoll = result;
   }

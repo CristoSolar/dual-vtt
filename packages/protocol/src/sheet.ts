@@ -402,6 +402,8 @@ export interface DualityRollRequest {
   /** Experiences being spent, each costing 1 Hope (SRD p.38). */
   /** Names of the Experiences being leveraged; each costs a Hope. */
   experiences: readonly string[];
+  /** Advantage dice from allies using Help an Ally. Optional; defaults to none. */
+  helpDice?: number;
 }
 
 export interface DualityRollOutcome {
@@ -446,6 +448,7 @@ export function makeDualityRoll(
     modifiers: request.modifiers + experienceBonus,
     advantage: request.advantage,
     disadvantage: request.disadvantage,
+    helpDice: request.helpDice ?? 0,
     rng,
   });
   const result = resolveActionRoll(roll, request.difficulty);

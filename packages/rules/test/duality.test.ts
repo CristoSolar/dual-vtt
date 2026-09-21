@@ -48,6 +48,36 @@ describe('rollDuality', () => {
     expect(withDisadvantage.total).toBe(2);
   });
 
+  it('rolls one advantage die however many sources grant it (SRD 2.0 p.49)', () => {
+    // Only one d6 is scripted after the Duality Dice: a second would throw.
+    const roll = rollDuality({ advantage: 3, rng: scriptedRng([4, 3, [5, 6]]) });
+    expect(roll.advantageRoll).toBe(5);
+    expect(roll.total).toBe(12);
+  });
+
+  it('rolls one disadvantage die however many sources grant it', () => {
+    const roll = rollDuality({ disadvantage: 4, rng: scriptedRng([4, 3, [5, 6]]) });
+    expect(roll.disadvantageRoll).toBe(5);
+    expect(roll.total).toBe(2);
+  });
+
+  it('takes the highest of every advantage die when allies Help an Ally', () => {
+    // The one exception: the acting player's own die plus one per helping ally,
+    // and only the best of them is added.
+    const roll = rollDuality({
+      advantage: 1,
+      helpDice: 2,
+      rng: scriptedRng([4, 3, [2, 6], [6, 6], [3, 6]]),
+    });
+    expect(roll.advantageRoll).toBe(6);
+    expect(roll.total).toBe(13);
+  });
+
+  it('rolls only the helpers dice when nothing else grants advantage', () => {
+    const roll = rollDuality({ helpDice: 1, rng: scriptedRng([4, 3, [5, 6]]) });
+    expect(roll.advantageRoll).toBe(5);
+  });
+
   it('rolls neither die when advantage and disadvantage cancel', () => {
     // Only two faces are scripted, so a third roll would throw.
     const roll = rollDuality({ advantage: 1, disadvantage: 1, rng: scriptedRng([4, 3]) });

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   applyRoomEvent,
+  claimCharacterInRoom,
   createRoomState,
   createScene,
   createSheet,
@@ -184,6 +185,7 @@ describe('rolls are server-side and read from the sheet', () => {
           difficulty: 10,
           advantage: 0,
           disadvantage: 0,
+          helpDice: 0,
           experiences: [],
         },
       },
@@ -210,6 +212,7 @@ describe('rolls are server-side and read from the sheet', () => {
           difficulty: 10,
           advantage: 0,
           disadvantage: 0,
+          helpDice: 0,
           experiences: ['Dragon Rider'],
         },
       }),
@@ -275,6 +278,33 @@ describe('what a player is allowed to see', () => {
 
     expect(room.adversaryInstances[0]?.hpMarked).toBe(adversary.hp);
     expect(room.adversaryInstances[0]?.stressMarked).toBe(adversary.stress);
+  });
+});
+
+describe('a party assembling', () => {
+  it('hands the GM one Fear for each new PC, and none for a replacement', () => {
+    const base = createRoomState('c-1', { id: GM.id, name: 'GM', connected: true });
+    const room = {
+      ...base,
+      players: [
+        { id: ALEX.id, name: 'Alex', connected: true, characterId: null },
+        { id: SAM.id, name: 'Sam', connected: true, characterId: null },
+      ],
+    };
+    expect(room.fear).toBe(0);
+
+    // "You start a campaign with 1 Fear per PC in the party" (SRD 2.0 p.87), and a
+    // party fills up over several sessions.
+    const withAlex = claimCharacterInRoom(room, ALEX.id, createSheet(makeCharacter()));
+    expect(withAlex.fear).toBe(1);
+    expect(withAlex.players.find((p) => p.id === ALEX.id)?.characterId).toBe(ALEX.id);
+
+    const withSam = claimCharacterInRoom(withAlex, SAM.id, createSheet(makeCharacter()));
+    expect(withSam.fear).toBe(2);
+
+    // Replacing a character is not a new PC at the table.
+    const rebuilt = claimCharacterInRoom(withSam, ALEX.id, createSheet(makeCharacter('bard')));
+    expect(rebuilt.fear).toBe(2);
   });
 });
 

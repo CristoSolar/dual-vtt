@@ -108,6 +108,8 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
       difficulty: z.number().int().min(0).max(60),
       advantage: z.number().int().min(0).max(10),
       disadvantage: z.number().int().min(0).max(10),
+      /** Allies using Help an Ally, each of whom rolls an advantage die. */
+      helpDice: z.number().int().min(0).max(6).default(0),
       // Names only. The modifiers come from the character's own Experiences, so an
       // unbounded bonus cannot be dialled in from the client.
       experiences: z.array(z.string().min(1)).max(5),

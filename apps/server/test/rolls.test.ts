@@ -50,7 +50,7 @@ describe('server-side dice', () => {
       const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
         type: 'rollDuality',
         characterId: 'u-player',
-        request: { label: 'Roll', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, experiences: [] },
+        request: { label: 'Roll', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, helpDice: 0, experiences: [] },
       });
       const entry = outcome.entries[0];
       if (entry === undefined || entry.kind !== 'duality') throw new Error('no roll');
@@ -72,7 +72,7 @@ describe('server-side dice', () => {
     const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
       type: 'rollDuality',
       characterId: 'u-player',
-      request: { label: 'Audit', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, experiences: [] },
+      request: { label: 'Audit', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, helpDice: 0, experiences: [] },
     });
 
     const entry = outcome.entries[0];

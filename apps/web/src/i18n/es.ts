@@ -420,6 +420,10 @@ export const es = {
   'sheet.roll.difficulty': 'Dificultad',
   'sheet.roll.advantageDice': 'Dados de Ventaja',
   'sheet.roll.disadvantageDice': 'Dados de Desventaja',
+  'sheet.roll.helpDice': 'Aliados que ayudan',
+  'sheet.roll.helpDiceHint':
+    'Ayudar a un Aliado cuesta 1 Esperanza a quien ayuda. Cada aliado tira un dado de ' +
+    'ventaja y se suma solo el más alto. Es la única forma de tirar más de un dado de ventaja.',
   'sheet.roll.useExperience': 'Usar una Experiencia (1 Esperanza cada una)',
   'sheet.roll.spendingHope': 'Gastando {cost} de Esperanza de {hope}.',
   'sheet.roll.notEnoughHopeInline': 'No tienes suficiente Esperanza.',

@@ -2,6 +2,7 @@ import { randomBytes, randomInt } from 'node:crypto';
 
 import {
   applyRoomEvent,
+  claimCharacterInRoom,
   createRoomState,
   roomForRole,
   roomPatch,
@@ -192,11 +193,9 @@ export class CampaignStore {
     if (campaign === undefined) return fail('unknownCampaign', 'no such campaign');
 
     const before = campaign.state;
-    campaign.state = {
-      ...before,
-      characters: { ...before.characters, [accountId]: sheet },
-      players: before.players.map((p) => (p.id === accountId ? { ...p, characterId: accountId } : p)),
-    };
+    // The reducer lives in `protocol` with every other room rule, including the
+    // Fear a new PC brings to the GM's pool.
+    campaign.state = claimCharacterInRoom(before, accountId, sheet);
     campaign.updatedAt = this.now();
     return { ok: true, ...patchesFor(before, campaign.state), entries: [] };
   }

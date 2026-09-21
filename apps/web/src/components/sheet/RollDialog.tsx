@@ -35,6 +35,8 @@ export function RollDialog({
   const [difficulty, setDifficulty] = useState(10);
   const [advantage, setAdvantage] = useState(0);
   const [disadvantage, setDisadvantage] = useState(0);
+  /** Allies spending a Hope to help. Each rolls a die; the best one counts. */
+  const [helpDice, setHelpDice] = useState(0);
   const [chosen, setChosen] = useState<readonly string[]>([]);
 
   const selected = experiences.filter((e) => chosen.includes(e.name));
@@ -93,6 +95,21 @@ export function RollDialog({
             </div>
           </div>
 
+          <div>
+            <label htmlFor="help-dice">{t('sheet.roll.helpDice')}</label>
+            <input
+              id="help-dice"
+              type="number"
+              min={0}
+              max={6}
+              value={helpDice}
+              onChange={(event) =>
+                setHelpDice(Math.min(6, Math.max(0, Number(event.target.value) || 0)))
+              }
+            />
+            <p className="muted">{t('sheet.roll.helpDiceHint')}</p>
+          </div>
+
           {experiences.length > 0 ? (
             <fieldset>
               <legend>{t('sheet.roll.useExperience')}</legend>
@@ -125,6 +142,7 @@ export function RollDialog({
                 difficulty,
                 advantage,
                 disadvantage,
+                helpDice,
                 experiences: selectedNames,
               })
             }
