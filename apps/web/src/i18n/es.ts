@@ -828,6 +828,7 @@ export const es = {
   'map.panel.grid': 'Cuadrícula y escala',
   'map.panel.tokens': 'Fichas',
   'map.panel.fog': 'Niebla de guerra',
+  'map.panel.gm': 'Pantalla del GM',
   'map.panel.walls': 'Muros y puertas',
   'map.panel.closeAria': 'Cerrar {title}',
 

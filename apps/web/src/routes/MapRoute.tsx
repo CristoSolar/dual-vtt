@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Icon, type IconName } from '../components/icons/Icon.js';
 import { FloatingPanel } from '../components/map/FloatingPanel.js';
+import { GMPanel } from '../components/gm/GMPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
@@ -24,6 +25,8 @@ interface MapRouteProps {
   room: RoomState;
   isGameMaster: boolean;
   viewerId: string | null;
+  /** Shown in the GM screen's header when it is opened over the map. */
+  campaignName?: string;
   send: (event: RoomEvent) => void;
 }
 
@@ -33,7 +36,7 @@ const nextId = (prefix: string) => {
   return `${prefix}-${Date.now().toString(36)}-${counter.toString(36)}`;
 };
 
-type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet' | 'walls';
+type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet' | 'walls' | 'gm';
 
 /** Panel titles, resolved at call time so a locale switch is reflected immediately. */
 function panelTitle(id: PanelId): string {
@@ -52,6 +55,8 @@ function panelTitle(id: PanelId): string {
       return t('app.characterSheet');
     case 'walls':
       return t('map.panel.walls');
+    case 'gm':
+      return t('map.panel.gm');
   }
 }
 
@@ -67,6 +72,7 @@ const defaultPanels = (): PanelStore => ({
   fog: { x: 90, y: 96, z: 1, open: false },
   sheet: { x: 90, y: 96, z: 1, open: false },
   walls: { x: 90, y: 96, z: 1, open: false },
+  gm: { x: 90, y: 96, z: 1, open: false },
 });
 
 /** Reads saved panel positions; any corruption just falls back to defaults. */
@@ -81,7 +87,13 @@ function loadPanels(): PanelStore {
 }
 
 /** The tactical map: canvas plus, for the GM, the tools that drive it. */
-export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) {
+export function MapRoute({
+  room,
+  isGameMaster,
+  viewerId,
+  campaignName = '',
+  send,
+}: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
   const [measuring, setMeasuring] = useState(false);
@@ -354,6 +366,7 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
               {toolButton('tokens', 'group', t('map.panel.tokens'))}
               {toolButton('fog', 'fog', t('map.panel.fog'))}
               {toolButton('walls', 'door', t('map.panel.walls'))}
+              {toolButton('gm', 'shield', t('map.panel.gm'))}
             </>
           ) : (
             toolButton('sheet', 'shield', t('app.characterSheet'))
@@ -529,6 +542,21 @@ export function MapRoute({ room, isGameMaster, viewerId, send }: MapRouteProps) 
           wide
         >
           <MapSheetPanel sheet={mySheet} characterId={viewerId} send={send} sharedLog={room.rollLog} />
+        </FloatingPanel>
+      ) : null}
+
+      {/* The GM's screen, on the map rather than a route away from it. Running a
+          fight meant leaving the map to spend Fear and coming back. */}
+      {isGameMaster && panels.gm.open ? (
+        <FloatingPanel
+          title={panelTitle('gm')}
+          layout={panels.gm}
+          onLayoutChange={(l) => movePanel('gm', l)}
+          onFocus={() => focusPanel('gm')}
+          onClose={() => closePanel('gm')}
+          wide
+        >
+          <GMPanel room={room} campaignName={campaignName} send={send} />
         </FloatingPanel>
       ) : null}
 

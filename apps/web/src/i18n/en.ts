@@ -812,6 +812,7 @@ export const en: Record<keyof typeof es, string> = {
   'map.panel.grid': 'Grid and scale',
   'map.panel.tokens': 'Tokens',
   'map.panel.fog': 'Fog of war',
+  'map.panel.gm': 'GM screen',
   'map.panel.walls': 'Walls and doors',
   'map.panel.closeAria': 'Close {title}',
 

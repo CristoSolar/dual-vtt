@@ -371,6 +371,7 @@ function Shell() {
                 room={campaign.room}
                 isGameMaster={isGameMaster}
                 viewerId={account.id}
+                campaignName={activeCampaignName}
                 send={campaign.send}
               />
             )
