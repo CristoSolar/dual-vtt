@@ -772,16 +772,58 @@ function EnvironmentPicker({
             <strong>{t('gm.environment.potentialAdversaries')}</strong> {active.potentialAdversaries}
           </p>
           {active.features.map((feature) => (
-            <p className="card-text" key={feature.name}>
-              <strong>
-                {feature.name} — {prettify(feature.type)}
-                {feature.costsFear ? t('gm.fearSuffix') : ''}:
-              </strong>{' '}
-              {feature.text}
-            </p>
+            <EnvironmentFeatureRow key={feature.name} feature={feature} send={send} />
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/** One environment feature, with the Fear its own text asks for. */
+function EnvironmentFeatureRow({
+  feature,
+  send,
+}: {
+  feature: StatBlockFeature;
+  send: (event: RoomEvent) => void;
+}) {
+  const [fearCost, setFearCost] = useState(feature.costsFear ? 1 : 0);
+
+  return (
+    <div className="card-text">
+      <p>
+        <strong>
+          {feature.name} — {prettify(feature.type)}
+          {feature.costsFear ? t('gm.fearSuffix') : ''}:
+        </strong>{' '}
+        {feature.text}
+      </p>
+      <div className="row">
+        {feature.costsFear ? (
+          <>
+            <label htmlFor={`env-fear-${feature.name}`}>{t('gm.adversaries.featureFear')}</label>
+            <input
+              id={`env-fear-${feature.name}`}
+              type="number"
+              min={0}
+              max={MAX_FEAR}
+              value={fearCost}
+              onChange={(event) =>
+                setFearCost(Math.max(0, Math.min(MAX_FEAR, Number(event.target.value) || 0)))
+              }
+            />
+          </>
+        ) : null}
+        <button
+          type="button"
+          onClick={() =>
+            send({ type: 'useEnvironmentFeature', featureName: feature.name, fearCost })
+          }
+        >
+          {t('gm.adversaries.useFeature')}
+        </button>
+      </div>
     </div>
   );
 }

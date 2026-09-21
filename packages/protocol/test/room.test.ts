@@ -700,6 +700,49 @@ describe('the GM rolling for an adversary', () => {
     ).toBe('featureSpent');
   });
 
+  it('spends Fear on an environment feature, and refuses one that is not there', () => {
+    const environment = srd().environments.find((e) => e.features.length > 0);
+    const feature = environment?.features[0];
+    if (environment === undefined || feature === undefined) {
+      throw new Error('no environment with features');
+    }
+
+    let next = apply(room, GM, { type: 'setEnvironment', environmentId: environment.id });
+    next = apply(next, GM, { type: 'gainFear', amount: 3 });
+    const before = next.fear;
+    next = apply(next, GM, {
+      type: 'useEnvironmentFeature',
+      featureName: feature.name,
+      fearCost: 2,
+    });
+    expect(next.fear).toBe(before - 2);
+
+    expect(
+      refusal(next, GM, {
+        type: 'useEnvironmentFeature',
+        featureName: 'Not A Real Feature',
+        fearCost: 0,
+      }),
+    ).toBe('unknownFeature');
+
+    expect(
+      refusal(next, ALEX, {
+        type: 'useEnvironmentFeature',
+        featureName: feature.name,
+        fearCost: 0,
+      }),
+    ).toBe('notGameMaster');
+
+    // With no environment on the table there is nothing to use.
+    expect(
+      refusal(room, GM, {
+        type: 'useEnvironmentFeature',
+        featureName: feature.name,
+        fearCost: 0,
+      }),
+    ).toBe('noEnvironment');
+  });
+
   it('refuses a feature the adversary does not have, and any of this from a player', () => {
     expect(
       refusal(room, GM, {

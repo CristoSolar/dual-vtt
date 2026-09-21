@@ -257,6 +257,12 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     experience: z.string().min(1).max(80).optional(),
   }),
   z.object({
+    // The active environment's own features, which cost Fear the same way.
+    type: z.literal('useEnvironmentFeature'),
+    featureName: z.string().min(1).max(80),
+    fearCost: z.number().int().min(0).max(MAX_FEAR).default(0),
+  }),
+  z.object({
     // Uses a feature off the stat block. The text says what it costs, so the GM
     // states the Fear and the server checks the pool can cover it.
     type: z.literal('useAdversaryFeature'),

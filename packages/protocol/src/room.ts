@@ -241,6 +241,7 @@ export type RoomError =
   | 'characterIsGone'
   | 'unknownExperience'
   | 'unknownFeature'
+  | 'noEnvironment'
   | 'featureSpent'
   | 'unknownTransformation'
   | 'rejected';
@@ -538,6 +539,26 @@ export function applyRoomEvent(
         target: targetNameFor(state, event.targetId),
       };
       return ok(appendEntries({ ...state, fear }, [entry]), null, [entry]);
+    }
+
+    case 'useEnvironmentFeature': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (state.activeEnvironment === null) {
+        return fail('noEnvironment', 'no environment is active');
+      }
+      const environment = srd().environments.find((e) => e.id === state.activeEnvironment);
+      if (environment === undefined) {
+        return fail('noEnvironment', 'that environment is not in the SRD');
+      }
+      if (!environment.features.some((f) => f.name === event.featureName)) {
+        return fail('unknownFeature', 'this environment has no such feature');
+      }
+
+      if (event.fearCost === 0) return ok(state);
+      const spent = spendFear(state.fear, event.fearCost);
+      if (spent === null) return fail('notEnoughFear', 'not enough Fear for that feature');
+      return ok({ ...state, fear: spent });
     }
 
     case 'useAdversaryFeature': {
