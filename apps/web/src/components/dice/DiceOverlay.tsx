@@ -55,23 +55,27 @@ export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly Ro
     if (throws.length === 0) return;
 
     let cancelled = false;
-    setVisible(true);
+    let timer: number | undefined;
     for (const color of COLORS) {
       if (throws.some((t) => t.color === color)) continue;
       void boxes.current.get(color)?.then((box) => box.clearDice(), () => {});
     }
-    for (const { color, notation } of throws) {
-      boxFor(color).then(
-        (box) => {
-          if (!cancelled) void box.roll(notation);
-        },
-        () => {},
-      );
-    }
-    const timer = window.setTimeout(() => {
-      setVisible(false);
-      for (const box of boxes.current.values()) void box.then((b) => b.clearDice(), () => {});
-    }, SHOW_MS);
+    // The table shows, and its timer starts, once the dice are actually thrown.
+    // The first roll fetches the library, which over a slow link can take longer
+    // than the dice stay up: timed from the broadcast, they landed unseen.
+    void Promise.allSettled(
+      throws.map(({ color, notation }) => boxFor(color).then((box) => ({ box, notation }))),
+    ).then((settled) => {
+      if (cancelled) return;
+      const ready = settled.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
+      setVisible(ready.length > 0);
+      if (ready.length === 0) return;
+      for (const { box, notation } of ready) void box.roll(notation);
+      timer = window.setTimeout(() => {
+        setVisible(false);
+        for (const box of boxes.current.values()) void box.then((b) => b.clearDice(), () => {});
+      }, SHOW_MS);
+    });
     return () => {
       cancelled = true;
       window.clearTimeout(timer);

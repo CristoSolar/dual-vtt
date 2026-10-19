@@ -12,13 +12,12 @@ import {
   type CampaignSummary,
   type EffectMessage,
   type PingedMessage,
-  type RollEntry,
   type RoomEvent,
   type RoomState,
   type SheetState,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
-import { hasDice } from './diceNotation.js';
+import { hasDice, joinBurst, type DiceRoll } from './diceNotation.js';
 import { appendPrivate } from './feed.js';
 import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -62,7 +61,7 @@ export interface CampaignConnection {
    * The entries of the most recent roll, for the dice overlay. Kept apart from
    * `lastRoll` so dismissing the toast does not snatch the dice off the table.
    */
-  lastDice: { id: string; entries: RollEntry[] } | null;
+  lastDice: DiceRoll | null;
   /**
    * The effect of this account's most recent accepted intent — what the sheet
    * would have reported offline. Carries an id so a repeat of the same effect
@@ -107,7 +106,7 @@ export function useCampaign(
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
   const [lastRoll, setLastRoll] = useState<{ id: string; message: string } | null>(null);
-  const [lastDice, setLastDice] = useState<{ id: string; entries: RollEntry[] } | null>(null);
+  const [lastDice, setLastDice] = useState<DiceRoll | null>(null);
   const [lastEffect, setLastEffect] = useState<{ id: number; effect: EffectMessage } | null>(null);
   const effectCount = useRef(0);
   const [pings, setPings] = useState<ActivePing[]>([]);
@@ -192,7 +191,8 @@ export function useCampaign(
       if (!parsed.success || parsed.data.entries.length === 0) return;
       const id = parsed.data.entries.map((entry) => entry.id).join('-');
       setLastRoll({ id, message: parsed.data.entries.map(describeRollEntry).join(' · ') });
-      if (hasDice(parsed.data.entries)) setLastDice({ id, entries: parsed.data.entries });
+      const { entries } = parsed.data;
+      if (hasDice(entries)) setLastDice((previous) => joinBurst(previous, { id, entries }));
     });
 
     // Whispers and private rolls reach only the GM and their audience, and no patch
@@ -205,7 +205,7 @@ export function useCampaign(
       const id = entries.map((p) => p.entry.id).join('-');
       setLastRoll({ id, message: entries.map((p) => describeRollEntry(p.entry)).join(' · ') });
       const rolled = entries.map((p) => p.entry);
-      if (hasDice(rolled)) setLastDice({ id, entries: rolled });
+      if (hasDice(rolled)) setLastDice((previous) => joinBurst(previous, { id, entries: rolled }));
     });
 
     // A ping lives only here, for as long as it is drawn.

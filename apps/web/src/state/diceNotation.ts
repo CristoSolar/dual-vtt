@@ -86,3 +86,64 @@ export function groupByColor(throws: readonly DiceThrow[]): DiceThrow[] {
     color,
   }));
 }
+
+/** A broadcast's entries, as the dice overlay throws them. */
+export interface DiceRoll {
+  id: string;
+  entries: RollEntry[];
+}
+
+/**
+ * How far apart, by the server's clock, two of one roller's broadcasts can be and
+ * still be one action. An attack is two intents — the action roll, then its
+ * damage — so its dice arrive as two broadcasts, often in the same render.
+ */
+const BURST_MS = 1000;
+
+/**
+ * The roll to throw once `next` arrives. A follow-up to the roll still on the table
+ * joins it, so an attack's damage die lands beside its Hope and Fear dice instead
+ * of replacing them before they were ever drawn.
+ */
+export function joinBurst(previous: DiceRoll | null, next: DiceRoll): DiceRoll {
+  const last = previous?.entries.at(-1);
+  const first = next.entries[0];
+  if (previous === null || last === undefined || first === undefined) return next;
+  const gap = first.at - last.at;
+  if (first.by !== last.by || gap < 0 || gap > BURST_MS) return next;
+  return { id: `${previous.id}-${next.id}`, entries: [...previous.entries, ...next.entries] };
+}
+
+/**
+ * Thrown when 3D dice are switched on before anything was rolled, so the switch
+ * visibly does something. Display only: it is never logged or sent.
+ */
+export function previewRoll(): DiceRoll {
+  return {
+    id: 'preview',
+    entries: [
+      {
+        kind: 'duality',
+        id: 'preview',
+        at: 0,
+        by: 'preview',
+        label: 'preview',
+        roll: {
+          hope: 8,
+          fear: 5,
+          total: 13,
+          modifiers: 0,
+          critical: false,
+          withHope: true,
+          advantageRoll: null,
+          disadvantageRoll: null,
+        },
+        difficulty: 10,
+        outcome: 'successHope',
+        experiences: [],
+        reaction: false,
+        target: null,
+      },
+    ],
+  };
+}

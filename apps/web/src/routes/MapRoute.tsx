@@ -47,6 +47,9 @@ interface MapRouteProps {
   /** Pings currently on the map, for every scene; only this scene's are drawn. */
   pings?: readonly ActivePing[];
   onPing?: (sceneId: string, x: number, y: number) => void;
+  /** Whether rolls are thrown as 3D dice on this device; the switch sits in the rail. */
+  diceOn?: boolean;
+  onToggleDice?: () => void;
 }
 
 const NO_PINGS: readonly ActivePing[] = [];
@@ -134,6 +137,8 @@ export function MapRoute({
   send,
   pings = NO_PINGS,
   onPing,
+  diceOn = false,
+  onToggleDice,
 }: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
@@ -527,6 +532,18 @@ export function MapRoute({
           >
             <Icon name="measure" size={20} />
           </button>
+          {onToggleDice === undefined ? null : (
+            <button
+              type="button"
+              className="map-rail-button"
+              aria-pressed={diceOn}
+              aria-label={t('map.dice3d')}
+              title={diceOn ? t('map.dice3dOn') : t('map.dice3dOff')}
+              onClick={onToggleDice}
+            >
+              <Icon name="dice" size={20} />
+            </button>
+          )}
         </div>
       ) : null}
 

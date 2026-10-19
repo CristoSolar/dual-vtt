@@ -18,6 +18,7 @@ import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
+import { previewRoll, type DiceRoll } from './state/diceNotation.js';
 import { canRollPrivately, chatRecipients } from './state/feed.js';
 import {
   hasSeenGuide,
@@ -48,8 +49,13 @@ function Shell() {
   const [diceOn, setDiceOn] = useState(() =>
     loadDicePreference(storage, window.matchMedia('(prefers-reduced-motion: reduce)').matches),
   );
+  // Switching the dice on throws something straight away — the last roll, which
+  // the overlay re-throws as it mounts, or a sample pair — so the switch is seen
+  // to work rather than waiting silently for the next roll.
+  const [dicePreview, setDicePreview] = useState<DiceRoll | null>(null);
   const toggleDice = useCallback(() => {
     saveDicePreference(storage, !diceOn);
+    setDicePreview(diceOn ? null : previewRoll());
     setDiceOn(!diceOn);
   }, [storage, diceOn]);
   const [guideOpen, setGuideOpen] = useState(false);
@@ -201,16 +207,13 @@ function Shell() {
             <button type="button" aria-label={t('help.open')}>?</button>
           </Link>
           <LocaleToggle />
-          <button type="button" aria-pressed={diceOn} onClick={toggleDice}>
-            {t('app.dice3d')}
-          </button>
           <button type="button" onClick={auth.logout}>
             {t('app.logout')}
           </button>
         </nav>
       </header>
 
-      {diceOn ? <DiceOverlay roll={campaign.lastDice} /> : null}
+      {diceOn ? <DiceOverlay roll={campaign.lastDice ?? dicePreview} /> : null}
 
       {/* Above the routes, so the music carries on from the sheet to the map. */}
       {campaign.room === null ? null : <AudioPlayer audio={campaign.room.audio} />}
@@ -421,6 +424,8 @@ function Shell() {
                 send={campaign.send}
                 pings={campaign.pings}
                 onPing={campaign.ping}
+                diceOn={diceOn}
+                onToggleDice={toggleDice}
               />
             )
           }

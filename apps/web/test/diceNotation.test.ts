@@ -1,7 +1,7 @@
 import type { RollEntry } from '@daggerheart/protocol';
 import { describe, expect, it } from 'vitest';
 
-import { groupByColor, hasDice, notationFor } from '../src/state/diceNotation.js';
+import { groupByColor, hasDice, joinBurst, notationFor, previewRoll } from '../src/state/diceNotation.js';
 
 const base = { id: 'r1', at: 0, by: 'Ash', label: 'Agility' };
 
@@ -146,5 +146,43 @@ describe('hasDice', () => {
   it('is false for a chat line alone, so it cannot replace dice still on screen', () => {
     expect(hasDice([message])).toBe(false);
     expect(hasDice([])).toBe(false);
+  });
+});
+
+describe('joinBurst', () => {
+  const damage = (at: number, by = 'Ash'): RollEntry => ({
+    kind: 'damage',
+    id: `d${at}`,
+    at,
+    by,
+    label: 'Broadsword',
+    roll: { rolls: [6], modifier: 0, criticalBonus: 0, total: 6, die: 8 },
+    critical: false,
+  });
+  const attack = { id: 'r1', entries: [duality(null, null)] };
+
+  it("adds an attack's damage to the action roll it follows", () => {
+    expect(joinBurst(attack, { id: 'd500', entries: [damage(500)] })).toEqual({
+      id: 'r1-d500',
+      entries: [duality(null, null), damage(500)],
+    });
+  });
+
+  it('starts a fresh throw for a later roll, another roller, or nothing before it', () => {
+    const later = { id: 'd5000', entries: [damage(5000)] };
+    const someoneElse = { id: 'd500', entries: [damage(500, 'Brin')] };
+    expect(joinBurst(attack, later)).toBe(later);
+    expect(joinBurst(attack, someoneElse)).toBe(someoneElse);
+    expect(joinBurst(null, later)).toBe(later);
+  });
+});
+
+describe('previewRoll', () => {
+  it('throws a Hope and a Fear die', () => {
+    const preview = previewRoll();
+    expect(preview.entries.flatMap((entry) => notationFor(entry) ?? []).map((d) => d.color)).toEqual([
+      'hope',
+      'fear',
+    ]);
   });
 });
