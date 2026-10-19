@@ -1,6 +1,8 @@
 import {
   DEFAULT_GRID,
+  MAX_SCENE_REGIONS,
   type Grid,
+  type Region,
   type RoomEvent,
   type RoomState,
   type Token,
@@ -16,6 +18,7 @@ import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { GMPanel } from '../components/gm/GMPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
+import { RegionForm } from '../components/map/RegionForm.js';
 import { Hotbar, isTypingTarget, useHotbar, useHotbarKeys } from '../components/sheet/Hotbar.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
@@ -62,6 +65,7 @@ type PanelId =
   | 'fog'
   | 'sheet'
   | 'walls'
+  | 'regions'
   | 'gm'
   | 'journal';
 
@@ -82,6 +86,8 @@ function panelTitle(id: PanelId): string {
       return t('app.characterSheet');
     case 'walls':
       return t('map.panel.walls');
+    case 'regions':
+      return t('map.panel.regions');
     case 'gm':
       return t('map.panel.gm');
     case 'journal':
@@ -101,6 +107,7 @@ const defaultPanels = (): PanelStore => ({
   fog: { x: 90, y: 96, z: 1, open: false },
   sheet: { x: 90, y: 96, z: 1, open: false },
   walls: { x: 90, y: 96, z: 1, open: false },
+  regions: { x: 90, y: 96, z: 1, open: false },
   gm: { x: 90, y: 96, z: 1, open: false },
   journal: { x: 90, y: 96, z: 1, open: false },
 });
@@ -136,6 +143,12 @@ export function MapRoute({
   const [measuring, setMeasuring] = useState(false);
   const [snapping, setSnapping] = useState(true);
   const [drawingWall, setDrawingWall] = useState(false);
+  /** The region pen, one more drawing tool; picking any of them puts the rest away. */
+  const [drawingRegion, setDrawingRegion] = useState(false);
+  /** The region being named in the form — one just drawn, or one picked to edit —
+   * and the scene it belongs to, which the GM may switch away from meanwhile. */
+  const [editingRegion, setEditingRegion] = useState<{ sceneId: string; region: Region } | null>(null);
+  const closeRegionForm = useCallback(() => setEditingRegion(null), []);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [tokenImageError, setTokenImageError] = useState<string | null>(null);
@@ -482,6 +495,7 @@ export function MapRoute({
               {toolButton('tokens', 'group', t('map.panel.tokens'))}
               {toolButton('fog', 'fog', t('map.panel.fog'))}
               {toolButton('walls', 'door', t('map.panel.walls'))}
+              {toolButton('regions', 'region', t('map.panel.regions'))}
               {toolButton('gm', 'shield', t('map.panel.gm'))}
               {toolButton('journal', 'journal', t('map.panel.journal'))}
             </>
@@ -557,6 +571,20 @@ export function MapRoute({
                 wall: { id: nextId('wall'), x1, y1, x2, y2, kind: 'wall', open: false },
               });
             }}
+            drawingRegion={drawingRegion}
+            onDrawRegion={(points) =>
+              setEditingRegion({
+                sceneId: scene.id,
+                region: {
+                  id: nextId('region'),
+                  name: t('map.regions.defaultName'),
+                  points: [...points],
+                  effect: 'note',
+                  text: '',
+                  visibleToPlayers: true,
+                },
+              })
+            }
             onToggleDoor={(wallId) => {
               if (scene === null) return;
               const wall = scene.walls.find((candidate) => candidate.id === wallId);
@@ -869,6 +897,7 @@ export function MapRoute({
                   aria-pressed={fogBrush?.reveal === true}
                   onClick={() => {
                     setFogPen(null);
+                    setDrawingRegion(false);
                     setFogBrush(fogBrush?.reveal === true ? null : { radius: 120, reveal: true });
                   }}
                 >
@@ -879,6 +908,7 @@ export function MapRoute({
                   aria-pressed={fogBrush?.reveal === false}
                   onClick={() => {
                     setFogPen(null);
+                    setDrawingRegion(false);
                     setFogBrush(fogBrush?.reveal === false ? null : { radius: 120, reveal: false });
                   }}
                 >
@@ -892,6 +922,7 @@ export function MapRoute({
                   onClick={() => {
                     setFogBrush(null);
                     setDrawingWall(false);
+                    setDrawingRegion(false);
                     setFogPen(fogPen?.reveal === true ? null : { reveal: true });
                   }}
                 >
@@ -903,6 +934,7 @@ export function MapRoute({
                   onClick={() => {
                     setFogBrush(null);
                     setDrawingWall(false);
+                    setDrawingRegion(false);
                     setFogPen(fogPen?.reveal === false ? null : { reveal: false });
                   }}
                 >
@@ -935,6 +967,7 @@ export function MapRoute({
             onClick={() => {
               setFogBrush(null);
               setFogPen(null);
+              setDrawingRegion(false);
               setDrawingWall((d) => !d);
             }}
           >
@@ -1002,6 +1035,70 @@ export function MapRoute({
             </ul>
           )}
         </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && scene !== null && panels.regions.open ? (
+        <FloatingPanel
+          title={panelTitle('regions')}
+          layout={panels.regions}
+          onLayoutChange={(l) => movePanel('regions', l)}
+          onFocus={() => focusPanel('regions')}
+          onClose={() => {
+            closePanel('regions');
+            setDrawingRegion(false);
+          }}
+        >
+          <button
+            type="button"
+            aria-pressed={drawingRegion}
+            disabled={scene.regions.length >= MAX_SCENE_REGIONS}
+            onClick={() => {
+              setFogBrush(null);
+              setFogPen(null);
+              setDrawingWall(false);
+              setDrawingRegion((d) => !d);
+            }}
+          >
+            {drawingRegion ? t('map.regions.drawing') : t('map.regions.draw')}
+          </button>
+          {drawingRegion ? <p className="muted mt-2">{t('map.regions.penHint')}</p> : null}
+          {scene.regions.length === 0 ? (
+            <p className="muted mt-3">{t('map.regions.empty')}</p>
+          ) : (
+            <ul className="log mt-3">
+              {scene.regions.map((region) => (
+                <li key={region.id}>
+                  <div className="row spread">
+                    <span>
+                      {region.name} · {t(`map.regions.effect.${region.effect}`)}
+                      {region.visibleToPlayers ? null : ` · ${t('map.regions.hiddenTag')}`}
+                    </span>
+                    <div className="row">
+                      <button type="button" onClick={() => setEditingRegion({ sceneId: scene.id, region })}>
+                        {t('map.regions.edit')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => send({ type: 'removeRegion', sceneId: scene.id, regionId: region.id })}
+                      >
+                        {t('common.remove')}
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </FloatingPanel>
+      ) : null}
+
+      {isGameMaster && editingRegion !== null ? (
+        <RegionForm
+          key={editingRegion.region.id}
+          region={editingRegion.region}
+          onSave={(region) => send({ type: 'upsertRegion', sceneId: editingRegion.sceneId, region })}
+          onClose={closeRegionForm}
+        />
       ) : null}
     </div>
   );

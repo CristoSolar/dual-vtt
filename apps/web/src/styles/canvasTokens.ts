@@ -51,6 +51,10 @@ export const canvasPalette = {
   ringFallback: () => tokenAlpha('--c-text', 0.33),
   wallLine: () => token('--c-text'),
   doorLine: () => token('--c-brass'),
+  /** Scene regions, one colour per effect. */
+  regionDifficultTerrain: () => token('--c-brass'),
+  regionHazard: () => token('--c-crimson-bright'),
+  regionNote: () => token('--c-domain-codex'),
 } as const;
 
 /** Range rings reuse the band colours defined alongside the rest of the palette. */

@@ -4,6 +4,7 @@ import {
   type Fog,
   type Grid,
   type RangeScale,
+  type Region,
   type Scene,
   type Token,
 } from '@daggerheart/protocol';
@@ -55,6 +56,10 @@ export interface MapCanvasProps {
    * fog pen; each leg is its own wall, so one can be deleted without the rest. */
   drawingWall: boolean;
   onAddWall: (x1: number, y1: number, x2: number, y2: number) => void;
+  /** Set while the GM is outlining a region with the pen. Closing the shape hands
+   * its corners over; naming it is the caller's business. */
+  drawingRegion?: boolean;
+  onDrawRegion?: (points: readonly { x: number; y: number }[]) => void;
   /** Clicking a door on the map opens or closes it. GM only. */
   onToggleDoor: (wallId: string) => void;
   /** Reports the current pan/zoom, so the caller can anchor an HTML overlay
@@ -126,6 +131,8 @@ export function MapCanvas({
   snapping = true,
   drawingWall,
   onAddWall,
+  drawingRegion = false,
+  onDrawRegion,
   onToggleDoor,
   onViewChange,
   health,
@@ -244,7 +251,14 @@ export function MapCanvas({
   /** True between pointer-down and pointer-up while the fog brush is active. */
   const paintingStroke = useRef(false);
 
-  const penning = isGameMaster && (fogPen !== null || drawingWall);
+  const penning = isGameMaster && (fogPen !== null || drawingWall || drawingRegion);
+  /** The fog pen and the region pen both outline a closed area; only walls chain. */
+  const penCloses = fogPen !== null || drawingRegion;
+  const penColor = drawingRegion
+    ? canvasPalette.regionNote()
+    : fogPen === null
+      ? canvasPalette.wallLine()
+      : canvasPalette.measureLine();
   /** How close to the first corner a click counts as "close the shape", in scene
    * pixels at the current zoom — so it stays the same size on screen. */
   const closeRadius = 10 / view.scale;
@@ -258,7 +272,9 @@ export function MapCanvas({
    * for walls. Fewer than the minimum corners is a stray click, so it is dropped. */
   const finishPen = useCallback(
     (points: readonly { x: number; y: number }[]) => {
-      if (fogPen !== null) {
+      if (drawingRegion) {
+        if (points.length >= 3) onDrawRegion?.(points);
+      } else if (fogPen !== null) {
         if (points.length >= 3) onFillFog(points);
       } else {
         for (let i = 1; i < points.length; i++) {
@@ -270,7 +286,7 @@ export function MapCanvas({
       }
       cancelPen();
     },
-    [fogPen, onFillFog, onAddWall, cancelPen],
+    [drawingRegion, onDrawRegion, fogPen, onFillFog, onAddWall, cancelPen],
   );
 
   // Enter finishes what the pen has drawn, Escape throws it away. Both are what
@@ -335,7 +351,7 @@ export function MapCanvas({
       const first = penPoints[0];
       // Clicking the first corner again closes the shape, the way a pen tool does.
       if (first !== undefined && penPoints.length >= 2 && Math.hypot(first.x - point.x, first.y - point.y) <= closeRadius) {
-        finishPen(fogPen !== null ? penPoints : [...penPoints, first]);
+        finishPen(penCloses ? penPoints : [...penPoints, first]);
         return;
       }
       setPenPoints([...penPoints, point]);
@@ -504,6 +520,14 @@ export function MapCanvas({
         ) : null}
       </Layer>
 
+      {/* Regions lie on the map like paint: under walls and tokens, never in the
+          way of a click. */}
+      <Layer listening={false}>
+        {scene.regions.map((region) => (
+          <RegionShape key={region.id} region={region} scale={view.scale} />
+        ))}
+      </Layer>
+
       {/* Walls listen only for the GM, and only so a door can be clicked open;
           a player's pointer passes straight through to the tokens below. */}
       <Layer listening={isGameMaster && !penning}>
@@ -562,9 +586,9 @@ export function MapCanvas({
           <Group>
             <Line
               points={penPoints.flatMap((point) => [point.x, point.y])}
-              stroke={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+              stroke={penColor}
               strokeWidth={3}
-              {...(fogPen === null ? {} : { closed: penPoints.length > 2, opacity: 0.8 })}
+              {...(penCloses ? { closed: penPoints.length > 2, opacity: 0.8 } : {})}
             />
             {penCursor === null ? null : (
               <Line
@@ -574,7 +598,7 @@ export function MapCanvas({
                   penCursor.x,
                   penCursor.y,
                 ]}
-                stroke={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+                stroke={penColor}
                 strokeWidth={2}
                 dash={[6, 6]}
               />
@@ -585,7 +609,7 @@ export function MapCanvas({
                 x={point.x}
                 y={point.y}
                 radius={index === 0 ? 6 : 4}
-                fill={fogPen === null ? canvasPalette.wallLine() : canvasPalette.measureLine()}
+                fill={penColor}
               />
             ))}
           </Group>
@@ -799,6 +823,85 @@ function PingRing({
   }, [reducedMotion]);
 
   return <Circle ref={ref} x={x} y={y} radius={0} stroke={color} strokeWidth={4 / scale} />;
+}
+
+function regionColor(region: Region): string {
+  switch (region.effect) {
+    case 'difficultTerrain':
+      return canvasPalette.regionDifficultTerrain();
+    case 'hazard':
+      return canvasPalette.regionHazard();
+    case 'note':
+      return canvasPalette.regionNote();
+  }
+}
+
+/** Gap between the hatch lines of difficult terrain, in scene pixels. */
+const HATCH_SPACING = 16;
+
+/**
+ * One region: a translucent wash in its effect's colour, hatched for difficult
+ * terrain so it reads as "rough ground" even to someone who cannot tell the colours
+ * apart. The name sits at the top-left of its bounds, with the text under it when
+ * this viewer has any.
+ */
+function RegionShape({ region, scale }: { region: Region; scale: number }) {
+  const color = regionColor(region);
+  const flat = region.points.flatMap((point) => [point.x, point.y]);
+  const xs = region.points.map((point) => point.x);
+  const ys = region.points.map((point) => point.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  const hatches: JSX.Element[] = [];
+  if (region.effect === 'difficultTerrain') {
+    // Diagonals over the bounds, clipped to the outline below.
+    const span = maxY - minY;
+    for (let x = minX - span; x <= maxX; x += HATCH_SPACING) {
+      hatches.push(
+        <Line key={x} points={[x, maxY, x + span, minY]} stroke={color} strokeWidth={2} opacity={0.6} />,
+      );
+    }
+  }
+
+  return (
+    <Group>
+      <Line points={flat} closed fill={color} opacity={0.18} />
+      {hatches.length === 0 ? null : (
+        <Group
+          clipFunc={(ctx) => {
+            ctx.beginPath();
+            region.points.forEach((point, index) =>
+              index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y),
+            );
+            ctx.closePath();
+          }}
+        >
+          {hatches}
+        </Group>
+      )}
+      {/* Dashed when the players cannot see it: only the GM ever receives those. */}
+      <Line
+        points={flat}
+        closed
+        stroke={color}
+        strokeWidth={2 / scale}
+        opacity={0.8}
+        {...(region.visibleToPlayers ? {} : { dash: [8 / scale, 6 / scale] })}
+      />
+      <Text
+        x={minX + 6 / scale}
+        y={minY + 6 / scale}
+        text={region.text === '' ? region.name : `${region.name}\n${region.text}`}
+        width={Math.max(0, maxX - minX - 12 / scale)}
+        fill={canvasPalette.tokenLabel()}
+        fontSize={13 / scale}
+        lineHeight={1.3}
+      />
+    </Group>
+  );
 }
 
 /** Where uploaded maps are served from. */
