@@ -121,6 +121,30 @@ describe('upload authentication', () => {
     expect(past.headers.get('content-range')).toBe('bytes */10');
   });
 
+  it('keeps serving after a client aborts mid-body, as an <audio> range request does', async () => {
+    // Large enough that the abort below lands mid-stream rather than after it finished.
+    const bigOgg = new Uint8Array(5 * 1024 * 1024);
+    bigOgg.set([0x4f, 0x67, 0x67, 0x53], 0);
+    const uploadResponse = await fetch(`${server.url}/uploads`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: bigOgg,
+    });
+    const { url } = (await uploadResponse.json()) as { url: string };
+
+    const controller = new AbortController();
+    const aborted = fetch(`${server.url}${url}`, { signal: controller.signal }).catch(() => null);
+    setTimeout(() => controller.abort(), 5);
+    await aborted;
+
+    // A read stream leaked by .pipe (or left without an error handler) would either
+    // never release its fd or take the process down; either way the next request
+    // would misbehave. It doesn't.
+    const after = await fetch(`${server.url}${url}`);
+    expect(after.status).toBe(200);
+    expect(new Uint8Array(await after.arrayBuffer())).toHaveLength(bigOgg.length);
+  });
+
   it('refuses a path that tries to escape the uploads directory', async () => {
     const response = await fetch(`${server.url}/uploads/..%2f..%2fetc%2fpasswd`);
     expect(response.status).toBe(400);

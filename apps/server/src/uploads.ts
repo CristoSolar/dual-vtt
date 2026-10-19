@@ -3,6 +3,7 @@ import { createReadStream } from 'node:fs';
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize } from 'node:path';
+import { pipeline } from 'node:stream';
 
 import { actorFor } from './http-auth.js';
 import type { SessionStore } from './sessions.js';
@@ -192,7 +193,11 @@ export async function handleUploads(
           'content-length': info.size,
           'accept-ranges': 'bytes',
         });
-        createReadStream(path).pipe(response);
+        // pipeline, not .pipe: .pipe leaves the read stream's fd open when the
+        // client aborts mid-body (an <audio> range request does this constantly),
+        // and adds no 'error' listener, so a file vanishing after stat would crash
+        // the process instead of just failing this request.
+        pipeline(createReadStream(path), response, () => {});
         return true;
       }
       // A player joining mid-song seeks into the track, and a browser cannot seek
@@ -209,7 +214,7 @@ export async function handleUploads(
         'content-range': `bytes ${range.start}-${range.end}/${info.size}`,
         'accept-ranges': 'bytes',
       });
-      createReadStream(path, range).pipe(response);
+      pipeline(createReadStream(path, range), response, () => {});
     } catch {
       json(response, 404, { error: 'not found' });
     }
