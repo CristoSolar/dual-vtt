@@ -1472,6 +1472,103 @@ describe('map events', () => {
   });
 });
 
+describe('per-account targets', () => {
+  const pcToken = (over: Partial<Token> = {}): Token => ({
+    id: 'tok-1',
+    kind: 'pc',
+    refId: ALEX.id,
+    name: 'Alex',
+    x: 100,
+    y: 100,
+    width: 50,
+    height: 50,
+    rotation: 0,
+    color: '#fff',
+    image: null,
+    colorFrame: false,
+    hidden: false,
+    showRings: false,
+    ownerId: ALEX.id,
+    conditions: [],
+    visionRadius: 300,
+    ...over,
+  });
+
+  /** A room with one active scene the players can see. */
+  function roomWithScene(): RoomState {
+    let room = apply(roomWithPlayers(), GM, { type: 'addScene', id: 's-1', name: 'The bridge' });
+    room = apply(room, GM, { type: 'setActiveScene', id: 's-1' });
+    return room;
+  }
+
+  it('lets a player target a visible token on the active scene', () => {
+    const room = apply(roomWithScene(), GM, { type: 'addToken', sceneId: 's-1', token: pcToken() });
+    const next = apply(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] });
+    expect(next.targets[ALEX.id]).toEqual(['tok-1']);
+  });
+
+  it('refuses a player targeting a hidden token', () => {
+    const room = apply(roomWithScene(), GM, {
+      type: 'addToken',
+      sceneId: 's-1',
+      token: pcToken({ hidden: true }),
+    });
+    expect(refusal(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] })).toBe('unknownToken');
+  });
+
+  it('refuses a player targeting a token on another scene', () => {
+    let room = apply(roomWithScene(), GM, { type: 'addScene', id: 's-2', name: 'Elsewhere' });
+    room = apply(room, GM, { type: 'addToken', sceneId: 's-2', token: pcToken() });
+    expect(refusal(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] })).toBe('unknownToken');
+  });
+
+  it('lets the GM target a token on any scene, not only the active one', () => {
+    let room = apply(roomWithScene(), GM, { type: 'addScene', id: 's-2', name: 'Elsewhere' });
+    room = apply(room, GM, { type: 'addToken', sceneId: 's-2', token: pcToken() });
+    room = apply(room, GM, { type: 'setTargets', tokenIds: ['tok-1'] });
+    expect(room.targets[GM.id]).toEqual(['tok-1']);
+  });
+
+  it('clears the sender’s own entry with an empty list', () => {
+    let room = apply(roomWithScene(), GM, { type: 'addToken', sceneId: 's-1', token: pcToken() });
+    room = apply(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] });
+    room = apply(room, ALEX, { type: 'setTargets', tokenIds: [] });
+    expect(room.targets[ALEX.id]).toBeUndefined();
+  });
+
+  it('removing a targeted token drops it from every account’s targets', () => {
+    let room = apply(roomWithScene(), GM, { type: 'addToken', sceneId: 's-1', token: pcToken() });
+    room = apply(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] });
+    room = apply(room, GM, { type: 'setTargets', tokenIds: ['tok-1'] });
+    room = apply(room, GM, { type: 'removeToken', sceneId: 's-1', tokenId: 'tok-1' });
+    expect(room.targets).toEqual({});
+  });
+
+  it('removing a scene drops its tokens’ targets too', () => {
+    let room = apply(roomWithScene(), GM, { type: 'addToken', sceneId: 's-1', token: pcToken() });
+    room = apply(room, GM, { type: 'setTargets', tokenIds: ['tok-1'] });
+    room = apply(room, GM, { type: 'addScene', id: 's-2', name: 'Elsewhere' });
+    room = apply(room, GM, { type: 'removeScene', id: 's-1' });
+    expect(room.targets).toEqual({});
+  });
+
+  it('drops a target pointing at a token the player cannot see', () => {
+    const room = apply(roomWithScene(), GM, {
+      type: 'addToken',
+      sceneId: 's-1',
+      token: pcToken({ hidden: true }),
+    });
+    const withTarget = apply(room, GM, { type: 'setTargets', tokenIds: ['tok-1'] });
+    expect(roomForRole(withTarget, 'player').targets[GM.id]).toBeUndefined();
+  });
+
+  it('keeps the same targets reference when roomForRole drops nothing', () => {
+    const room = apply(roomWithScene(), GM, { type: 'addToken', sceneId: 's-1', token: pcToken() });
+    const withTarget = apply(room, ALEX, { type: 'setTargets', tokenIds: ['tok-1'] });
+    expect(roomForRole(withTarget, 'player').targets).toBe(withTarget.targets);
+  });
+});
+
 describe('chat and private rolls', () => {
   let room: RoomState;
   beforeEach(() => {

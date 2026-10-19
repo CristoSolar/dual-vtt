@@ -353,6 +353,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
 export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 
 const sceneId = z.string().min(1).max(64);
+const tokenId = z.string().min(1).max(64);
 
 /**
  * Map intents. All are GM-only except `moveToken` (a player may send it for a
@@ -410,6 +411,12 @@ export const TableRoomEventSchema = z.discriminatedUnion('type', [
     type: z.literal('sendMessage'),
     text: z.string().trim().min(1).max(500),
     whisperTo: z.array(z.string().min(1).max(64)).max(12).default([]),
+  }),
+  z.object({
+    // Replaces the whole list, same as `setInventory`/`setConditions`. An empty
+    // array clears the sender's own entry rather than leaving a stale one behind.
+    type: z.literal('setTargets'),
+    tokenIds: z.array(tokenId).max(6),
   }),
 ]);
 export type TableRoomEvent = z.infer<typeof TableRoomEventSchema>;
@@ -509,6 +516,7 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.groupAction !== after.groupAction) patch.groupAction = after.groupAction;
   if (before.tagTeam !== after.tagTeam) patch.tagTeam = after.tagTeam;
   if (before.map !== after.map) patch.map = after.map;
+  if (before.targets !== after.targets) patch.targets = after.targets;
   return patch;
 }
 
@@ -541,5 +549,6 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.groupAction === undefined ? {} : { groupAction: patch.groupAction }),
     ...(patch.tagTeam === undefined ? {} : { tagTeam: patch.tagTeam }),
     ...(patch.map === undefined ? {} : { map: patch.map }),
+    ...(patch.targets === undefined ? {} : { targets: patch.targets }),
   };
 }

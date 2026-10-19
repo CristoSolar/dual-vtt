@@ -238,6 +238,13 @@ export const RoomStateSchema = z.object({
     .default([]),
   /** Scenes, tokens, and fog. Players receive only the active scene. */
   map: MapStateSchema,
+  /**
+   * Account id -> the token ids that account has targeted, at most six. A player
+   * sees only their own entry filtered to what `roomForRole` lets through; the GM
+   * sees every account's. Defaulted so a snapshot written before targeting existed
+   * still loads.
+   */
+  targets: z.record(z.string(), z.array(z.string().min(1).max(64)).max(6)).default({}),
 });
 export type RoomState = z.infer<typeof RoomStateSchema>;
 
@@ -264,6 +271,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     spotlightTokens: null,
     adversaryPools: [],
     map: createMapState(),
+    targets: {},
   };
 }
 
@@ -275,6 +283,31 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
  */
 const EMPTY_PRIVATE_LOG = Object.freeze([]) as unknown as PrivateEntry[];
 
+/** Every token id anywhere on a map, across every scene. */
+function tokenIdsOf(map: MapState): Set<string> {
+  return new Set(map.scenes.flatMap((scene) => scene.tokens.map((token) => token.id)));
+}
+
+/**
+ * Filters every account's target list by `keep`, dropping ids it rejects and
+ * removing an account's entry entirely once its list is empty. Reference-stable
+ * when every id passes, so an unrelated room change does not produce a spurious
+ * `targets` patch.
+ */
+function filterTargets(
+  targets: RoomState['targets'],
+  keep: (tokenId: string) => boolean,
+): RoomState['targets'] {
+  let changed = false;
+  const next: RoomState['targets'] = {};
+  for (const [accountId, tokenIds] of Object.entries(targets)) {
+    const filtered = tokenIds.filter(keep);
+    if (filtered.length !== tokenIds.length) changed = true;
+    if (filtered.length > 0) next[accountId] = filtered;
+  }
+  return changed ? next : targets;
+}
+
 /**
  * The room as a given role is allowed to see it. The GM sees everything; a player
  * sees only the active scene, without GM-only tokens, never receives the fog
@@ -284,9 +317,14 @@ const EMPTY_PRIVATE_LOG = Object.freeze([]) as unknown as PrivateEntry[];
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
+  const map = mapForPlayer(state.map);
+  // A target on a token a player cannot see (hidden, or on another scene) is
+  // dropped rather than forwarded, so a GM's target never reveals one.
+  const visibleTokenIds = tokenIdsOf(map);
   return {
     ...state,
-    map: mapForPlayer(state.map),
+    map,
+    targets: filterTargets(state.targets, (tokenId) => visibleTokenIds.has(tokenId)),
     // Reusing the state's own array when every instance is already undamaged
     // keeps `roomForRole(before, 'player') === ...` for unrelated changes, so
     // `roomPatch` does not see a spurious `adversaryInstances` diff.
@@ -638,6 +676,20 @@ export function applyRoomEvent(
       // The private log's schema holds at most 12; past that a snapshot would not load.
       if (audience.length > 12) return fail('rejected', 'too many people to whisper to');
       return okLogged(state, actor, null, [entry], 'private', audience);
+    }
+
+    case 'setTargets': {
+      // A player can only target what they themselves could see; the GM can
+      // target any token anywhere on the map, not only the active scene.
+      const knownTokenIds =
+        actor.role === 'gm' ? tokenIdsOf(state.map) : tokenIdsOf(mapForPlayer(state.map));
+      if (!event.tokenIds.every((tokenId) => knownTokenIds.has(tokenId))) {
+        return fail('unknownToken', 'no such token to target');
+      }
+      const targets = { ...state.targets };
+      if (event.tokenIds.length === 0) delete targets[actor.id];
+      else targets[actor.id] = event.tokenIds;
+      return ok({ ...state, targets });
     }
 
     case 'setAdversaryPool': {
@@ -1523,15 +1575,20 @@ function applyMapEvent(
     }
 
     case 'removeScene': {
+      const removedScene = findScene(event.id);
+      if (removedScene === undefined) return fail('unknownScene', 'no such scene');
       const remaining = state.map.scenes.filter((scene) => scene.id !== event.id);
-      if (remaining.length === state.map.scenes.length) {
-        return fail('unknownScene', 'no such scene');
-      }
       const activeSceneId =
         state.map.activeSceneId === event.id
           ? remaining[0]?.id ?? null
           : state.map.activeSceneId;
-      return ok({ ...state, map: { scenes: remaining, activeSceneId } });
+      // A target that pointed at a token on this scene cannot point at anything now.
+      const removedTokenIds = new Set(removedScene.tokens.map((token) => token.id));
+      return ok({
+        ...state,
+        map: { scenes: remaining, activeSceneId },
+        targets: filterTargets(state.targets, (tokenId) => !removedTokenIds.has(tokenId)),
+      });
     }
 
     case 'setActiveScene': {
@@ -1579,12 +1636,15 @@ function applyMapEvent(
     case 'removeToken': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
-      return ok(
-        withScene(state, scene.id, {
-          ...scene,
-          tokens: scene.tokens.filter((token) => token.id !== event.tokenId),
-        }),
-      );
+      const withoutToken = withScene(state, scene.id, {
+        ...scene,
+        tokens: scene.tokens.filter((token) => token.id !== event.tokenId),
+      });
+      // Nobody can keep targeting a token that no longer exists.
+      return ok({
+        ...withoutToken,
+        targets: filterTargets(state.targets, (tokenId) => tokenId !== event.tokenId),
+      });
     }
 
     case 'paintFog': {
