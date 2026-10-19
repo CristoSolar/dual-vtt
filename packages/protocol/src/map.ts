@@ -273,13 +273,20 @@ export function isRevealed(fog: Fog, point: { x: number; y: number }): boolean {
 // --- role-based views --------------------------------------------------------
 
 /**
+ * Shared by every call with no active scene, so two unrelated `mapForPlayer` calls
+ * compare equal by reference and a diff against this state is empty, not a
+ * spurious `map` patch.
+ */
+const EMPTY_PLAYER_MAP: MapState = Object.freeze({ scenes: [], activeSceneId: null }) as MapState;
+
+/**
  * What a player is allowed to see of the map: the active scene only, without
  * GM-only tokens. Unrevealed fog is absent by construction — `revealed` lists what
  * players can see, so hidden regions are never transmitted.
  */
 export function mapForPlayer(map: MapState): MapState {
   const active = map.scenes.find((scene) => scene.id === map.activeSceneId);
-  if (active === undefined) return { scenes: [], activeSceneId: null };
+  if (active === undefined) return EMPTY_PLAYER_MAP;
 
   return {
     activeSceneId: map.activeSceneId,

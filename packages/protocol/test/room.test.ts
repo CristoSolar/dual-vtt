@@ -9,7 +9,9 @@ import {
   createScene,
   createSheet,
   recallCostOf,
+  roomForActor,
   roomForRole,
+  roomPatch,
   RoomStateSchema,
   type Actor,
   type RoomEvent,
@@ -1641,5 +1643,39 @@ describe('chat and private rolls', () => {
       connected: true,
     });
     expect(RoomStateSchema.parse(old).privateLog).toEqual([]);
+  });
+
+  it('never hands privateLog to the player channel', () => {
+    const withWhisper = apply(room, ALEX, {
+      type: 'sendMessage',
+      text: 'psst',
+      whisperTo: [SAM.id],
+    });
+    expect(roomForRole(withWhisper, 'player').privateLog).toEqual([]);
+  });
+
+  it('player patch is empty when only privateLog changed', () => {
+    const before = room;
+    const after = apply(room, ALEX, { type: 'sendMessage', text: 'psst', whisperTo: [SAM.id] });
+    expect(roomPatch(roomForRole(before, 'player'), roomForRole(after, 'player'))).toEqual({});
+  });
+
+  it('roomForActor gives a player their own private entries and no one else’s', () => {
+    const message = (id: string): RoomState['privateLog'][number]['entry'] => ({
+      kind: 'message',
+      id,
+      at: NOW,
+      by: 'GM',
+      byId: GM.id,
+      text: id,
+    });
+    const state: RoomState = {
+      ...room,
+      privateLog: [
+        { audience: [ALEX.id], entry: message('mine') },
+        { audience: [SAM.id], entry: message('not mine') },
+      ],
+    };
+    expect(roomForActor(state, ALEX).privateLog.map((p) => p.entry.id)).toEqual(['mine']);
   });
 });

@@ -268,16 +268,48 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
 }
 
 /**
+ * Shared by every player view, so two calls with nothing to hide compare equal by
+ * reference and never produce a spurious `privateLog` patch (`privateLog` itself
+ * never travels in a patch — see `roomPatch` — but keeping this stable costs
+ * nothing and matches the pattern below).
+ */
+const EMPTY_PRIVATE_LOG = Object.freeze([]) as unknown as PrivateEntry[];
+
+/**
  * The room as a given role is allowed to see it. The GM sees everything; a player
  * sees only the active scene, without GM-only tokens, never receives the fog
- * regions that have not been revealed, and never learns how hurt an adversary is.
+ * regions that have not been revealed, never learns how hurt an adversary is, and
+ * never receives the private log raw — whispers and private rolls reach a player
+ * only through `roomForActor`, filtered to their own.
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
   return {
     ...state,
     map: mapForPlayer(state.map),
-    adversaryInstances: state.adversaryInstances.map(adversaryForPlayer),
+    // Reusing the state's own array when every instance is already undamaged
+    // keeps `roomForRole(before, 'player') === ...` for unrelated changes, so
+    // `roomPatch` does not see a spurious `adversaryInstances` diff.
+    adversaryInstances: state.adversaryInstances.every(
+      (instance) => instance.hpMarked === 0 && instance.stressMarked === 0,
+    )
+      ? state.adversaryInstances
+      : state.adversaryInstances.map(adversaryForPlayer),
+    privateLog: EMPTY_PRIVATE_LOG,
+  };
+}
+
+/**
+ * The room as a specific actor is allowed to see it. The GM gets the whole state;
+ * a player gets `roomForRole(state, 'player')` with the private log narrowed to
+ * entries whose audience includes them — never another player's whisper, never a
+ * GM-only roll.
+ */
+export function roomForActor(state: RoomState, actor: Actor): RoomState {
+  if (actor.role === 'gm') return state;
+  return {
+    ...roomForRole(state, 'player'),
+    privateLog: state.privateLog.filter((entry) => entry.audience.includes(actor.id)),
   };
 }
 
