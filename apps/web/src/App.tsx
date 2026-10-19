@@ -3,6 +3,7 @@ import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } f
 
 import { GMPanel } from './components/gm/GMPanel.js';
 import { ConfirmDialog } from './components/ConfirmDialog.js';
+import { DiceOverlay } from './components/dice/DiceOverlay.js';
 import { GuideDialog } from './components/GuideDialog.js';
 import { LocaleToggle } from './components/LocaleToggle.js';
 import { Toast, ToastStack } from './components/Toast.js';
@@ -17,7 +18,12 @@ import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
 import { canRollPrivately, chatRecipients } from './state/feed.js';
-import { hasSeenGuide, markGuideSeen } from './state/storage.js';
+import {
+  hasSeenGuide,
+  loadDicePreference,
+  markGuideSeen,
+  saveDicePreference,
+} from './state/storage.js';
 import { firstTarget } from './state/targets.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 
@@ -38,6 +44,13 @@ function Shell() {
   const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null);
 
   const accountId = auth.user?.id ?? null;
+  const [diceOn, setDiceOn] = useState(() =>
+    loadDicePreference(storage, window.matchMedia('(prefers-reduced-motion: reduce)').matches),
+  );
+  const toggleDice = useCallback(() => {
+    saveDicePreference(storage, !diceOn);
+    setDiceOn(!diceOn);
+  }, [storage, diceOn]);
   const [guideOpen, setGuideOpen] = useState(false);
   const [confirmingLeave, setConfirmingLeave] = useState(false);
   useEffect(() => {
@@ -187,11 +200,16 @@ function Shell() {
             <button type="button" aria-label={t('help.open')}>?</button>
           </Link>
           <LocaleToggle />
+          <button type="button" aria-pressed={diceOn} onClick={toggleDice}>
+            {t('app.dice3d')}
+          </button>
           <button type="button" onClick={auth.logout}>
             {t('app.logout')}
           </button>
         </nav>
       </header>
+
+      {diceOn ? <DiceOverlay roll={campaign.lastDice} /> : null}
 
       {guideOpen ? <GuideDialog role={account.role} onClose={closeGuide} /> : null}
 

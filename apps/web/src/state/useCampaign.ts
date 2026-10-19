@@ -10,6 +10,7 @@ import {
   applyRoomPatch,
   type CampaignSummary,
   type EffectMessage,
+  type RollEntry,
   type RoomEvent,
   type RoomState,
   type SheetState,
@@ -48,6 +49,11 @@ export interface CampaignConnection {
   /** The most recent roll broadcast to the room, for a live "so-and-so rolled" toast. */
   lastRoll: { id: string; message: string } | null;
   dismissLastRoll: () => void;
+  /**
+   * The entries of the most recent roll, for the dice overlay. Kept apart from
+   * `lastRoll` so dismissing the toast does not snatch the dice off the table.
+   */
+  lastDice: { id: string; entries: RollEntry[] } | null;
   /**
    * The effect of this account's most recent accepted intent — what the sheet
    * would have reported offline. Carries an id so a repeat of the same effect
@@ -88,6 +94,7 @@ export function useCampaign(
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
   const [lastRoll, setLastRoll] = useState<{ id: string; message: string } | null>(null);
+  const [lastDice, setLastDice] = useState<{ id: string; entries: RollEntry[] } | null>(null);
   const [lastEffect, setLastEffect] = useState<{ id: number; effect: EffectMessage } | null>(null);
   const effectCount = useRef(0);
   const [pending, setPending] = useState(false);
@@ -168,10 +175,9 @@ export function useCampaign(
     socket.on(CHANNEL.rolled, (payload: unknown) => {
       const parsed = RolledSchema.safeParse(payload);
       if (!parsed.success || parsed.data.entries.length === 0) return;
-      setLastRoll({
-        id: parsed.data.entries.map((entry) => entry.id).join('-'),
-        message: parsed.data.entries.map(describeRollEntry).join(' · '),
-      });
+      const id = parsed.data.entries.map((entry) => entry.id).join('-');
+      setLastRoll({ id, message: parsed.data.entries.map(describeRollEntry).join(' · ') });
+      setLastDice({ id, entries: parsed.data.entries });
     });
 
     // Whispers and private rolls reach only the GM and their audience, and no patch
@@ -181,10 +187,9 @@ export function useCampaign(
       if (!parsed.success || parsed.data.entries.length === 0) return;
       const { entries } = parsed.data;
       setRoom((current) => (current === null ? current : appendPrivate(current, entries)));
-      setLastRoll({
-        id: entries.map((p) => p.entry.id).join('-'),
-        message: entries.map((p) => describeRollEntry(p.entry)).join(' · '),
-      });
+      const id = entries.map((p) => p.entry.id).join('-');
+      setLastRoll({ id, message: entries.map((p) => describeRollEntry(p.entry)).join(' · ') });
+      setLastDice({ id, entries: entries.map((p) => p.entry) });
     });
 
     socket.on(CHANNEL.rejected, (payload: unknown) => {
@@ -316,6 +321,7 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      lastDice,
       lastEffect,
       dismissLastEffect,
       pending,
@@ -338,6 +344,7 @@ export function useCampaign(
       error,
       lastRoll,
       dismissLastRoll,
+      lastDice,
       lastEffect,
       dismissLastEffect,
       pending,

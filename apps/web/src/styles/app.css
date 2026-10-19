@@ -3049,3 +3049,25 @@ details summary {
   inset: 0;
   pointer-events: none;
 }
+
+/* ============================================================== dice overlay */
+
+/* Thrown dice: drawn over the whole window, never in the way of a click. Kept
+   laid out while hidden, since a dice box measures its layer when created. Sits
+   under the toasts, which carry the same result as text. */
+.dice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.dice-overlay--visible {
+  visibility: visible;
+}
+
+.dice-overlay-layer {
+  position: absolute;
+  inset: 0;
+}

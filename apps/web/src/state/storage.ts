@@ -1,4 +1,5 @@
 import { deserialize, serialize, type CreationState } from '@daggerheart/character';
+import { z } from 'zod';
 
 /**
  * localStorage persistence for an in-progress character creation only. The
@@ -69,5 +70,31 @@ export function markGuideSeen(storage: StorageLike, accountId: string): void {
     storage.setItem(guideSeenKey(accountId), '1');
   } catch {
     // Private mode or quota: the guide will simply show again next time.
+  }
+}
+
+const DICE_KEY = `${KEY_PREFIX}:dice-3d`;
+const DicePreferenceSchema = z.boolean();
+
+/**
+ * Whether rolls are thrown as 3D dice on this device. Unset, it follows the
+ * system's reduced-motion setting: off for anyone who asked for less motion.
+ */
+export function loadDicePreference(storage: StorageLike, prefersReducedMotion: boolean): boolean {
+  try {
+    const raw = storage.getItem(DICE_KEY);
+    if (raw === null) return !prefersReducedMotion;
+    const parsed = DicePreferenceSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : !prefersReducedMotion;
+  } catch {
+    return !prefersReducedMotion;
+  }
+}
+
+export function saveDicePreference(storage: StorageLike, enabled: boolean): void {
+  try {
+    storage.setItem(DICE_KEY, JSON.stringify(enabled));
+  } catch {
+    // Private mode or quota: the choice lasts until the page reloads.
   }
 }

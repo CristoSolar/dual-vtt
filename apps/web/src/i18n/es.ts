@@ -112,6 +112,7 @@ export const es = {
   'app.map': 'Mapa',
   'app.gmPanel': 'Panel del DJ',
   'app.sheet': 'Hoja',
+  'app.dice3d': 'Dados 3D',
   'app.logout': 'Cerrar sesión',
   'app.inCampaignPrefix': 'Estás en la campaña',
   'app.inCampaignSuffix': 'pero todavía no creaste tu personaje.',

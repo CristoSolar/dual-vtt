@@ -105,6 +105,7 @@ export const en: Record<keyof typeof es, string> = {
   'app.map': 'Map',
   'app.gmPanel': 'GM Panel',
   'app.sheet': 'Sheet',
+  'app.dice3d': '3D dice',
   'app.logout': 'Log out',
   'app.inCampaignPrefix': 'You are in the campaign',
   'app.inCampaignSuffix': 'but you have not created your character yet.',

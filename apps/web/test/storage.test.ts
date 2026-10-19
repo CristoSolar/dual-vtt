@@ -5,8 +5,10 @@ import {
   clearCreation,
   hasSeenGuide,
   loadCreation,
+  loadDicePreference,
   markGuideSeen,
   saveCreation,
+  saveDicePreference,
   type StorageLike,
 } from '../src/state/storage.js';
 import { buildCreationState, fakeStorage } from './helpers.js';
@@ -101,5 +103,27 @@ describe('an unreadable draft', () => {
     };
     expect(() => loadCreation(readOnly, 'c-1')).not.toThrow();
     expect(loadCreation(readOnly, 'c-1')).toBeNull();
+  });
+});
+
+describe('the 3D dice preference', () => {
+  it('defaults on, and off for reduced motion', () => {
+    expect(loadDicePreference(fakeStorage(), false)).toBe(true);
+    expect(loadDicePreference(fakeStorage(), true)).toBe(false);
+  });
+
+  it('remembers an explicit choice over the system setting', () => {
+    const storage = fakeStorage();
+    saveDicePreference(storage, true);
+    expect(loadDicePreference(storage, true)).toBe(true);
+    saveDicePreference(storage, false);
+    expect(loadDicePreference(storage, false)).toBe(false);
+  });
+
+  it('falls back to the default on a value it cannot read', () => {
+    const storage = fakeStorage({ 'daggerheart-vtt:dice-3d': '"yes"' });
+    expect(loadDicePreference(storage, false)).toBe(true);
+    storage.setItem('daggerheart-vtt:dice-3d', '{ not json');
+    expect(loadDicePreference(storage, true)).toBe(false);
   });
 });
