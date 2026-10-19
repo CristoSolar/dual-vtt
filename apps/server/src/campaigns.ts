@@ -205,15 +205,19 @@ export class CampaignStore {
     const campaign = this.campaigns.get(campaignId);
     if (campaign === undefined) return fail('unknownCampaign', 'no such campaign');
 
-    const rollsThisEvent = event.type === 'rollDuality' || event.type === 'rollDamage' ? 1 : 0;
-    const rng = rngForRoll(campaign.seed, campaign.rollCount);
+    const baseRng = rngForRoll(campaign.seed, campaign.rollCount);
+    let rngWasCalled = false;
+    const rng: Rng = () => {
+      rngWasCalled = true;
+      return baseRng();
+    };
 
     const before = campaign.state;
     const result = applyRoomEvent(before, actor, event, rng, this.now());
     if (!result.ok) return fail(result.error, result.message);
 
     campaign.state = result.state;
-    campaign.rollCount += rollsThisEvent;
+    if (rngWasCalled) campaign.rollCount += 1;
     campaign.updatedAt = this.now();
     return {
       ok: true,

@@ -62,6 +62,52 @@ describe('server-side dice', () => {
     expect(new Set(rolls.map((r) => `${r.hope}-${r.fear}`)).size).toBeGreaterThan(1);
   });
 
+  it('advances the roll index for every event that rolls dice, even without a logged entry', () => {
+    // rollFate carries no character and produces an entry, but the index must
+    // still move so the next roll of any kind does not repeat it.
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Fate Test', 111);
+
+    const roll = () =>
+      store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
+        type: 'rollFate',
+        kind: 'fate',
+        label: 'Fate',
+      });
+
+    const a = roll();
+    const b = roll();
+    expect(a.ok).toBe(true);
+    expect(b.ok).toBe(true);
+    expect(store.get(campaign.id)?.rollCount).toBe(2);
+  });
+
+  it('advances the roll index for beginRest, which rolls Fear but logs no entry', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Rest Test', 222);
+
+    const outcome = store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
+      type: 'beginRest',
+      kind: 'short',
+    });
+
+    expect(outcome.ok).toBe(true);
+    expect(store.get(campaign.id)?.rollCount).toBe(1);
+  });
+
+  it('leaves the roll index unchanged for an event that never touches the rng', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'No Roll Test', 333);
+
+    const outcome = store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
+      type: 'gainFear',
+      amount: 1,
+    });
+
+    expect(outcome.ok).toBe(true);
+    expect(store.get(campaign.id)?.rollCount).toBe(0);
+  });
+
   it('replays a logged roll from its seed and index for auditing', () => {
     const store = new CampaignStore();
     const campaign = store.createCampaign('u-gm', 'gm', 'Audit Test', 2024);
