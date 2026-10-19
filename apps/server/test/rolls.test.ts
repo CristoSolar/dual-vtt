@@ -1,5 +1,5 @@
 import { createSheet, makeDualityRoll } from '@daggerheart/protocol';
-import { resolveActionRoll, rollDuality, seededRng } from '@daggerheart/rules';
+import { resolveActionRoll, rollDuality } from '@daggerheart/rules';
 import { describe, expect, it } from 'vitest';
 
 import { CampaignStore, rngForRoll } from '../src/campaigns.js';
@@ -21,7 +21,7 @@ describe('server-side dice', () => {
       modifiers: request.modifiers,
       advantage: request.advantage,
       disadvantage: request.disadvantage,
-      rng: seededRng(seed),
+      rng: rngForRoll(seed, 0),
     });
     const expectedOutcome = resolveActionRoll(expected, request.difficulty);
 
@@ -31,6 +31,13 @@ describe('server-side dice', () => {
     expect(actual.outcome).not.toBeNull();
     expect(actual.outcome?.roll).toEqual(expected);
     expect(actual.outcome?.result.outcome).toBe(expectedOutcome.outcome);
+  });
+
+  it('does not repeat faces across consecutive rolls', () => {
+    const hope = new Set(
+      Array.from({ length: 48 }, (_, index) => rollDuality({ rng: rngForRoll(123456789, index) }).hope),
+    );
+    expect(hope.size).toBeGreaterThanOrEqual(10);
   });
 
   it('is reproducible: the same (seed, index) always rolls the same dice', () => {

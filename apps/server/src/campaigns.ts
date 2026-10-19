@@ -66,8 +66,16 @@ const fail = (error: string, message: string): ApplyOutcome => ({
   message,
 });
 
+/**
+ * The dice for roll `index` of a campaign. Seed and index are hashed together first:
+ * xorshift seeded with neighbouring numbers (`seed + index`) gives nearly the same
+ * opening values, so consecutive rolls kept landing on the same faces.
+ */
 export function rngForRoll(seed: number, index: number): Rng {
-  return seededRng(seed + index);
+  let h = (seed ^ Math.imul(index + 0x9e3779b9, 0x85ebca6b)) >>> 0;
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return seededRng((h ^ (h >>> 16)) >>> 0);
 }
 
 /** In-memory campaign storage: the single source of truth for the whole table. */
