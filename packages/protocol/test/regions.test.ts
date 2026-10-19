@@ -206,6 +206,36 @@ describe('moveToken into a region', () => {
   });
 });
 
+describe('Token.dragFrom is server-owned', () => {
+  it('ignores a forged dragFrom sent with addToken', () => {
+    let room = createRoomState('c-1', { id: GM.id, name: 'GM', connected: true });
+    room = apply(room, GM, { type: 'addScene', id: 's-1', name: 'Caldera' });
+    room = apply(room, GM, {
+      type: 'addToken',
+      sceneId: 's-1',
+      token: token({ dragFrom: { x: 9, y: 9 } }),
+    });
+    expect(room.map.scenes[0]?.tokens[0]?.dragFrom).toBeNull();
+  });
+
+  it('preserves the stored dragFrom across a GM updateToken', () => {
+    let room = roomWithRegion();
+    // Start a drag preview so the token carries a non-null dragFrom.
+    room = apply(room, ALEX, move(120, 120, false));
+    const midDrag = room.map.scenes[0]?.tokens[0];
+    expect(midDrag?.dragFrom).toEqual({ x: 200, y: 200 });
+
+    room = apply(room, GM, {
+      type: 'updateToken',
+      sceneId: 's-1',
+      token: { ...token(), name: 'Renamed', dragFrom: { x: 999, y: 999 } },
+    });
+    const updated = room.map.scenes[0]?.tokens[0];
+    expect(updated?.name).toBe('Renamed');
+    expect(updated?.dragFrom).toEqual({ x: 200, y: 200 });
+  });
+});
+
 describe('region intents', () => {
   it('lets the GM add, replace and remove a region', () => {
     let room = roomWithRegion();

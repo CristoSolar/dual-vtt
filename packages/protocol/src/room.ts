@@ -1325,8 +1325,11 @@ export function applyRoomEvent(
       if (scene.tokens.some((t) => t.id === event.token.id)) {
         return fail('tokenExists', 'a token with that id is already on this scene');
       }
-      const withToken = { ...scene, tokens: [...scene.tokens, event.token] };
-      return ok(withScene(state, scene.id, revealVisionFor(withToken, event.token, event.token.x, event.token.y)));
+      // dragFrom tracks an in-progress drag and is server-owned (see moveToken);
+      // a freshly added token is never mid-drag, whatever the client sent.
+      const newToken = { ...event.token, dragFrom: null };
+      const withToken = { ...scene, tokens: [...scene.tokens, newToken] };
+      return ok(withScene(state, scene.id, revealVisionFor(withToken, newToken, newToken.x, newToken.y)));
     }
 
     case 'moveToken': {
@@ -1955,15 +1958,17 @@ function applyMapEvent(
     case 'updateToken': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
-      if (!scene.tokens.some((token) => token.id === event.token.id)) {
+      const existing = scene.tokens.find((token) => token.id === event.token.id);
+      if (existing === undefined) {
         return fail('unknownToken', 'no such token');
       }
+      // dragFrom is server-owned (see moveToken): a GM edit replaces the token
+      // wholesale, but must not let the client inject or clear a drag origin.
+      const updated = { ...(event.token as Token), dragFrom: existing.dragFrom };
       return ok(
         withScene(state, scene.id, {
           ...scene,
-          tokens: scene.tokens.map((token) =>
-            token.id === event.token.id ? (event.token as Token) : token,
-          ),
+          tokens: scene.tokens.map((token) => (token.id === event.token.id ? updated : token)),
         }),
       );
     }
