@@ -1,10 +1,17 @@
-import { createMapState, createScene, type RoomState, type Token } from '@daggerheart/protocol';
+import {
+  createMapState,
+  createScene,
+  type RollEntry,
+  type RoomState,
+  type Token,
+} from '@daggerheart/protocol';
 import { describe, expect, it } from 'vitest';
 
 import { GM_COLOR, colorFor } from '../src/state/playerColor.js';
 import {
   adversaryTargetOf,
   firstTarget,
+  newestDamageIds,
   pcTargetOf,
   targetRings,
   toggleTarget,
@@ -103,5 +110,27 @@ describe('targets', () => {
   it('finds the character behind a PC target', () => {
     expect(pcTargetOf(room({ 'gm-1': ['wolf', 'sam'] }), 'gm-1')).toBe('p-sam');
     expect(pcTargetOf(room({ 'gm-1': ['wolf'] }), 'gm-1')).toBeNull();
+  });
+});
+
+describe('newestDamageIds', () => {
+  const damage = (id: string, by: string): RollEntry => ({
+    kind: 'damage',
+    id,
+    at: 0,
+    by,
+    label: 'Longsword',
+    roll: { rolls: [4], die: 8, criticalBonus: 0, modifier: 1, total: 5 },
+    critical: false,
+  });
+  const message: RollEntry = { kind: 'message', id: 'm', at: 0, by: 'Sam', byId: 'acc-sam', text: 'hit!' };
+
+  it("keeps only each author's newest damage line, from a newest-first feed", () => {
+    const feed = [message, damage('d3', 'Sam'), damage('d2', 'Alex'), damage('d1', 'Sam')];
+    expect([...newestDamageIds(feed)]).toEqual(['d3', 'd2']);
+  });
+
+  it('is empty when nothing was damage', () => {
+    expect(newestDamageIds([message]).size).toBe(0);
   });
 });

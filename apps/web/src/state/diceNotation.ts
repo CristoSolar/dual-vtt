@@ -45,6 +45,15 @@ export function notationFor(entry: RollEntry): DiceThrow[] | null {
 }
 
 /**
+ * Whether a broadcast has anything to throw. A chat line, table roll or region
+ * notice must not replace the dice still on screen: the overlay's timer belongs to
+ * the roll it is showing, and a dice-less roll would cancel it and never clear.
+ */
+export function hasDice(entries: readonly RollEntry[]): boolean {
+  return entries.some((entry) => notationFor(entry) !== null);
+}
+
+/**
  * Entries logged before damage kept its die size have only the faces. A critical
  * adds the dice's maximum, which gives the size back exactly; otherwise the
  * smallest standard die that could have shown every face stands in for it, and

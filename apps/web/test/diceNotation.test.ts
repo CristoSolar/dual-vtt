@@ -1,7 +1,7 @@
 import type { RollEntry } from '@daggerheart/protocol';
 import { describe, expect, it } from 'vitest';
 
-import { groupByColor, notationFor } from '../src/state/diceNotation.js';
+import { groupByColor, hasDice, notationFor } from '../src/state/diceNotation.js';
 
 const base = { id: 'r1', at: 0, by: 'Ash', label: 'Agility' };
 
@@ -133,5 +133,18 @@ describe('groupByColor', () => {
       { notation: '1d12@3', color: 'fear' },
       { notation: '1d6+2d8@5,3,2', color: 'neutral' },
     ]);
+  });
+});
+
+describe('hasDice', () => {
+  const message: RollEntry = { kind: 'message', id: 'm1', at: 0, by: 'Ash', byId: 'acc-ash', text: 'nice!' };
+
+  it('is true when any entry has dice to throw', () => {
+    expect(hasDice([message, duality(null, null)])).toBe(true);
+  });
+
+  it('is false for a chat line alone, so it cannot replace dice still on screen', () => {
+    expect(hasDice([message])).toBe(false);
+    expect(hasDice([])).toBe(false);
   });
 });

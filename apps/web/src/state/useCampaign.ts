@@ -18,6 +18,7 @@ import {
   type SheetState,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
+import { hasDice } from './diceNotation.js';
 import { appendPrivate } from './feed.js';
 import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -191,7 +192,7 @@ export function useCampaign(
       if (!parsed.success || parsed.data.entries.length === 0) return;
       const id = parsed.data.entries.map((entry) => entry.id).join('-');
       setLastRoll({ id, message: parsed.data.entries.map(describeRollEntry).join(' · ') });
-      setLastDice({ id, entries: parsed.data.entries });
+      if (hasDice(parsed.data.entries)) setLastDice({ id, entries: parsed.data.entries });
     });
 
     // Whispers and private rolls reach only the GM and their audience, and no patch
@@ -203,7 +204,8 @@ export function useCampaign(
       setRoom((current) => (current === null ? current : appendPrivate(current, entries)));
       const id = entries.map((p) => p.entry.id).join('-');
       setLastRoll({ id, message: entries.map((p) => describeRollEntry(p.entry)).join(' · ') });
-      setLastDice({ id, entries: entries.map((p) => p.entry) });
+      const rolled = entries.map((p) => p.entry);
+      if (hasDice(rolled)) setLastDice({ id, entries: rolled });
     });
 
     // A ping lives only here, for as long as it is drawn.

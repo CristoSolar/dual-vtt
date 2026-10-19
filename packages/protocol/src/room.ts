@@ -1271,7 +1271,7 @@ export function applyRoomEvent(
       if (result === undefined) return fail('unknownTable', 'that table has no rows');
       const entry: RollEntry = {
         kind: 'table',
-        id: `${now.toString(36)}-${table.id}-tbl`,
+        id: `${now.toString(36)}-${table.id}-${Math.floor(rng() * 36 ** 4).toString(36)}-tbl`,
         at: now,
         by: state.gm.name,
         label: table.name,
@@ -1364,11 +1364,14 @@ export function applyRoomEvent(
         .map(
           (region): RollEntry => ({
             kind: 'message',
-            id: `${now.toString(36)}-${token.id}-${region.id}-rgn`,
+            // The rng nibble keeps two notices in one millisecond apart; clients
+            // drop an entry whose id they have already seen.
+            id: `${now.toString(36)}-${token.id}-${region.id}-${Math.floor(rng() * 36 ** 4).toString(36)}-rgn`,
             at: now,
             by: token.name,
             byId: actor.id,
-            text: `«${token.name}» entró en «${region.name}»${region.text === '' ? '' : `: ${region.text}`}`.slice(0, 500),
+            // Names and arrow only: the protocol carries no prose in any one language.
+            text: `«${token.name}» → «${region.name}»${region.text === '' ? '' : `: ${region.text}`}`.slice(0, 500),
           }),
         );
       // The GM's alone: the region may be one the players cannot see.

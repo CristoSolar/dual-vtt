@@ -175,10 +175,31 @@ describe('moveToken into a region', () => {
       kind: 'message',
       by: 'Alex',
       byId: ALEX.id,
-      text: '«Alex» entró en «Lava»: Take 1d6 fire damage.',
+      text: '«Alex» → «Lava»: Take 1d6 fire damage.',
     });
     expect(outcome.privateEntries[0]).toEqual(logged);
     expect(outcome.state.rollLog).toEqual([]);
+  });
+
+  it('leaves the text off a hazard that has none', () => {
+    const outcome = result(roomWithRegion({ text: '' }), ALEX, move(25, 25, true));
+    expect(outcome.privateEntries[0]?.entry).toMatchObject({ kind: 'message', text: '«Alex» → «Lava»' });
+  });
+
+  it('gives each notice its own id, even within one millisecond', () => {
+    let room = roomWithRegion();
+    room = apply(room, GM, {
+      type: 'upsertRegion',
+      sceneId: 's-1',
+      region: region({ id: 'r-2', name: 'Ash' }),
+    });
+    // Both regions at once, then out and back into both, all at the same instant.
+    const first = result(room, ALEX, move(25, 25, true));
+    room = apply(first.state, ALEX, move(200, 200, true));
+    const second = result(room, ALEX, move(25, 25, true));
+    const ids = [...first.privateEntries, ...second.privateEntries].map((p) => p.entry.id);
+    expect(ids).toHaveLength(4);
+    expect(new Set(ids).size).toBe(4);
   });
 
   it('does not fire on a drag preview', () => {

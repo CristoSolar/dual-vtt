@@ -1,4 +1,4 @@
-import type { AdversaryInstance, RoomState, Token } from '@daggerheart/protocol';
+import type { AdversaryInstance, RollEntry, RoomState, Token } from '@daggerheart/protocol';
 
 import { colorFor } from './playerColor.js';
 
@@ -56,6 +56,22 @@ export function adversaryTargetOf(room: RoomState, by: string): AdversaryInstanc
   const token = targetsOf(room, accountId).find((candidate) => candidate.kind === 'adversary');
   if (token === undefined) return null;
   return room.adversaryInstances.find((instance) => instance.instanceId === token.refId) ?? null;
+}
+
+/**
+ * The damage entries that may still be applied to a target: each author's newest
+ * one, from a log ordered newest first. An older line would land on whatever that
+ * author is targeting now, which is not what it was rolled against.
+ */
+export function newestDamageIds(feed: readonly RollEntry[]): Set<string> {
+  const authors = new Set<string>();
+  const ids = new Set<string>();
+  for (const entry of feed) {
+    if (entry.kind !== 'damage' || authors.has(entry.by)) continue;
+    authors.add(entry.by);
+    ids.add(entry.id);
+  }
+  return ids;
 }
 
 /** The character behind an account's first PC target, for aiming an adversary's attack. */

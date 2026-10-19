@@ -30,7 +30,7 @@ import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { t, type MessageKey } from '../../i18n/index.js';
 import { chatRecipients, mergeFeed } from '../../state/feed.js';
 import { label as prettify } from '../../state/selectors.js';
-import { adversaryTargetOf, pcTargetOf } from '../../state/targets.js';
+import { adversaryTargetOf, newestDamageIds, pcTargetOf } from '../../state/targets.js';
 import { uploadAudio } from '../../state/uploadMap.js';
 import { SectionHead } from '../SectionHead.js';
 import { ChatBox, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
@@ -1491,11 +1491,15 @@ function ApplyToTarget({
   room,
   by,
   amount,
+  applied,
+  onApply,
   send,
 }: {
   room: RoomState;
   by: string;
   amount: number;
+  applied: boolean;
+  onApply: () => void;
   send: (event: RoomEvent) => void;
 }) {
   const target = adversaryTargetOf(room, by);
@@ -1504,7 +1508,13 @@ function ApplyToTarget({
     <button
       type="button"
       className="mt-1"
-      onClick={() => send({ type: 'applyDamageToAdversary', instanceId: target.instanceId, amount })}
+      disabled={applied}
+      onClick={() => {
+        // A double click would otherwise mark the same damage twice.
+        if (applied) return;
+        onApply();
+        send({ type: 'applyDamageToAdversary', instanceId: target.instanceId, amount });
+      }}
     >
       {t('gm.rollLog.applyToTarget', { name: target.name })}
     </button>
@@ -1514,6 +1524,9 @@ function ApplyToTarget({
 function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   // The GM is sent every private entry, so the whole private log belongs here.
   const feed = useMemo(() => mergeFeed(room.rollLog, room.privateLog), [room.rollLog, room.privateLog]);
+  const applicable = useMemo(() => newestDamageIds(feed.map((item) => item.entry)), [feed]);
+  // Entries already applied from this panel; local, so a reload forgets them.
+  const [applied, setApplied] = useState<ReadonlySet<string>>(() => new Set());
   return (
     <div className="panel">
       <SectionHead>{t('sheet.log.title')}</SectionHead>
@@ -1593,8 +1606,15 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                               : '',
                           })}
                 </span>
-                {entry.kind === 'damage' ? (
-                  <ApplyToTarget room={room} by={entry.by} amount={entry.roll.total} send={send} />
+                {entry.kind === 'damage' && applicable.has(entry.id) ? (
+                  <ApplyToTarget
+                    room={room}
+                    by={entry.by}
+                    amount={entry.roll.total}
+                    applied={applied.has(entry.id)}
+                    onApply={() => setApplied((current) => new Set(current).add(entry.id))}
+                    send={send}
+                  />
                 ) : null}
               </>
             )}

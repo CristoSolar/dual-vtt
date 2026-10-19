@@ -121,6 +121,22 @@ describe('table intents', () => {
     expect(e1.label).toBe('Table t-1');
   });
 
+  it('gives two rolls of one table in the same millisecond different ids', () => {
+    // As on the server: each event draws from the next rng in the campaign's sequence.
+    const roll = (seed: number) => {
+      const r = applyRoomEvent(
+        roomWithTable(),
+        GM,
+        { type: 'rollTable', tableId: 't-1', visibility: 'public' },
+        seededRng(seed),
+        NOW,
+      );
+      if (!r.ok) throw new Error('roll was rejected');
+      return r.entries[0]?.id;
+    };
+    expect(roll(1)).not.toBe(roll(2));
+  });
+
   it('routes a private roll to the private log, GM-only audience', () => {
     const room = roomWithTable();
     const r = applyRoomEvent(
