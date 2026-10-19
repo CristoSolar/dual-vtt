@@ -112,6 +112,21 @@ export const WallSchema = z.object({
 });
 export type Wall = z.infer<typeof WallSchema>;
 
+/**
+ * A pin on a scene that opens a journal entry. A player only receives the notes
+ * whose entry is shared with them, which `roomForRole` decides — it has the journal.
+ */
+export const MapNoteSchema = z.object({
+  id: z.string().min(1).max(64),
+  x: z.number(),
+  y: z.number(),
+  journalId: z.string().min(1).max(64),
+});
+export type MapNote = z.infer<typeof MapNoteSchema>;
+
+/** How many notes one scene holds. */
+export const MAX_SCENE_NOTES = 100;
+
 /** `auto` computes fog reveals from wall geometry; `manual` is the GM's brush. */
 export const VisionModeSchema = z.enum(['manual', 'auto']);
 export type VisionMode = z.infer<typeof VisionModeSchema>;
@@ -125,6 +140,7 @@ export const SceneSchema = z.object({
   fog: FogSchema,
   walls: z.array(WallSchema).max(500).default([]),
   visionMode: VisionModeSchema.default('manual'),
+  notes: z.array(MapNoteSchema).max(MAX_SCENE_NOTES).default([]),
 });
 export type Scene = z.infer<typeof SceneSchema>;
 
@@ -160,6 +176,7 @@ export function createScene(id: string, name: string): Scene {
     fog: DEFAULT_FOG,
     walls: [],
     visionMode: 'manual',
+    notes: [],
   };
 }
 

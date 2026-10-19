@@ -33,6 +33,7 @@ function room(overrides: Partial<RoomState> = {}): RoomState {
     adversaryPools: [],
     map: createMapState(),
     targets: {},
+    journal: [],
     rollLog: [],
     privateLog: [],
     ...overrides,

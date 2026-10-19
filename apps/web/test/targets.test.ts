@@ -63,6 +63,7 @@ function room(targets: RoomState['targets']): RoomState {
     adversaryPools: [],
     map: { ...createMapState(), scenes: [scene], activeSceneId: 's-1' },
     targets,
+    journal: [],
     rollLog: [],
     privateLog: [],
   };

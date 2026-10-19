@@ -31,7 +31,9 @@ import {
   type Countdown,
 } from './countdowns.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
+import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
 import {
+  MAX_SCENE_NOTES,
   MapStateSchema,
   cellsInBrush,
   cellsInPolygon,
@@ -246,6 +248,11 @@ export const RoomStateSchema = z.object({
    * still loads.
    */
   targets: z.record(z.string(), z.array(z.string().min(1).max(64)).max(6)).default({}),
+  /**
+   * The GM's journal. A player receives only the entries shared with `'all'`, and
+   * only the map notes pointing at those. Defaulted so an older snapshot loads.
+   */
+  journal: z.array(JournalEntrySchema).max(MAX_JOURNAL_ENTRIES).default([]),
 });
 export type RoomState = z.infer<typeof RoomStateSchema>;
 
@@ -273,6 +280,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     adversaryPools: [],
     map: createMapState(),
     targets: {},
+    journal: [],
   };
 }
 
@@ -309,16 +317,66 @@ function filterTargets(
   return changed ? next : targets;
 }
 
+/** A player view with no shared entries, shared so it compares equal by reference. */
+const EMPTY_JOURNAL = Object.freeze([]) as unknown as RoomState['journal'];
+
+/**
+ * First shared entry -> the last shared list built starting with it. Filtering
+ * builds a fresh array, so without this, editing a GM-only entry would hand players
+ * a journal that differs by reference only and every player patch would carry it.
+ * Keyed weakly by entry objects, which are never shared between campaigns.
+ */
+const lastSharedJournal = new WeakMap<JournalEntry, RoomState['journal']>();
+
+function journalForPlayer(journal: RoomState['journal']): RoomState['journal'] {
+  if (journal.every((entry) => entry.shared === 'all')) return journal;
+  const shared = journal.filter((entry) => entry.shared === 'all');
+  const first = shared[0];
+  if (first === undefined) return EMPTY_JOURNAL;
+  const previous = lastSharedJournal.get(first);
+  if (
+    previous !== undefined &&
+    previous.length === shared.length &&
+    previous.every((entry, i) => entry === shared[i])
+  ) {
+    return previous;
+  }
+  lastSharedJournal.set(first, shared);
+  return shared;
+}
+
+/**
+ * Drops the notes pointing at an entry the player was not sent. `mapForPlayer`
+ * cannot do this itself, not having the journal. The map comes back as it was when
+ * no note is dropped.
+ */
+function notesForPlayer(map: MapState, journal: RoomState['journal']): MapState {
+  const visible = new Set(journal.map((entry) => entry.id));
+  const hides = (scene: Scene): boolean =>
+    scene.notes.some((note) => !visible.has(note.journalId));
+  if (!map.scenes.some(hides)) return map;
+  return {
+    ...map,
+    scenes: map.scenes.map((scene) =>
+      hides(scene)
+        ? { ...scene, notes: scene.notes.filter((note) => visible.has(note.journalId)) }
+        : scene,
+    ),
+  };
+}
+
 /**
  * The room as a given role is allowed to see it. The GM sees everything; a player
  * sees only the active scene, without GM-only tokens, never receives the fog
  * regions that have not been revealed, never learns how hurt an adversary is, and
  * never receives the private log raw — whispers and private rolls reach a player
- * only through `roomForActor`, filtered to their own.
+ * only through `roomForActor`, filtered to their own. Journal entries the GM has
+ * not shared, and the map notes pointing at them, stay with the GM.
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
-  const map = mapForPlayer(state.map);
+  const journal = journalForPlayer(state.journal);
+  const map = notesForPlayer(mapForPlayer(state.map), journal);
   // A target on a token a player cannot see (hidden, or on another scene) is
   // dropped rather than forwarded, so a GM's target never reveals one.
   const visibleTokenIds = tokenIdsOf(map);
@@ -335,6 +393,7 @@ export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
       ? state.adversaryInstances
       : state.adversaryInstances.map(adversaryForPlayer),
     privateLog: EMPTY_PRIVATE_LOG,
+    journal,
   };
 }
 
@@ -390,6 +449,7 @@ export type RoomError =
   | 'noEnvironment'
   | 'featureSpent'
   | 'unknownTransformation'
+  | 'unknownJournalEntry'
   | 'rejected';
 
 export type RoomResult =
@@ -1036,6 +1096,68 @@ export function applyRoomEvent(
         ),
       });
     }
+    // --- GM: journal and map notes ------------------------------------------
+    case 'upsertJournalEntry': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const exists = state.journal.some((entry) => entry.id === event.entry.id);
+      if (!exists && state.journal.length >= MAX_JOURNAL_ENTRIES) {
+        return fail('rejected', 'the journal is full');
+      }
+      return ok({
+        ...state,
+        journal: exists
+          ? state.journal.map((entry) => (entry.id === event.entry.id ? event.entry : entry))
+          : [...state.journal, event.entry],
+      });
+    }
+    case 'removeJournalEntry': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!state.journal.some((entry) => entry.id === event.id)) {
+        return fail('unknownJournalEntry', 'no such journal entry');
+      }
+      // A pin to a page that no longer exists would open nothing, on any scene.
+      return ok({
+        ...state,
+        journal: state.journal.filter((entry) => entry.id !== event.id),
+        map: {
+          ...state.map,
+          scenes: state.map.scenes.map((scene) =>
+            scene.notes.some((note) => note.journalId === event.id)
+              ? { ...scene, notes: scene.notes.filter((note) => note.journalId !== event.id) }
+              : scene,
+          ),
+        },
+      });
+    }
+    case 'addNote': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const scene = state.map.scenes.find((s) => s.id === event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      if (!state.journal.some((entry) => entry.id === event.note.journalId)) {
+        return fail('unknownJournalEntry', 'no such journal entry');
+      }
+      if (scene.notes.some((note) => note.id === event.note.id)) {
+        return fail('rejected', 'a note with that id is already on this scene');
+      }
+      if (scene.notes.length >= MAX_SCENE_NOTES) return fail('rejected', 'note limit reached');
+      return ok(withScene(state, scene.id, { ...scene, notes: [...scene.notes, event.note] }));
+    }
+    case 'removeNote': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const scene = state.map.scenes.find((s) => s.id === event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(
+        withScene(state, scene.id, {
+          ...scene,
+          notes: scene.notes.filter((note) => note.id !== event.noteId),
+        }),
+      );
+    }
+
     // --- map ------------------------------------------------------------------
     case 'addScene':
     case 'renameScene':

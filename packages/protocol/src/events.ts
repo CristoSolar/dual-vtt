@@ -2,7 +2,15 @@ import { MAX_FEAR } from '@daggerheart/rules';
 import { z } from 'zod';
 
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
-import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
+import { JournalEntrySchema } from './journal.js';
+import {
+  GridSchema,
+  MapNoteSchema,
+  SceneImageSchema,
+  TokenSchema,
+  VisionModeSchema,
+  WallSchema,
+} from './map.js';
 import { PrivateEntrySchema, RollEntrySchema, VisibilitySchema } from './rollLog.js';
 import {
   DeathMoveChoiceSchema,
@@ -365,6 +373,23 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     instanceId: z.string().min(1),
     amount: z.number().int().min(0).max(999),
   }),
+  z.object({
+    // Adds the entry, or replaces the one with the same id. Sharing it with the
+    // table is just an upsert with `shared: 'all'`.
+    type: z.literal('upsertJournalEntry'),
+    entry: JournalEntrySchema,
+  }),
+  z.object({
+    // Takes every map note pointing at the entry with it.
+    type: z.literal('removeJournalEntry'),
+    id: z.string().min(1).max(64),
+  }),
+  z.object({ type: z.literal('addNote'), sceneId: z.string().min(1).max(64), note: MapNoteSchema }),
+  z.object({
+    type: z.literal('removeNote'),
+    sceneId: z.string().min(1).max(64),
+    noteId: z.string().min(1).max(64),
+  }),
 ]);
 export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 
@@ -544,6 +569,7 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.tagTeam !== after.tagTeam) patch.tagTeam = after.tagTeam;
   if (before.map !== after.map) patch.map = after.map;
   if (before.targets !== after.targets) patch.targets = after.targets;
+  if (before.journal !== after.journal) patch.journal = after.journal;
   return patch;
 }
 
@@ -577,5 +603,6 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.tagTeam === undefined ? {} : { tagTeam: patch.tagTeam }),
     ...(patch.map === undefined ? {} : { map: patch.map }),
     ...(patch.targets === undefined ? {} : { targets: patch.targets }),
+    ...(patch.journal === undefined ? {} : { journal: patch.journal }),
   };
 }
