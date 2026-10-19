@@ -108,6 +108,16 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     byId: z.string().min(1),
     text: z.string().min(1).max(500),
   }),
+  z.object({
+    /** A row drawn from one of the GM's random tables. `label` names the table. */
+    kind: z.literal('table'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    label: z.string().min(1),
+    result: z.string().min(1),
+    index: z.number().int(),
+  }),
 ]);
 export type RollEntry = z.infer<typeof RollEntrySchema>;
 

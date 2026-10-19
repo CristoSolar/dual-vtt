@@ -39,6 +39,7 @@ export function notationFor(entry: RollEntry): DiceThrow[] | null {
     }
     case 'fate':
     case 'message':
+    case 'table':
       return null;
   }
 }

@@ -26,7 +26,7 @@ interface RollLogPanelProps {
 const NO_PRIVATE: readonly PrivateEntry[] = [];
 
 /** What a filter narrows the log to. */
-type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate' | 'message';
+type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate' | 'message' | 'table';
 
 /**
  * The session's rolls and chat, most recent first.
@@ -68,7 +68,7 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
           value={filter}
           onChange={(event) => setFilter(event.target.value as LogFilter)}
         >
-          {(['all', 'duality', 'attack', 'damage', 'fate', 'message'] as const).map((kind) => (
+          {(['all', 'duality', 'attack', 'damage', 'fate', 'message', 'table'] as const).map((kind) => (
             <option key={kind} value={kind}>
               {t(`sheet.log.filter.${kind}` as MessageKey)}
             </option>
@@ -151,6 +151,11 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
               <div className="row spread">
                 <strong>{entry.label}</strong>
                 <span>{entry.value}</span>
+              </div>
+            ) : entry.kind === 'table' ? (
+              <div className="row spread">
+                <strong>{entry.label}</strong>
+                <span>{entry.result}</span>
               </div>
             ) : (
               <>

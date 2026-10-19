@@ -97,6 +97,24 @@ describe('server-side dice', () => {
     expect(store.get(campaign.id)?.rollCount).toBe(1);
   });
 
+  it('advances the roll index for rollTable', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Table Test', 444);
+    store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
+      type: 'upsertTable',
+      table: { id: 't-1', name: 'Encounters', rows: ['Wolves', 'Bandits', 'Nothing'] },
+    });
+
+    const outcome = store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
+      type: 'rollTable',
+      tableId: 't-1',
+      visibility: 'public',
+    });
+
+    expect(outcome.ok).toBe(true);
+    expect(store.get(campaign.id)?.rollCount).toBe(1);
+  });
+
   it('leaves the roll index unchanged for an event that never touches the rng', () => {
     const store = new CampaignStore();
     const campaign = store.createCampaign('u-gm', 'gm', 'No Roll Test', 333);

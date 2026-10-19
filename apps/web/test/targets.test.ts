@@ -65,6 +65,7 @@ function room(targets: RoomState['targets']): RoomState {
     targets,
     journal: [],
     audio: { tracks: [], playing: null },
+    tables: [],
     rollLog: [],
     privateLog: [],
   };

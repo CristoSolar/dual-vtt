@@ -21,6 +21,7 @@ import {
   type RoomState,
 } from './room.js';
 import { SheetStateSchema } from './sheet.js';
+import { RollTableSchema } from './tables.js';
 
 /** Socket.io channel names. Kept in one place so both ends agree. */
 export const CHANNEL = {
@@ -398,6 +399,18 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('playTrack'), trackId: z.string().min(1).max(64), loop: z.boolean() }),
   z.object({ type: z.literal('stopTrack') }),
   z.object({ type: z.literal('setTrackVolume'), volume: z.number().min(0).max(1) }),
+  z.object({
+    // Adds the table, or replaces the one with the same id.
+    type: z.literal('upsertTable'),
+    table: RollTableSchema,
+  }),
+  z.object({ type: z.literal('removeTable'), id: z.string().min(1).max(64) }),
+  z.object({
+    // Picks a row uniformly at random on the server; the client only names the table.
+    type: z.literal('rollTable'),
+    tableId: z.string().min(1).max(64),
+    visibility: VisibilitySchema.default('public'),
+  }),
 ]);
 export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 
@@ -579,6 +592,7 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.targets !== after.targets) patch.targets = after.targets;
   if (before.journal !== after.journal) patch.journal = after.journal;
   if (before.audio !== after.audio) patch.audio = after.audio;
+  if (before.tables !== after.tables) patch.tables = after.tables;
   return patch;
 }
 
@@ -614,5 +628,6 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.targets === undefined ? {} : { targets: patch.targets }),
     ...(patch.journal === undefined ? {} : { journal: patch.journal }),
     ...(patch.audio === undefined ? {} : { audio: patch.audio }),
+    ...(patch.tables === undefined ? {} : { tables: patch.tables }),
   };
 }

@@ -33,6 +33,7 @@ import {
 import { AudioStateSchema, MAX_TRACKS } from './audio.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
+import { MAX_TABLES, RollTableSchema } from './tables.js';
 import {
   MAX_SCENE_NOTES,
   MapStateSchema,
@@ -259,6 +260,11 @@ export const RoomStateSchema = z.object({
    * players need `playing` to hear it. Defaulted so an older snapshot loads.
    */
   audio: AudioStateSchema.default({ tracks: [], playing: null }),
+  /**
+   * The GM's random tables. GM-only, same as the journal's unshared pages:
+   * `roomForRole('player')` empties this. Defaulted so an older snapshot loads.
+   */
+  tables: z.array(RollTableSchema).max(MAX_TABLES).default([]),
 });
 export type RoomState = z.infer<typeof RoomStateSchema>;
 
@@ -288,6 +294,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     targets: {},
     journal: [],
     audio: { tracks: [], playing: null },
+    tables: [],
   };
 }
 
@@ -326,6 +333,9 @@ function filterTargets(
 
 /** A player view with no shared entries, shared so it compares equal by reference. */
 const EMPTY_JOURNAL = Object.freeze([]) as unknown as RoomState['journal'];
+
+/** A player never sees the GM's tables, so this is always what they get, by reference. */
+const EMPTY_TABLES = Object.freeze([]) as unknown as RoomState['tables'];
 
 /**
  * First shared entry -> the last shared list built starting with it. Filtering
@@ -378,7 +388,8 @@ function notesForPlayer(map: MapState, journal: RoomState['journal']): MapState 
  * regions that have not been revealed, never learns how hurt an adversary is, and
  * never receives the private log raw — whispers and private rolls reach a player
  * only through `roomForActor`, filtered to their own. Journal entries the GM has
- * not shared, and the map notes pointing at them, stay with the GM.
+ * not shared, and the map notes pointing at them, stay with the GM. The GM's random
+ * tables stay with the GM entirely — there is no shared variant of one.
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
@@ -401,6 +412,7 @@ export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
       : state.adversaryInstances.map(adversaryForPlayer),
     privateLog: EMPTY_PRIVATE_LOG,
     journal,
+    tables: EMPTY_TABLES,
   };
 }
 
@@ -458,6 +470,7 @@ export type RoomError =
   | 'unknownTransformation'
   | 'unknownJournalEntry'
   | 'unknownTrack'
+  | 'unknownTable'
   | 'rejected';
 
 export type RoomResult =
@@ -1222,6 +1235,49 @@ export function applyRoomEvent(
         ...state,
         audio: { ...state.audio, playing: { ...playing, volume: event.volume } },
       });
+    }
+
+    // --- GM: random tables ---------------------------------------------------
+    case 'upsertTable': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const exists = state.tables.some((table) => table.id === event.table.id);
+      if (!exists && state.tables.length >= MAX_TABLES) {
+        return fail('rejected', 'the table limit is full');
+      }
+      return ok({
+        ...state,
+        tables: exists
+          ? state.tables.map((table) => (table.id === event.table.id ? event.table : table))
+          : [...state.tables, event.table],
+      });
+    }
+    case 'removeTable': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!state.tables.some((table) => table.id === event.id)) {
+        return fail('unknownTable', 'no such table');
+      }
+      return ok({ ...state, tables: state.tables.filter((table) => table.id !== event.id) });
+    }
+    case 'rollTable': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const table = state.tables.find((t) => t.id === event.tableId);
+      if (table === undefined) return fail('unknownTable', 'no such table');
+      const index = Math.floor(rng() * table.rows.length);
+      const result = table.rows[index];
+      if (result === undefined) return fail('unknownTable', 'that table has no rows');
+      const entry: RollEntry = {
+        kind: 'table',
+        id: `${now.toString(36)}-${table.id}-tbl`,
+        at: now,
+        by: state.gm.name,
+        label: table.name,
+        result,
+        index,
+      };
+      return okLogged(state, actor, null, [entry], event.visibility);
     }
 
     // --- map ------------------------------------------------------------------

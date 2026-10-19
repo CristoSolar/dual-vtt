@@ -49,6 +49,7 @@ export const es = {
   'reject.tooManyWalls': 'Demasiados muros en esta escena.',
   'reject.unknownJournalEntry': 'Entrada de diario desconocida.',
   'reject.unknownTrack': 'Pista desconocida.',
+  'reject.unknownTable': 'Tabla desconocida.',
   'reject.badRequest': 'El servidor no entendió esa acción.',
   'reject.forbidden': 'Ya no eres miembro de esta campaña.',
   'reject.noSeat': 'Únete a una campaña primero.',
@@ -63,6 +64,7 @@ export const es = {
   'roll.outcome.failureFear': 'Fallo con Miedo',
   'roll.dualityLine': '{by}: {label} — {outcome} (total {total})',
   'roll.damageLine': '{by}: {label} — {total} de daño',
+  'roll.tableLine': '{by}: {label} — {result}',
 
   // generic strings shared across areas
   'common.loading': 'Cargando…',
@@ -645,6 +647,7 @@ export const es = {
   'sheet.log.filter.damage': 'Daño',
   'sheet.log.filter.fate': 'Destino y peligros',
   'sheet.log.filter.message': 'Mensajes',
+  'sheet.log.filter.table': 'Tablas',
   'log.private': 'Privado',
   'roll.privateToggle': 'Privado',
   'roll.messageLine': '{by}: {text}',
@@ -768,6 +771,17 @@ export const es = {
   'gm.playlist.volume': 'Volumen para la mesa',
   'gm.playlist.badType': 'Las pistas deben ser OGG o MP3.',
   'gm.playlist.tooLarge': 'Esa pista supera el límite de 20 MB.',
+
+  'gm.tables.title': 'Tablas aleatorias',
+  'gm.tables.new': 'Nueva tabla',
+  'gm.tables.nameLabel': 'Nombre',
+  'gm.tables.rowsLabel': 'Filas (una por línea)',
+  'gm.tables.rowsPlaceholder': 'Lobos\nBandidos\nNada',
+  'gm.tables.save': 'Guardar',
+  'gm.tables.roll': 'Tirar',
+  'gm.tables.empty': 'Sin tablas todavía.',
+  'gm.tables.resultPrefix': 'Resultado:',
+
   'audio.nowPlaying': 'Sonando: {name}',
   'audio.enable': 'Activar sonido',
   'audio.volume': 'Tu volumen',

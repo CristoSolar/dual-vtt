@@ -155,5 +155,8 @@ export function describeRollEntry(entry: RollEntry): string {
     return t('roll.fateLine', { by: entry.by, label: entry.label, total: entry.value });
   }
   if (entry.kind === 'message') return t('roll.messageLine', { by: entry.by, text: entry.text });
+  if (entry.kind === 'table') {
+    return t('roll.tableLine', { by: entry.by, label: entry.label, result: entry.result });
+  }
   return t('roll.damageLine', { by: entry.by, label: entry.label, total: entry.roll.total });
 }

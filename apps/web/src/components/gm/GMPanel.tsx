@@ -1,8 +1,10 @@
 import {
+  MAX_TABLES,
   MAX_TRACKS,
   outcomeTone,
   type AdversaryInstance,
   type Countdown,
+  type RollTable,
   type RoomEvent,
   type RoomState,
   type Visibility,
@@ -186,6 +188,7 @@ export function GMPanel({ room, campaignName, authToken, send }: GMPanelProps) {
           <BattlePoints room={room} />
           <AdversaryPools room={room} send={send} />
           <Hazards send={send} />
+          <Tables room={room} send={send} />
           <Adversaries room={room} send={send} />
           <EnvironmentPicker activeEnvironment={room.activeEnvironment} send={send} />
           <Playlist audio={room.audio} authToken={authToken} send={send} />
@@ -1327,6 +1330,107 @@ function EnvironmentFeatureRow({
   );
 }
 
+/**
+ * The GM's random tables: a name and rows, one per line. Rolling one picks a row
+ * uniformly at random on the server and logs it, same as a fate roll.
+ */
+function Tables({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [rowsText, setRowsText] = useState('');
+  const [visibility, setVisibility] = useState<Visibility>('public');
+
+  const startNew = () => {
+    setEditingId('');
+    setName('');
+    setRowsText('');
+  };
+
+  const startEdit = (table: RollTable) => {
+    setEditingId(table.id);
+    setName(table.name);
+    setRowsText(table.rows.join('\n'));
+  };
+
+  const save = () => {
+    const rows = rowsText
+      .split('\n')
+      .map((row) => row.trim())
+      .filter((row) => row !== '');
+    if (name.trim() === '' || rows.length === 0 || editingId === null) return;
+    const table: RollTable = { id: editingId === '' ? nextId('tbl') : editingId, name: name.trim(), rows };
+    send({ type: 'upsertTable', table });
+    setEditingId(null);
+  };
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.tables.title')}</SectionHead>
+      {editingId === null ? (
+        <>
+          {room.tables.length === 0 ? (
+            <p className="muted">{t('gm.tables.empty')}</p>
+          ) : (
+            <ul className="log">
+              {room.tables.map((table) => (
+                <li key={table.id} className="row spread">
+                  <button type="button" onClick={() => startEdit(table)}>
+                    {table.name}
+                  </button>
+                  <div className="row">
+                    <button
+                      type="button"
+                      onClick={() => send({ type: 'rollTable', tableId: table.id, visibility })}
+                    >
+                      {t('gm.tables.roll')}
+                    </button>
+                    <button type="button" onClick={() => send({ type: 'removeTable', id: table.id })}>
+                      {t('common.remove')}
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="row mt-3">
+            <PrivateToggle value={visibility} onChange={setVisibility} />
+            <button type="button" disabled={room.tables.length >= MAX_TABLES} onClick={startNew}>
+              {t('gm.tables.new')}
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <label htmlFor="table-name">{t('gm.tables.nameLabel')}</label>
+          <input id="table-name" value={name} maxLength={60} onChange={(event) => setName(event.target.value)} />
+          <label htmlFor="table-rows" className="mt-3">
+            {t('gm.tables.rowsLabel')}
+          </label>
+          <textarea
+            id="table-rows"
+            rows={6}
+            value={rowsText}
+            placeholder={t('gm.tables.rowsPlaceholder')}
+            onChange={(event) => setRowsText(event.target.value)}
+          />
+          <div className="row mt-3">
+            <button
+              type="button"
+              disabled={name.trim() === '' || rowsText.trim() === ''}
+              onClick={save}
+            >
+              {t('gm.tables.save')}
+            </button>
+            <button type="button" onClick={() => setEditingId(null)}>
+              {t('common.cancel')}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function Presence({ room }: { room: RoomState }) {
   return (
     <div className="panel">
@@ -1451,6 +1555,8 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                     </span>
                   ) : entry.kind === 'fate' ? (
                     <span>{entry.value}</span>
+                  ) : entry.kind === 'table' ? (
+                    <span>{entry.result}</span>
                   ) : (
                     <span>
                       {entry.roll.total}
@@ -1478,12 +1584,14 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                         }`
                       : entry.kind === 'fate'
                         ? t('gm.rollLog.fateMeta')
-                        : t('gm.rollLog.damageMeta', {
-                          rolls: entry.roll.rolls.join(', '),
-                          critical: entry.critical
-                            ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
-                            : '',
-                        })}
+                        : entry.kind === 'table'
+                          ? ''
+                          : t('gm.rollLog.damageMeta', {
+                            rolls: entry.roll.rolls.join(', '),
+                            critical: entry.critical
+                              ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
+                              : '',
+                          })}
                 </span>
                 {entry.kind === 'damage' ? (
                   <ApplyToTarget room={room} by={entry.by} amount={entry.roll.total} send={send} />

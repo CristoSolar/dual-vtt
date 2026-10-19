@@ -7,6 +7,7 @@ export * from './ranges.js';
 export * from './map.js';
 export * from './journal.js';
 export * from './audio.js';
+export * from './tables.js';
 export * from './vision.js';
 export * from './auth.js';
 export * from './campaign.js';
