@@ -33,8 +33,9 @@ export function notationFor(entry: RollEntry): DiceThrow[] | null {
       return [{ notation: `1d20@${entry.roll.die}`, color: 'neutral' }];
     case 'damage': {
       const { rolls } = entry.roll;
-      if (rolls.length === 0) return null;
-      return [{ notation: `${rolls.length}d${damageDie(entry.roll)}@${rolls.join(',')}`, color: 'neutral' }];
+      const die = entry.roll.die ?? damageDie(entry.roll);
+      if (rolls.length === 0 || die === null) return null;
+      return [{ notation: `${rolls.length}d${die}@${rolls.join(',')}`, color: 'neutral' }];
     }
     case 'fate':
     case 'message':
@@ -43,16 +44,17 @@ export function notationFor(entry: RollEntry): DiceThrow[] | null {
 }
 
 /**
- * The log keeps a damage roll's faces but not its die size. A critical adds the
- * dice's maximum, which gives the size back exactly; otherwise the smallest
- * standard die that could have shown every face stands in for it.
+ * Entries logged before damage kept its die size have only the faces. A critical
+ * adds the dice's maximum, which gives the size back exactly; otherwise the
+ * smallest standard die that could have shown every face stands in for it, and
+ * a face no standard die has means nothing is drawn.
  */
-function damageDie(roll: { rolls: readonly number[]; criticalBonus: number }): number {
+function damageDie(roll: { rolls: readonly number[]; criticalBonus: number }): number | null {
   if (roll.criticalBonus > 0 && roll.criticalBonus % roll.rolls.length === 0) {
     return roll.criticalBonus / roll.rolls.length;
   }
   const highest = Math.max(...roll.rolls);
-  return STANDARD_DICE.find((die) => die >= highest) ?? highest;
+  return STANDARD_DICE.find((die) => die >= highest) ?? null;
 }
 
 /**

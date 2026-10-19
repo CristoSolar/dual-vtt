@@ -108,7 +108,7 @@ describe('roll log', () => {
       at: 0,
       by: 'Tester',
       label: 'Test',
-      roll: { rolls: [1], criticalBonus: 0, modifier: 0, total: 1 },
+      roll: { rolls: [1], die: 6, criticalBonus: 0, modifier: 0, total: 1 },
       critical: false,
     });
 

@@ -273,6 +273,8 @@ describe('rolls are server-side and read from the sheet', () => {
     if (entry === undefined || entry.kind !== 'damage') throw new Error('no damage entry');
     // A level-1 character has Proficiency 1, so one die is rolled.
     expect(entry.roll.rolls).toHaveLength(room.characters[ALEX.id]?.character.proficiency ?? 0);
+    // The die size travels with the faces, so the dice overlay draws d8s.
+    expect(entry.roll.die).toBe(8);
   });
 });
 
@@ -644,6 +646,8 @@ describe('the GM rolling for an adversary', () => {
     const entry = result.entries[0];
     if (entry === undefined || entry.kind !== 'damage') throw new Error('no damage entry');
     expect(entry.roll.total).toBeGreaterThan(0);
+    const printed = srd().adversaries.find((a) => a.id === adversaryId)?.standardAttack.damage;
+    expect(entry.roll.die).toBe(printed?.die ?? null);
 
     expect(
       refusal(room, ALEX, {

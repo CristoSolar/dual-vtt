@@ -19,7 +19,7 @@ function colorset(color: DiceColor): DiceColorset {
       : color === 'fear'
         ? [token('--c-fear-fill'), token('--c-fear-ink'), token('--c-fear-edge')]
         : [token('--c-surface-3'), token('--c-text'), token('--c-line')];
-  return { name: `dh-${color}`, background, foreground, outline, texture: 'none', material: 'plastic' };
+  return { name: `dh-${color}`, background, foreground, outline, texture: 'none', material: 'none' };
 }
 
 /**
@@ -87,6 +87,9 @@ export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly Ro
         void box.then((b) => {
           b.clearDice();
           b.renderer.dispose();
+          // The library never removes its window resize listener, which keeps
+          // the GL context alive after dispose; drop the context explicitly.
+          b.renderer.forceContextLoss();
         }, () => {});
       }
       owned.clear();

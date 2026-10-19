@@ -22,6 +22,6 @@ declare module '@3d-dice/dice-box-threejs' {
     /** Throws the dice. A notation like `2d12@7,3` forces the faces they land on. */
     roll(notation: string): Promise<unknown>;
     clearDice(): void;
-    renderer: { dispose(): void };
+    renderer: { dispose(): void; forceContextLoss(): void };
   }
 }

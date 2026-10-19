@@ -304,6 +304,7 @@ export function SheetRoute({
         { ...pending.damage, critical: result.result.criticalDamage },
         rng,
       );
+      const { die } = pending.damage.dice;
       setLog((current) =>
         appendRoll(current, {
           kind: 'damage',
@@ -311,7 +312,7 @@ export function SheetRoute({
           at: Date.now(),
           by: rollerName,
           label: t('sheet.roll.damageLabel', { title: pending.title }),
-          roll: damage,
+          roll: { ...damage, die },
           critical: result.result.criticalDamage,
         }),
       );
@@ -366,7 +367,7 @@ export function SheetRoute({
         at: Date.now(),
         by: rollerName,
         label,
-        roll: result,
+        roll: { ...result, die: damage.dice.die },
         critical: false,
       }),
     );

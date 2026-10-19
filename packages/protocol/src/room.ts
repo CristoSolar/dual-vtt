@@ -999,7 +999,7 @@ export function applyRoomEvent(
         at: now,
         by: instance.name,
         label: block.standardAttack.name,
-        roll,
+        roll: { ...roll, die: printed.die ?? null },
         critical: event.critical,
       };
       return okLogged(state, actor, null, [entry], event.visibility);
@@ -1573,7 +1573,7 @@ function applyCharacterEvent(
         at: now,
         by: rollerName,
         label: event.label,
-        roll,
+        roll: { ...roll, die: event.dice.die },
         critical: event.critical,
       };
       return okLogged(state, actor, null, [entry], event.visibility);

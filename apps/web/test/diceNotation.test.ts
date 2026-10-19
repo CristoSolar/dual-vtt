@@ -62,32 +62,52 @@ describe('notationFor', () => {
     expect(notationFor(entry)).toEqual([{ notation: '1d20@17', color: 'neutral' }]);
   });
 
-  it('reads the die size of a critical damage roll off its bonus', () => {
+  it('draws damage on the die size the entry carries', () => {
+    const entry: RollEntry = {
+      ...base,
+      kind: 'damage',
+      roll: { rolls: [3, 2], die: 8, criticalBonus: 0, modifier: 1, total: 6 },
+      critical: false,
+    };
+    expect(notationFor(entry)).toEqual([{ notation: '2d8@3,2', color: 'neutral' }]);
+  });
+
+  it('reads the die size of an older critical damage roll off its bonus', () => {
     // A critical adds the dice's maximum: 2d8 → +16, so a 3 and a 2 are d8s.
     const entry: RollEntry = {
       ...base,
       kind: 'damage',
-      roll: { rolls: [3, 2], criticalBonus: 16, modifier: 1, total: 22 },
+      roll: { rolls: [3, 2], die: null, criticalBonus: 16, modifier: 1, total: 22 },
       critical: true,
     };
     expect(notationFor(entry)).toEqual([{ notation: '2d8@3,2', color: 'neutral' }]);
   });
 
-  it('shows ordinary damage on the smallest standard die that could have rolled it', () => {
+  it('shows older ordinary damage on the smallest standard die that could have rolled it', () => {
     const entry: RollEntry = {
       ...base,
       kind: 'damage',
-      roll: { rolls: [9, 4, 1], criticalBonus: 0, modifier: 0, total: 14 },
+      roll: { rolls: [9, 4, 1], die: null, criticalBonus: 0, modifier: 0, total: 14 },
       critical: false,
     };
     expect(notationFor(entry)).toEqual([{ notation: '3d10@9,4,1', color: 'neutral' }]);
+  });
+
+  it('shows nothing for older damage whose die size cannot be told', () => {
+    const entry: RollEntry = {
+      ...base,
+      kind: 'damage',
+      roll: { rolls: [23], die: null, criticalBonus: 0, modifier: 0, total: 23 },
+      critical: false,
+    };
+    expect(notationFor(entry)).toBeNull();
   });
 
   it('shows nothing for flat damage with no dice', () => {
     const entry: RollEntry = {
       ...base,
       kind: 'damage',
-      roll: { rolls: [], criticalBonus: 0, modifier: 4, total: 4 },
+      roll: { rolls: [], die: null, criticalBonus: 0, modifier: 4, total: 4 },
       critical: false,
     };
     expect(notationFor(entry)).toBeNull();

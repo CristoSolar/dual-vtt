@@ -23,6 +23,8 @@ export const DualityRollSchema = z.object({
 
 export const DamageRollSchema = z.object({
   rolls: z.array(z.number().int()),
+  /** Faces on each die, for drawing them. Null on entries logged before it was kept. */
+  die: z.number().int().nullable().default(null),
   criticalBonus: z.number().int(),
   modifier: z.number().int(),
   total: z.number().int(),
