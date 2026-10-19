@@ -335,7 +335,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
 
         {sharedLog !== undefined && sharedLog.length > 0 ? (
           <p className="muted sheet-last-roll">
-            {t('map.sheet.lastRoll', { label: sharedLog[sharedLog.length - 1]?.label ?? '' })}
+            {t('map.sheet.lastRoll', { label: lastRollLabel(sharedLog) })}
           </p>
         ) : null}
       </div>
@@ -364,4 +364,10 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
       ) : null}
     </div>
   );
+}
+
+/** The label of the log's last entry, or nothing when that entry is a chat line. */
+function lastRollLabel(log: readonly RollEntry[]): string {
+  const last = log[log.length - 1];
+  return last === undefined || last.kind === 'message' ? '' : last.label;
 }

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
-import { RollEntrySchema } from './rollLog.js';
+import { RollEntrySchema, VisibilitySchema } from './rollLog.js';
 import {
   DeathMoveChoiceSchema,
   DowntimeMoveSchema,
@@ -206,6 +206,7 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
       // unbounded bonus cannot be dialled in from the client.
       experiences: z.array(z.string().min(1)).max(5),
     }),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     type: z.literal('rollDamage'),
@@ -218,6 +219,7 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     // Proficiency is the character's, read from the sheet on the server.
     modifier: z.number().int().min(-20).max(99),
     critical: z.boolean(),
+    visibility: VisibilitySchema.default('public'),
   }),
 ]);
 export type CharacterRoomEvent = z.infer<typeof CharacterRoomEventSchema>;
@@ -230,6 +232,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     type: z.literal('rollFate'),
     kind: z.enum(['fate', 'fallVeryClose', 'fallClose', 'fallFar', 'collision']),
     label: z.string().min(1).max(80),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     // Sets a named adversary pool to a number of tokens; null removes the pool.
@@ -315,6 +318,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
      * the adversary has it and that the Fear is there to spend.
      */
     experience: z.string().min(1).max(80).optional(),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     // The active environment's own features, which cost Fear the same way.
@@ -335,6 +339,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     instanceId: z.string().min(1),
     /** Set after a natural 20, which adds the damage dice's maximum. */
     critical: z.boolean().default(false),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     type: z.literal('updateAdversary'),
@@ -395,11 +400,24 @@ export const MapRoomEventSchema = z.discriminatedUnion('type', [
 ]);
 export type MapRoomEvent = z.infer<typeof MapRoomEventSchema>;
 
+/** Intents any seat at the table may send. */
+export const TableRoomEventSchema = z.discriminatedUnion('type', [
+  z.object({
+    // A chat line. An empty `whisperTo` says it to the table; otherwise only those
+    // accounts and the sender see it, and the GM, who sees every whisper.
+    type: z.literal('sendMessage'),
+    text: z.string().trim().min(1).max(500),
+    whisperTo: z.array(z.string().min(1).max(64)).max(12).default([]),
+  }),
+]);
+export type TableRoomEvent = z.infer<typeof TableRoomEventSchema>;
+
 /** Every intent a client can send. */
 export const RoomEventSchema = z.union([
   CharacterRoomEventSchema,
   GameMasterRoomEventSchema,
   MapRoomEventSchema,
+  TableRoomEventSchema,
 ]);
 export type RoomEvent = z.infer<typeof RoomEventSchema>;
 

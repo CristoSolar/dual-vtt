@@ -661,6 +661,7 @@ function AttackControls({
               instanceId: instance.instanceId,
               advantage: swing === 'advantage',
               disadvantage: swing === 'disadvantage',
+              visibility: 'public',
               ...(targetId === '' ? {} : { targetId }),
               ...(experience === '' ? {} : { experience }),
             })
@@ -671,7 +672,12 @@ function AttackControls({
         <button
           type="button"
           onClick={() =>
-            send({ type: 'rollAdversaryDamage', instanceId: instance.instanceId, critical: false })
+            send({
+              type: 'rollAdversaryDamage',
+              instanceId: instance.instanceId,
+              critical: false,
+              visibility: 'public',
+            })
           }
         >
           {t('gm.adversaries.rollDamage', {
@@ -685,7 +691,12 @@ function AttackControls({
         <button
           type="button"
           onClick={() =>
-            send({ type: 'rollAdversaryDamage', instanceId: instance.instanceId, critical: true })
+            send({
+              type: 'rollAdversaryDamage',
+              instanceId: instance.instanceId,
+              critical: true,
+              visibility: 'public',
+            })
           }
         >
           {t('gm.adversaries.rollCriticalDamage')}
@@ -724,6 +735,7 @@ function Hazards({ send }: { send: (event: RoomEvent) => void }) {
                 type: 'rollFate',
                 kind,
                 label: label.trim() === '' ? t(`gm.hazards.${kind}`) : label.trim(),
+                visibility: 'public',
               })
             }
           >
@@ -1215,7 +1227,7 @@ function SharedRollLog({ room }: { room: RoomState }) {
       <SectionHead>{t('sheet.log.title')}</SectionHead>
       {room.rollLog.length === 0 ? <p className="muted">{t('gm.rollLog.empty')}</p> : null}
       <ul className="log">
-        {room.rollLog.map((entry) => (
+        {room.rollLog.map((entry) => entry.kind === 'message' ? null : (
           <li key={entry.id}>
             <div className="row spread">
               <strong>

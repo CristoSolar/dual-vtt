@@ -10,6 +10,7 @@ import {
   createSheet,
   recallCostOf,
   roomForRole,
+  RoomStateSchema,
   type Actor,
   type RoomEvent,
   type RoomState,
@@ -174,6 +175,7 @@ describe('rolls are server-side and read from the sheet', () => {
       ALEX,
       {
         type: 'rollDuality',
+        visibility: 'public',
         characterId: ALEX.id,
         request: {
           label: 'Agility Roll',
@@ -204,6 +206,7 @@ describe('rolls are server-side and read from the sheet', () => {
       ALEX,
       {
         type: 'rollDuality',
+        visibility: 'public',
         characterId: ALEX.id,
         request: {
           label: 'Dodge',
@@ -231,6 +234,7 @@ describe('rolls are server-side and read from the sheet', () => {
     expect(
       refusal(room, ALEX, {
         type: 'rollDuality',
+        visibility: 'public',
         characterId: ALEX.id,
         request: {
           label: 'Bogus',
@@ -252,6 +256,7 @@ describe('rolls are server-side and read from the sheet', () => {
       ALEX,
       {
         type: 'rollDamage',
+        visibility: 'public',
         characterId: ALEX.id,
         label: 'Longsword',
         dice: { count: 1, die: 8 },
@@ -549,6 +554,7 @@ describe('the GM rolling for an adversary', () => {
       GM,
       {
         type: 'rollAdversaryAttack',
+        visibility: 'public',
         instanceId: 'a-1',
         targetId: ALEX.id,
         advantage: false,
@@ -572,7 +578,7 @@ describe('the GM rolling for an adversary', () => {
     const result = applyRoomEvent(
       room,
       GM,
-      { type: 'rollAdversaryAttack', instanceId: 'a-1', advantage: false, disadvantage: false },
+      { type: 'rollAdversaryAttack', instanceId: 'a-1', advantage: false, disadvantage: false, visibility: 'public' },
       rng,
       NOW,
     );
@@ -591,6 +597,7 @@ describe('the GM rolling for an adversary', () => {
     const withFear = apply(room, GM, { type: 'gainFear', amount: 2 });
     const spent = apply(withFear, GM, {
       type: 'rollAdversaryAttack',
+      visibility: 'public',
       instanceId: 'a-1',
       advantage: false,
       disadvantage: false,
@@ -601,6 +608,7 @@ describe('the GM rolling for an adversary', () => {
     expect(
       refusal(withFear, GM, {
         type: 'rollAdversaryAttack',
+        visibility: 'public',
         instanceId: 'a-1',
         advantage: false,
         disadvantage: false,
@@ -613,6 +621,7 @@ describe('the GM rolling for an adversary', () => {
     expect(
       refusal(room, GM, {
         type: 'rollAdversaryAttack',
+        visibility: 'public',
         instanceId: 'a-1',
         advantage: false,
         disadvantage: false,
@@ -625,7 +634,7 @@ describe('the GM rolling for an adversary', () => {
     const result = applyRoomEvent(
       room,
       GM,
-      { type: 'rollAdversaryDamage', instanceId: 'a-1', critical: false },
+      { type: 'rollAdversaryDamage', instanceId: 'a-1', critical: false, visibility: 'public' },
       rng,
       NOW,
     );
@@ -637,6 +646,7 @@ describe('the GM rolling for an adversary', () => {
     expect(
       refusal(room, ALEX, {
         type: 'rollAdversaryDamage',
+        visibility: 'public',
         instanceId: 'a-1',
         critical: false,
       }),
@@ -729,14 +739,14 @@ describe('the GM rolling for an adversary', () => {
 
   it('rolls fate and hazards into the log, and only for the GM', () => {
     const room = roomWithPlayers();
-    expect(refusal(room, ALEX, { type: 'rollFate', kind: 'fate', label: 'Fire' })).toBe(
+    expect(refusal(room, ALEX, { type: 'rollFate', kind: 'fate', label: 'Fire', visibility: 'public' })).toBe(
       'notGameMaster',
     );
 
     const rolled = applyRoomEvent(
       room,
       GM,
-      { type: 'rollFate', kind: 'fallClose', label: 'Off the wall' },
+      { type: 'rollFate', kind: 'fallClose', label: 'Off the wall', visibility: 'public' },
       rng,
       NOW,
     );
@@ -788,7 +798,7 @@ describe('the GM rolling for an adversary', () => {
       reaction: false,
     };
 
-    const acted = apply(on, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    const acted = apply(on, ALEX, { type: 'rollDuality', characterId: ALEX.id, request, visibility: 'public' });
     expect(acted.spotlightTokens?.left[ALEX.id]).toBe(0);
 
     // The spotlight cannot swing to a player who is out of tokens.
@@ -797,12 +807,13 @@ describe('the GM rolling for an adversary', () => {
     );
 
     // The last token spent refills everybody.
-    const refilled = apply(acted, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    const refilled = apply(acted, SAM, { type: 'rollDuality', characterId: SAM.id, request, visibility: 'public' });
     expect(refilled.spotlightTokens?.left).toEqual({ [ALEX.id]: 1, [SAM.id]: 1 });
 
     // A reaction roll is not taking an action, so it costs no token.
     const reacted = apply(refilled, ALEX, {
       type: 'rollDuality',
+      visibility: 'public',
       characterId: ALEX.id,
       request: { ...request, reaction: true },
     });
@@ -831,7 +842,7 @@ describe('the GM rolling for an adversary', () => {
     };
 
     // Sam collaborates: the roll is forced to be a reaction, and its outcome is kept.
-    const helped = apply(opened, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    const helped = apply(opened, SAM, { type: 'rollDuality', characterId: SAM.id, request, visibility: 'public' });
     const recorded = helped.groupAction?.reactions[SAM.id];
     expect(typeof recorded).toBe('boolean');
     // The log is newest-first.
@@ -840,7 +851,7 @@ describe('the GM rolling for an adversary', () => {
     expect(helpEntry.reaction).toBe(true);
 
     // Alex leads: the bonus lands in the roll's modifiers and the group action closes.
-    const led = apply(helped, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    const led = apply(helped, ALEX, { type: 'rollDuality', characterId: ALEX.id, request, visibility: 'public' });
     const leadEntry = led.rollLog[0];
     if (leadEntry === undefined || leadEntry.kind !== 'duality') throw new Error('no lead entry');
     expect(leadEntry.roll.modifiers).toBe(recorded === true ? 1 : -1);
@@ -882,11 +893,11 @@ describe('the GM rolling for an adversary', () => {
     };
 
     // Neither roll pays out on its own.
-    const first = apply(opened, ALEX, { type: 'rollDuality', characterId: ALEX.id, request });
+    const first = apply(opened, ALEX, { type: 'rollDuality', characterId: ALEX.id, request, visibility: 'public' });
     expect(
       refusal(first, ALEX, { type: 'chooseTagTeam', characterId: ALEX.id, rollOf: ALEX.id }),
     ).toBe('rejected');
-    const both = apply(first, SAM, { type: 'rollDuality', characterId: SAM.id, request });
+    const both = apply(first, SAM, { type: 'rollDuality', characterId: SAM.id, request, visibility: 'public' });
     expect(Object.keys(both.tagTeam?.rolls ?? {})).toHaveLength(2);
     expect(both.fear).toBe(opened.fear);
 
@@ -1024,6 +1035,7 @@ describe('the GM rolling for an adversary', () => {
     expect(
       refusal(room, GM, {
         type: 'rollAdversaryAttack',
+        visibility: 'public',
         instanceId: 'nope',
         advantage: false,
         disadvantage: false,
@@ -1103,7 +1115,7 @@ describe('death moves', () => {
     );
     if (!result.ok) throw new Error('the death move was rejected');
     expect(result.entries).toHaveLength(1);
-    expect(result.state.rollLog[0]?.label).toBe('Risk It All');
+    expect(result.state.rollLog[0]).toMatchObject({ label: 'Risk It All' });
   });
 
   it('refuses a death move for a character who is already gone', () => {
@@ -1455,5 +1467,150 @@ describe('map events', () => {
     });
     // Opening the door exposes the far side without anybody taking a step.
     expect(room.map.scenes[0]?.fog.revealed.length).toBeGreaterThan(behindClosedDoor);
+  });
+});
+
+describe('chat and private rolls', () => {
+  let room: RoomState;
+  beforeEach(() => {
+    room = roomWithPlayers();
+  });
+
+  const request = {
+    label: 'Agility Roll',
+    modifiers: 0,
+    difficulty: 10,
+    advantage: 0,
+    disadvantage: 0,
+    helpDice: 0,
+    reaction: false,
+    experiences: [],
+  };
+
+  it('posts a public message to the log, signed by the actor', () => {
+    const r = applyRoomEvent(room, ALEX, { type: 'sendMessage', text: 'hola', whisperTo: [] }, rng, NOW);
+    if (!r.ok) throw new Error('message was rejected');
+    expect(r.state.rollLog[0]).toMatchObject({ kind: 'message', text: 'hola', by: 'Alex', byId: ALEX.id });
+    expect(r.entries).toHaveLength(1);
+    expect(r.privateEntries).toEqual([]);
+  });
+
+  it('keeps a whisper out of the public log', () => {
+    const r = applyRoomEvent(
+      room,
+      ALEX,
+      { type: 'sendMessage', text: 'psst', whisperTo: [SAM.id] },
+      rng,
+      NOW,
+    );
+    if (!r.ok) throw new Error('whisper was rejected');
+    expect(r.state.rollLog).toHaveLength(0);
+    expect(r.entries).toHaveLength(0);
+    expect([...(r.state.privateLog[0]?.audience ?? [])].sort()).toEqual([ALEX.id, SAM.id].sort());
+    expect(r.privateEntries[0]?.entry).toMatchObject({ kind: 'message', text: 'psst' });
+  });
+
+  it('leaves the GM out of a whisper audience, since the GM sees every whisper', () => {
+    const toGm = applyRoomEvent(
+      room,
+      ALEX,
+      { type: 'sendMessage', text: 'only you', whisperTo: [GM.id] },
+      rng,
+      NOW,
+    );
+    if (!toGm.ok) throw new Error('whisper was rejected');
+    expect(toGm.state.rollLog).toHaveLength(0);
+    expect(toGm.state.privateLog[0]?.audience).toEqual([ALEX.id]);
+
+    const fromGm = applyRoomEvent(
+      room,
+      GM,
+      { type: 'sendMessage', text: 'a word', whisperTo: [SAM.id, SAM.id] },
+      rng,
+      NOW,
+    );
+    if (!fromGm.ok) throw new Error('whisper was rejected');
+    expect(fromGm.state.privateLog[0]?.audience).toEqual([SAM.id]);
+    expect(fromGm.state.privateLog[0]?.entry).toMatchObject({ by: 'GM', byId: GM.id });
+  });
+
+  it('refuses a whisper whose audience would not fit in the private log', () => {
+    const twelve = Array.from({ length: 12 }, (_, i) => `acc-${i}`);
+    expect(refusal(room, ALEX, { type: 'sendMessage', text: 'all of you', whisperTo: twelve })).toBe(
+      'rejected',
+    );
+  });
+
+  it('routes a private duality roll to privateLog with the roller as audience', () => {
+    const r = applyRoomEvent(
+      room,
+      ALEX,
+      { type: 'rollDuality', characterId: ALEX.id, request, visibility: 'private' },
+      rng,
+      NOW,
+    );
+    if (!r.ok) throw new Error('roll was rejected');
+    expect(r.state.rollLog).toHaveLength(0);
+    expect(r.entries).toHaveLength(0);
+    expect(r.privateEntries[0]?.audience).toEqual([ALEX.id]);
+    expect(r.state.privateLog[0]?.entry.kind).toBe('duality');
+  });
+
+  it('routes a private damage roll the same way', () => {
+    const r = applyRoomEvent(
+      room,
+      ALEX,
+      {
+        type: 'rollDamage',
+        characterId: ALEX.id,
+        label: 'Sword',
+        dice: { count: 1, die: 8 },
+        modifier: 0,
+        critical: false,
+        visibility: 'private',
+      },
+      rng,
+      NOW,
+    );
+    if (!r.ok) throw new Error('roll was rejected');
+    expect(r.state.rollLog).toHaveLength(0);
+    expect(r.privateEntries[0]?.audience).toEqual([ALEX.id]);
+  });
+
+  it('a private GM roll has an empty audience: GM only', () => {
+    const r = applyRoomEvent(
+      room,
+      GM,
+      { type: 'rollFate', kind: 'fate', label: 'Fire', visibility: 'private' },
+      rng,
+      NOW,
+    );
+    if (!r.ok) throw new Error('roll was rejected');
+    expect(r.state.rollLog).toHaveLength(0);
+    expect(r.privateEntries[0]?.audience).toEqual([]);
+    expect(r.state.privateLog[0]?.entry.kind).toBe('fate');
+  });
+
+  it('a public roll still goes to the shared log and nowhere else', () => {
+    const r = applyRoomEvent(
+      room,
+      GM,
+      { type: 'rollFate', kind: 'fate', label: 'Fire', visibility: 'public' },
+      rng,
+      NOW,
+    );
+    if (!r.ok) throw new Error('roll was rejected');
+    expect(r.state.rollLog).toHaveLength(1);
+    expect(r.state.privateLog).toEqual([]);
+    expect(r.privateEntries).toEqual([]);
+  });
+
+  it('loads a snapshot saved before privateLog existed', () => {
+    const { privateLog: _dropped, ...old } = createRoomState('c', {
+      id: GM.id,
+      name: 'GM',
+      connected: true,
+    });
+    expect(RoomStateSchema.parse(old).privateLog).toEqual([]);
   });
 });

@@ -91,8 +91,39 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     roll: DamageRollSchema,
     critical: z.boolean(),
   }),
+  z.object({
+    /**
+     * A chat line. The log is the table's chat as well as its dice, so a message
+     * sits among the rolls rather than in a panel of its own. `byId` is the
+     * sender's account, which `by` (a display name) cannot stand in for.
+     */
+    kind: z.literal('message'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    byId: z.string().min(1),
+    text: z.string().min(1).max(500),
+  }),
 ]);
 export type RollEntry = z.infer<typeof RollEntrySchema>;
+
+/**
+ * Who sees a roll. A player's private roll is theirs and the GM's; the GM's is the
+ * GM's alone. There is no roll hidden from its own roller: a duality roll moves
+ * Hope or Fear where everyone can see it.
+ */
+export const VisibilitySchema = z.enum(['public', 'private']);
+export type Visibility = z.infer<typeof VisibilitySchema>;
+
+/**
+ * An entry only some accounts may see: a whisper or a private roll. The GM is
+ * implied and never listed, so an empty audience means the GM alone.
+ */
+export const PrivateEntrySchema = z.object({
+  audience: z.array(z.string().min(1).max(64)).max(12),
+  entry: RollEntrySchema,
+});
+export type PrivateEntry = z.infer<typeof PrivateEntrySchema>;
 
 /** Human-readable outcome, shared by the log, roll dialog, and GM panel. */
 export const OUTCOME_LABELS: Record<z.infer<typeof ActionOutcomeSchema>, string> = {

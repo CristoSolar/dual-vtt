@@ -62,7 +62,7 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
         <p className="muted">{t('sheet.log.noneOfThatKind')}</p>
       ) : (
       <ul className="log">
-        {shown.map((entry) => (
+        {shown.map((entry) => entry.kind === 'message' ? null : (
           <li key={entry.id}>
             {entry.kind === 'duality' ? (
               <>

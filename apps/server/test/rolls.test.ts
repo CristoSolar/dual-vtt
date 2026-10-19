@@ -50,6 +50,7 @@ describe('server-side dice', () => {
       const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
         type: 'rollDuality',
         characterId: 'u-player',
+        visibility: 'public',
         request: { label: 'Roll', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, helpDice: 0, reaction: false, experiences: [] },
       });
       const entry = outcome.entries[0];
@@ -72,6 +73,7 @@ describe('server-side dice', () => {
       store.apply(campaign.id, { id: 'u-gm', role: 'gm' }, {
         type: 'rollFate',
         kind: 'fate',
+        visibility: 'public',
         label: 'Fate',
       });
 
@@ -118,6 +120,7 @@ describe('server-side dice', () => {
     const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
       type: 'rollDuality',
       characterId: 'u-player',
+      visibility: 'public',
       request: { label: 'Audit', modifiers: 0, difficulty: 10, advantage: 0, disadvantage: 0, helpDice: 0, reaction: false, experiences: [] },
     });
 

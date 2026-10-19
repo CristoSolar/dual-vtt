@@ -45,7 +45,14 @@ import {
   type Token,
 } from './map.js';
 import { computeVisionPolygon } from './vision.js';
-import { ActionOutcomeSchema, RollEntrySchema, type RollEntry } from './rollLog.js';
+import {
+  ActionOutcomeSchema,
+  PrivateEntrySchema,
+  RollEntrySchema,
+  type PrivateEntry,
+  type RollEntry,
+  type Visibility,
+} from './rollLog.js';
 import {
   SheetStateSchema,
   applyLevelUp,
@@ -164,6 +171,11 @@ export const RoomStateSchema = z.object({
   activeEnvironment: z.string().nullable(),
   rollLog: z.array(RollEntrySchema),
   /**
+   * Whispers and private rolls, newest first, each with the accounts allowed to see
+   * it. The GM sees all of them; a player is only ever sent their own.
+   */
+  privateLog: z.array(PrivateEntrySchema).default([]),
+  /**
    * The rest in progress, or null. Defaulted so a snapshot written before downtime
    * existed still loads instead of being dropped as unreadable.
    */
@@ -244,6 +256,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     adversaryInstances: [],
     activeEnvironment: null,
     rollLog: [],
+    privateLog: [],
     rest: null,
     consecutiveShortRests: 0,
     groupAction: null,
@@ -309,7 +322,14 @@ export type RoomError =
   | 'rejected';
 
 export type RoomResult =
-  | { ok: true; state: RoomState; effect: SheetEffect | null; entries: readonly RollEntry[] }
+  | {
+      ok: true;
+      state: RoomState;
+      effect: SheetEffect | null;
+      entries: readonly RollEntry[];
+      /** Entries only their audience (and the GM) may be sent. */
+      privateEntries: readonly PrivateEntry[];
+    }
   | { ok: false; error: RoomError; message: string };
 
 const fail = (error: RoomError, message: string): RoomResult => ({ ok: false, error, message });
@@ -318,7 +338,8 @@ const ok = (
   state: RoomState,
   effect: SheetEffect | null = null,
   entries: readonly RollEntry[] = [],
-): RoomResult => ({ ok: true, state, effect, entries });
+  privateEntries: readonly PrivateEntry[] = [],
+): RoomResult => ({ ok: true, state, effect, entries, privateEntries });
 
 /**
  * Seats a claimed character in the room.
@@ -363,6 +384,49 @@ function withCharacter(
 function appendEntries(state: RoomState, entries: readonly RollEntry[]): RoomState {
   if (entries.length === 0) return state;
   return { ...state, rollLog: [...entries, ...state.rollLog].slice(0, MAX_ROOM_LOG) };
+}
+
+/**
+ * Logs what a roll or a message produced where its visibility says. Public goes to
+ * the shared log. Private goes to the private log for `audience` and the GM, the
+ * audience being, unless a whisper names it, the roller — or nobody but the GM
+ * when the GM rolled.
+ */
+function logEntries(
+  state: RoomState,
+  actor: Actor,
+  entries: readonly RollEntry[],
+  visibility: Visibility,
+  audience: readonly string[] = actor.role === 'gm' ? [] : [actor.id],
+): { state: RoomState; privateEntries: PrivateEntry[] } {
+  // Anything but an explicit 'private' is public, which is also what the wire
+  // schema defaults a missing visibility to.
+  if (visibility !== 'private' || entries.length === 0) {
+    return { state: appendEntries(state, entries), privateEntries: [] };
+  }
+  const privateEntries = entries.map((entry) => ({ audience: [...audience], entry }));
+  return {
+    state: {
+      ...state,
+      privateLog: [...privateEntries, ...state.privateLog].slice(0, MAX_ROOM_LOG),
+    },
+    privateEntries,
+  };
+}
+
+/** `ok` for an event that logged entries: public ones in `entries`, the rest private. */
+function okLogged(
+  state: RoomState,
+  actor: Actor,
+  effect: SheetEffect | null,
+  entries: readonly RollEntry[],
+  visibility: Visibility,
+  audience?: readonly string[],
+): RoomResult {
+  const logged = logEntries(state, actor, entries, visibility, audience);
+  return visibility !== 'private'
+    ? ok(logged.state, effect, entries)
+    : ok(logged.state, effect, [], logged.privateEntries);
 }
 
 export { advanceOnActionRoll, advanceOnRest };
@@ -521,7 +585,27 @@ export function applyRoomEvent(
         label: event.label,
         value,
       };
-      return ok(appendEntries(state, [entry]), undefined, [entry]);
+      return okLogged(state, actor, null, [entry], event.visibility);
+    }
+
+    case 'sendMessage': {
+      const entry: RollEntry = {
+        kind: 'message',
+        id: `${now.toString(36)}-${Math.floor(rng() * 36 ** 4).toString(36)}-msg`,
+        at: now,
+        by: nameOf(state, actor),
+        byId: actor.id,
+        text: event.text,
+      };
+      if (event.whisperTo.length === 0) return okLogged(state, actor, null, [entry], 'public');
+
+      // The GM sees every whisper, so is never listed; the sender always is.
+      const audience = [...new Set([...event.whisperTo, actor.id])].filter(
+        (id) => id !== state.gm.id,
+      );
+      // The private log's schema holds at most 12; past that a snapshot would not load.
+      if (audience.length > 12) return fail('rejected', 'too many people to whisper to');
+      return okLogged(state, actor, null, [entry], 'private', audience);
     }
 
     case 'setAdversaryPool': {
@@ -747,7 +831,7 @@ export function applyRoomEvent(
         evasion: target?.character.evasion ?? null,
         target: targetNameFor(state, event.targetId),
       };
-      return ok(appendEntries({ ...state, fear }, [entry]), null, [entry]);
+      return okLogged({ ...state, fear }, actor, null, [entry], event.visibility);
     }
 
     case 'useEnvironmentFeature': {
@@ -833,7 +917,7 @@ export function applyRoomEvent(
         roll,
         critical: event.critical,
       };
-      return ok(appendEntries(state, [entry]), null, [entry]);
+      return okLogged(state, actor, null, [entry], event.visibility);
     }
 
     case 'endRest': {
@@ -968,10 +1052,7 @@ function applyCharacterEvent(
   rng: Rng,
   now: number,
 ): RoomResult {
-  const rollerName =
-    actor.role === 'gm'
-      ? state.gm.name
-      : state.players.find((p) => p.id === actor.id)?.name ?? 'Unknown';
+  const rollerName = nameOf(state, actor);
 
   switch (event.type) {
     case 'markHP': {
@@ -1268,7 +1349,7 @@ function applyCharacterEvent(
         next = { ...next, spotlightTokens: spendSpotlightToken(next.spotlightTokens, event.characterId) };
       }
 
-      return ok(appendEntries(next, [entry]), t.effect, [entry]);
+      return okLogged(next, actor, t.effect, [entry], event.visibility);
     }
     case 'startTagTeam': {
       if (state.tagTeam !== null) return fail('rejected', 'a Tag Team Roll is already open');
@@ -1341,11 +1422,18 @@ function applyCharacterEvent(
         roll,
         critical: event.critical,
       };
-      return ok(appendEntries(state, [entry]), null, [entry]);
+      return okLogged(state, actor, null, [entry], event.visibility);
     }
   }
 }
 
+
+/** The display name the log signs an actor's entries with. */
+function nameOf(state: RoomState, actor: Actor): string {
+  return actor.role === 'gm'
+    ? state.gm.name
+    : state.players.find((p) => p.id === actor.id)?.name ?? 'Unknown';
+}
 
 /** The display name of whoever a roll was aimed at, for the log. */
 function targetNameFor(state: RoomState, characterId: string | undefined): string | null {
