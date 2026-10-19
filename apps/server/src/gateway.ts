@@ -113,7 +113,7 @@ export function registerGateway(
   });
 
   io.on('connection', (socket) => {
-    socket.on(CHANNEL.joinCampaign, (payload: unknown) => {
+    const joinCampaign = (payload: unknown): void => {
       const parsed = JoinCampaignSchema.safeParse(payload);
       if (!parsed.success) return reject(socket, 'badRequest', 'invalid joinCampaign');
 
@@ -138,7 +138,16 @@ export function registerGateway(
           .to(channelFor(parsed.data.campaignId))
           .emit(CHANNEL.roomPatch, { players: state.players, gm: state.gm });
       }
-    });
+    };
+    socket.on(CHANNEL.joinCampaign, joinCampaign);
+
+    // A client that names its campaign in the handshake is seated before it can
+    // send anything. On a reconnect, socket.io flushes whatever the client emitted
+    // while offline *before* its 'connect' listeners run, so a seat re-established
+    // by a `joinCampaign` from there arrives after a buffered claim or intent, and
+    // that message is rejected with 'noSeat'.
+    const handshakeCampaignId = socket.handshake.auth?.campaignId as unknown;
+    if (handshakeCampaignId !== undefined) joinCampaign({ campaignId: handshakeCampaignId });
 
     socket.on(CHANNEL.claimCharacter, (payload: unknown) => {
       const seat = seatOf.get(socket);

@@ -139,16 +139,24 @@ export function useCampaign(
     if (existing !== null) return existing;
 
     setStatus('connecting');
-    const socket = io(SERVER_URL, { transports: ['websocket'], autoConnect: true, auth: { token } });
+    // The campaign rides in the handshake, read afresh on every (re)connect, so the
+    // server seats the socket before anything else arrives. Re-joining from the
+    // 'connect' handler instead lost the race on a reconnect: socket.io flushes
+    // whatever was emitted while offline — a finished wizard's claim — before
+    // 'connect' listeners run, and the server rejected it with 'noSeat'.
+    const socket = io(SERVER_URL, {
+      transports: ['websocket'],
+      autoConnect: true,
+      auth: (cb) => {
+        const campaignId = loadActiveCampaignId(storage);
+        cb(campaignId === null ? { token } : { token, campaignId });
+      },
+    });
     socketRef.current = socket;
 
     socket.on('connect', () => {
       setStatus('connected');
       setError(null);
-      // Rejoining is this handler's job alone. `join()` used to emit as well, which
-      // sent two joins for the first connection of every session.
-      const saved = loadActiveCampaignId(storage);
-      if (saved !== null) socket.emit(CHANNEL.joinCampaign, { campaignId: saved });
     });
 
     socket.on('disconnect', () => setStatus('connecting'));
@@ -302,8 +310,8 @@ export function useCampaign(
       storage.setItem(ACTIVE_CAMPAIGN_KEY, campaignId);
       setActiveCampaignId(campaignId);
       const socket = ensureSocket();
-      // A socket that is still connecting will join from its 'connect' handler,
-      // which reads the id just stored; emitting here too would join twice.
+      // A socket that is still connecting will join from its handshake, which
+      // reads the id just stored; emitting here too would join twice.
       if (socket?.connected === true) socket.emit(CHANNEL.joinCampaign, { campaignId });
     },
     [storage, ensureSocket],

@@ -64,7 +64,9 @@ srd-data  →  rules  →  character  →  protocol  →  server
     `static.ts`): login issues a token (`sessions.ts`, in-memory — restart signs
     everyone out, by design); GM creates player accounts and campaigns, adds members.
   - Socket (`gateway.ts`): authenticates once at connect with that same token, then
-    `joinCampaign` seats the socket after a membership check. Membership is re-checked
+    `joinCampaign` seats the socket after a membership check. The web client names its
+    campaign in the handshake `auth` instead, so a reconnect is seated before socket.io
+    flushes messages buffered while offline (otherwise they bounce with `noSeat`). Membership is re-checked
     on every message, so a removed player is cut off mid-session.
   - `campaigns.ts` owns the in-memory store, ownership (`ownerId` is GM, `memberIds`
     are players), and the per-campaign dice seed. `users.ts` holds accounts with
