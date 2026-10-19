@@ -25,7 +25,7 @@ import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
 import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
 import { PrintableSheet } from '../components/sheet/PrintableSheet.js';
 import { RollDialog, type RollDialogSpec } from '../components/sheet/RollDialog.js';
-import { RollLogPanel } from '../components/sheet/RollLogPanel.js';
+import { RollLogPanel, type ChatProps } from '../components/sheet/RollLogPanel.js';
 import {
   ArmorSlots,
   CornerBrackets,
@@ -37,7 +37,7 @@ import {
 } from '../components/sheet/SheetFurniture.js';
 import { SectionHead } from '../components/SectionHead.js';
 import { Toast, ToastStack } from '../components/Toast.js';
-import type { RoomEvent } from '@daggerheart/protocol';
+import type { PrivateEntry, RoomEvent, Visibility } from '@daggerheart/protocol';
 
 import { appendRoll, type RollEntry } from '../state/rollLog.js';
 import {
@@ -91,6 +91,12 @@ interface SheetRouteProps {
   characterId?: string;
   send?: (event: RoomEvent) => void;
   sharedLog?: readonly RollEntry[] | undefined;
+  /** Whispers and private rolls this account may see. Empty offline. */
+  privateLog?: readonly PrivateEntry[] | undefined;
+  /** The chat box under the log. Absent offline: there is nobody to write to. */
+  chat?: ChatProps | undefined;
+  /** Whether the roll dialog offers a private roll; false offline. */
+  canRollPrivately?: boolean;
   /**
    * The effect of this player's last accepted intent, as the server reported it.
    * Offline the same information comes straight back from the reducer; in a
@@ -130,6 +136,9 @@ export function SheetRoute({
   characterId,
   send,
   sharedLog,
+  privateLog,
+  chat,
+  canRollPrivately = false,
   lastEffect = null,
   rest = null,
   party = [],
@@ -228,13 +237,14 @@ export function SheetRoute({
     [character.experiences],
   );
 
-  const roll = (request: Parameters<typeof makeDualityRoll>[1]) => {
+  const roll = (request: Parameters<typeof makeDualityRoll>[1], visibility: Visibility) => {
     if (pending === null) return;
 
     // In a campaign the server rolls: dice are seeded there so the whole table sees
     // the same result and it can be audited afterwards.
     if (online) {
-      send(forMe({ type: 'rollDuality', request }));
+      send(forMe({ type: 'rollDuality', request, visibility }));
+      // The damage that follows a private attack is just as private.
       if (pending.damage !== null) {
         send(
           forMe({
@@ -243,6 +253,7 @@ export function SheetRoute({
             dice: pending.damage.dice,
             modifier: pending.damage.modifier,
             critical: false,
+            visibility,
           }),
         );
       }
@@ -777,7 +788,7 @@ export function SheetRoute({
             }
             onVault={(cardId) => run((s) => sendToVault(s, cardId), forMe({ type: 'vaultCard', cardId }))}
           />
-          <RollLogPanel entries={sharedLog ?? log} />
+          <RollLogPanel entries={sharedLog ?? log} privateEntries={privateLog} chat={chat} />
         </aside>
       </div>
 
@@ -787,7 +798,8 @@ export function SheetRoute({
           experiences={experiences}
           hope={sheet.hope}
           outcome={outcome}
-          onRoll={(request) => roll({ ...request, label: pending.title })}
+          canRollPrivately={online && canRollPrivately}
+          onRoll={(request, visibility) => roll({ ...request, label: pending.title }, visibility)}
           onClose={closeRoll}
         />
       ) : null}

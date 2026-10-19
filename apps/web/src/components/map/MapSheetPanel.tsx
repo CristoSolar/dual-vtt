@@ -1,5 +1,5 @@
 import { MAX_HOPE } from '@daggerheart/rules';
-import type { RoomEvent } from '@daggerheart/protocol';
+import type { RoomEvent, Visibility } from '@daggerheart/protocol';
 import { useMemo, useState } from 'react';
 
 import { t } from '../../i18n/index.js';
@@ -24,6 +24,8 @@ interface MapSheetPanelProps {
   characterId: string;
   send: (event: RoomEvent) => void;
   sharedLog: readonly RollEntry[] | undefined;
+  /** Whether the roll dialog offers a private roll: not while the roll is shared. */
+  canRollPrivately?: boolean;
 }
 
 interface PendingRoll extends RollDialogSpec {
@@ -41,7 +43,13 @@ type Tab = 'hoja' | 'cartas' | 'bio';
  * every action is an intent, and the result arrives through the shared room
  * state and roll log the caller already has.
  */
-export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetPanelProps) {
+export function MapSheetPanel({
+  sheet,
+  characterId,
+  send,
+  sharedLog,
+  canRollPrivately = false,
+}: MapSheetPanelProps) {
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
   const character = sheet.character;
   const [pending, setPending] = useState<PendingRoll | null>(null);
@@ -92,9 +100,9 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
       }),
     );
 
-  const submitRoll = (request: Omit<DualityRollRequest, 'label'>) => {
+  const submitRoll = (request: Omit<DualityRollRequest, 'label'>, visibility: Visibility) => {
     if (pending === null) return;
-    send(forMe({ type: 'rollDuality', request: { ...request, label: pending.title } }));
+    send(forMe({ type: 'rollDuality', request: { ...request, label: pending.title }, visibility }));
     if (pending.damage !== null) {
       send(
         forMe({
@@ -104,6 +112,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
           proficiency: pending.damage.proficiency,
           modifier: pending.damage.modifier,
           critical: false,
+          visibility,
         }),
       );
     }
@@ -346,6 +355,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
           experiences={experiences}
           hope={sheet.hope}
           outcome={null}
+          canRollPrivately={canRollPrivately}
           onRoll={submitRoll}
           onClose={() => setPending(null)}
         />
@@ -366,8 +376,7 @@ export function MapSheetPanel({ sheet, characterId, send, sharedLog }: MapSheetP
   );
 }
 
-/** The label of the log's last entry, or nothing when that entry is a chat line. */
+/** The label of the most recent roll; the log is newest first and chat lines have none. */
 function lastRollLabel(log: readonly RollEntry[]): string {
-  const last = log[log.length - 1];
-  return last === undefined || last.kind === 'message' ? '' : last.label;
+  return log.find((entry) => entry.kind !== 'message')?.label ?? '';
 }

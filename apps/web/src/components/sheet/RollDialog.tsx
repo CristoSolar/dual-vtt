@@ -1,3 +1,4 @@
+import type { Visibility } from '@daggerheart/protocol';
 import { useState } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
@@ -19,7 +20,12 @@ interface RollDialogProps {
   experiences: readonly { name: string; modifier: number }[];
   hope: number;
   outcome: DualityRollOutcome | null;
-  onRoll: (request: Omit<DualityRollRequest, 'label'>) => void;
+  /**
+   * Offers a private roll — the roller's and the GM's only. Off offline, where
+   * nobody else could see it anyway, and for a roll the table shares.
+   */
+  canRollPrivately?: boolean;
+  onRoll: (request: Omit<DualityRollRequest, 'label'>, visibility: Visibility) => void;
   onClose: () => void;
 }
 
@@ -29,6 +35,7 @@ export function RollDialog({
   experiences,
   hope,
   outcome,
+  canRollPrivately = false,
   onRoll,
   onClose,
 }: RollDialogProps) {
@@ -40,6 +47,7 @@ export function RollDialog({
   /** A reaction earns no Hope or Fear, which changes what the roll is worth. */
   const [reaction, setReaction] = useState(false);
   const [chosen, setChosen] = useState<readonly string[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const selected = experiences.filter((e) => chosen.includes(e.name));
   const hopeCost = selected.length;
@@ -142,19 +150,34 @@ export function RollDialog({
             </fieldset>
           ) : null}
 
+          {canRollPrivately ? (
+            <label htmlFor="roll-private">
+              <input
+                id="roll-private"
+                type="checkbox"
+                checked={isPrivate}
+                onChange={(event) => setIsPrivate(event.target.checked)}
+              />{' '}
+              {t('roll.privateToggle')}
+            </label>
+          ) : null}
+
           <button
             type="button"
             disabled={!canAfford}
             onClick={() =>
-              onRoll({
-                modifiers: spec.modifiers,
-                difficulty,
-                advantage,
-                disadvantage,
-                helpDice,
-                reaction,
-                experiences: selectedNames,
-              })
+              onRoll(
+                {
+                  modifiers: spec.modifiers,
+                  difficulty,
+                  advantage,
+                  disadvantage,
+                  helpDice,
+                  reaction,
+                  experiences: selectedNames,
+                },
+                canRollPrivately && isPrivate ? 'private' : 'public',
+              )
             }
           >
             {t('sheet.roll.rollButton')}

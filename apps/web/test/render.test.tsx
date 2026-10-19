@@ -12,6 +12,8 @@ import { GMPanel } from '../src/components/gm/GMPanel.js';
 import { ConfirmDialog } from '../src/components/ConfirmDialog.js';
 import { GuideDialog } from '../src/components/GuideDialog.js';
 import { PartyStrip } from '../src/components/sheet/PartyStrip.js';
+import { RollDialog } from '../src/components/sheet/RollDialog.js';
+import { RollLogPanel } from '../src/components/sheet/RollLogPanel.js';
 import { Toast } from '../src/components/Toast.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { setLocale, t } from '../src/i18n/index.js';
@@ -536,5 +538,48 @@ describe('usability pieces', () => {
     expect(html).toContain(t('sheet.party.fear', { fear: 4, max: 12 }));
     expect(html).toContain(t('sheet.party.yourTurn'));
     expect(html).toContain(String(sheet.character.hpSlots));
+  });
+});
+
+describe('chat and private entries', () => {
+  const line = (id: string, at: number, text: string) =>
+    ({ kind: 'message', id, at, by: 'Alice', byId: 'p1', text }) as const;
+
+  it('the log shows a message with its author and text, and labels a private entry', () => {
+    const html = render(
+      <RollLogPanel
+        entries={[line('m1', 10, 'Abro la puerta')]}
+        privateEntries={[{ audience: ['p1'], entry: line('m2', 20, 'Solo para ti') }]}
+        chat={{ gmId: 'gm-1', players: [{ id: 'p2', name: 'Bruno' }], onSend: () => {} }}
+      />,
+    );
+    expect(html).toContain('Alice');
+    expect(html).toContain('Abro la puerta');
+    expect(html).toContain('Solo para ti');
+    expect(html.split(t('log.private')).length - 1).toBe(1);
+    expect(html).toContain('maxLength="500"');
+    expect(html).toContain('Bruno');
+    expect(html).toContain(t('sheet.log.filter.message'));
+  });
+
+  it('the GM log shows whispers and offers private rolls', () => {
+    const room = gmRoom();
+    room.privateLog = [{ audience: ['p1'], entry: line('m1', 10, 'Un secreto') }];
+    room.adversaryInstances = [
+      { instanceId: 'a1', adversaryId: 'courtier', name: 'Courtier', hpMarked: 0, stressMarked: 0, usedFeatures: [] },
+    ];
+    const html = render(<GMPanel room={room} campaignName="Grupo" send={() => {}} />);
+    expect(html).toContain('Un secreto');
+    expect(html).toContain(t('log.private'));
+    expect(html).toContain(t('roll.privateToggle'));
+  });
+
+  it('the roll dialog offers a private roll only when asked to', () => {
+    const spec = { title: 'Agility Roll', modifiers: 1, modifierLabel: 'Agility' };
+    const props = { spec, experiences: [], hope: 2, outcome: null, onRoll: () => {}, onClose: () => {} };
+    expect(renderToStaticMarkup(<RollDialog {...props} canRollPrivately />)).toContain(
+      t('roll.privateToggle'),
+    );
+    expect(renderToStaticMarkup(<RollDialog {...props} />)).not.toContain(t('roll.privateToggle'));
   });
 });

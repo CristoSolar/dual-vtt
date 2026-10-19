@@ -1,37 +1,57 @@
-import { useMemo, useState } from 'react';
+import type { PrivateEntry } from '@daggerheart/protocol';
+import { useId, useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
+import { mergeFeed } from '../../state/feed.js';
 import { outcomeTone, type RollEntry } from '../../state/rollLog.js';
 import { SectionHead } from '../SectionHead.js';
 
-interface RollLogPanelProps {
-  entries: readonly RollEntry[];
+/** Who a chat line can go to, and how to send it. Present only in a campaign. */
+export interface ChatProps {
+  /** The GM's account, offered as a whisper target; null when the GM is the one writing. */
+  gmId: string | null;
+  /** The other players, by account. */
+  players: readonly { id: string; name: string }[];
+  /** `whisperTo` empty says it to the whole table. */
+  onSend: (text: string, whisperTo: string[]) => void;
 }
 
+interface RollLogPanelProps {
+  entries: readonly RollEntry[];
+  /** Whispers and private rolls this account may see. */
+  privateEntries?: readonly PrivateEntry[] | undefined;
+  chat?: ChatProps | undefined;
+}
+
+const NO_PRIVATE: readonly PrivateEntry[] = [];
+
 /** What a filter narrows the log to. */
-type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate';
+type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate' | 'message';
 
 /**
- * The session's rolls, most recent first.
+ * The session's rolls and chat, most recent first.
  *
  * A long fight fills this with damage rolls, and the one action roll somebody
  * wants to look back at scrolls away, so the kinds can be narrowed and the whole
  * thing collapsed when the table is doing something else.
  */
-export function RollLogPanel({ entries }: RollLogPanelProps) {
+export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: RollLogPanelProps) {
   const [filter, setFilter] = useState<LogFilter>('all');
   const [collapsed, setCollapsed] = useState(false);
 
+  const feed = useMemo(() => mergeFeed(entries, privateEntries), [entries, privateEntries]);
   const shown = useMemo(
-    () => (filter === 'all' ? entries : entries.filter((entry) => entry.kind === filter)),
-    [entries, filter],
+    () => (filter === 'all' ? feed : feed.filter((item) => item.entry.kind === filter)),
+    [feed, filter],
   );
 
-  if (entries.length === 0) {
+  if (feed.length === 0) {
     return (
       <div className="panel">
         <SectionHead>{t('sheet.log.title')}</SectionHead>
         <p className="muted">{t('sheet.log.empty')}</p>
+        {/* Keyed so the first line logged does not remount it and drop the recipient. */}
+        {chat === undefined ? null : <ChatBox key="chat" {...chat} />}
       </div>
     );
   }
@@ -48,7 +68,7 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
           value={filter}
           onChange={(event) => setFilter(event.target.value as LogFilter)}
         >
-          {(['all', 'duality', 'attack', 'damage', 'fate'] as const).map((kind) => (
+          {(['all', 'duality', 'attack', 'damage', 'fate', 'message'] as const).map((kind) => (
             <option key={kind} value={kind}>
               {t(`sheet.log.filter.${kind}` as MessageKey)}
             </option>
@@ -62,9 +82,12 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
         <p className="muted">{t('sheet.log.noneOfThatKind')}</p>
       ) : (
       <ul className="log">
-        {shown.map((entry) => entry.kind === 'message' ? null : (
+        {shown.map(({ entry, private: isPrivate }) => (
           <li key={entry.id}>
-            {entry.kind === 'duality' ? (
+            {isPrivate ? <PrivateBadge /> : null}
+            {entry.kind === 'message' ? (
+              <MessageLine by={entry.by} text={entry.text} />
+            ) : entry.kind === 'duality' ? (
               <>
                 <div className="row spread">
                   <strong>{entry.label}</strong>
@@ -149,6 +172,74 @@ export function RollLogPanel({ entries }: RollLogPanelProps) {
         ))}
       </ul>
       )}
+      {chat === undefined ? null : <ChatBox key="chat" {...chat} />}
     </div>
+  );
+}
+
+export function PrivateBadge() {
+  return <span className="badge">{t('log.private')}</span>;
+}
+
+/** A chat line: plain text, line breaks kept, nothing interpreted as markup. */
+export function MessageLine({ by, text }: { by: string; text: string }) {
+  return (
+    <>
+      <strong>{by}</strong>
+      <p className="chat-text">{text}</p>
+    </>
+  );
+}
+
+/** Where a line goes: the whole table, the GM, or one player. */
+export function ChatBox({ gmId, players, onSend }: ChatProps) {
+  const id = useId();
+  const [text, setText] = useState('');
+  /** '' is everyone; otherwise the account whispered to. */
+  const [to, setTo] = useState('');
+
+  const submit = (event?: FormEvent) => {
+    event?.preventDefault();
+    const trimmed = text.trim();
+    if (trimmed === '') return;
+    onSend(trimmed, to === '' ? [] : [to]);
+    setText('');
+  };
+
+  // Enter sends, as in any chat; Shift+Enter is still a line break.
+  const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) submit(event);
+  };
+
+  return (
+    <form className="chat-box mt-2" onSubmit={submit}>
+      <label className="sr-only" htmlFor={`${id}-text`}>
+        {t('chat.label')}
+      </label>
+      <textarea
+        id={`${id}-text`}
+        rows={2}
+        maxLength={500}
+        value={text}
+        placeholder={t('chat.placeholder')}
+        onChange={(event) => setText(event.target.value)}
+        onKeyDown={onKeyDown}
+      />
+      <div className="row">
+        <label htmlFor={`${id}-to`}>{t('chat.to')}</label>
+        <select id={`${id}-to`} value={to} onChange={(event) => setTo(event.target.value)}>
+          <option value="">{t('chat.toAll')}</option>
+          {gmId === null ? null : <option value={gmId}>{t('chat.toGm')}</option>}
+          {players.map((player) => (
+            <option key={player.id} value={player.id}>
+              {player.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit" disabled={text.trim() === ''}>
+          {t('chat.send')}
+        </button>
+      </div>
+    </form>
   );
 }

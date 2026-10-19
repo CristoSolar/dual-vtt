@@ -16,6 +16,7 @@ import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
+import { canRollPrivately } from '../state/feed.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
@@ -563,7 +564,13 @@ export function MapRoute({
           onClose={() => closePanel('sheet')}
           wide
         >
-          <MapSheetPanel sheet={mySheet} characterId={viewerId} send={send} sharedLog={room.rollLog} />
+          <MapSheetPanel
+            sheet={mySheet}
+            characterId={viewerId}
+            send={send}
+            sharedLog={room.rollLog}
+            canRollPrivately={canRollPrivately(room, viewerId)}
+          />
         </FloatingPanel>
       ) : null}
 

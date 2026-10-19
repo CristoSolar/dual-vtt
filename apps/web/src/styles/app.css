@@ -2152,6 +2152,18 @@ button.link {
   border-bottom: none;
 }
 
+/* Chat lines are plain text: line breaks kept, long words wrapped, no markup. */
+.chat-text {
+  margin: var(--sp-1) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-box textarea {
+  width: 100%;
+  resize: vertical;
+}
+
 /* ============================================================= domain cards */
 
 /*

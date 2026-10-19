@@ -4,6 +4,7 @@ import {
   type Countdown,
   type RoomEvent,
   type RoomState,
+  type Visibility,
 } from '@daggerheart/protocol';
 import {
   MAX_FEAR,
@@ -21,11 +22,13 @@ import {
   type Adversary,
   type StatBlockFeature,
 } from '@daggerheart/srd-data';
-import { useMemo, useState, type ChangeEvent } from 'react';
+import { useId, useMemo, useState, type ChangeEvent } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
+import { chatRecipients, mergeFeed } from '../../state/feed.js';
 import { label as prettify } from '../../state/selectors.js';
 import { SectionHead } from '../SectionHead.js';
+import { ChatBox, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
 
 interface GMPanelProps {
   room: RoomState;
@@ -184,7 +187,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
 
         <aside>
           <Presence room={room} />
-          <SharedRollLog room={room} />
+          <SharedRollLog room={room} send={send} />
         </aside>
       </div>
     </section>
@@ -607,6 +610,7 @@ function AttackControls({
   const [targetId, setTargetId] = useState('');
   const [swing, setSwing] = useState<'none' | 'advantage' | 'disadvantage'>('none');
   const [experience, setExperience] = useState('');
+  const [visibility, setVisibility] = useState<Visibility>('public');
 
   const targets = room.players.filter((player) => player.characterId !== null);
 
@@ -661,7 +665,7 @@ function AttackControls({
               instanceId: instance.instanceId,
               advantage: swing === 'advantage',
               disadvantage: swing === 'disadvantage',
-              visibility: 'public',
+              visibility,
               ...(targetId === '' ? {} : { targetId }),
               ...(experience === '' ? {} : { experience }),
             })
@@ -676,7 +680,7 @@ function AttackControls({
               type: 'rollAdversaryDamage',
               instanceId: instance.instanceId,
               critical: false,
-              visibility: 'public',
+              visibility,
             })
           }
         >
@@ -695,12 +699,13 @@ function AttackControls({
               type: 'rollAdversaryDamage',
               instanceId: instance.instanceId,
               critical: true,
-              visibility: 'public',
+              visibility,
             })
           }
         >
           {t('gm.adversaries.rollCriticalDamage')}
         </button>
+        <PrivateToggle value={visibility} onChange={setVisibility} />
       </div>
     </div>
   );
@@ -713,6 +718,7 @@ function AttackControls({
  */
 function Hazards({ send }: { send: (event: RoomEvent) => void }) {
   const [label, setLabel] = useState('');
+  const [visibility, setVisibility] = useState<Visibility>('public');
   const kinds = ['fate', 'fallVeryClose', 'fallClose', 'fallFar', 'collision'] as const;
 
   return (
@@ -735,13 +741,14 @@ function Hazards({ send }: { send: (event: RoomEvent) => void }) {
                 type: 'rollFate',
                 kind,
                 label: label.trim() === '' ? t(`gm.hazards.${kind}`) : label.trim(),
-                visibility: 'public',
+                visibility,
               })
             }
           >
             {t(`gm.hazards.${kind}`)}
           </button>
         ))}
+        <PrivateToggle value={visibility} onChange={setVisibility} />
       </div>
       <details>
         <summary>{t('gm.hazards.more')}</summary>
@@ -1221,80 +1228,115 @@ function Presence({ room }: { room: RoomState }) {
   );
 }
 
-function SharedRollLog({ room }: { room: RoomState }) {
+/** A GM roll that only the GM sees: a hidden check, an attack kept off the table. */
+function PrivateToggle({
+  value,
+  onChange,
+}: {
+  value: Visibility;
+  onChange: (next: Visibility) => void;
+}) {
+  const id = useId();
+  return (
+    <label htmlFor={id}>
+      <input
+        id={id}
+        type="checkbox"
+        checked={value === 'private'}
+        onChange={(event) => onChange(event.target.checked ? 'private' : 'public')}
+      />{' '}
+      {t('roll.privateToggle')}
+    </label>
+  );
+}
+
+function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
+  // The GM is sent every private entry, so the whole private log belongs here.
+  const feed = useMemo(() => mergeFeed(room.rollLog, room.privateLog), [room.rollLog, room.privateLog]);
   return (
     <div className="panel">
       <SectionHead>{t('sheet.log.title')}</SectionHead>
-      {room.rollLog.length === 0 ? <p className="muted">{t('gm.rollLog.empty')}</p> : null}
+      {feed.length === 0 ? <p className="muted">{t('gm.rollLog.empty')}</p> : null}
       <ul className="log">
-        {room.rollLog.map((entry) => entry.kind === 'message' ? null : (
+        {feed.map(({ entry, private: isPrivate }) => (
           <li key={entry.id}>
-            <div className="row spread">
-              <strong>
-                {entry.by} — {entry.label}
-              </strong>
-              {entry.kind === 'duality' ? (
-                <span className="outcome" data-tone={outcomeTone(entry.outcome)}>
-                  {t(`roll.outcome.${entry.outcome}` as MessageKey)}
+            {isPrivate ? <PrivateBadge /> : null}
+            {entry.kind === 'message' ? (
+              <MessageLine by={entry.by} text={entry.text} />
+            ) : (
+              <>
+                <div className="row spread">
+                  <strong>
+                    {entry.by} — {entry.label}
+                  </strong>
+                  {entry.kind === 'duality' ? (
+                    <span className="outcome" data-tone={outcomeTone(entry.outcome)}>
+                      {t(`roll.outcome.${entry.outcome}` as MessageKey)}
+                    </span>
+                  ) : entry.kind === 'attack' ? (
+                    <span
+                      className="outcome"
+                      data-tone={
+                        entry.roll.critical
+                          ? 'critical'
+                          : entry.roll.success === null
+                            ? undefined
+                            : entry.roll.success
+                              ? 'success'
+                              : 'failure'
+                      }
+                    >
+                      {entry.roll.critical
+                        ? t('sheet.log.attackCritical')
+                        : entry.roll.success === null
+                          ? t('sheet.log.attackTotal', { total: entry.roll.total })
+                          : t(entry.roll.success ? 'sheet.log.attackHit' : 'sheet.log.attackMiss')}
+                    </span>
+                  ) : entry.kind === 'fate' ? (
+                    <span>{entry.value}</span>
+                  ) : (
+                    <span>
+                      {entry.roll.total}
+                      {t('gm.rollLog.damageSuffix')}
+                    </span>
+                  )}
+                </div>
+                <span className="muted">
+                  {entry.kind === 'duality'
+                    ? t('gm.rollLog.dualityMeta', {
+                        hope: entry.roll.hope,
+                        fear: entry.roll.fear,
+                        total: entry.roll.total,
+                        difficulty: entry.difficulty,
+                      })
+                    : entry.kind === 'attack'
+                      ? `${t('sheet.log.attackDice', { dice: entry.roll.dice.join(', ') })}${
+                          entry.evasion === null
+                            ? t('sheet.log.attackNoTarget', { total: entry.roll.total })
+                            : t('sheet.log.attackVs', {
+                                total: entry.roll.total,
+                                evasion: entry.evasion,
+                                target: entry.target ?? '',
+                              })
+                        }`
+                      : entry.kind === 'fate'
+                        ? t('gm.rollLog.fateMeta')
+                        : t('gm.rollLog.damageMeta', {
+                          rolls: entry.roll.rolls.join(', '),
+                          critical: entry.critical
+                            ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
+                            : '',
+                        })}
                 </span>
-              ) : entry.kind === 'attack' ? (
-                <span
-                  className="outcome"
-                  data-tone={
-                    entry.roll.critical
-                      ? 'critical'
-                      : entry.roll.success === null
-                        ? undefined
-                        : entry.roll.success
-                          ? 'success'
-                          : 'failure'
-                  }
-                >
-                  {entry.roll.critical
-                    ? t('sheet.log.attackCritical')
-                    : entry.roll.success === null
-                      ? t('sheet.log.attackTotal', { total: entry.roll.total })
-                      : t(entry.roll.success ? 'sheet.log.attackHit' : 'sheet.log.attackMiss')}
-                </span>
-              ) : entry.kind === 'fate' ? (
-                <span>{entry.value}</span>
-              ) : (
-                <span>
-                  {entry.roll.total}
-                  {t('gm.rollLog.damageSuffix')}
-                </span>
-              )}
-            </div>
-            <span className="muted">
-              {entry.kind === 'duality'
-                ? t('gm.rollLog.dualityMeta', {
-                    hope: entry.roll.hope,
-                    fear: entry.roll.fear,
-                    total: entry.roll.total,
-                    difficulty: entry.difficulty,
-                  })
-                : entry.kind === 'attack'
-                  ? `${t('sheet.log.attackDice', { dice: entry.roll.dice.join(', ') })}${
-                      entry.evasion === null
-                        ? t('sheet.log.attackNoTarget', { total: entry.roll.total })
-                        : t('sheet.log.attackVs', {
-                            total: entry.roll.total,
-                            evasion: entry.evasion,
-                            target: entry.target ?? '',
-                          })
-                    }`
-                  : entry.kind === 'fate'
-                    ? t('gm.rollLog.fateMeta')
-                    : t('gm.rollLog.damageMeta', {
-                      rolls: entry.roll.rolls.join(', '),
-                      critical: entry.critical
-                        ? t('gm.rollLog.criticalSuffix', { bonus: entry.roll.criticalBonus })
-                        : '',
-                    })}
-            </span>
+              </>
+            )}
           </li>
         ))}
       </ul>
+      <ChatBox
+        {...chatRecipients(room, room.gm.id)}
+        onSend={(text, whisperTo) => send({ type: 'sendMessage', text, whisperTo })}
+      />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { PlayersRoute } from './routes/PlayersRoute.js';
 import { SheetRoute } from './routes/SheetRoute.js';
 import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
+import { canRollPrivately, chatRecipients } from './state/feed.js';
 import { hasSeenGuide, markGuideSeen } from './state/storage.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 
@@ -103,6 +104,15 @@ function Shell() {
   }, [campaign.room, auth.user]);
 
   const hasClaimedCharacter = mySheet !== null;
+
+  const { send } = campaign;
+  const chat = useMemo(() => {
+    if (campaign.room === null || accountId === null) return undefined;
+    return {
+      ...chatRecipients(campaign.room, accountId),
+      onSend: (text: string, whisperTo: string[]) => send({ type: 'sendMessage', text, whisperTo }),
+    };
+  }, [campaign.room, accountId, send]);
 
   if (auth.status === 'loading') {
     return (
@@ -351,6 +361,9 @@ function Shell() {
                 characterId={account.id}
                 send={campaign.send}
                 sharedLog={campaign.room?.rollLog}
+                privateLog={campaign.room?.privateLog}
+                chat={chat}
+                canRollPrivately={campaign.room !== null && canRollPrivately(campaign.room, account.id)}
                 lastEffect={campaign.lastEffect}
                 rest={campaign.room?.rest ?? null}
                 party={party}

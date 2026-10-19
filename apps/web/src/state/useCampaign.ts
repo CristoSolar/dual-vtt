@@ -2,6 +2,7 @@ import {
   CampaignSummarySchema,
   CHANNEL,
   EffectMessageSchema,
+  PrivateRolledSchema,
   RejectedSchema,
   RolledSchema,
   RoomPatchSchema,
@@ -14,6 +15,7 @@ import {
   type SheetState,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
+import { appendPrivate } from './feed.js';
 import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
@@ -169,6 +171,19 @@ export function useCampaign(
       setLastRoll({
         id: parsed.data.entries.map((entry) => entry.id).join('-'),
         message: parsed.data.entries.map(describeRollEntry).join(' · '),
+      });
+    });
+
+    // Whispers and private rolls reach only the GM and their audience, and no patch
+    // carries the private log, so each one is folded into the room here.
+    socket.on(CHANNEL.privateRolled, (payload: unknown) => {
+      const parsed = PrivateRolledSchema.safeParse(payload);
+      if (!parsed.success || parsed.data.entries.length === 0) return;
+      const { entries } = parsed.data;
+      setRoom((current) => (current === null ? current : appendPrivate(current, entries)));
+      setLastRoll({
+        id: entries.map((p) => p.entry.id).join('-'),
+        message: entries.map((p) => describeRollEntry(p.entry)).join(' · '),
       });
     });
 
