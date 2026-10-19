@@ -1680,6 +1680,27 @@ describe('rolling against a target and damaging adversaries', () => {
     expect(dualityEntry(room, GM, 'tok-1').difficulty).toBe(14);
   });
 
+  it('does not name a hidden target on a public roll, but still uses its Difficulty', () => {
+    const room = roomWith('acid-burrower', { ...adversaryToken, hidden: true });
+    const roll = (visibility: 'public' | 'private') => {
+      const result = applyRoomEvent(
+        room,
+        GM,
+        { type: 'rollDuality', characterId: ALEX.id, request, targetTokenId: 'tok-1', visibility },
+        rng,
+        NOW,
+      );
+      if (!result.ok) throw new Error(`rejected: ${result.error}`);
+      const entry = result.entries[0] ?? result.privateEntries[0]?.entry;
+      if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
+      return entry;
+    };
+    const open = roll('public');
+    expect(open.target).toBeNull();
+    expect(open.difficulty).toBe(14);
+    expect(roll('private').target).toBe('Burrower');
+  });
+
   it('marks HP on an adversary by its thresholds', () => {
     // acid-burrower: Major 8, Severe 15.
     const room = roomWith('acid-burrower', adversaryToken);

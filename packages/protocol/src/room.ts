@@ -1433,6 +1433,17 @@ function applyCharacterEvent(
       const t = makeDualityRoll(sheet, request, rng);
       if (t.outcome === null) return fail('rejected', t.effect.message ?? 'roll rejected');
 
+      // A public entry reaches every player, so it only names a target they could
+      // see; the Difficulty it was rolled against still stands.
+      const targetId = target?.id;
+      const targetName =
+        event.visibility !== 'public' ||
+        mapForPlayer(state.map).scenes.some((scene) =>
+          scene.tokens.some((token) => token.id === targetId),
+        )
+          ? (target?.name ?? null)
+          : null;
+
       const entry: RollEntry = {
         kind: 'duality',
         id: `${now.toString(36)}-${event.characterId}`,
@@ -1444,7 +1455,7 @@ function applyCharacterEvent(
         outcome: t.outcome.result.outcome,
         experiences: [...request.experiences],
         reaction: request.reaction ?? false,
-        target: target?.name ?? null,
+        target: targetName,
       };
 
       let next = withCharacter(state, event.characterId, t.sheet);
