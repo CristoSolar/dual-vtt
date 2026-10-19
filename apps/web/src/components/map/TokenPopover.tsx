@@ -18,6 +18,9 @@ interface TokenPopoverProps {
   onUploadImage: (file: File) => void;
   uploadingImage: boolean;
   imageError: string | null;
+  /** Whether this viewer is targeting the token; T on the map toggles it too. */
+  targeted: boolean;
+  onToggleTarget: () => void;
 }
 
 type TabId = 'stats' | 'settings' | 'image';
@@ -40,6 +43,8 @@ export function TokenPopover({
   onUploadImage,
   uploadingImage,
   imageError,
+  targeted,
+  onToggleTarget,
 }: TokenPopoverProps) {
   const adversaryInstance =
     token.kind === 'adversary' && token.refId !== null
@@ -66,6 +71,9 @@ export function TokenPopover({
       <div className="token-popover-head">
         <span className="token-popover-swatch" style={{ background: token.color }} aria-hidden="true" />
         <strong className="token-popover-name">{token.name}</strong>
+        <button type="button" aria-pressed={targeted} onClick={onToggleTarget}>
+          {targeted ? t('map.untarget') : t('map.target')}
+        </button>
         <button type="button" onClick={onClose} aria-label={t('common.close')}>
           ×
         </button>

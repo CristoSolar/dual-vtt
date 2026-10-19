@@ -1,5 +1,5 @@
 import { MAX_HOPE } from '@daggerheart/rules';
-import type { RoomEvent, Visibility } from '@daggerheart/protocol';
+import type { RoomEvent, Token, Visibility } from '@daggerheart/protocol';
 import { useMemo, useState } from 'react';
 
 import { t } from '../../i18n/index.js';
@@ -26,6 +26,8 @@ interface MapSheetPanelProps {
   sharedLog: readonly RollEntry[] | undefined;
   /** Whether the roll dialog offers a private roll: not while the roll is shared. */
   canRollPrivately?: boolean;
+  /** The viewer's first target, which an action roll is made against. */
+  target?: Token | null;
 }
 
 interface PendingRoll extends RollDialogSpec {
@@ -49,6 +51,7 @@ export function MapSheetPanel({
   send,
   sharedLog,
   canRollPrivately = false,
+  target = null,
 }: MapSheetPanelProps) {
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
   const character = sheet.character;
@@ -102,7 +105,14 @@ export function MapSheetPanel({
 
   const submitRoll = (request: Omit<DualityRollRequest, 'label'>, visibility: Visibility) => {
     if (pending === null) return;
-    send(forMe({ type: 'rollDuality', request: { ...request, label: pending.title }, visibility }));
+    send(
+      forMe({
+        type: 'rollDuality',
+        request: { ...request, label: pending.title },
+        visibility,
+        ...(target === null ? {} : { targetTokenId: target.id }),
+      }),
+    );
     if (pending.damage !== null) {
       send(
         forMe({
@@ -356,6 +366,7 @@ export function MapSheetPanel({
           hope={sheet.hope}
           outcome={null}
           canRollPrivately={canRollPrivately}
+          target={target}
           onRoll={submitRoll}
           onClose={() => setPending(null)}
         />

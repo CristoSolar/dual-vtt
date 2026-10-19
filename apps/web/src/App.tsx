@@ -18,6 +18,7 @@ import { WizardRoute } from './routes/WizardRoute.js';
 import { useAuth } from './state/auth.js';
 import { canRollPrivately, chatRecipients } from './state/feed.js';
 import { hasSeenGuide, markGuideSeen } from './state/storage.js';
+import { firstTarget } from './state/targets.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 
 /**
@@ -371,6 +372,7 @@ function Shell() {
                 partyMembers={partyMembers}
                 fear={campaign.room?.fear ?? null}
                 spotlit={campaign.room?.spotlight === account.id}
+                target={campaign.room === null ? null : firstTarget(campaign.room, account.id)}
               />
             )
           }

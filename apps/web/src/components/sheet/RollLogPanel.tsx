@@ -101,6 +101,7 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
                     ? t('sheet.log.modifier', { mod: entry.roll.modifiers })
                     : ''}
                   {t('sheet.log.totalVs', { total: entry.roll.total, difficulty: entry.difficulty })}
+                  {entry.target === null ? '' : t('sheet.log.target', { target: entry.target })}
                   {entry.experiences.length > 0 ? ` · ${entry.experiences.join(', ')}` : ''}
                 </span>
               </>

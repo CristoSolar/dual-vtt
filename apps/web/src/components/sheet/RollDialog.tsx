@@ -1,4 +1,4 @@
-import type { Visibility } from '@daggerheart/protocol';
+import type { Token, Visibility } from '@daggerheart/protocol';
 import { useState } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
@@ -25,6 +25,8 @@ interface RollDialogProps {
    * nobody else could see it anyway, and for a roll the table shares.
    */
   canRollPrivately?: boolean;
+  /** The roller's first target, which the caller sends the roll against. */
+  target?: Token | null;
   onRoll: (request: Omit<DualityRollRequest, 'label'>, visibility: Visibility) => void;
   onClose: () => void;
 }
@@ -36,6 +38,7 @@ export function RollDialog({
   hope,
   outcome,
   canRollPrivately = false,
+  target = null,
   onRoll,
   onClose,
 }: RollDialogProps) {
@@ -69,6 +72,15 @@ export function RollDialog({
           <p className="muted">
             {spec.modifierLabel}: {formatSigned(spec.modifiers)}
           </p>
+          {target === null ? null : (
+            <p>
+              <strong>{t('sheet.roll.target', { name: target.name })}</strong>
+              {/* The server reads an adversary's Difficulty off its stat block. */}
+              {target.kind === 'adversary' ? (
+                <span className="muted"> {t('sheet.roll.targetDifficulty')}</span>
+              ) : null}
+            </p>
+          )}
 
           <div className="grid cols-3">
             <div>

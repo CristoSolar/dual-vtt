@@ -598,6 +598,8 @@ export const es = {
 
   // character sheet: roll dialog
   'sheet.roll.difficulty': 'Dificultad',
+  'sheet.roll.target': 'Objetivo: {name}',
+  'sheet.roll.targetDifficulty': 'Contra un adversario cuenta su Dificultad, no la de aquí.',
   'sheet.roll.advantageDice': 'Dados de Ventaja',
   'sheet.roll.disadvantageDice': 'Dados de Desventaja',
   'sheet.roll.helpDice': 'Aliados que ayudan',
@@ -656,6 +658,7 @@ export const es = {
   'sheet.log.dualityMeta': 'Esperanza {hope} · Miedo {fear}',
   'sheet.log.modifier': ' · modificador {mod}',
   'sheet.log.totalVs': ' · total {total} vs {difficulty}',
+  'sheet.log.target': ' · contra {target}',
   'sheet.log.damageTotal': '{total} de daño',
   'sheet.log.attackHit': 'Impacta',
   'sheet.log.attackMiss': 'Falla',
@@ -835,6 +838,7 @@ export const es = {
   'gm.rollLog.damageSuffix': ' de daño',
   'gm.rollLog.dualityMeta': 'Esperanza {hope} · Miedo {fear} · total {total} vs {difficulty}',
   'gm.rollLog.damageMeta': 'Dados {rolls}{critical}',
+  'gm.rollLog.applyToTarget': 'Aplicar a objetivo: {name}',
   'gm.rollLog.criticalSuffix': ' · crítico +{bonus}',
 
   // tactical map: HUD, panels, canvas (components/map/*.tsx, routes/MapRoute.tsx)
@@ -858,6 +862,8 @@ export const es = {
   'map.gmNoSceneHint': 'Crea una escena para empezar a armar el mapa.',
   'map.playerNoSceneHint': 'El DJ todavía no ha compartido una escena.',
   'map.hideRings': 'Ocultar anillos de alcance',
+  'map.target': 'Apuntar (T)',
+  'map.untarget': 'Dejar de apuntar (T)',
   'map.showRings': 'Mostrar anillos de alcance',
   'map.zoomOut': 'Alejar',
   'map.zoomIn': 'Acercar',

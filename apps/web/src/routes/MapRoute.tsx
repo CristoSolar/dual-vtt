@@ -18,6 +18,7 @@ import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
 import { canRollPrivately } from '../state/feed.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
+import { firstTarget, targetRings, toggleTarget } from '../state/targets.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
 import { adversaryTokenColor, tokenColorAt } from '../styles/canvasTokens.js';
@@ -139,6 +140,17 @@ export function MapRoute({
   const selected = scene?.tokens.find((t) => t.id === selectedTokenId) ?? null;
   const mySheet = viewerId !== null ? room.characters[viewerId] ?? null : null;
 
+  const myTargets = useMemo(
+    () => (viewerId === null ? [] : room.targets[viewerId] ?? []),
+    [room.targets, viewerId],
+  );
+  const rings = useMemo(() => targetRings(room), [room]);
+  const myTarget = viewerId === null ? null : firstTarget(room, viewerId);
+  const toggleTargetOn = useCallback(
+    (tokenId: string) => send({ type: 'setTargets', tokenIds: toggleTarget(myTargets, tokenId) }),
+    [myTargets, send],
+  );
+
   /**
    * HP per token, for the bar under each name chip. Both sides come from real
    * state — a PC token from its claimed sheet, an adversary from its instance
@@ -238,8 +250,8 @@ export function MapRoute({
 
   /**
    * Keyboard for the map: Escape drops the selection, Delete removes the selected
-   * token, F fits the scene, and +/- zoom. Ignored while a field has focus, so
-   * typing a scene name never deletes a token.
+   * token, T targets or untargets it, F fits the scene, and +/- zoom. Ignored while
+   * a field has focus, so typing a scene name never deletes a token.
    */
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -256,6 +268,10 @@ export function MapRoute({
       if (event.key === 'Escape') {
         setSelectedTokenId(null);
         setMeasuring(false);
+        return;
+      }
+      if (event.key === 't' || event.key === 'T') {
+        if (selectedTokenId !== null) toggleTargetOn(selectedTokenId);
         return;
       }
       if (event.key === 'f' || event.key === 'F') {
@@ -280,7 +296,7 @@ export function MapRoute({
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isGameMaster, scene, selectedTokenId, send]);
+  }, [isGameMaster, scene, selectedTokenId, send, toggleTargetOn]);
 
   const hasOwnToken =
     viewerId !== null && scene !== null && scene.tokens.some((t) => t.kind === 'pc' && t.refId === viewerId);
@@ -436,6 +452,7 @@ export function MapRoute({
             measuring={measuring}
             snapping={snapping}
             health={tokenHealth}
+            targetRings={rings}
             zoomApi={zoomApi}
             onViewChange={setCanvasView}
             drawingWall={drawingWall}
@@ -472,6 +489,8 @@ export function MapRoute({
             onUploadImage={(file) => void onUploadTokenImage(file)}
             uploadingImage={uploadingTokenImage}
             imageError={tokenImageError}
+            targeted={myTargets.includes(selected.id)}
+            onToggleTarget={() => toggleTargetOn(selected.id)}
           />
         ) : null}
       </div>
@@ -490,7 +509,16 @@ export function MapRoute({
             >
               {selected.showRings ? t('map.hideRings') : t('map.showRings')}
             </button>
-          ) : null}
+          ) : (
+            // The GM toggles a target from the token popover instead.
+            <button
+              type="button"
+              aria-pressed={myTargets.includes(selected.id)}
+              onClick={() => toggleTargetOn(selected.id)}
+            >
+              {myTargets.includes(selected.id) ? t('map.untarget') : t('map.target')}
+            </button>
+          )}
         </div>
       ) : null}
 
@@ -570,6 +598,7 @@ export function MapRoute({
             send={send}
             sharedLog={room.rollLog}
             canRollPrivately={canRollPrivately(room, viewerId)}
+            target={myTarget}
           />
         </FloatingPanel>
       ) : null}

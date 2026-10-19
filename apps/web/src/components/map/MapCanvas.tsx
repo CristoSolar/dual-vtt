@@ -54,6 +54,8 @@ export interface MapCanvasProps {
    * tokens the caller has real numbers for get one — no bar is drawn for a
    * token whose HP nobody tracks. */
   health?: Readonly<Record<string, { marked: number; total: number }>>;
+  /** Per token id, the colour of each account targeting it; each gets a dashed ring. */
+  targetRings?: Readonly<Record<string, readonly string[]>>;
   /** Filled in by the canvas with a one-step zoom, so the HUD's zoom control
    * (an HTML overlay, outside the Konva tree) can drive it. */
   /**
@@ -105,6 +107,7 @@ export function MapCanvas({
   onToggleDoor,
   onViewChange,
   health,
+  targetRings,
   zoomApi,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
@@ -529,6 +532,7 @@ export function MapCanvas({
             spotlit={spotlightId !== null && token.ownerId === spotlightId}
             draggable={canDrag(token)}
             health={health?.[token.id]}
+            targetedBy={targetRings?.[token.id] ?? NO_RINGS}
             onSelect={() => onSelectToken(token.id)}
             onDragMove={(x, y) => {
               const preview = throttle.current.move(x, y);
@@ -708,6 +712,8 @@ interface TokenShapeProps {
   spotlit: boolean;
   draggable: boolean;
   health: { marked: number; total: number } | undefined;
+  /** The colour of each account targeting this token. */
+  targetedBy: readonly string[];
   onSelect: () => void;
   onDragMove: (x: number, y: number) => void;
   onDragEnd: (x: number, y: number) => void;
@@ -718,6 +724,10 @@ const CHIP_HEIGHT = 16;
 const CHIP_GAP = 6;
 const PIP_HEIGHT = 4;
 const PIP_GAP = 2;
+/** Target rings start outside the spotlight ring and step out one per account. */
+const TARGET_RING_OFFSET = 14;
+const TARGET_RING_STEP = 5;
+const NO_RINGS: readonly string[] = [];
 
 function TokenShape({
   token,
@@ -725,6 +735,7 @@ function TokenShape({
   spotlit,
   draggable,
   health,
+  targetedBy,
   onSelect,
   onDragMove,
   onDragEnd,
@@ -810,6 +821,26 @@ function TokenShape({
           listening={false}
         />
       ) : null}
+      {/* Targets are dashed, in the colour of whoever is aiming, so two players
+          aiming at the same token both show. */}
+      {targetedBy.map((color, index) => {
+        const offset = TARGET_RING_OFFSET + index * TARGET_RING_STEP;
+        return (
+          <Rect
+            key={`target-${index}`}
+            x={-offset}
+            y={-offset}
+            width={token.width + offset * 2}
+            height={token.height + offset * 2}
+            fill="transparent"
+            cornerRadius={radius + offset}
+            stroke={color}
+            strokeWidth={2}
+            dash={[6, 4]}
+            listening={false}
+          />
+        );
+      })}
       {/* Selection reads as a brighter, wider ring outside the band, so it
           never has to compete with the band for the same pixels. */}
       {selected ? (

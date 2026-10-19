@@ -27,6 +27,7 @@ import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { t, type MessageKey } from '../../i18n/index.js';
 import { chatRecipients, mergeFeed } from '../../state/feed.js';
 import { label as prettify } from '../../state/selectors.js';
+import { adversaryTargetOf, pcTargetOf } from '../../state/targets.js';
 import { SectionHead } from '../SectionHead.js';
 import { ChatBox, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
 
@@ -607,17 +608,21 @@ function AttackControls({
   stat: Adversary;
   send: (event: RoomEvent) => void;
 }) {
-  const [targetId, setTargetId] = useState('');
+  /** Null until the GM picks one: until then it follows the GM's PC target on the map. */
+  const [picked, setPicked] = useState<string | null>(null);
   const [swing, setSwing] = useState<'none' | 'advantage' | 'disadvantage'>('none');
   const [experience, setExperience] = useState('');
   const [visibility, setVisibility] = useState<Visibility>('public');
 
   const targets = room.players.filter((player) => player.characterId !== null);
+  const aimedAt = pcTargetOf(room, room.gm.id);
+  const targetId =
+    picked ?? (targets.some((player) => player.characterId === aimedAt) ? aimedAt ?? '' : '');
 
   return (
     <div className="mt-2">
       <div className="row">
-        <select value={targetId} onChange={(event) => setTargetId(event.target.value)}>
+        <select value={targetId} onChange={(event) => setPicked(event.target.value)}>
           <option value="">{t('gm.adversaries.noTarget')}</option>
           {targets.map((player) => (
             <option key={player.id} value={player.characterId ?? ''}>
@@ -1250,6 +1255,35 @@ function PrivateToggle({
   );
 }
 
+/**
+ * Marks a damage roll on the adversary its roller is targeting now. Read at click
+ * time from the roller's targets, not from the entry, so retargeting before
+ * applying is enough to redirect it; the server turns the amount into HP.
+ */
+function ApplyToTarget({
+  room,
+  by,
+  amount,
+  send,
+}: {
+  room: RoomState;
+  by: string;
+  amount: number;
+  send: (event: RoomEvent) => void;
+}) {
+  const target = adversaryTargetOf(room, by);
+  if (target === null) return null;
+  return (
+    <button
+      type="button"
+      className="mt-1"
+      onClick={() => send({ type: 'applyDamageToAdversary', instanceId: target.instanceId, amount })}
+    >
+      {t('gm.rollLog.applyToTarget', { name: target.name })}
+    </button>
+  );
+}
+
 function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   // The GM is sent every private entry, so the whole private log belongs here.
   const feed = useMemo(() => mergeFeed(room.rollLog, room.privateLog), [room.rollLog, room.privateLog]);
@@ -1303,12 +1337,12 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                 </div>
                 <span className="muted">
                   {entry.kind === 'duality'
-                    ? t('gm.rollLog.dualityMeta', {
+                    ? `${t('gm.rollLog.dualityMeta', {
                         hope: entry.roll.hope,
                         fear: entry.roll.fear,
                         total: entry.roll.total,
                         difficulty: entry.difficulty,
-                      })
+                      })}${entry.target === null ? '' : t('sheet.log.target', { target: entry.target })}`
                     : entry.kind === 'attack'
                       ? `${t('sheet.log.attackDice', { dice: entry.roll.dice.join(', ') })}${
                           entry.evasion === null
@@ -1328,6 +1362,9 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                             : '',
                         })}
                 </span>
+                {entry.kind === 'damage' ? (
+                  <ApplyToTarget room={room} by={entry.by} amount={entry.roll.total} send={send} />
+                ) : null}
               </>
             )}
           </li>

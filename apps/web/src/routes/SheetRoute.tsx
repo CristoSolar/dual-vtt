@@ -37,7 +37,7 @@ import {
 } from '../components/sheet/SheetFurniture.js';
 import { SectionHead } from '../components/SectionHead.js';
 import { Toast, ToastStack } from '../components/Toast.js';
-import type { PrivateEntry, RoomEvent, Visibility } from '@daggerheart/protocol';
+import type { PrivateEntry, RoomEvent, Token, Visibility } from '@daggerheart/protocol';
 
 import { appendRoll, type RollEntry } from '../state/rollLog.js';
 import {
@@ -115,6 +115,8 @@ interface SheetRouteProps {
   fear?: number | null;
   /** True while the spotlight is on this character. */
   spotlit?: boolean;
+  /** This account's first target on the map, which an action roll is made against. */
+  target?: Token | null;
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -146,6 +148,7 @@ export function SheetRoute({
   partyMembers = [],
   fear = null,
   spotlit = false,
+  target = null,
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -243,7 +246,14 @@ export function SheetRoute({
     // In a campaign the server rolls: dice are seeded there so the whole table sees
     // the same result and it can be audited afterwards.
     if (online) {
-      send(forMe({ type: 'rollDuality', request, visibility }));
+      send(
+        forMe({
+          type: 'rollDuality',
+          request,
+          visibility,
+          ...(target === null ? {} : { targetTokenId: target.id }),
+        }),
+      );
       // The damage that follows a private attack is just as private.
       if (pending.damage !== null) {
         send(
@@ -800,6 +810,7 @@ export function SheetRoute({
           hope={sheet.hope}
           outcome={outcome}
           canRollPrivately={online && canRollPrivately}
+          target={target}
           onRoll={(request, visibility) => roll({ ...request, label: pending.title }, visibility)}
           onClose={closeRoll}
         />

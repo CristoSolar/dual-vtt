@@ -582,6 +582,8 @@ export const en: Record<keyof typeof es, string> = {
 
   // character sheet: roll dialog
   'sheet.roll.difficulty': 'Difficulty',
+  'sheet.roll.target': 'Target: {name}',
+  'sheet.roll.targetDifficulty': 'Against an adversary its own Difficulty counts, not this one.',
   'sheet.roll.advantageDice': 'Advantage dice',
   'sheet.roll.disadvantageDice': 'Disadvantage dice',
   'sheet.roll.helpDice': 'Allies helping',
@@ -640,6 +642,7 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.log.dualityMeta': 'Hope {hope} · Fear {fear}',
   'sheet.log.modifier': ' · modifier {mod}',
   'sheet.log.totalVs': ' · total {total} vs {difficulty}',
+  'sheet.log.target': ' · against {target}',
   'sheet.log.damageTotal': '{total} damage',
   'sheet.log.attackHit': 'Hit',
   'sheet.log.attackMiss': 'Miss',
@@ -819,6 +822,7 @@ export const en: Record<keyof typeof es, string> = {
   'gm.rollLog.damageSuffix': ' damage',
   'gm.rollLog.dualityMeta': 'Hope {hope} · Fear {fear} · total {total} vs {difficulty}',
   'gm.rollLog.damageMeta': 'Dice {rolls}{critical}',
+  'gm.rollLog.applyToTarget': 'Apply to target: {name}',
   'gm.rollLog.criticalSuffix': ' · critical +{bonus}',
 
   // tactical map: HUD, panels, canvas (components/map/*.tsx, routes/MapRoute.tsx)
@@ -842,6 +846,8 @@ export const en: Record<keyof typeof es, string> = {
   'map.gmNoSceneHint': 'Create a scene to start building the map.',
   'map.playerNoSceneHint': "The GM hasn't shared a scene yet.",
   'map.hideRings': 'Hide range rings',
+  'map.target': 'Target (T)',
+  'map.untarget': 'Untarget (T)',
   'map.showRings': 'Show range rings',
   'map.zoomOut': 'Zoom out',
   'map.zoomIn': 'Zoom in',
