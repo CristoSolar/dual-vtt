@@ -49,6 +49,15 @@ export function saveAuth(storage: StorageLike, auth: StoredAuth | null): void {
   else storage.setItem(AUTH_KEY, JSON.stringify(auth));
 }
 
+/**
+ * Whether a socket's failed connect was the server refusing the token — sessions
+ * live in memory, so a server restart kills every one — rather than the network.
+ * Only the former should sign the player out; a Wi-Fi blip just retries.
+ */
+export function isAuthRejection(error: { message: string }): boolean {
+  return error.message === 'unauthorized';
+}
+
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn';
 
 export interface AuthConnection {
@@ -62,6 +71,9 @@ export interface AuthConnection {
   pending: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  /** Drops a token the server no longer accepts and asks the player to sign in
+   * again. Only the token goes: drafts and the active campaign stay put. */
+  expire: () => void;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
@@ -142,6 +154,13 @@ export function useAuth(storage: StorageLike): AuthConnection {
     }
   }, [storage]);
 
+  const expire = useCallback(() => {
+    saveAuth(storage, null);
+    setAuth(null);
+    setError(t('auth.sessionExpired'));
+    setStatus('signedOut');
+  }, [storage]);
+
   const changePassword = useCallback(
     async (currentPassword: string, newPassword: string) => {
       setError(null);
@@ -175,6 +194,7 @@ export function useAuth(storage: StorageLike): AuthConnection {
     pending,
     login,
     logout,
+    expire,
     changePassword,
   };
 }

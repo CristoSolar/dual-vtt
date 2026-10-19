@@ -58,7 +58,11 @@ describe('campaign lifecycle over a socket', () => {
   });
 
   it('disconnects a socket with no valid login token', async () => {
-    await expect(TestClient.connect(server.url, 'not-a-real-token')).rejects.toBeDefined();
+    // The web client tells this apart from a network failure by the message, and
+    // sends the player back to the login screen on it.
+    await expect(TestClient.connect(server.url, 'not-a-real-token')).rejects.toMatchObject({
+      message: 'unauthorized',
+    });
   });
 
   it('persists immediately when a character is claimed, not just on the periodic snapshot', async () => {

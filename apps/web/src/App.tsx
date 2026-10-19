@@ -43,7 +43,7 @@ function Shell() {
   // and draws its own thin scene bar instead of sharing the page chrome.
   const isMapRoute = useLocation().pathname === '/map';
   const auth = useAuth(storage);
-  const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null);
+  const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null, auth.expire);
 
   const accountId = auth.user?.id ?? null;
   const [diceOn, setDiceOn] = useState(() =>

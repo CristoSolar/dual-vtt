@@ -17,6 +17,7 @@ import {
   type SheetState,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
+import { isAuthRejection } from './auth.js';
 import { hasDice, joinBurst, type DiceRoll } from './diceNotation.js';
 import { appendPrivate } from './feed.js';
 import { describeRollEntry } from './rollLog.js';
@@ -99,6 +100,8 @@ export function useCampaign(
   storage: Storage,
   token: string | null,
   accountId: string | null,
+  /** Called when the server refuses the token, over HTTP or the socket. */
+  onSessionExpired: () => void,
 ): CampaignConnection {
   const [status, setStatus] = useState<ConnectionStatus>('idle');
   const [campaigns, setCampaigns] = useState<CampaignSummary[]>([]);
@@ -122,12 +125,13 @@ export function useCampaign(
     const response = await fetch(`${SERVER_URL}/campaigns`, {
       headers: { authorization: `Bearer ${token}` },
     });
+    if (response.status === 401) return onSessionExpired();
     if (!response.ok) return;
     const body = (await response.json()) as unknown;
     if (!Array.isArray(body)) return;
     const parsed = body.map((c) => CampaignSummarySchema.safeParse(c)).filter((r) => r.success);
     setCampaigns(parsed.map((r) => r.data));
-  }, [token]);
+  }, [token, onSessionExpired]);
 
   useEffect(() => {
     void refreshCampaigns();
@@ -160,7 +164,10 @@ export function useCampaign(
     });
 
     socket.on('disconnect', () => setStatus('connecting'));
-    socket.on('connect_error', () => {
+    // socket.io gives up for good after a middleware rejection, so a dead token
+    // would sit on the offline banner forever; send the player to log in instead.
+    socket.on('connect_error', (err) => {
+      if (isAuthRejection(err)) return onSessionExpired();
       setStatus('error');
       setError(t('campaign.connectFailed'));
     });
@@ -232,7 +239,7 @@ export function useCampaign(
     });
 
     return socket;
-  }, [token, storage]);
+  }, [token, storage, onSessionExpired]);
 
   useEffect(() => {
     if (token !== null && loadActiveCampaignId(storage) !== null) ensureSocket();
@@ -252,6 +259,10 @@ export function useCampaign(
           headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
           body: JSON.stringify({ name }),
         });
+        if (response.status === 401) {
+          onSessionExpired();
+          return null;
+        }
         if (!response.ok) {
           setError(t('campaign.createFailed'));
           return null;
@@ -264,7 +275,7 @@ export function useCampaign(
         setPending(false);
       }
     },
-    [token, refreshCampaigns],
+    [token, refreshCampaigns, onSessionExpired],
   );
 
   const addPlayer = useCallback(
@@ -279,6 +290,8 @@ export function useCampaign(
         });
         if (response.ok) {
           await refreshCampaigns();
+        } else if (response.status === 401) {
+          onSessionExpired();
         } else {
           // A 404 here is the ordinary case: the GM typed a username that has no
           // account. Saying nothing made it look like the player had been added.
@@ -289,7 +302,7 @@ export function useCampaign(
         setPending(false);
       }
     },
-    [token, refreshCampaigns],
+    [token, refreshCampaigns, onSessionExpired],
   );
 
   const removePlayer = useCallback(
@@ -300,9 +313,10 @@ export function useCampaign(
         headers: { authorization: `Bearer ${token}` },
       });
       if (response.ok) await refreshCampaigns();
+      if (response.status === 401) onSessionExpired();
       return response.ok;
     },
-    [token, refreshCampaigns],
+    [token, refreshCampaigns, onSessionExpired],
   );
 
   const join = useCallback(

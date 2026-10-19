@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadAuth, saveAuth } from '../src/state/auth.js';
+import { isAuthRejection, loadAuth, saveAuth } from '../src/state/auth.js';
 import { fakeStorage } from './helpers.js';
 
 const user = { id: 'u-1', username: 'alex', role: 'player' as const, mustChangePassword: false };
@@ -42,5 +42,17 @@ describe('auth storage', () => {
     const storage = fakeStorage();
     storage.setItem('daggerheart-vtt:auth', 'not json');
     expect(loadAuth(storage)).toBeNull();
+  });
+});
+
+describe('isAuthRejection', () => {
+  it('recognises the gateway refusing a token, as after a server restart', () => {
+    expect(isAuthRejection(new Error('unauthorized'))).toBe(true);
+  });
+
+  it('leaves network failures alone, so a Wi-Fi blip does not sign the player out', () => {
+    expect(isAuthRejection(new Error('websocket error'))).toBe(false);
+    expect(isAuthRejection(new Error('timeout'))).toBe(false);
+    expect(isAuthRejection(new Error('xhr poll error'))).toBe(false);
   });
 });
