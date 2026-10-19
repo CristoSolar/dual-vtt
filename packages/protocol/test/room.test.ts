@@ -1605,6 +1605,35 @@ describe('chat and private rolls', () => {
     expect(r.privateEntries).toEqual([]);
   });
 
+  it('refuses a private roll that is part of a Tag Team', () => {
+    const funded = apply(room, ALEX, { type: 'gainHope', characterId: ALEX.id, amount: 2 });
+    const opened = apply(funded, ALEX, {
+      type: 'startTagTeam',
+      characterId: ALEX.id,
+      partnerCharacterId: SAM.id,
+    });
+    expect(
+      refusal(opened, ALEX, {
+        type: 'rollDuality',
+        characterId: ALEX.id,
+        request,
+        visibility: 'private',
+      }),
+    ).toBe('rejected');
+  });
+
+  it('refuses a private roll that collaborates on a group action', () => {
+    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id });
+    expect(
+      refusal(opened, SAM, {
+        type: 'rollDuality',
+        characterId: SAM.id,
+        request,
+        visibility: 'private',
+      }),
+    ).toBe('rejected');
+  });
+
   it('loads a snapshot saved before privateLog existed', () => {
     const { privateLog: _dropped, ...old } = createRoomState('c', {
       id: GM.id,

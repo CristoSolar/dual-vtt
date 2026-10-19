@@ -1278,6 +1278,10 @@ function applyCharacterEvent(
       const collaborating = group !== null && group.leadCharacterId !== event.characterId;
       const leading = group !== null && group.leadCharacterId === event.characterId;
 
+      if (event.visibility === 'private' && (inTagTeam || collaborating)) {
+        return fail('rejected', 'a shared roll cannot be private');
+      }
+
       // A collaborator's roll and either half of a Tag Team roll generate no Hope or
       // Fear of their own: the lead roll and the chosen Tag Team roll do that.
       const request: DualityRollRequest = {
