@@ -278,6 +278,7 @@ function gmRoom(): RoomState {
     map: createMapState(),
     targets: {},
     journal: [],
+    audio: { tracks: [], playing: null },
     rollLog: [],
     privateLog: [],
   };
@@ -381,6 +382,7 @@ describe('GM panel renders', () => {
       map: createMapState(),
       targets: {},
       journal: [],
+      audio: { tracks: [], playing: null },
       privateLog: [],
       rollLog: [
         {

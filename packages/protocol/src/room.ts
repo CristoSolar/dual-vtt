@@ -30,6 +30,7 @@ import {
   advanceOnRest,
   type Countdown,
 } from './countdowns.js';
+import { AudioStateSchema, MAX_TRACKS } from './audio.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
 import {
@@ -253,6 +254,11 @@ export const RoomStateSchema = z.object({
    * only the map notes pointing at those. Defaulted so an older snapshot loads.
    */
   journal: z.array(JournalEntrySchema).max(MAX_JOURNAL_ENTRIES).default([]),
+  /**
+   * The GM's playlist and the track playing, if any. Public, unlike most GM state:
+   * players need `playing` to hear it. Defaulted so an older snapshot loads.
+   */
+  audio: AudioStateSchema.default({ tracks: [], playing: null }),
 });
 export type RoomState = z.infer<typeof RoomStateSchema>;
 
@@ -281,6 +287,7 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     map: createMapState(),
     targets: {},
     journal: [],
+    audio: { tracks: [], playing: null },
   };
 }
 
@@ -450,6 +457,7 @@ export type RoomError =
   | 'featureSpent'
   | 'unknownTransformation'
   | 'unknownJournalEntry'
+  | 'unknownTrack'
   | 'rejected';
 
 export type RoomResult =
@@ -1156,6 +1164,64 @@ export function applyRoomEvent(
           notes: scene.notes.filter((note) => note.id !== event.noteId),
         }),
       );
+    }
+    // --- GM: playlist ------------------------------------------------------------
+    case 'addTrack': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const { tracks } = state.audio;
+      if (tracks.some((track) => track.id === event.track.id)) {
+        return fail('rejected', 'a track with that id is already on the playlist');
+      }
+      if (tracks.length >= MAX_TRACKS) return fail('rejected', 'the playlist is full');
+      return ok({ ...state, audio: { ...state.audio, tracks: [...tracks, event.track] } });
+    }
+    case 'removeTrack': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const { tracks, playing } = state.audio;
+      if (!tracks.some((track) => track.id === event.id)) {
+        return fail('unknownTrack', 'no such track');
+      }
+      return ok({
+        ...state,
+        audio: {
+          tracks: tracks.filter((track) => track.id !== event.id),
+          playing: playing?.trackId === event.id ? null : playing,
+        },
+      });
+    }
+    case 'playTrack': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!state.audio.tracks.some((track) => track.id === event.trackId)) {
+        return fail('unknownTrack', 'no such track');
+      }
+      // The volume carries over from the track it replaces.
+      const volume = state.audio.playing?.volume ?? 1;
+      return ok({
+        ...state,
+        audio: {
+          ...state.audio,
+          playing: { trackId: event.trackId, startedAt: now, loop: event.loop, volume },
+        },
+      });
+    }
+    case 'stopTrack': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (state.audio.playing === null) return ok(state);
+      return ok({ ...state, audio: { ...state.audio, playing: null } });
+    }
+    case 'setTrackVolume': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const { playing } = state.audio;
+      if (playing === null) return fail('rejected', 'nothing is playing');
+      return ok({
+        ...state,
+        audio: { ...state.audio, playing: { ...playing, volume: event.volume } },
+      });
     }
 
     // --- map ------------------------------------------------------------------

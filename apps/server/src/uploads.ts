@@ -9,8 +9,8 @@ import type { SessionStore } from './sessions.js';
 import type { UserStore } from './users.js';
 
 /**
- * Map image uploads. Images are stored on disk beside the room snapshots and served
- * back over HTTP; there is no cloud storage and no database.
+ * Map image and playlist audio uploads. Files are stored on disk beside the room
+ * snapshots and served back over HTTP; there is no cloud storage and no database.
  *
  * The file type is decided from the bytes on disk, not from what the browser claims,
  * and the size is capped before anything is written.
@@ -18,30 +18,40 @@ import type { UserStore } from './users.js';
 
 export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
-interface ImageType {
+interface FileType {
   extension: string;
   mime: string;
   /** Leading bytes that identify the format. */
   magic: readonly number[];
   /** Bytes to skip before matching, for formats with a container header. */
   offset?: number;
+  /** Per-byte mask applied before comparing, for headers with variable bits. */
+  mask?: readonly number[];
 }
 
 /** The formats accepted. Anything else is rejected outright. */
-const IMAGE_TYPES: readonly ImageType[] = [
+const FILE_TYPES: readonly FileType[] = [
   { extension: '.png', mime: 'image/png', magic: [0x89, 0x50, 0x4e, 0x47] },
   { extension: '.jpg', mime: 'image/jpeg', magic: [0xff, 0xd8, 0xff] },
   { extension: '.gif', mime: 'image/gif', magic: [0x47, 0x49, 0x46, 0x38] },
   // WEBP is "RIFF....WEBP": the tag sits after the 4-byte size field.
   { extension: '.webp', mime: 'image/webp', magic: [0x57, 0x45, 0x42, 0x50], offset: 8 },
+  { extension: '.ogg', mime: 'audio/ogg', magic: [0x4f, 0x67, 0x67, 0x53] },
+  { extension: '.mp3', mime: 'audio/mpeg', magic: [0x49, 0x44, 0x33] },
+  // An MP3 without an ID3 tag opens on a frame header: eleven set sync bits.
+  { extension: '.mp3', mime: 'audio/mpeg', magic: [0xff, 0xe0], mask: [0xff, 0xe0] },
 ];
 
-/** Identifies an image from its leading bytes, or null if it is not one we accept. */
-export function detectImageType(bytes: Uint8Array): ImageType | null {
-  for (const type of IMAGE_TYPES) {
+/** Identifies an upload from its leading bytes, or null if it is not one we accept. */
+export function detectFileType(bytes: Uint8Array): FileType | null {
+  for (const type of FILE_TYPES) {
     const offset = type.offset ?? 0;
     if (bytes.length < offset + type.magic.length) continue;
-    if (type.magic.every((byte, index) => bytes[offset + index] === byte)) return type;
+    const matches = type.magic.every((byte, index) => {
+      const actual = bytes[offset + index] ?? 0;
+      return (actual & (type.mask?.[index] ?? 0xff)) === byte;
+    });
+    if (matches) return type;
   }
   return null;
 }
@@ -52,10 +62,10 @@ export interface StoredUpload {
   bytes: number;
 }
 
-/** Writes an uploaded image, giving it a random name and a verified extension. */
+/** Writes an upload, giving it a random name and a verified extension. */
 export async function storeUpload(directory: string, bytes: Uint8Array): Promise<StoredUpload> {
-  const type = detectImageType(bytes);
-  if (type === null) throw new Error('unsupported image type');
+  const type = detectFileType(bytes);
+  if (type === null) throw new Error('unsupported file type');
 
   await mkdir(directory, { recursive: true });
   const name = `${randomBytes(12).toString('hex')}${type.extension}`;
@@ -79,8 +89,29 @@ export async function readBody(request: IncomingMessage, limit: number): Promise
 }
 
 const MIME_BY_EXTENSION: Record<string, string> = Object.fromEntries(
-  IMAGE_TYPES.map((type) => [type.extension, type.mime]),
+  FILE_TYPES.map((type) => [type.extension, type.mime]),
 );
+
+/**
+ * One `bytes=start-end` range, `end` inclusive and clamped to the file. A suffix
+ * (`bytes=-500`) counts back from the end. Multiple ranges are not supported and,
+ * like an unsatisfiable one, come back null.
+ */
+export function parseRange(header: string, size: number): { start: number; end: number } | null {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(header.trim());
+  if (match === null) return null;
+  const [, from = '', to = ''] = match;
+  if (from === '' && to === '') return null;
+  if (from === '') {
+    const length = Number(to);
+    if (length === 0) return null;
+    return { start: Math.max(0, size - length), end: size - 1 };
+  }
+  const start = Number(from);
+  const end = to === '' ? size - 1 : Math.min(Number(to), size - 1);
+  if (start >= size || start > end) return null;
+  return { start, end };
+}
 
 const json = (response: ServerResponse, status: number, body: unknown): void => {
   response.writeHead(status, { 'content-type': 'application/json' });
@@ -91,7 +122,7 @@ const json = (response: ServerResponse, status: number, body: unknown): void => 
  * Handles `POST /uploads` and `GET /uploads/:name`. Returns true when it handled the
  * request, so the caller can fall through to its other routes.
  *
- * The body is the raw image; there is no multipart parsing to get wrong.
+ * The body is the raw file; there is no multipart parsing to get wrong.
  */
 export interface UploadsDeps {
   directory: string;
@@ -154,8 +185,31 @@ export async function handleUploads(
     const path = join(directory, name);
     try {
       const info = await stat(path);
-      response.writeHead(200, { 'content-type': mime, 'content-length': info.size });
-      createReadStream(path).pipe(response);
+      const header = request.headers.range;
+      if (header === undefined) {
+        response.writeHead(200, {
+          'content-type': mime,
+          'content-length': info.size,
+          'accept-ranges': 'bytes',
+        });
+        createReadStream(path).pipe(response);
+        return true;
+      }
+      // A player joining mid-song seeks into the track, and a browser cannot seek
+      // an <audio> whose server ignores ranges.
+      const range = parseRange(header, info.size);
+      if (range === null) {
+        response.writeHead(416, { 'content-range': `bytes */${info.size}` });
+        response.end();
+        return true;
+      }
+      response.writeHead(206, {
+        'content-type': mime,
+        'content-length': range.end - range.start + 1,
+        'content-range': `bytes ${range.start}-${range.end}/${info.size}`,
+        'accept-ranges': 'bytes',
+      });
+      createReadStream(path, range).pipe(response);
     } catch {
       json(response, 404, { error: 'not found' });
     }

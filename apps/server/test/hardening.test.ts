@@ -95,6 +95,32 @@ describe('upload authentication', () => {
     expect(response.status).toBe(415);
   });
 
+  it('serves byte ranges, so an audio track can be joined mid-song', async () => {
+    const ogg = new Uint8Array([0x4f, 0x67, 0x67, 0x53, 1, 2, 3, 4, 5, 6]);
+    const response = await fetch(`${server.url}/uploads`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: ogg,
+    });
+    const { url } = (await response.json()) as { url: string };
+
+    const whole = await fetch(`${server.url}${url}`);
+    expect(whole.headers.get('content-type')).toBe('audio/ogg');
+    expect(whole.headers.get('accept-ranges')).toBe('bytes');
+
+    const part = await fetch(`${server.url}${url}`, { headers: { range: 'bytes=4-6' } });
+    expect(part.status).toBe(206);
+    expect(part.headers.get('content-range')).toBe('bytes 4-6/10');
+    expect(new Uint8Array(await part.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+
+    const open = await fetch(`${server.url}${url}`, { headers: { range: 'bytes=8-' } });
+    expect(new Uint8Array(await open.arrayBuffer())).toEqual(new Uint8Array([5, 6]));
+
+    const past = await fetch(`${server.url}${url}`, { headers: { range: 'bytes=50-' } });
+    expect(past.status).toBe(416);
+    expect(past.headers.get('content-range')).toBe('bytes */10');
+  });
+
   it('refuses a path that tries to escape the uploads directory', async () => {
     const response = await fetch(`${server.url}/uploads/..%2f..%2fetc%2fpasswd`);
     expect(response.status).toBe(400);

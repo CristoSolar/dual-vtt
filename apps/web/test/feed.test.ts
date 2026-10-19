@@ -34,6 +34,7 @@ function room(overrides: Partial<RoomState> = {}): RoomState {
     map: createMapState(),
     targets: {},
     journal: [],
+    audio: { tracks: [], playing: null },
     rollLog: [],
     privateLog: [],
     ...overrides,

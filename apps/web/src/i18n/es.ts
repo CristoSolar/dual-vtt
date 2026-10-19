@@ -48,6 +48,7 @@ export const es = {
   'reject.tokenExists': 'Ya existe una ficha con ese identificador.',
   'reject.tooManyWalls': 'Demasiados muros en esta escena.',
   'reject.unknownJournalEntry': 'Entrada de diario desconocida.',
+  'reject.unknownTrack': 'Pista desconocida.',
   'reject.badRequest': 'El servidor no entendió esa acción.',
   'reject.forbidden': 'Ya no eres miembro de esta campaña.',
   'reject.noSeat': 'Únete a una campaña primero.',

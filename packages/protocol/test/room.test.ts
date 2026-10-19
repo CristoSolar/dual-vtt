@@ -1958,3 +1958,79 @@ describe('chat and private rolls', () => {
     expect(roomForActor(state, ALEX).privateLog.map((p) => p.entry.id)).toEqual(['mine']);
   });
 });
+
+describe('playlist', () => {
+  const track = (id: string) => ({ id, name: `Track ${id}`, url: `/uploads/${id}.ogg` });
+
+  function roomWithTracks(): RoomState {
+    let room = roomWithPlayers();
+    room = apply(room, GM, { type: 'addTrack', track: track('t-1') });
+    room = apply(room, GM, { type: 'addTrack', track: track('t-2') });
+    return room;
+  }
+
+  it('starts empty, and an old snapshot without audio still loads', () => {
+    const room = roomWithPlayers();
+    expect(room.audio).toEqual({ tracks: [], playing: null });
+    const { audio: _audio, ...old } = room;
+    expect(RoomStateSchema.parse(old).audio).toEqual({ tracks: [], playing: null });
+  });
+
+  it('plays a track from the server clock, not one a client chose', () => {
+    const room = apply(roomWithTracks(), GM, { type: 'playTrack', trackId: 't-2', loop: true });
+    expect(room.audio.playing).toEqual({ trackId: 't-2', startedAt: NOW, loop: true, volume: 1 });
+  });
+
+  it('keeps the volume across tracks and sets it while playing', () => {
+    let room = apply(roomWithTracks(), GM, { type: 'playTrack', trackId: 't-1', loop: false });
+    room = apply(room, GM, { type: 'setTrackVolume', volume: 0.4 });
+    expect(room.audio.playing?.volume).toBe(0.4);
+    room = apply(room, GM, { type: 'playTrack', trackId: 't-2', loop: false });
+    expect(room.audio.playing?.volume).toBe(0.4);
+  });
+
+  it('stops', () => {
+    let room = apply(roomWithTracks(), GM, { type: 'playTrack', trackId: 't-1', loop: false });
+    room = apply(room, GM, { type: 'stopTrack' });
+    expect(room.audio.playing).toBeNull();
+  });
+
+  it('removing the track that is playing stops it; removing another does not', () => {
+    const playing = apply(roomWithTracks(), GM, { type: 'playTrack', trackId: 't-1', loop: false });
+    const other = apply(playing, GM, { type: 'removeTrack', id: 't-2' });
+    expect(other.audio.playing?.trackId).toBe('t-1');
+    const removed = apply(playing, GM, { type: 'removeTrack', id: 't-1' });
+    expect(removed.audio.playing).toBeNull();
+    expect(removed.audio.tracks.map((t) => t.id)).toEqual(['t-2']);
+  });
+
+  it('refuses a track that is not on the list, or added twice', () => {
+    const room = roomWithTracks();
+    expect(refusal(room, GM, { type: 'playTrack', trackId: 'nope', loop: false })).toBe(
+      'unknownTrack',
+    );
+    expect(refusal(room, GM, { type: 'removeTrack', id: 'nope' })).toBe('unknownTrack');
+    expect(refusal(room, GM, { type: 'addTrack', track: track('t-1') })).toBe('rejected');
+  });
+
+  it('is the GM’s alone to change', () => {
+    const room = roomWithTracks();
+    const intents: RoomEvent[] = [
+      { type: 'addTrack', track: track('t-3') },
+      { type: 'removeTrack', id: 't-1' },
+      { type: 'playTrack', trackId: 't-1', loop: false },
+      { type: 'stopTrack' },
+      { type: 'setTrackVolume', volume: 0.5 },
+    ];
+    for (const intent of intents) expect(refusal(room, ALEX, intent)).toBe('notGameMaster');
+  });
+
+  it('reaches players unchanged, and travels in their patch', () => {
+    const before = roomWithTracks();
+    const after = apply(before, GM, { type: 'playTrack', trackId: 't-1', loop: true });
+    expect(roomForRole(after, 'player').audio).toBe(after.audio);
+    expect(roomPatch(roomForRole(before, 'player'), roomForRole(after, 'player'))).toEqual({
+      audio: after.audio,
+    });
+  });
+});

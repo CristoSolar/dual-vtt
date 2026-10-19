@@ -1,6 +1,7 @@
 import { MAX_FEAR } from '@daggerheart/rules';
 import { z } from 'zod';
 
+import { TrackSchema } from './audio.js';
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { JournalEntrySchema } from './journal.js';
 import {
@@ -390,6 +391,13 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     sceneId: z.string().min(1).max(64),
     noteId: z.string().min(1).max(64),
   }),
+  z.object({ type: z.literal('addTrack'), track: TrackSchema }),
+  // Stops it first if it is the one playing.
+  z.object({ type: z.literal('removeTrack'), id: z.string().min(1).max(64) }),
+  // The server stamps the start time; a client never says when the song began.
+  z.object({ type: z.literal('playTrack'), trackId: z.string().min(1).max(64), loop: z.boolean() }),
+  z.object({ type: z.literal('stopTrack') }),
+  z.object({ type: z.literal('setTrackVolume'), volume: z.number().min(0).max(1) }),
 ]);
 export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 
@@ -570,6 +578,7 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.map !== after.map) patch.map = after.map;
   if (before.targets !== after.targets) patch.targets = after.targets;
   if (before.journal !== after.journal) patch.journal = after.journal;
+  if (before.audio !== after.audio) patch.audio = after.audio;
   return patch;
 }
 
@@ -604,5 +613,6 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.map === undefined ? {} : { map: patch.map }),
     ...(patch.targets === undefined ? {} : { targets: patch.targets }),
     ...(patch.journal === undefined ? {} : { journal: patch.journal }),
+    ...(patch.audio === undefined ? {} : { audio: patch.audio }),
   };
 }

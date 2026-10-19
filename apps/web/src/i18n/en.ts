@@ -46,6 +46,7 @@ export const en: Record<keyof typeof es, string> = {
   'reject.tokenExists': 'A token with that id already exists.',
   'reject.tooManyWalls': 'Too many walls on this scene.',
   'reject.unknownJournalEntry': 'Unknown journal entry.',
+  'reject.unknownTrack': 'Unknown track.',
   'reject.badRequest': 'The server did not understand that action.',
   'reject.forbidden': 'You are no longer a member of this campaign.',
   'reject.noSeat': 'Join a campaign first.',

@@ -64,6 +64,7 @@ function room(targets: RoomState['targets']): RoomState {
     map: { ...createMapState(), scenes: [scene], activeSceneId: 's-1' },
     targets,
     journal: [],
+    audio: { tracks: [], playing: null },
     rollLog: [],
     privateLog: [],
   };
