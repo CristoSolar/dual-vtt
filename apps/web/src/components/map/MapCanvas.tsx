@@ -14,6 +14,7 @@ import type Konva from 'konva';
 import { t, type MessageKey } from '../../i18n/index.js';
 import { DragThrottle } from '../../state/dragCommit.js';
 import { snapToGrid } from '../../state/gridSnap.js';
+import { PING_DURATION_MS } from '../../state/useCampaign.js';
 import { canvasPalette, rangeRingColor } from '../../styles/canvasTokens.js';
 import { FogGl } from './FogGl.js';
 
@@ -56,6 +57,10 @@ export interface MapCanvasProps {
   health?: Readonly<Record<string, { marked: number; total: number }>>;
   /** Per token id, the colour of each account targeting it; each gets a dashed ring. */
   targetRings?: Readonly<Record<string, readonly string[]>>;
+  /** Pings on this scene, each already in its sender's colour. */
+  pings?: readonly { id: number; x: number; y: number; color: string }[];
+  /** Alt+click, or a long press on touch, pings a point. Absent means no pinging. */
+  onPing?: (x: number, y: number) => void;
   /** Filled in by the canvas with a one-step zoom, so the HUD's zoom control
    * (an HTML overlay, outside the Konva tree) can drive it. */
   /**
@@ -77,6 +82,10 @@ export interface MapCanvasProps {
 export function scaleFor(grid: Grid): RangeScale {
   return { mode: grid.mode, pixelsPerSquare: grid.size, feetPerInch: grid.feetPerInch };
 }
+
+/** How long a finger has to rest before it pings, and how far it may drift. */
+const LONG_PRESS_MS = 600;
+const LONG_PRESS_SLOP = 10;
 
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 4;
@@ -108,6 +117,8 @@ export function MapCanvas({
   onViewChange,
   health,
   targetRings,
+  pings = NO_PINGS,
+  onPing,
   zoomApi,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
@@ -266,11 +277,39 @@ export function MapCanvas({
     if (!penning) cancelPen();
   }, [penning, cancelPen]);
 
+  /**
+   * True from the pointer-down that pinged until the next pointer-down, so the
+   * click that follows it (selecting a token, opening a door) is swallowed: a ping
+   * points at something, it does not act on it.
+   */
+  const pingGesture = useRef(false);
+  const longPress = useRef<{ at: { x: number; y: number }; timer: number } | null>(null);
+  const cancelLongPress = useCallback(() => {
+    if (longPress.current !== null) window.clearTimeout(longPress.current.timer);
+    longPress.current = null;
+  }, []);
+  useEffect(() => cancelLongPress, [cancelLongPress]);
+
+  /** Read once: the system setting rarely changes mid-session. */
+  const reducedMotion = useMemo(
+    () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
+    [],
+  );
+
   const onStagePointerDown = (event: Konva.KonvaEventObject<PointerEvent>) => {
     const stage = stageRef.current;
     const pointer = stage?.getPointerPosition();
     if (!pointer) return;
     const point = toScene(pointer);
+    pingGesture.current = false;
+    cancelLongPress();
+
+    // Alt+click pings whatever tool is out, and does nothing else.
+    if (event.evt.altKey && onPing !== undefined) {
+      pingGesture.current = true;
+      onPing(point.x, point.y);
+      return;
+    }
 
     if (painting) {
       paintingStroke.current = true;
@@ -292,6 +331,18 @@ export function MapCanvas({
       setMeasureLine({ from: point, to: point });
       return;
     }
+    // Touch has no Alt: a finger held still pings instead. Only with no tool out,
+    // where a press would otherwise just pan or select.
+    if (onPing !== undefined && event.evt.pointerType === 'touch') {
+      longPress.current = {
+        at: pointer,
+        timer: window.setTimeout(() => {
+          longPress.current = null;
+          pingGesture.current = true;
+          onPing(point.x, point.y);
+        }, LONG_PRESS_MS),
+      };
+    }
     // A click on empty canvas clears the selection.
     if (event.target === stage) onSelectToken(null);
   };
@@ -300,6 +351,10 @@ export function MapCanvas({
     const pointer = stageRef.current?.getPointerPosition();
     if (!pointer) return;
     const point = toScene(pointer);
+    const press = longPress.current;
+    if (press !== null && Math.hypot(pointer.x - press.at.x, pointer.y - press.at.y) > LONG_PRESS_SLOP) {
+      cancelLongPress();
+    }
 
     // Dragging the brush paints a stroke. The old guard asked the stage whether it
     // was dragging, but the stage is not draggable while painting, so it always
@@ -327,6 +382,7 @@ export function MapCanvas({
       pinch.current = null;
       return;
     }
+    cancelLongPress();
 
     event.evt.preventDefault();
     const stage = stageRef.current;
@@ -404,12 +460,13 @@ export function MapCanvas({
       onPointerDown={onStagePointerDown}
       onPointerMove={onStagePointerMove}
       onPointerUp={() => {
+        cancelLongPress();
         paintingStroke.current = false;
         setMeasureLine(null);
       }}
       onDblClick={() => {
         // The other way to finish, for people who never look for a keyboard.
-        if (penning) finishPen(penPoints);
+        if (penning && !pingGesture.current) finishPen(penPoints);
       }}
       onDragMove={(event) => {
         // Reported during the pan, not only at its end: a popover positioned from
@@ -449,7 +506,13 @@ export function MapCanvas({
                 // A 3px line is hard to hit; the click target is wider than the ink.
                 hitStrokeWidth={isDoor ? 18 : 0}
                 listening={isDoor}
-                {...(isDoor ? { onPointerClick: () => onToggleDoor(wall.id) } : {})}
+                {...(isDoor
+                  ? {
+                      onPointerClick: () => {
+                        if (!pingGesture.current) onToggleDoor(wall.id);
+                      },
+                    }
+                  : {})}
                 onMouseEnter={(event) => {
                   if (isDoor) {
                     const stage = event.target.getStage();
@@ -533,7 +596,9 @@ export function MapCanvas({
             draggable={canDrag(token)}
             health={health?.[token.id]}
             targetedBy={targetRings?.[token.id] ?? NO_RINGS}
-            onSelect={() => onSelectToken(token.id)}
+            onSelect={() => {
+              if (!pingGesture.current) onSelectToken(token.id);
+            }}
             onDragMove={(x, y) => {
               const preview = throttle.current.move(x, y);
               if (preview !== null) onMoveToken(token.id, preview.x, preview.y, false);
@@ -604,6 +669,19 @@ export function MapCanvas({
           />
         ) : null}
       </Layer>
+
+      <Layer listening={false}>
+        {pings.map((ping) => (
+          <PingRing
+            key={ping.id}
+            x={ping.x}
+            y={ping.y}
+            color={ping.color}
+            scale={view.scale}
+            reducedMotion={reducedMotion}
+          />
+        ))}
+      </Layer>
     </Stage>
     {scene.fog.enabled && scene.image !== null && fogOnGpu ? (
       <FogGl
@@ -618,6 +696,55 @@ export function MapCanvas({
     ) : null}
     </>
   );
+}
+
+const NO_PINGS: readonly { id: number; x: number; y: number; color: string }[] = [];
+
+/** A ping's ring at full size, in screen pixels, so it reads the same at any zoom. */
+const PING_RADIUS = 60;
+
+/**
+ * One ping: a ring that grows out of the point and fades over `PING_DURATION_MS`.
+ * With reduced motion it does not grow, it only fades. Driven frame by frame on
+ * the Konva node rather than through React state, which would re-render the
+ * whole canvas sixty times a second.
+ */
+function PingRing({
+  x,
+  y,
+  color,
+  scale,
+  reducedMotion,
+}: {
+  x: number;
+  y: number;
+  color: string;
+  scale: number;
+  reducedMotion: boolean;
+}) {
+  const ref = useRef<Konva.Circle>(null);
+  // Read each frame, so zooming mid-ping keeps the ring's size on screen without
+  // restarting the animation.
+  const scaleRef = useRef(scale);
+  scaleRef.current = scale;
+
+  useEffect(() => {
+    const node = ref.current;
+    if (node === null) return;
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const progress = Math.min(1, (now - start) / PING_DURATION_MS);
+      const size = reducedMotion ? 1 : 0.15 + 0.85 * progress;
+      node.radius((PING_RADIUS * size) / scaleRef.current);
+      node.opacity(1 - progress);
+      if (progress < 1) frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [reducedMotion]);
+
+  return <Circle ref={ref} x={x} y={y} radius={0} stroke={color} strokeWidth={4 / scale} />;
 }
 
 /** Where uploaded maps are served from. */

@@ -2,6 +2,7 @@ import {
   CampaignSummarySchema,
   CHANNEL,
   EffectMessageSchema,
+  PingedSchema,
   PrivateRolledSchema,
   RejectedSchema,
   RolledSchema,
@@ -10,6 +11,7 @@ import {
   applyRoomPatch,
   type CampaignSummary,
   type EffectMessage,
+  type PingedMessage,
   type RollEntry,
   type RoomEvent,
   type RoomState,
@@ -25,6 +27,12 @@ const ACTIVE_CAMPAIGN_KEY = 'daggerheart-vtt:active-campaign';
 
 /** Where the server lives. Configurable so the app can point at another machine. */
 export const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:4000';
+
+/** How long a ping stays on the map, animation included. */
+export const PING_DURATION_MS = 2000;
+
+/** A ping currently on the map. The id tells two pings at the same spot apart. */
+export type ActivePing = PingedMessage & { id: number };
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'error';
 
@@ -61,6 +69,10 @@ export interface CampaignConnection {
    */
   lastEffect: { id: number; effect: EffectMessage } | null;
   dismissLastEffect: () => void;
+  /** Pings received in the last `PING_DURATION_MS`. Never part of the room. */
+  pings: readonly ActivePing[];
+  /** Pings a point on a scene. The server stamps who sent it and may drop it. */
+  ping: (sceneId: string, x: number, y: number) => void;
   /** True while `createCampaign`/`addPlayer` is in flight — disable the form on
    * this, not just field validation, or a double-click fires the request twice. */
   pending: boolean;
@@ -97,6 +109,8 @@ export function useCampaign(
   const [lastDice, setLastDice] = useState<{ id: string; entries: RollEntry[] } | null>(null);
   const [lastEffect, setLastEffect] = useState<{ id: number; effect: EffectMessage } | null>(null);
   const effectCount = useRef(0);
+  const [pings, setPings] = useState<ActivePing[]>([]);
+  const pingCount = useRef(0);
   const [pending, setPending] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
@@ -190,6 +204,16 @@ export function useCampaign(
       const id = entries.map((p) => p.entry.id).join('-');
       setLastRoll({ id, message: entries.map((p) => describeRollEntry(p.entry)).join(' · ') });
       setLastDice({ id, entries: entries.map((p) => p.entry) });
+    });
+
+    // A ping lives only here, for as long as it is drawn.
+    socket.on(CHANNEL.pinged, (payload: unknown) => {
+      const parsed = PingedSchema.safeParse(payload);
+      if (!parsed.success) return;
+      pingCount.current += 1;
+      const id = pingCount.current;
+      setPings((current) => [...current, { ...parsed.data, id }]);
+      window.setTimeout(() => setPings((current) => current.filter((p) => p.id !== id)), PING_DURATION_MS);
     });
 
     socket.on(CHANNEL.rejected, (payload: unknown) => {
@@ -291,6 +315,10 @@ export function useCampaign(
     socketRef.current?.emit(CHANNEL.intent, event);
   }, []);
 
+  const ping = useCallback((sceneId: string, x: number, y: number) => {
+    socketRef.current?.emit(CHANNEL.ping, { sceneId, x, y });
+  }, []);
+
   const leave = useCallback(() => {
     storage.removeItem(ACTIVE_CAMPAIGN_KEY);
     setActiveCampaignId(null);
@@ -324,6 +352,8 @@ export function useCampaign(
       lastDice,
       lastEffect,
       dismissLastEffect,
+      pings,
+      ping,
       pending,
       refreshCampaigns,
       createCampaign,
@@ -347,6 +377,8 @@ export function useCampaign(
       lastDice,
       lastEffect,
       dismissLastEffect,
+      pings,
+      ping,
       pending,
       refreshCampaigns,
       createCampaign,

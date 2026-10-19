@@ -410,6 +410,8 @@ function Shell() {
                 campaignName={activeCampaignName}
                 authToken={auth.token}
                 send={campaign.send}
+                pings={campaign.pings}
+                onPing={campaign.ping}
               />
             )
           }

@@ -19,8 +19,10 @@ import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
 import { canRollPrivately } from '../state/feed.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
+import { colorFor } from '../state/playerColor.js';
 import { rollRequestFor, type HotbarRoll } from '../state/hotbar.js';
 import { firstTarget, targetRings, toggleTarget } from '../state/targets.js';
+import type { ActivePing } from '../state/useCampaign.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
 import { adversaryTokenColor, tokenColorAt } from '../styles/canvasTokens.js';
@@ -36,7 +38,12 @@ interface MapRouteProps {
   /** The session token, which uploads need: the endpoint writes to disk. */
   authToken: string | null;
   send: (event: RoomEvent) => void;
+  /** Pings currently on the map, for every scene; only this scene's are drawn. */
+  pings?: readonly ActivePing[];
+  onPing?: (sceneId: string, x: number, y: number) => void;
 }
+
+const NO_PINGS: readonly ActivePing[] = [];
 
 let counter = 0;
 const nextId = (prefix: string) => {
@@ -103,6 +110,8 @@ export function MapRoute({
   campaignName = '',
   authToken,
   send,
+  pings = NO_PINGS,
+  onPing,
 }: MapRouteProps) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [fogBrush, setFogBrush] = useState<{ radius: number; reveal: boolean } | null>(null);
@@ -150,6 +159,13 @@ export function MapRoute({
     [room.targets, viewerId],
   );
   const rings = useMemo(() => targetRings(room), [room]);
+  const scenePings = useMemo(
+    () =>
+      pings
+        .filter((p) => p.sceneId === scene?.id)
+        .map((p) => ({ id: p.id, x: p.x, y: p.y, color: colorFor(p.byId, p.byId === room.gm.id ? 'gm' : 'player') })),
+    [pings, scene?.id, room.gm.id],
+  );
   const myTarget = viewerId === null ? null : firstTarget(room, viewerId);
   const toggleTargetOn = useCallback(
     (tokenId: string) => send({ type: 'setTargets', tokenIds: toggleTarget(myTargets, tokenId) }),
@@ -467,6 +483,8 @@ export function MapRoute({
             snapping={snapping}
             health={tokenHealth}
             targetRings={rings}
+            pings={scenePings}
+            {...(onPing === undefined ? {} : { onPing: (x: number, y: number) => onPing(scene.id, x, y) })}
             zoomApi={zoomApi}
             onViewChange={setCanvasView}
             drawingWall={drawingWall}
