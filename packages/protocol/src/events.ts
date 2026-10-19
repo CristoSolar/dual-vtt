@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { GridSchema, SceneImageSchema, TokenSchema, VisionModeSchema, WallSchema } from './map.js';
-import { RollEntrySchema, VisibilitySchema } from './rollLog.js';
+import { PrivateEntrySchema, RollEntrySchema, VisibilitySchema } from './rollLog.js';
 import {
   DeathMoveChoiceSchema,
   DowntimeMoveSchema,
@@ -23,6 +23,8 @@ export const CHANNEL = {
   roomState: 'roomState',
   roomPatch: 'roomPatch',
   rolled: 'rolled',
+  /** Private rolls and whispers, sent only to their audience and the GM. */
+  privateRolled: 'privateRolled',
   rejected: 'rejected',
   /** Sent only to the socket whose intent produced it. */
   effect: 'effect',
@@ -455,6 +457,9 @@ export type RejectedMessage = z.infer<typeof RejectedSchema>;
 
 export const RolledSchema = z.object({ entries: z.array(RollEntrySchema) });
 export type RolledMessage = z.infer<typeof RolledSchema>;
+
+export const PrivateRolledSchema = z.object({ entries: z.array(PrivateEntrySchema) });
+export type PrivateRolledMessage = z.infer<typeof PrivateRolledSchema>;
 
 /**
  * What the server wants the acting client to say about an intent it accepted:

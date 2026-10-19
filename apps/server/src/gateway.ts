@@ -3,7 +3,7 @@ import {
   ClaimCharacterSchema,
   JoinCampaignSchema,
   RoomEventSchema,
-  roomForRole,
+  roomForActor,
   type Actor,
   type RoomPatch,
 } from '@daggerheart/protocol';
@@ -32,18 +32,22 @@ const reject = (socket: Socket, error: string, message: string): void => {
 const channelFor = (campaignId: string): string => `campaign:${campaignId}`;
 const gmChannelFor = (campaignId: string): string => `campaign:${campaignId}:gm`;
 const playerChannelFor = (campaignId: string): string => `campaign:${campaignId}:players`;
+/** One account's sockets in one campaign — where its private rolls and whispers go. */
+const userChannelFor = (campaignId: string, accountId: string): string =>
+  `campaign:${campaignId}:user:${accountId}`;
 
-/** Sends the whole current room, filtered to what this role may see — never GM-only
- * tokens or unrevealed fog to a player. */
-function sendFullState(socket: Socket, campaigns: CampaignStore, campaignId: string, role: 'gm' | 'player'): void {
+/** Sends the whole current room, filtered to what this actor may see — never GM-only
+ * tokens, unrevealed fog, or someone else's private entries to a player. */
+function sendFullState(socket: Socket, campaigns: CampaignStore, campaignId: string, actor: Actor): void {
   const campaign = campaigns.get(campaignId);
   if (campaign === null) return;
-  socket.emit(CHANNEL.roomState, roomForRole(campaign.state, role));
+  socket.emit(CHANNEL.roomState, roomForActor(campaign.state, actor));
 }
 
-function joinChannels(socket: Socket, campaignId: string, role: 'gm' | 'player'): void {
+function joinChannels(socket: Socket, campaignId: string, actor: Actor): void {
   void socket.join(channelFor(campaignId));
-  void socket.join(role === 'gm' ? gmChannelFor(campaignId) : playerChannelFor(campaignId));
+  void socket.join(actor.role === 'gm' ? gmChannelFor(campaignId) : playerChannelFor(campaignId));
+  void socket.join(userChannelFor(campaignId, actor.id));
 }
 
 /**
@@ -63,6 +67,7 @@ function stillMember(
   void socket.leave(channelFor(seat.campaignId));
   void socket.leave(gmChannelFor(seat.campaignId));
   void socket.leave(playerChannelFor(seat.campaignId));
+  void socket.leave(userChannelFor(seat.campaignId, account));
   reject(socket, 'forbidden', 'no longer a member of that campaign');
   return false;
 }
@@ -116,8 +121,9 @@ export function registerGateway(
       if (seat === null) return reject(socket, 'forbidden', 'not a member of that campaign');
 
       seatOf.set(socket, { campaignId: parsed.data.campaignId, role: seat.role });
-      joinChannels(socket, parsed.data.campaignId, seat.role);
-      sendFullState(socket, campaigns, parsed.data.campaignId, seat.role);
+      const actor: Actor = { id: account, role: seat.role };
+      joinChannels(socket, parsed.data.campaignId, actor);
+      sendFullState(socket, campaigns, parsed.data.campaignId, actor);
       // The roster slices are the same for both roles (`roomForRole` filters only
       // the map), so one combined channel is right here. Skipped entirely if the
       // campaign vanished between the seat check and now, rather than broadcasting
@@ -174,6 +180,14 @@ export function registerGateway(
       }
       if (outcome.entries.length > 0) {
         io.to(channelFor(seat.campaignId)).emit(CHANNEL.rolled, { entries: outcome.entries });
+      }
+      // Each private entry goes to the GM plus its own audience; a socket in more
+      // than one of those rooms still receives it once.
+      for (const entry of outcome.privateEntries) {
+        io.to([
+          gmChannelFor(seat.campaignId),
+          ...entry.audience.map((id) => userChannelFor(seat.campaignId, id)),
+        ]).emit(CHANNEL.privateRolled, { entries: [entry] });
       }
     });
 

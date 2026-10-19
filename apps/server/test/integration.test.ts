@@ -1,4 +1,4 @@
-import { CHANNEL, type RoomPatch, type RoomState } from '@daggerheart/protocol';
+import { CHANNEL, type PrivateEntry, type RoomPatch, type RoomState } from '@daggerheart/protocol';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
@@ -334,5 +334,126 @@ describe('campaign lifecycle over a socket', () => {
 
     gmClient.close();
     alice.client.close();
+  });
+
+  it('delivers a whisper to its audience and the GM only', async () => {
+    const gm = await accountFor(server, 'gm-whisper', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-whisper');
+    const bobPlayer = await accountFor(server, 'bob-whisper');
+    const carolPlayer = await accountFor(server, 'carol-whisper');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Whisper Test');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+    const bob = await joinCampaignAs(server, gm, campaignId, bobPlayer);
+    const carol = await joinCampaignAs(server, gm, campaignId, carolPlayer);
+
+    const carolPrivate: unknown[] = [];
+    carol.client.socket.on(CHANNEL.privateRolled, (payload: unknown) => carolPrivate.push(payload));
+
+    const bobGets = bob.client.next<{ entries: PrivateEntry[] }>(CHANNEL.privateRolled);
+    const gmGets = gmClient.next<{ entries: PrivateEntry[] }>(CHANNEL.privateRolled);
+    const aliceGets = alice.client.next<{ entries: PrivateEntry[] }>(CHANNEL.privateRolled);
+    alice.client.emit(CHANNEL.intent, { type: 'sendMessage', text: 'psst', whisperTo: [bobPlayer.id] });
+
+    for (const received of await Promise.all([bobGets, gmGets, aliceGets])) {
+      expect(received.entries).toHaveLength(1);
+      expect(received.entries[0]?.entry).toMatchObject({ kind: 'message', text: 'psst' });
+      expect(received.entries[0]?.audience).toEqual([bobPlayer.id, alicePlayer.id]);
+    }
+
+    // Socket.io delivers in order per socket, so once Carol sees this public
+    // message, any whisper sent to her before it would already have arrived.
+    const carolSync = carol.client.next(CHANNEL.rolled);
+    alice.client.emit(CHANNEL.intent, { type: 'sendMessage', text: 'hello all', whisperTo: [] });
+    await carolSync;
+    expect(carolPrivate).toEqual([]);
+
+    gmClient.close();
+    alice.client.close();
+    bob.client.close();
+    carol.client.close();
+  });
+
+  it('a reconnecting player gets their private entries back in roomState', async () => {
+    const gm = await accountFor(server, 'gm-private-back', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-private-back');
+    const bobPlayer = await accountFor(server, 'bob-private-back');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Private Reconnect');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+    const bob = await joinCampaignAs(server, gm, campaignId, bobPlayer);
+
+    const claimed = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.characters?.[alicePlayer.id] !== undefined,
+    );
+    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    await claimed;
+
+    const delivered = alice.client.next(CHANNEL.privateRolled);
+    alice.client.emit(CHANNEL.intent, {
+      type: 'rollDuality',
+      characterId: alicePlayer.id,
+      request: {
+        label: 'Sneak',
+        modifiers: 0,
+        difficulty: 12,
+        advantage: 0,
+        disadvantage: 0,
+        experiences: [],
+      },
+      visibility: 'private',
+    });
+    await delivered;
+
+    const disconnected = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.players?.find((player) => player.id === alicePlayer.id)?.connected === false,
+    );
+    alice.client.close();
+    await disconnected;
+
+    const returning = await TestClient.connect(server.url, alicePlayer.token);
+    const full = returning.next<RoomState>(CHANNEL.roomState);
+    returning.emit(CHANNEL.joinCampaign, { campaignId });
+    const state = await full;
+    expect(state.privateLog).toHaveLength(1);
+    expect(state.privateLog[0]?.audience).toEqual([alicePlayer.id]);
+    expect(state.privateLog[0]?.entry.kind).toBe('duality');
+
+    // Another player rejoining sees none of it.
+    bob.client.close();
+    const bobBack = await TestClient.connect(server.url, bobPlayer.token);
+    const bobFull = bobBack.next<RoomState>(CHANNEL.roomState);
+    bobBack.emit(CHANNEL.joinCampaign, { campaignId });
+    expect((await bobFull).privateLog).toEqual([]);
+
+    gmClient.close();
+    returning.close();
+    bobBack.close();
+  });
+
+  it('no roomPatch to the player channel carries privateLog', async () => {
+    const gm = await accountFor(server, 'gm-no-patch', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-no-patch');
+    const carolPlayer = await accountFor(server, 'carol-no-patch');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'No Private Patch');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+    const carol = await joinCampaignAs(server, gm, campaignId, carolPlayer);
+
+    const carolPatches: RoomPatch[] = [];
+    carol.client.socket.on(CHANNEL.roomPatch, (patch: RoomPatch) => carolPatches.push(patch));
+
+    const gmGets = gmClient.next(CHANNEL.privateRolled);
+    alice.client.emit(CHANNEL.intent, { type: 'sendMessage', text: 'secret', whisperTo: [] });
+    gmClient.emit(CHANNEL.intent, { type: 'sendMessage', text: 'gm aside', whisperTo: [alicePlayer.id] });
+    await gmGets;
+
+    const carolSync = carol.client.next(CHANNEL.rolled);
+    gmClient.emit(CHANNEL.intent, { type: 'sendMessage', text: 'public', whisperTo: [] });
+    await carolSync;
+    expect(carolPatches.some((patch) => 'privateLog' in patch)).toBe(false);
+
+    gmClient.close();
+    alice.client.close();
+    carol.client.close();
   });
 });

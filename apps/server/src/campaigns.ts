@@ -8,6 +8,7 @@ import {
   roomPatch,
   type Actor,
   type GameMaster,
+  type PrivateEntry,
   type RoomEvent,
   type RoomPatch,
   type RoomState,
@@ -40,6 +41,8 @@ export interface ApplyOutcome {
   patch: RoomPatch;
   playerPatch: RoomPatch;
   entries: readonly RollEntry[];
+  /** Private rolls and whispers, each delivered only to its audience and the GM. */
+  privateEntries: readonly PrivateEntry[];
   /** What to tell the acting client beyond the new state. Null when there is nothing. */
   effect?: SheetEffect | null;
   error?: string;
@@ -58,6 +61,7 @@ const fail = (error: string, message: string): ApplyOutcome => ({
   patch: {},
   playerPatch: {},
   entries: [],
+  privateEntries: [],
   error,
   message,
 });
@@ -197,7 +201,7 @@ export class CampaignStore {
     // Fear a new PC brings to the GM's pool.
     campaign.state = claimCharacterInRoom(before, accountId, sheet);
     campaign.updatedAt = this.now();
-    return { ok: true, ...patchesFor(before, campaign.state), entries: [] };
+    return { ok: true, ...patchesFor(before, campaign.state), entries: [], privateEntries: [] };
   }
 
   /** Applies one validated intent. The actor's role must already be known (via `seatFor`). */
@@ -223,6 +227,7 @@ export class CampaignStore {
       ok: true,
       ...patchesFor(before, result.state),
       entries: result.entries,
+      privateEntries: result.privateEntries,
       effect: result.effect,
     };
   }
