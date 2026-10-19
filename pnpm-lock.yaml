@@ -54,6 +54,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@3d-dice/dice-box-threejs':
+        specifier: 0.0.12
+        version: 0.0.12
       '@daggerheart/character':
         specifier: workspace:*
         version: link:../../packages/character
@@ -84,6 +87,9 @@ importers:
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.3
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
     devDependencies:
       '@types/react':
         specifier: ^18.3.12
@@ -146,6 +152,9 @@ importers:
         version: 4.23.1
 
 packages:
+
+  '@3d-dice/dice-box-threejs@0.0.12':
+    resolution: {integrity: sha512-Bau5UizUunZS9+A6zgGeZecEJotSLEI6YvmYTosvvdhRxv92xo89aIvKYQb6xqdx/AqjHdGENJmqBOadlFL9kA==}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -662,6 +671,9 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
+  cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
+
   chai@5.3.3:
     resolution: {integrity: sha512-4zNhdJD/iOjSH0A05ea+Ke6MU5mmpQcbQsSOkgdaUMJ9zTlDTD/GYlwohmIE2u0gaxHYiVHEn1Fw9mZ/ktJWgw==}
     engines: {node: '>=18'}
@@ -864,6 +876,9 @@ packages:
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
 
+  three@0.143.0:
+    resolution: {integrity: sha512-oKcAGYHhJ46TGEuHjodo2n6TY2R6lbvrkp+feKZxqsUL/WkH7GKKaeu6RHeyb2Xjfk2dPLRKLsOP0KM2VgT8Zg==}
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -985,6 +1000,11 @@ packages:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
 snapshots:
+
+  '@3d-dice/dice-box-threejs@0.0.12':
+    dependencies:
+      cannon-es: 0.20.0
+      three: 0.143.0
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
@@ -1294,6 +1314,8 @@ snapshots:
 
   cac@6.7.14: {}
 
+  cannon-es@0.20.0: {}
+
   chai@5.3.3:
     dependencies:
       assertion-error: 2.0.1
@@ -1588,6 +1610,8 @@ snapshots:
   stackback@0.0.2: {}
 
   std-env@3.10.0: {}
+
+  three@0.143.0: {}
 
   tinybench@2.9.0: {}
 
