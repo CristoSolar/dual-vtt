@@ -19,6 +19,8 @@ export const CHANNEL = {
   intent: 'intent',
   joinCampaign: 'joinCampaign',
   claimCharacter: 'claimCharacter',
+  /** A map ping: ephemeral, never stored in the room. */
+  ping: 'ping',
   /** server -> client */
   roomState: 'roomState',
   roomPatch: 'roomPatch',
@@ -26,6 +28,8 @@ export const CHANNEL = {
   /** Private rolls and whispers, sent only to their audience and the GM. */
   privateRolled: 'privateRolled',
   rejected: 'rejected',
+  /** A relayed ping, stamped with the pinger's account id. */
+  pinged: 'pinged',
   /** Sent only to the socket whose intent produced it. */
   effect: 'effect',
 } as const;
@@ -478,6 +482,18 @@ export type RolledMessage = z.infer<typeof RolledSchema>;
 
 export const PrivateRolledSchema = z.object({ entries: z.array(PrivateEntrySchema) });
 export type PrivateRolledMessage = z.infer<typeof PrivateRolledSchema>;
+
+/**
+ * A map ping. Ephemeral by design: the server relays it and forgets it, so it never
+ * touches `RoomState`, the log, or a snapshot. `byId` is stamped by the server from
+ * the socket, never taken from the client.
+ */
+export const PingSchema = z.object({ sceneId, x: z.number().finite(), y: z.number().finite() });
+export type PingMessage = z.infer<typeof PingSchema>;
+export const PingedSchema = PingSchema.extend({ byId: z.string() });
+export type PingedMessage = z.infer<typeof PingedSchema>;
+/** Minimum gap between two relayed pings from the same socket. */
+export const PING_COOLDOWN_MS = 500;
 
 /**
  * What the server wants the acting client to say about an intent it accepted:

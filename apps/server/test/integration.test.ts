@@ -1,4 +1,4 @@
-import { CHANNEL, type PrivateEntry, type RoomPatch, type RoomState } from '@daggerheart/protocol';
+import { CHANNEL, type PingedMessage, type PrivateEntry, type RoomPatch, type RoomState } from '@daggerheart/protocol';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
@@ -455,5 +455,111 @@ describe('campaign lifecycle over a socket', () => {
     gmClient.close();
     alice.client.close();
     carol.client.close();
+  });
+  it('relays a player ping on the active scene to the whole table, stamped with its sender', async () => {
+    const gm = await accountFor(server, 'gm-ping', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-ping');
+    const bobPlayer = await accountFor(server, 'bob-ping');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Ping Test');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+    const bob = await joinCampaignAs(server, gm, campaignId, bobPlayer);
+
+    const ready = bob.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'scene-1');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'scene-1', name: 'Bridge' });
+    await ready;
+
+    const gets = [gmClient, alice.client, bob.client].map((c) => c.next<PingedMessage>(CHANNEL.pinged));
+    alice.client.emit(CHANNEL.ping, { sceneId: 'scene-1', x: 10, y: 20, byId: 'forged' });
+    for (const received of await Promise.all(gets)) {
+      expect(received).toEqual({ sceneId: 'scene-1', x: 10, y: 20, byId: alicePlayer.id });
+    }
+
+    gmClient.close();
+    alice.client.close();
+    bob.client.close();
+  });
+
+  it('drops a player ping on a scene that is not active', async () => {
+    const gm = await accountFor(server, 'gm-ping-inactive', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-ping-inactive');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Ping Inactive');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const ready = alice.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'visible');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'visible', name: 'Visible' });
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'secret', name: 'Secret' });
+    await ready;
+
+    const gmPings: PingedMessage[] = [];
+    const alicePings: PingedMessage[] = [];
+    gmClient.socket.on(CHANNEL.pinged, (p: PingedMessage) => gmPings.push(p));
+    alice.client.socket.on(CHANNEL.pinged, (p: PingedMessage) => alicePings.push(p));
+
+    // Per-socket order: once the message that follows lands, the ping would have too.
+    const sync = [gmClient.next(CHANNEL.rolled), alice.client.next(CHANNEL.rolled)];
+    alice.client.emit(CHANNEL.ping, { sceneId: 'secret', x: 1, y: 1 });
+    alice.client.emit(CHANNEL.intent, { type: 'sendMessage', text: 'sync', whisperTo: [] });
+    await Promise.all(sync);
+    expect(gmPings).toEqual([]);
+    expect(alicePings).toEqual([]);
+
+    gmClient.close();
+    alice.client.close();
+  });
+
+  it('sends a GM ping on an inactive scene to the GM channel only', async () => {
+    const gm = await accountFor(server, 'gm-ping-gm', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-ping-gm');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Ping GM');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const ready = alice.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'visible');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'visible', name: 'Visible' });
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'secret', name: 'Secret' });
+    await ready;
+
+    const alicePings: PingedMessage[] = [];
+    alice.client.socket.on(CHANNEL.pinged, (p: PingedMessage) => alicePings.push(p));
+
+    const gmGets = gmClient.next<PingedMessage>(CHANNEL.pinged);
+    gmClient.emit(CHANNEL.ping, { sceneId: 'secret', x: 5, y: 5 });
+    expect(await gmGets).toEqual({ sceneId: 'secret', x: 5, y: 5, byId: gm.id });
+
+    const aliceSync = alice.client.next<PingedMessage>(CHANNEL.pinged);
+    alice.client.emit(CHANNEL.ping, { sceneId: 'visible', x: 2, y: 2 });
+    await aliceSync;
+    expect(alicePings.map((p) => p.sceneId)).toEqual(['visible']);
+
+    gmClient.close();
+    alice.client.close();
+  });
+
+  it('relays only the first of two pings within the cooldown from one socket', async () => {
+    const gm = await accountFor(server, 'gm-ping-cool', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-ping-cool');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Ping Cooldown');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const ready = alice.client.until<RoomPatch>(CHANNEL.roomPatch, (p) => p.map?.activeSceneId === 'scene-1');
+    gmClient.emit(CHANNEL.intent, { type: 'addScene', id: 'scene-1', name: 'Bridge' });
+    await ready;
+
+    const gmPings: PingedMessage[] = [];
+    gmClient.socket.on(CHANNEL.pinged, (p: PingedMessage) => gmPings.push(p));
+
+    const sync = gmClient.next(CHANNEL.rolled);
+    alice.client.emit(CHANNEL.ping, { sceneId: 'scene-1', x: 1, y: 1 });
+    alice.client.emit(CHANNEL.ping, { sceneId: 'scene-1', x: 2, y: 2 });
+    alice.client.emit(CHANNEL.intent, { type: 'sendMessage', text: 'sync', whisperTo: [] });
+    await sync;
+    expect(gmPings.map((p) => p.x)).toEqual([1]);
+
+    // Another socket has its own cooldown.
+    const gmOwn = gmClient.next<PingedMessage>(CHANNEL.pinged);
+    gmClient.emit(CHANNEL.ping, { sceneId: 'scene-1', x: 3, y: 3 });
+    expect((await gmOwn).byId).toBe(gm.id);
+
+    gmClient.close();
+    alice.client.close();
   });
 });

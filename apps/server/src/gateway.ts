@@ -2,6 +2,8 @@ import {
   CHANNEL,
   ClaimCharacterSchema,
   JoinCampaignSchema,
+  PING_COOLDOWN_MS,
+  PingSchema,
   RoomEventSchema,
   roomForActor,
   type Actor,
@@ -24,6 +26,8 @@ import type { UserStore } from './users.js';
 const accountOf = new WeakMap<Socket, string>();
 /** Set once the socket has joined a campaign; absent until then. */
 const seatOf = new WeakMap<Socket, { campaignId: string; role: 'gm' | 'player' }>();
+/** When each socket last had a ping relayed. Cleared on disconnect. */
+const lastPingAt = new Map<Socket, number>();
 
 const reject = (socket: Socket, error: string, message: string): void => {
   socket.emit(CHANNEL.rejected, { error, message });
@@ -191,7 +195,41 @@ export function registerGateway(
       }
     });
 
+    // Pings are relayed and forgotten: no reducer, no room state, no snapshot.
+    socket.on(CHANNEL.ping, (payload: unknown) => {
+      const seat = seatOf.get(socket);
+      if (seat === undefined) return reject(socket, 'noSeat', 'join a campaign first');
+
+      const parsed = PingSchema.safeParse(payload);
+      if (!parsed.success) return reject(socket, 'badRequest', 'invalid ping');
+
+      const account = accountOf.get(socket);
+      if (account === undefined) return;
+      if (!stillMember(socket, campaigns, seat, account)) return;
+
+      const now = Date.now();
+      const last = lastPingAt.get(socket);
+      if (last !== undefined && now - last < PING_COOLDOWN_MS) return;
+
+      // The active scene comes from the room, never the client. A player may only
+      // ping the scene everyone is looking at; the GM may ping any, but a ping on a
+      // scene players cannot see goes to the GM channel so its id never leaks.
+      const activeSceneId = campaigns.get(seat.campaignId)?.state.map.activeSceneId ?? null;
+      const onActive = parsed.data.sceneId === activeSceneId;
+      if (!onActive && seat.role !== 'gm') return;
+
+      lastPingAt.set(socket, now);
+      const { sceneId, x, y } = parsed.data;
+      io.to(onActive ? channelFor(seat.campaignId) : gmChannelFor(seat.campaignId)).emit(CHANNEL.pinged, {
+        sceneId,
+        x,
+        y,
+        byId: account,
+      });
+    });
+
     socket.on('disconnect', () => {
+      lastPingAt.delete(socket);
       const seat = seatOf.get(socket);
       const account = accountOf.get(socket);
       if (seat === undefined || account === undefined) return;
