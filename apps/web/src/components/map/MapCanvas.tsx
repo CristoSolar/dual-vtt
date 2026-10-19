@@ -18,6 +18,15 @@ import { PING_DURATION_MS } from '../../state/useCampaign.js';
 import { canvasPalette, rangeRingColor } from '../../styles/canvasTokens.js';
 import { FogGl } from './FogGl.js';
 
+/** A journal note as the canvas draws it: where, and what it opens. */
+export interface MapPin {
+  id: string;
+  x: number;
+  y: number;
+  journalId: string;
+  title: string;
+}
+
 export interface MapCanvasProps {
   scene: Scene;
   /** Viewer's role: the GM sees fog at reduced opacity, players not at all. */
@@ -61,6 +70,10 @@ export interface MapCanvasProps {
   pings?: readonly { id: number; x: number; y: number; color: string }[];
   /** Alt+click, or a long press on touch, pings a point. Absent means no pinging. */
   onPing?: (x: number, y: number) => void;
+  /** Journal pins on this scene, each with its entry's title. */
+  notes?: readonly MapPin[];
+  /** Clicking a pin opens its journal entry. */
+  onOpenNote?: (journalId: string) => void;
   /** Filled in by the canvas with a one-step zoom, so the HUD's zoom control
    * (an HTML overlay, outside the Konva tree) can drive it. */
   /**
@@ -119,6 +132,8 @@ export function MapCanvas({
   targetRings,
   pings = NO_PINGS,
   onPing,
+  notes = NO_PINS,
+  onOpenNote,
   zoomApi,
 }: MapCanvasProps) {
   const stageRef = useRef<Konva.Stage>(null);
@@ -617,6 +632,44 @@ export function MapCanvas({
         ))}
       </Layer>
 
+      {/* Journal pins sit over the tokens, so a note on a crowded square is
+          still there to click. */}
+      <Layer listening={!penning && !painting}>
+        {notes.map((note) => (
+          <Group
+            key={note.id}
+            x={note.x}
+            y={note.y}
+            onClick={() => {
+              if (!pingGesture.current) onOpenNote?.(note.journalId);
+            }}
+            onTap={() => onOpenNote?.(note.journalId)}
+            onMouseEnter={(event) => {
+              const stage = event.target.getStage();
+              if (stage !== null) stage.container().style.cursor = 'pointer';
+            }}
+            onMouseLeave={(event) => {
+              const stage = event.target.getStage();
+              if (stage !== null) stage.container().style.cursor = 'grab';
+            }}
+          >
+            <Circle
+              radius={10 / view.scale}
+              fill={canvasPalette.doorLine()}
+              stroke={canvasPalette.tokenChip()}
+              strokeWidth={2 / view.scale}
+            />
+            <Text
+              x={14 / view.scale}
+              y={-7 / view.scale}
+              text={note.title}
+              fill={canvasPalette.tokenLabel()}
+              fontSize={14 / view.scale}
+            />
+          </Group>
+        ))}
+      </Layer>
+
       {/* Fog last, so it covers everything beneath it. Only drawn here when the
           GPU layer could not start; see FogGl. */}
       {scene.fog.enabled && scene.image !== null && !fogOnGpu ? (
@@ -698,6 +751,7 @@ export function MapCanvas({
   );
 }
 
+const NO_PINS: readonly MapPin[] = [];
 const NO_PINGS: readonly { id: number; x: number; y: number; color: string }[] = [];
 
 /** A ping's ring at full size, in screen pixels, so it reads the same at any zoom. */

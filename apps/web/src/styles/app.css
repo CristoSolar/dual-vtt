@@ -2932,6 +2932,17 @@ button.link {
   margin-bottom: 0;
 }
 
+/* Journal pages keep the GM's line breaks; the image never outgrows the panel. */
+.journal-body {
+  white-space: pre-wrap;
+}
+.journal-image {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  margin-top: 0.75rem;
+}
+
 @media (max-width: 720px) {
   .floating-panel {
     width: calc(100vw - var(--sp-6));

@@ -9,7 +9,9 @@ import { MAX_FEAR } from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { Dialog } from '../components/Dialog.js';
 import { Icon, type IconName } from '../components/icons/Icon.js';
+import { JournalPanel, imageSrc } from '../components/journal/JournalPanel.js';
 import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { GMPanel } from '../components/gm/GMPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
@@ -18,6 +20,7 @@ import { Hotbar, isTypingTarget, useHotbar, useHotbarKeys } from '../components/
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
 import { canRollPrivately } from '../state/feed.js';
+import { newlyShared } from '../state/journal.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { colorFor } from '../state/playerColor.js';
 import { rollRequestFor, type HotbarRoll } from '../state/hotbar.js';
@@ -51,7 +54,16 @@ const nextId = (prefix: string) => {
   return `${prefix}-${Date.now().toString(36)}-${counter.toString(36)}`;
 };
 
-type PanelId = 'scenes' | 'battlemap' | 'grid' | 'tokens' | 'fog' | 'sheet' | 'walls' | 'gm';
+type PanelId =
+  | 'scenes'
+  | 'battlemap'
+  | 'grid'
+  | 'tokens'
+  | 'fog'
+  | 'sheet'
+  | 'walls'
+  | 'gm'
+  | 'journal';
 
 /** Panel titles, resolved at call time so a locale switch is reflected immediately. */
 function panelTitle(id: PanelId): string {
@@ -72,6 +84,8 @@ function panelTitle(id: PanelId): string {
       return t('map.panel.walls');
     case 'gm':
       return t('map.panel.gm');
+    case 'journal':
+      return t('map.panel.journal');
   }
 }
 
@@ -88,6 +102,7 @@ const defaultPanels = (): PanelStore => ({
   sheet: { x: 90, y: 96, z: 1, open: false },
   walls: { x: 90, y: 96, z: 1, open: false },
   gm: { x: 90, y: 96, z: 1, open: false },
+  journal: { x: 90, y: 96, z: 1, open: false },
 });
 
 /** Reads saved panel positions; any corruption just falls back to defaults. */
@@ -188,6 +203,45 @@ export function MapRoute({
     setRequestedRoll(request);
   };
   useHotbarKeys(rollFromSlot);
+
+  /** The journal entry open in the panel, set by the list or by a pin on the map. */
+  const [journalOpenId, setJournalOpenId] = useState<string | null>(null);
+  const openJournalEntry = (journalId: string) => {
+    setJournalOpenId(journalId);
+    setPanels((prev) => ({ ...prev, journal: { ...prev.journal, open: true } }));
+    focusPanel('journal');
+  };
+
+  /**
+   * A player is shown an entry once, when the GM shares it. What was already
+   * shared when the map opened counts as seen, so joining does not open a stack
+   * of dialogs; the set lives in memory only.
+   */
+  const seenShared = useRef<Set<string> | null>(null);
+  const [announcedId, setAnnouncedId] = useState<string | null>(null);
+  useEffect(() => {
+    if (isGameMaster) return;
+    if (seenShared.current === null) {
+      seenShared.current = new Set(room.journal.map((entry) => entry.id));
+      return;
+    }
+    const fresh = newlyShared(room.journal, seenShared.current);
+    for (const entry of fresh) seenShared.current.add(entry.id);
+    const latest = fresh[fresh.length - 1];
+    if (latest !== undefined) setAnnouncedId(latest.id);
+  }, [room.journal, isGameMaster]);
+  const announced = room.journal.find((entry) => entry.id === announcedId) ?? null;
+  const closeAnnounced = useCallback(() => setAnnouncedId(null), []);
+
+  /** This scene's notes with their entry's title; a player only has shared ones. */
+  const pins = useMemo(
+    () =>
+      (scene?.notes ?? []).flatMap((note) => {
+        const entry = room.journal.find((candidate) => candidate.id === note.journalId);
+        return entry === undefined ? [] : [{ ...note, title: entry.title }];
+      }),
+    [scene?.notes, room.journal],
+  );
 
   /**
    * HP per token, for the bar under each name chip. Both sides come from real
@@ -428,9 +482,13 @@ export function MapRoute({
               {toolButton('fog', 'fog', t('map.panel.fog'))}
               {toolButton('walls', 'door', t('map.panel.walls'))}
               {toolButton('gm', 'shield', t('map.panel.gm'))}
+              {toolButton('journal', 'journal', t('map.panel.journal'))}
             </>
           ) : (
-            toolButton('sheet', 'shield', t('app.characterSheet'))
+            <>
+              {toolButton('sheet', 'shield', t('app.characterSheet'))}
+              {toolButton('journal', 'journal', t('map.panel.journal'))}
+            </>
           )}
           {/* Measuring changes nothing on the table: it is a ruler, and a player
               asking "can I reach them?" needs it as much as the GM does. */}
@@ -485,6 +543,8 @@ export function MapRoute({
             targetRings={rings}
             pings={scenePings}
             {...(onPing === undefined ? {} : { onPing: (x: number, y: number) => onPing(scene.id, x, y) })}
+            notes={pins}
+            onOpenNote={openJournalEntry}
             zoomApi={zoomApi}
             onViewChange={setCanvasView}
             drawingWall={drawingWall}
@@ -654,6 +714,62 @@ export function MapRoute({
         >
           <GMPanel room={room} campaignName={campaignName} send={send} />
         </FloatingPanel>
+      ) : null}
+
+      {panels.journal.open ? (
+        <FloatingPanel
+          title={panelTitle('journal')}
+          layout={panels.journal}
+          onLayoutChange={(l) => movePanel('journal', l)}
+          onFocus={() => focusPanel('journal')}
+          onClose={() => closePanel('journal')}
+        >
+          <JournalPanel
+            journal={room.journal}
+            isGameMaster={isGameMaster}
+            openId={journalOpenId}
+            onOpen={setJournalOpenId}
+            send={send}
+            authToken={authToken}
+            notes={scene?.notes ?? []}
+            {...(scene === null
+              ? {}
+              : {
+                  // Dropped where the GM is looking, like a player's own token.
+                  onPin: (journalId: string) =>
+                    send({
+                      type: 'addNote',
+                      sceneId: scene.id,
+                      note: {
+                        id: nextId('note'),
+                        x: Math.round((stageSize.width / 2 - canvasView.x) / canvasView.scale),
+                        y: Math.round((stageSize.height / 2 - canvasView.y) / canvasView.scale),
+                        journalId,
+                      },
+                    }),
+                  onUnpin: (noteId: string) =>
+                    send({ type: 'removeNote', sceneId: scene.id, noteId }),
+                })}
+          />
+        </FloatingPanel>
+      ) : null}
+
+      {announced !== null ? (
+        <Dialog title={t('journal.sharedTitle', { title: announced.title })} onClose={closeAnnounced}>
+          {announced.image !== null ? (
+            <img className="journal-image" src={imageSrc(announced.image.url)} alt="" />
+          ) : null}
+          <p className="journal-body">{announced.body}</p>
+          <button
+            type="button"
+            onClick={() => {
+              openJournalEntry(announced.id);
+              closeAnnounced();
+            }}
+          >
+            {t('journal.openInPanel')}
+          </button>
+        </Dialog>
       ) : null}
 
       {isGameMaster && scene !== null && panels.scenes.open ? (

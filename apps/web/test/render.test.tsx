@@ -17,6 +17,7 @@ import { RollLogPanel } from '../src/components/sheet/RollLogPanel.js';
 import { Toast } from '../src/components/Toast.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
 import { Hotbar } from '../src/components/sheet/Hotbar.js';
+import { JournalPanel } from '../src/components/journal/JournalPanel.js';
 import { setLocale, t } from '../src/i18n/index.js';
 import { HelpRoute, parseHelpHash } from '../src/routes/HelpRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
@@ -602,5 +603,38 @@ describe('hotbar', () => {
     expect(html).toContain(t('trait.agility'));
     expect(html).toContain('aria-label="Espacio vacío 2"');
     expect(html).toContain('aria-label="Espacio vacío 10"');
+  });
+});
+
+describe('journal panel', () => {
+  const entry = {
+    id: 'j-1',
+    title: 'La posada del cuervo',
+    body: 'Huele a humo.',
+    image: null,
+    shared: 'all' as const,
+  };
+  const props = {
+    journal: [entry],
+    openId: 'j-1',
+    onOpen: () => undefined,
+    send: () => undefined,
+    authToken: null,
+    notes: [],
+  };
+
+  it('lets the GM edit and share an entry', () => {
+    const html = renderToStaticMarkup(<JournalPanel {...props} isGameMaster />);
+    expect(html).toContain('La posada del cuervo');
+    expect(html).toContain(t('journal.edit'));
+    expect(html).toContain(t('journal.hideFromPlayers'));
+  });
+
+  it('shows a player the entry with no edit button', () => {
+    const html = renderToStaticMarkup(<JournalPanel {...props} isGameMaster={false} />);
+    expect(html).toContain('Huele a humo.');
+    expect(html).not.toContain(t('journal.edit'));
+    expect(html).not.toContain(t('journal.showToPlayers'));
+    expect(html).not.toContain(t('journal.new'));
   });
 });
