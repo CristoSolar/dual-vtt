@@ -1,9 +1,10 @@
 import { MAX_HOPE } from '@daggerheart/rules';
 import type { RoomEvent, Token, Visibility } from '@daggerheart/protocol';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { t } from '../../i18n/index.js';
 import { DamageDialog } from '../sheet/DamageDialog.js';
+import { hotbarDrag } from '../sheet/Hotbar.js';
 import { RollDialog, type RollDialogSpec } from '../sheet/RollDialog.js';
 import {
   ArmorSlots,
@@ -15,6 +16,7 @@ import {
   ThresholdRibbon,
   TraitPlaque,
 } from '../sheet/SheetFurniture.js';
+import type { HotbarRoll } from '../../state/hotbar.js';
 import type { RollEntry } from '../../state/rollLog.js';
 import { describeWeaponDamage, label as prettify, selectSheetView, weaponDamage } from '../../state/selectors.js';
 import type { DualityRollRequest, SheetState } from '../../state/sheet.js';
@@ -28,10 +30,14 @@ interface MapSheetPanelProps {
   canRollPrivately?: boolean;
   /** The viewer's first target, which an action roll is made against. */
   target?: Token | null;
+  /** A roll the map's hotbar asked for; opened here, then handed back as taken. */
+  requestedRoll?: HotbarRoll | null;
+  onRequestTaken?: () => void;
 }
 
 interface PendingRoll extends RollDialogSpec {
   damage: { dice: { count: number; die: number }; proficiency: number; modifier: number } | null;
+  presetExperiences?: readonly string[];
 }
 
 type Tab = 'hoja' | 'cartas' | 'bio';
@@ -52,12 +58,20 @@ export function MapSheetPanel({
   sharedLog,
   canRollPrivately = false,
   target = null,
+  requestedRoll = null,
+  onRequestTaken,
 }: MapSheetPanelProps) {
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
   const character = sheet.character;
   const [pending, setPending] = useState<PendingRoll | null>(null);
   const [showDamage, setShowDamage] = useState(false);
   const [tab, setTab] = useState<Tab>('hoja');
+
+  useEffect(() => {
+    if (requestedRoll === null) return;
+    setPending(requestedRoll);
+    onRequestTaken?.();
+  }, [requestedRoll, onRequestTaken]);
 
   const tabs: readonly { id: Tab; label: string }[] = [
     { id: 'hoja', label: t('app.sheet') },
@@ -199,6 +213,7 @@ export function MapSheetPanel({
                   uses={trait.uses}
                   active={pending?.modifierLabel === trait.label}
                   onClick={() => openTraitRoll(trait.label, trait.modifier)}
+                  hotbarSlot={{ kind: 'trait', trait: trait.trait }}
                 />
               ))}
             </div>
@@ -256,7 +271,11 @@ export function MapSheetPanel({
 
             {[view.primaryWeapon, view.secondaryWeapon].map((weapon, index) =>
               weapon === null ? null : (
-                <div className="weapon-strip" key={weapon.id}>
+                <div
+                  className="weapon-strip"
+                  key={weapon.id}
+                  {...hotbarDrag({ kind: 'weapon', slot: index === 0 ? 'primary' : 'secondary' })}
+                >
                   <div className="weapon-strip-name">
                     <strong>{weapon.name}</strong>
                     <span className="muted">
@@ -303,7 +322,12 @@ export function MapSheetPanel({
               <p className="muted">{t('map.sheet.noCards')}</p>
             ) : (
               view.loadout.map((card) => (
-                <article className="domain-mini" key={card.id} style={{ ['--domain-color' as string]: `var(--c-domain-${card.domain})` }}>
+                <article
+                  className="domain-mini"
+                  key={card.id}
+                  style={{ ['--domain-color' as string]: `var(--c-domain-${card.domain})` }}
+                  {...hotbarDrag({ kind: 'card', cardId: card.id })}
+                >
                   <div className="domain-mini-head">
                     <h3>{card.name}</h3>
                     <span className="domain-mini-level">{card.level}</span>
@@ -343,7 +367,7 @@ export function MapSheetPanel({
             ) : (
               <ul className="sheet-bio-experiences">
                 {experiences.map((experience) => (
-                  <li key={experience.name}>
+                  <li key={experience.name} {...hotbarDrag({ kind: 'experience', name: experience.name })}>
                     {experience.name} <span className="muted">+{experience.modifier}</span>
                   </li>
                 ))}
@@ -363,6 +387,7 @@ export function MapSheetPanel({
         <RollDialog
           spec={pending}
           experiences={experiences}
+          presetExperiences={pending.presetExperiences ?? []}
           hope={sheet.hope}
           outcome={null}
           canRollPrivately={canRollPrivately}

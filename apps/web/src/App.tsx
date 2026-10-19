@@ -378,6 +378,7 @@ function Shell() {
                 update={() => null}
                 rng={rng}
                 characterId={account.id}
+                campaignId={campaign.activeCampaignId}
                 send={campaign.send}
                 sharedLog={campaign.room?.rollLog}
                 privateLog={campaign.room?.privateLog}
@@ -405,6 +406,7 @@ function Shell() {
                 room={campaign.room}
                 isGameMaster={isGameMaster}
                 viewerId={account.id}
+                campaignId={campaign.activeCampaignId}
                 campaignName={activeCampaignName}
                 authToken={auth.token}
                 send={campaign.send}

@@ -22,6 +22,7 @@ import { PartyStrip, type PartyMember } from '../components/sheet/PartyStrip.js'
 import { TransformationPanel } from '../components/sheet/TransformationPanel.js';
 import { DeathMoveDialog } from '../components/sheet/DeathMoveDialog.js';
 import { LevelUpDialog } from '../components/sheet/LevelUpDialog.js';
+import { Hotbar, hotbarDrag, useHotbar, useHotbarKeys } from '../components/sheet/Hotbar.js';
 import { LoadoutPanel } from '../components/sheet/LoadoutPanel.js';
 import { PrintableSheet } from '../components/sheet/PrintableSheet.js';
 import { RollDialog, type RollDialogSpec } from '../components/sheet/RollDialog.js';
@@ -78,6 +79,7 @@ import {
   type SheetState,
   type TakeDamageOptions,
 } from '../state/sheet.js';
+import { rollRequestFor } from '../state/hotbar.js';
 
 interface SheetRouteProps {
   sheet: SheetState;
@@ -89,6 +91,8 @@ interface SheetRouteProps {
    * locally. The rules are identical either way — only who runs them changes.
    */
   characterId?: string;
+  /** The joined campaign, which scopes the hotbar. Without one there is no hotbar. */
+  campaignId?: string | null;
   send?: (event: RoomEvent) => void;
   sharedLog?: readonly RollEntry[] | undefined;
   /** Whispers and private rolls this account may see. Empty offline. */
@@ -123,6 +127,8 @@ interface SheetRouteProps {
 interface PendingRoll extends RollDialogSpec {
   /** Damage to roll automatically once an attack lands, if this was an attack. */
   damage: { dice: { count: number; die: number }; proficiency: number; modifier: number } | null;
+  /** Experiences ticked on open, when a hotbar slot opened the roll. */
+  presetExperiences?: readonly string[];
 }
 
 let entryCounter = 0;
@@ -136,6 +142,7 @@ export function SheetRoute({
   update,
   rng,
   characterId,
+  campaignId = null,
   send,
   sharedLog,
   privateLog,
@@ -344,6 +351,20 @@ export function SheetRoute({
     });
   };
 
+  // The hotbar lives with the campaign: its slots are saved per account and campaign.
+  const hotbarOn = online && campaignId !== null;
+  const hotbar = useHotbar(campaignId, characterId ?? null);
+  const drag = (slot: Parameters<typeof hotbarDrag>[0]) => (hotbarOn ? hotbarDrag(slot) : {});
+  const rollFromSlot = (index: number) => {
+    const slot = hotbar.bar[index];
+    if (!hotbarOn || slot === null || slot === undefined) return;
+    const request = rollRequestFor(slot, sheet);
+    if (request === null) return;
+    setOutcome(null);
+    setPending(request);
+  };
+  useHotbarKeys(rollFromSlot);
+
   const rollLooseDamage = (weaponName: string, damage: NonNullable<PendingRoll['damage']>) => {
     const label = t('sheet.roll.damageLabel', { title: weaponName });
     if (online) {
@@ -428,6 +449,7 @@ export function SheetRoute({
                   modifier={trait.modifier}
                   uses={trait.uses}
                   onClick={() => openTraitRoll(trait.label, trait.modifier)}
+                  {...(hotbarOn ? { hotbarSlot: { kind: 'trait', trait: trait.trait } as const } : {})}
                 />
               ))}
             </div>
@@ -551,7 +573,11 @@ export function SheetRoute({
             <SectionHead>{t('sheet.route.weaponsArmorTitle')}</SectionHead>
             {[view.primaryWeapon, view.secondaryWeapon].map((weapon, index) =>
               weapon === null ? null : (
-                <div className="card" key={weapon.id}>
+                <div
+                  className="card"
+                  key={weapon.id}
+                  {...drag({ kind: 'weapon', slot: index === 0 ? 'primary' : 'secondary' })}
+                >
                   <div className="card-head">
                     <strong>
                       {weapon.name}{' '}
@@ -623,7 +649,11 @@ export function SheetRoute({
             <SectionHead>{t('sheet.route.experiencesTitle')}</SectionHead>
             <div className="row">
               {experiences.map((experience) => (
-                <span key={experience.name} className="badge">
+                <span
+                  key={experience.name}
+                  className="badge"
+                  {...drag({ kind: 'experience', name: experience.name })}
+                >
                   {experience.name} {experience.modifier >= 0 ? '+' : ''}
                   {experience.modifier}
                 </span>
@@ -799,15 +829,21 @@ export function SheetRoute({
               )
             }
             onVault={(cardId) => run((s) => sendToVault(s, cardId), forMe({ type: 'vaultCard', cardId }))}
+            draggableCards={hotbarOn}
           />
           <RollLogPanel entries={sharedLog ?? log} privateEntries={privateLog} chat={chat} />
         </aside>
       </div>
 
+      {hotbarOn ? (
+        <Hotbar bar={hotbar.bar} sheet={sheet} onAssign={hotbar.assign} onUse={rollFromSlot} />
+      ) : null}
+
       {pending !== null ? (
         <RollDialog
           spec={pending}
           experiences={experiences}
+          presetExperiences={pending.presetExperiences ?? []}
           hope={sheet.hope}
           outcome={outcome}
           canRollPrivately={online && canRollPrivately}

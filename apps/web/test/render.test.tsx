@@ -16,6 +16,7 @@ import { RollDialog } from '../src/components/sheet/RollDialog.js';
 import { RollLogPanel } from '../src/components/sheet/RollLogPanel.js';
 import { Toast } from '../src/components/Toast.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
+import { Hotbar } from '../src/components/sheet/Hotbar.js';
 import { setLocale, t } from '../src/i18n/index.js';
 import { HelpRoute, parseHelpHash } from '../src/routes/HelpRoute.js';
 import { WizardRoute } from '../src/routes/WizardRoute.js';
@@ -27,6 +28,7 @@ import {
   type SheetEffect,
   type SheetState,
 } from '../src/state/sheet.js';
+import { emptyHotbar, setSlot } from '../src/state/hotbar.js';
 import { saveCreation } from '../src/state/storage.js';
 import { buildCharacter, buildCreationState } from './helpers.js';
 
@@ -584,5 +586,19 @@ describe('chat and private entries', () => {
       t('roll.privateToggle'),
     );
     expect(renderToStaticMarkup(<RollDialog {...props} />)).not.toContain(t('roll.privateToggle'));
+  });
+});
+
+describe('hotbar', () => {
+  it('names a trait slot and labels an empty one by its number', () => {
+    const sheet = createSheet(buildCharacter('bard'));
+    const bar = setSlot(emptyHotbar(), 0, { kind: 'trait', trait: 'agility' });
+    const html = renderToStaticMarkup(
+      <Hotbar bar={bar} sheet={sheet} onAssign={() => undefined} onUse={() => undefined} />,
+    );
+
+    expect(html).toContain(t('trait.agility'));
+    expect(html).toContain('aria-label="Espacio vacío 2"');
+    expect(html).toContain('aria-label="Espacio vacío 10"');
   });
 });

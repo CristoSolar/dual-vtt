@@ -1175,4 +1175,11 @@ export const en: Record<keyof typeof es, string> = {
   'compendium.featureType.reaction': 'Reaction',
   'compendium.featureType.passive': 'Passive',
   'compendium.featureType.evolution': 'Evolution',
+  'hotbar.label': 'Hotbar',
+  'hotbar.emptySlot': 'Empty slot {n}',
+  'hotbar.dropHint': 'Drag a trait, weapon, card, or Experience here from your sheet.',
+  'hotbar.slot': 'Slot {n}: {name}. Click or press {key} to roll; right-click to clear.',
+  'hotbar.unavailableSlot': 'Slot {n}: {name} is no longer on your sheet. Right-click to clear.',
+  'hotbar.primaryWeapon': 'Primary weapon',
+  'hotbar.secondaryWeapon': 'Secondary weapon',
 };

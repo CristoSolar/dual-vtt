@@ -1,4 +1,6 @@
 import { t } from '../../i18n/index.js';
+import type { HotbarSlot } from '../../state/hotbar.js';
+import { hotbarDrag } from './Hotbar.js';
 
 /**
  * The sheet's "rulebook" furniture, straight from the design direction's §05:
@@ -45,12 +47,21 @@ interface TraitPlaqueProps {
    * 1px border on its own. */
   active?: boolean;
   onClick?: () => void;
+  /** What the plaque drops onto the hotbar as; not draggable without one. */
+  hotbarSlot?: HotbarSlot;
 }
 
 const signed = (n: number) => (n >= 0 ? `+${n}` : `−${Math.abs(n)}`);
 
 /** A trait plaque with its name on an overlapping chip and its three SRD uses. */
-export function TraitPlaque({ label, modifier, uses, active = false, onClick }: TraitPlaqueProps) {
+export function TraitPlaque({
+  label,
+  modifier,
+  uses,
+  active = false,
+  onClick,
+  hotbarSlot,
+}: TraitPlaqueProps) {
   const body = (
     <>
       <span className="trait-plaque-chip">{label}</span>
@@ -59,7 +70,7 @@ export function TraitPlaque({ label, modifier, uses, active = false, onClick }: 
   );
 
   return (
-    <div className="trait-plaque-slot">
+    <div className="trait-plaque-slot" {...(hotbarSlot === undefined ? {} : hotbarDrag(hotbarSlot))}>
       {onClick === undefined ? (
         <div className="trait-plaque" data-active={active}>
           {body}

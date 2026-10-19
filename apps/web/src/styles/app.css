@@ -2638,6 +2638,70 @@ button.link {
   font-variant-numeric: tabular-nums;
 }
 
+/* Hotbar: ten drop targets along the bottom. Sticky under the sheet, floating
+   over the map's lower edge, clear of the zoom bar on the right. */
+.hotbar {
+  position: sticky;
+  bottom: var(--sp-2);
+  z-index: 30;
+  display: flex;
+  gap: var(--sp-1);
+  width: max-content;
+  max-width: 100%;
+  margin: var(--sp-4) auto 0;
+  padding: var(--sp-1);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--c-glass-blur));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-float), var(--shadow-inset-gold);
+}
+
+.map-fullscreen .hotbar {
+  position: absolute;
+  bottom: var(--sp-4);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.hotbar-slot {
+  position: relative;
+  width: 64px;
+  height: 48px;
+  min-height: 0;
+  padding: var(--sp-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--size-rule) dashed var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
+  background: transparent;
+  box-shadow: none;
+  color: var(--c-text);
+  font-size: var(--fs-xs);
+  line-height: 1.1;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hotbar-slot:not([data-empty]) {
+  border-style: solid;
+}
+
+.hotbar-slot[data-available='false'] {
+  opacity: 0.45;
+}
+
+.hotbar-key {
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  font-size: 10px;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* A small editor anchored to a selected token on the map — tracks the canvas's
    pan/zoom, so it stays glued to the token instead of drifting. Tabbed so size,
    image, and stats each get their own space instead of one long scroll. */

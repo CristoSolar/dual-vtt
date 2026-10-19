@@ -5,6 +5,7 @@ import { useState, type CSSProperties } from 'react';
 import { t } from '../../i18n/index.js';
 import { label as prettify } from '../../state/selectors.js';
 import { SectionHead } from '../SectionHead.js';
+import { hotbarDrag } from './Hotbar.js';
 
 /** Domain colours live in the token file; this maps a domain id onto its token. */
 const domainStyle = (domain: string): CSSProperties =>
@@ -24,6 +25,8 @@ interface LoadoutPanelProps {
   onToggleRest: () => void;
   onRecall: (cardId: string, vaulting: string | undefined) => void;
   onVault: (cardId: string) => void;
+  /** Lets a loadout card be dragged onto the hotbar, where there is one. */
+  draggableCards?: boolean;
 }
 
 /** Loadout and vault, with the Stress cost of recalling shown before you commit. */
@@ -35,6 +38,7 @@ export function LoadoutPanel({
   onToggleRest,
   onRecall,
   onVault,
+  draggableCards = false,
 }: LoadoutPanelProps) {
   const [vaulting, setVaulting] = useState<string>('');
   const full = loadout.length >= MAX_LOADOUT;
@@ -57,7 +61,12 @@ export function LoadoutPanel({
       </div>
 
       {loadout.map((card) => (
-        <div className="card domain-card" key={card.id} style={domainStyle(card.domain)}>
+        <div
+          className="card domain-card"
+          key={card.id}
+          style={domainStyle(card.domain)}
+          {...(draggableCards ? hotbarDrag({ kind: 'card', cardId: card.id }) : {})}
+        >
           <span className="domain-corner level domain-hex" title={t('sheet.loadout.cardLevelTitle')}>
             {card.level}
           </span>

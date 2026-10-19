@@ -1192,4 +1192,11 @@ export const es = {
   'compendium.featureType.reaction': 'Reacción',
   'compendium.featureType.passive': 'Pasiva',
   'compendium.featureType.evolution': 'Evolución',
+  'hotbar.label': 'Barra de acceso rápido',
+  'hotbar.emptySlot': 'Espacio vacío {n}',
+  'hotbar.dropHint': 'Arrastra aquí un rasgo, un arma, una carta o una Experiencia de tu hoja.',
+  'hotbar.slot': 'Espacio {n}: {name}. Clic o tecla {key} para tirar; clic derecho para vaciar.',
+  'hotbar.unavailableSlot': 'Espacio {n}: {name} ya no está en tu hoja. Clic derecho para vaciar.',
+  'hotbar.primaryWeapon': 'Arma principal',
+  'hotbar.secondaryWeapon': 'Arma secundaria',
 } as const;

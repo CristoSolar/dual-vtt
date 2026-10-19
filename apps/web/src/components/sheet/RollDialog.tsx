@@ -18,6 +18,8 @@ interface RollDialogProps {
   spec: RollDialogSpec;
   /** Experiences the character has, offered as an optional Hope spend. */
   experiences: readonly { name: string; modifier: number }[];
+  /** Experiences ticked when the dialog opens, as a hotbar slot asks for. */
+  presetExperiences?: readonly string[];
   hope: number;
   outcome: DualityRollOutcome | null;
   /**
@@ -35,6 +37,7 @@ interface RollDialogProps {
 export function RollDialog({
   spec,
   experiences,
+  presetExperiences = [],
   hope,
   outcome,
   canRollPrivately = false,
@@ -49,7 +52,7 @@ export function RollDialog({
   const [helpDice, setHelpDice] = useState(0);
   /** A reaction earns no Hope or Fear, which changes what the roll is worth. */
   const [reaction, setReaction] = useState(false);
-  const [chosen, setChosen] = useState<readonly string[]>([]);
+  const [chosen, setChosen] = useState<readonly string[]>(presetExperiences);
   const [isPrivate, setIsPrivate] = useState(false);
 
   const selected = experiences.filter((e) => chosen.includes(e.name));

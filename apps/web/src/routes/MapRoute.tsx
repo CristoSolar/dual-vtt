@@ -14,10 +14,12 @@ import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { GMPanel } from '../components/gm/GMPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
+import { Hotbar, isTypingTarget, useHotbar, useHotbarKeys } from '../components/sheet/Hotbar.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
 import { canRollPrivately } from '../state/feed.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
+import { rollRequestFor, type HotbarRoll } from '../state/hotbar.js';
 import { firstTarget, targetRings, toggleTarget } from '../state/targets.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
@@ -27,6 +29,8 @@ interface MapRouteProps {
   room: RoomState;
   isGameMaster: boolean;
   viewerId: string | null;
+  /** The joined campaign, which scopes the player's hotbar. */
+  campaignId?: string | null;
   /** Shown in the GM screen's header when it is opened over the map. */
   campaignName?: string;
   /** The session token, which uploads need: the endpoint writes to disk. */
@@ -95,6 +99,7 @@ export function MapRoute({
   room,
   isGameMaster,
   viewerId,
+  campaignId = null,
   campaignName = '',
   authToken,
   send,
@@ -150,6 +155,23 @@ export function MapRoute({
     (tokenId: string) => send({ type: 'setTargets', tokenIds: toggleTarget(myTargets, tokenId) }),
     [myTargets, send],
   );
+
+  // A player's hotbar opens its rolls in the sheet window, through the same
+  // dialog the sheet's own buttons use, opening the window if it is closed.
+  const hotbarOn = !isGameMaster && viewerId !== null && mySheet !== null && campaignId !== null;
+  const hotbar = useHotbar(campaignId, viewerId);
+  const [requestedRoll, setRequestedRoll] = useState<HotbarRoll | null>(null);
+  const takeRequestedRoll = useCallback(() => setRequestedRoll(null), []);
+  const rollFromSlot = (index: number) => {
+    const slot = hotbar.bar[index];
+    if (!hotbarOn || mySheet === null || slot === null || slot === undefined) return;
+    const request = rollRequestFor(slot, mySheet);
+    if (request === null) return;
+    setPanels((prev) => ({ ...prev, sheet: { ...prev.sheet, open: true } }));
+    focusPanel('sheet');
+    setRequestedRoll(request);
+  };
+  useHotbarKeys(rollFromSlot);
 
   /**
    * HP per token, for the bar under each name chip. Both sides come from real
@@ -255,15 +277,7 @@ export function MapRoute({
    */
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      const target = event.target;
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target instanceof HTMLSelectElement ||
-        (target instanceof HTMLElement && target.isContentEditable)
-      ) {
-        return;
-      }
+      if (isTypingTarget(event.target)) return;
 
       if (event.key === 'Escape') {
         setSelectedTokenId(null);
@@ -599,8 +613,14 @@ export function MapRoute({
             sharedLog={room.rollLog}
             canRollPrivately={canRollPrivately(room, viewerId)}
             target={myTarget}
+            requestedRoll={requestedRoll}
+            onRequestTaken={takeRequestedRoll}
           />
         </FloatingPanel>
+      ) : null}
+
+      {hotbarOn ? (
+        <Hotbar bar={hotbar.bar} sheet={mySheet} onAssign={hotbar.assign} onUse={rollFromSlot} />
       ) : null}
 
       {/* The GM's screen, on the map rather than a route away from it. Running a
