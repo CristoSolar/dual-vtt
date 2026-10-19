@@ -3,6 +3,7 @@ import {
   HOPE_FEATURE_COST,
   MAX_FEAR,
   MOVES_PER_REST,
+  applyDamage,
   gainFear,
   isMoveAvailable,
   mustRestLong,
@@ -1125,6 +1126,38 @@ export function applyRoomEvent(
         ),
       });
     }
+
+    case 'applyDamageToAdversary': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      const target = state.adversaryInstances.find((a) => a.instanceId === event.instanceId);
+      if (target === undefined) return fail('unknownAdversary', 'no such adversary');
+      const block = srd().adversaries.find((a) => a.id === target.adversaryId);
+      if (block === undefined) return fail('unknownAdversary', 'that stat block is not in the SRD');
+      // A minion has no thresholds and marks one HP per hit; with no Severe threshold
+      // the worst a hit can be is Major.
+      const thresholds = block.thresholds;
+      const marked =
+        thresholds === null
+          ? event.amount > 0
+            ? 1
+            : 0
+          : applyDamage({
+              incoming: event.amount,
+              thresholds: {
+                major: thresholds.major,
+                severe: thresholds.severe ?? Number.POSITIVE_INFINITY,
+              },
+            }).hpMarked;
+      return ok({
+        ...state,
+        adversaryInstances: state.adversaryInstances.map((a) =>
+          a.instanceId === event.instanceId
+            ? { ...a, hpMarked: Math.min(block.hp, a.hpMarked + marked) }
+            : a,
+        ),
+      });
+    }
   }
 }
 
@@ -1283,6 +1316,7 @@ function applyCharacterEvent(
               outcome: t.outcome.died ? 'failureFear' : 'successHope',
               experiences: [],
               reaction: false,
+              target: null,
             }
           : null;
       const next = withCharacter(state, event.characterId, t.sheet);
@@ -1366,10 +1400,30 @@ function applyCharacterEvent(
         return fail('rejected', 'a shared roll cannot be private');
       }
 
+      // A target is checked against what the roller could see, same as `setTargets`;
+      // an adversary's Difficulty comes from its stat block, never the client.
+      let target: Token | null = null;
+      let difficulty = event.request.difficulty;
+      if (event.targetTokenId !== undefined) {
+        const visible = actor.role === 'gm' ? state.map : mapForPlayer(state.map);
+        target =
+          visible.scenes
+            .flatMap((scene) => scene.tokens)
+            .find((token) => token.id === event.targetTokenId) ?? null;
+        if (target === null) return fail('unknownToken', 'no such token to roll against');
+        if (target.kind === 'adversary') {
+          const refId = target.refId;
+          const instance = state.adversaryInstances.find((a) => a.instanceId === refId);
+          const block = srd().adversaries.find((a) => a.id === instance?.adversaryId);
+          difficulty = block?.difficulty ?? difficulty;
+        }
+      }
+
       // A collaborator's roll and either half of a Tag Team roll generate no Hope or
       // Fear of their own: the lead roll and the chosen Tag Team roll do that.
       const request: DualityRollRequest = {
         ...event.request,
+        difficulty,
         ...(collaborating || inTagTeam ? { reaction: true } : {}),
         ...(leading
           ? { modifiers: event.request.modifiers + groupActionBonus(group.reactions) }
@@ -1390,6 +1444,7 @@ function applyCharacterEvent(
         outcome: t.outcome.result.outcome,
         experiences: [...request.experiences],
         reaction: request.reaction ?? false,
+        target: target?.name ?? null,
       };
 
       let next = withCharacter(state, event.characterId, t.sheet);

@@ -284,6 +284,7 @@ export function SheetRoute({
         outcome: result.result.outcome,
         experiences: [...request.experiences],
         reaction: request.reaction ?? false,
+        target: null,
       }),
     );
 

@@ -398,6 +398,7 @@ describe('GM panel renders', () => {
           outcome: 'successHope',
           experiences: [],
           reaction: false,
+          target: null,
         },
       ],
     };

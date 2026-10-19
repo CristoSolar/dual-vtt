@@ -56,6 +56,8 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     experiences: z.array(z.string()),
     /** Reactions read differently: they earn no Hope or Fear. */
     reaction: z.boolean().default(false),
+    /** The targeted token's name, when the roll was made against one. */
+    target: z.string().nullable().default(null),
   }),
   z.object({
     kind: z.literal('attack'),

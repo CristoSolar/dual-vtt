@@ -1569,6 +1569,163 @@ describe('per-account targets', () => {
   });
 });
 
+describe('rolling against a target and damaging adversaries', () => {
+  const token = (over: Partial<Token>): Token => ({
+    id: 'tok-1',
+    kind: 'marker',
+    refId: null,
+    name: 'Marker',
+    x: 100,
+    y: 100,
+    width: 50,
+    height: 50,
+    rotation: 0,
+    color: '#fff',
+    image: null,
+    colorFrame: false,
+    hidden: false,
+    showRings: false,
+    ownerId: null,
+    conditions: [],
+    visionRadius: 300,
+    ...over,
+  });
+
+  const request = {
+    label: 'Agility Roll',
+    modifiers: 0,
+    difficulty: 10,
+    advantage: 0,
+    disadvantage: 0,
+    helpDice: 0,
+    reaction: false,
+    experiences: [],
+  };
+
+  /** A room with an active scene holding one token and one adversary in play. */
+  function roomWith(adversaryId: string, placed: Token): RoomState {
+    let room = apply(roomWithPlayers(), GM, { type: 'addScene', id: 's-1', name: 'The bridge' });
+    room = apply(room, GM, { type: 'setActiveScene', id: 's-1' });
+    room = apply(room, GM, { type: 'addAdversary', instanceId: 'a-1', adversaryId, name: 'Burrower' });
+    return apply(room, GM, { type: 'addToken', sceneId: 's-1', token: placed });
+  }
+
+  function dualityEntry(room: RoomState, actor: Actor, targetTokenId: string) {
+    const result = applyRoomEvent(
+      room,
+      actor,
+      { type: 'rollDuality', characterId: ALEX.id, request, targetTokenId, visibility: 'public' },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error(`rejected: ${result.error}`);
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
+    return entry;
+  }
+
+  const adversaryToken = token({ kind: 'adversary', refId: 'a-1', name: 'Burrower' });
+
+  it('reads the Difficulty of a targeted adversary from its stat block', () => {
+    // acid-burrower has Difficulty 14; the client's 10 is ignored.
+    const room = roomWith('acid-burrower', adversaryToken);
+    const entry = dualityEntry(room, ALEX, 'tok-1');
+    expect(entry.difficulty).toBe(14);
+    expect(entry.target).toBe('Burrower');
+  });
+
+  it('uses the requested Difficulty against a marker or a PC, naming the target', () => {
+    const marker = dualityEntry(roomWith('acid-burrower', token({})), ALEX, 'tok-1');
+    expect(marker.difficulty).toBe(10);
+    expect(marker.target).toBe('Marker');
+
+    const pc = token({ kind: 'pc', refId: SAM.id, name: 'Sam' });
+    const atSam = dualityEntry(roomWith('acid-burrower', pc), ALEX, 'tok-1');
+    expect(atSam.difficulty).toBe(10);
+    expect(atSam.target).toBe('Sam');
+  });
+
+  it('falls back to the requested Difficulty when the adversary is not in play', () => {
+    const stray = token({ kind: 'adversary', refId: 'gone', name: 'Ghost' });
+    const entry = dualityEntry(roomWith('acid-burrower', stray), ALEX, 'tok-1');
+    expect(entry.difficulty).toBe(10);
+    expect(entry.target).toBe('Ghost');
+  });
+
+  it('leaves the target empty when none is named', () => {
+    const result = applyRoomEvent(
+      roomWith('acid-burrower', adversaryToken),
+      ALEX,
+      { type: 'rollDuality', characterId: ALEX.id, request, visibility: 'public' },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('rejected');
+    const entry = result.entries[0];
+    expect(entry?.kind === 'duality' && entry.target).toBeNull();
+  });
+
+  it('refuses a player rolling against a token they cannot see', () => {
+    const room = roomWith('acid-burrower', { ...adversaryToken, hidden: true });
+    const event: RoomEvent = {
+      type: 'rollDuality',
+      characterId: ALEX.id,
+      request,
+      targetTokenId: 'tok-1',
+      visibility: 'public',
+    };
+    expect(refusal(room, ALEX, event)).toBe('unknownToken');
+    expect(refusal(room, ALEX, { ...event, targetTokenId: 'nope' })).toBe('unknownToken');
+    // The GM sees hidden tokens, so may roll against one (here, on Alex's behalf).
+    expect(dualityEntry(room, GM, 'tok-1').difficulty).toBe(14);
+  });
+
+  it('marks HP on an adversary by its thresholds', () => {
+    // acid-burrower: Major 8, Severe 15.
+    const room = roomWith('acid-burrower', adversaryToken);
+    const hpOf = (r: RoomState) => r.adversaryInstances.find((a) => a.instanceId === 'a-1')?.hpMarked;
+    const hit = (amount: number) =>
+      apply(room, GM, { type: 'applyDamageToAdversary', instanceId: 'a-1', amount });
+    expect(hpOf(hit(15))).toBe(3);
+    expect(hpOf(hit(8))).toBe(2);
+    expect(hpOf(hit(3))).toBe(1);
+    expect(hpOf(hit(0))).toBe(0);
+  });
+
+  it('never marks past the adversary’s HP', () => {
+    let room = roomWith('acid-burrower', adversaryToken);
+    for (let i = 0; i < 4; i++) {
+      room = apply(room, GM, { type: 'applyDamageToAdversary', instanceId: 'a-1', amount: 20 });
+    }
+    expect(room.adversaryInstances[0]?.hpMarked).toBe(8);
+  });
+
+  it('caps an adversary with no Severe threshold at Major', () => {
+    // octopus: Major 3, no Severe, 2 HP — so 999 damage marks 2, not 3.
+    const room = roomWith('octopus', adversaryToken);
+    const next = apply(room, GM, { type: 'applyDamageToAdversary', instanceId: 'a-1', amount: 999 });
+    expect(next.adversaryInstances[0]?.hpMarked).toBe(2);
+  });
+
+  it('marks a single HP on a minion per hit', () => {
+    const block = srd().adversaries.find((a) => a.thresholds === null && a.hp > 1);
+    const minionId = block?.id ?? 'darkweave-crawler';
+    const room = roomWith(minionId, adversaryToken);
+    const next = apply(room, GM, { type: 'applyDamageToAdversary', instanceId: 'a-1', amount: 30 });
+    expect(next.adversaryInstances[0]?.hpMarked).toBe(1);
+  });
+
+  it('is the GM’s alone', () => {
+    const room = roomWith('acid-burrower', adversaryToken);
+    expect(
+      refusal(room, ALEX, { type: 'applyDamageToAdversary', instanceId: 'a-1', amount: 10 }),
+    ).toBe('notGameMaster');
+    expect(
+      refusal(room, GM, { type: 'applyDamageToAdversary', instanceId: 'nope', amount: 10 }),
+    ).toBe('unknownAdversary');
+  });
+});
+
 describe('chat and private rolls', () => {
   let room: RoomState;
   beforeEach(() => {

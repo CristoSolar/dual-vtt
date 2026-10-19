@@ -32,6 +32,7 @@ export const CHANNEL = {
 
 const amount = z.number().int().min(1).max(99);
 const characterId = z.string().min(1).max(64);
+const tokenId = z.string().min(1).max(64);
 
 const GoldUnitSchema = z.enum(['handfuls', 'bags', 'chests']);
 const DamageTypeSchema = z.enum(['physical', 'magic', 'both']);
@@ -208,6 +209,11 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
       // unbounded bonus cannot be dialled in from the client.
       experiences: z.array(z.string().min(1)).max(5),
     }),
+    /**
+     * The token rolled against. An adversary's Difficulty then comes from its stat
+     * block on the server, overriding `request.difficulty`.
+     */
+    targetTokenId: tokenId.optional(),
     visibility: VisibilitySchema.default('public'),
   }),
   z.object({
@@ -349,11 +355,16 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     hpMarked: z.number().int().min(0).max(99),
     stressMarked: z.number().int().min(0).max(99),
   }),
+  z.object({
+    // The GM states the hit; the server marks HP against the stat block's thresholds.
+    type: z.literal('applyDamageToAdversary'),
+    instanceId: z.string().min(1),
+    amount: z.number().int().min(0).max(999),
+  }),
 ]);
 export type GameMasterRoomEvent = z.infer<typeof GameMasterRoomEventSchema>;
 
 const sceneId = z.string().min(1).max(64);
-const tokenId = z.string().min(1).max(64);
 
 /**
  * Map intents. All are GM-only except `moveToken` (a player may send it for a
