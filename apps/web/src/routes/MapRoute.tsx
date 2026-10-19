@@ -712,7 +712,7 @@ export function MapRoute({
           onClose={() => closePanel('gm')}
           wide
         >
-          <GMPanel room={room} campaignName={campaignName} send={send} />
+          <GMPanel room={room} campaignName={campaignName} authToken={authToken} send={send} />
         </FloatingPanel>
       ) : null}
 

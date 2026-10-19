@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
+import { AudioPlayer } from './components/audio/AudioPlayer.js';
 import { GMPanel } from './components/gm/GMPanel.js';
 import { ConfirmDialog } from './components/ConfirmDialog.js';
 import { DiceOverlay } from './components/dice/DiceOverlay.js';
@@ -211,6 +212,9 @@ function Shell() {
 
       {diceOn ? <DiceOverlay roll={campaign.lastDice} /> : null}
 
+      {/* Above the routes, so the music carries on from the sheet to the map. */}
+      {campaign.room === null ? null : <AudioPlayer audio={campaign.room.audio} />}
+
       {guideOpen ? <GuideDialog role={account.role} onClose={closeGuide} /> : null}
 
       {/* A dropped socket used to show nothing at all: the sheet kept taking clicks
@@ -363,7 +367,12 @@ function Shell() {
             campaign.room === null || !isGameMaster ? (
               <Navigate to="/" replace />
             ) : (
-              <GMPanel room={campaign.room} campaignName={activeCampaignName} send={campaign.send} />
+              <GMPanel
+                room={campaign.room}
+                campaignName={activeCampaignName}
+                authToken={auth.token}
+                send={campaign.send}
+              />
             )
           }
         />

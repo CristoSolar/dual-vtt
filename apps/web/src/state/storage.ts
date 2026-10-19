@@ -128,3 +128,29 @@ export function saveHotbar(
     // Private mode or quota: the bar lasts until the page reloads.
   }
 }
+
+const AUDIO_VOLUME_KEY = `${KEY_PREFIX}:audio-volume`;
+const AudioVolumeSchema = z.number().min(0).max(1);
+
+/**
+ * This device's playlist volume, 0..1, multiplied with the GM's. Full until set,
+ * so muting is a choice each listener makes, not a default the GM fights.
+ */
+export function loadAudioVolume(storage: StorageLike): number {
+  try {
+    const raw = storage.getItem(AUDIO_VOLUME_KEY);
+    if (raw === null) return 1;
+    const parsed = AudioVolumeSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : 1;
+  } catch {
+    return 1;
+  }
+}
+
+export function saveAudioVolume(storage: StorageLike, volume: number): void {
+  try {
+    storage.setItem(AUDIO_VOLUME_KEY, JSON.stringify(volume));
+  } catch {
+    // Private mode or quota: the level lasts until the page reloads.
+  }
+}

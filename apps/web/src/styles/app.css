@@ -2949,6 +2949,36 @@ button.link {
   }
 }
 
+/* ============================================================ audio player */
+
+/* What the GM is playing, on every screen. Under the toasts, which come and go. */
+.audio-player {
+  position: fixed;
+  right: var(--sp-4);
+  bottom: var(--sp-4);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  max-width: min(420px, 92vw);
+  padding: var(--sp-1) var(--sp-3);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--c-glass-blur));
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-float);
+}
+
+.audio-player-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audio-player input[type='range'] {
+  width: 96px;
+}
+
 /* ==================================================================== toast */
 
 .toast-stack {

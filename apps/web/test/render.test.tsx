@@ -4,8 +4,9 @@ import { srd } from '@daggerheart/srd-data';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Route, Routes } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { AudioPlayer } from '../src/components/audio/AudioPlayer.js';
 import { EntryDetail } from '../src/components/help/details.js';
 import { COLLECTIONS } from '../src/components/help/Compendium.js';
 import { GMPanel } from '../src/components/gm/GMPanel.js';
@@ -31,7 +32,7 @@ import {
 } from '../src/state/sheet.js';
 import { emptyHotbar, setSlot } from '../src/state/hotbar.js';
 import { saveCreation } from '../src/state/storage.js';
-import { buildCharacter, buildCreationState } from './helpers.js';
+import { buildCharacter, buildCreationState, fakeStorage } from './helpers.js';
 
 /**
  * Renders the real component tree to markup. This catches crashes that typechecking
@@ -311,7 +312,7 @@ describe('the GM rolling for an adversary', () => {
         },
       ],
     };
-    const html = render(<GMPanel room={room} campaignName="A" send={() => {}} />, '/gm');
+    const html = render(<GMPanel room={room} campaignName="A" authToken={null} send={() => {}} />, '/gm');
     expect(html).toContain(t('gm.adversaries.rollAttack'));
     expect(html).toContain(t('gm.adversaries.noTarget'));
     // The seated player is offered as a target.
@@ -322,12 +323,12 @@ describe('the GM rolling for an adversary', () => {
 describe('downtime', () => {
   it('offers the GM a rest, and says when the party owes a long one', () => {
     const base = gmRoom();
-    expect(render(<GMPanel room={base} campaignName="A" send={() => {}} />, '/gm')).toContain(
+    expect(render(<GMPanel room={base} campaignName="A" authToken={null} send={() => {}} />, '/gm')).toContain(
       t('gm.downtime.beginShort'),
     );
 
     const owed = { ...base, consecutiveShortRests: 3 };
-    const html = render(<GMPanel room={owed} campaignName="A" send={() => {}} />, '/gm');
+    const html = render(<GMPanel room={owed} campaignName="A" authToken={null} send={() => {}} />, '/gm');
     expect(html).toContain(t('gm.downtime.owesLong'));
   });
 
@@ -336,8 +337,39 @@ describe('downtime', () => {
       ...gmRoom(),
       rest: { kind: 'short' as const, movesLeft: { pc1: 2 } },
     };
-    const html = render(<GMPanel room={resting} campaignName="A" send={() => {}} />, '/gm');
+    const html = render(<GMPanel room={resting} campaignName="A" authToken={null} send={() => {}} />, '/gm');
     expect(html).toContain(t('gm.downtime.end'));
+  });
+});
+
+describe('playlist', () => {
+  const audio: RoomState['audio'] = {
+    tracks: [{ id: 't-1', name: 'Tavern Rain', url: '/uploads/a.ogg' }],
+    playing: { trackId: 't-1', startedAt: 0, loop: true, volume: 0.5 },
+  };
+
+  it('lists the GM’s tracks with a way to stop the one playing', () => {
+    const room = { ...gmRoom(), audio };
+    const html = render(<GMPanel room={room} campaignName="A" authToken={null} send={() => {}} />);
+    expect(html).toContain(t('gm.playlist.title'));
+    expect(html).toContain('Tavern Rain');
+    expect(html).toContain(t('gm.playlist.stop'));
+    expect(html).toContain(t('gm.playlist.upload'));
+  });
+
+  it('shows every listener what is playing, without the unlock button until a refusal', () => {
+    vi.stubGlobal('window', { localStorage: fakeStorage() });
+    try {
+      const html = render(<AudioPlayer audio={audio} />);
+      expect(html).toContain(t('audio.nowPlaying', { name: 'Tavern Rain' }));
+      expect(html).toContain(t('audio.volume'));
+      expect(html).not.toContain(t('audio.enable'));
+      expect(render(<AudioPlayer audio={{ ...audio, playing: null }} />)).not.toContain(
+        'Tavern Rain',
+      );
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
 
@@ -410,7 +442,7 @@ describe('GM panel renders', () => {
       ],
     };
 
-    const html = render(<GMPanel room={room} campaignName="Grupo Martes" send={() => {}} />);
+    const html = render(<GMPanel room={room} campaignName="Grupo Martes" authToken={null} send={() => {}} />);
 
     expect(html).toContain(t('app.gmPanel'));
     expect(html).toContain('Grupo Martes');
@@ -578,7 +610,7 @@ describe('chat and private entries', () => {
     room.adversaryInstances = [
       { instanceId: 'a1', adversaryId: 'courtier', name: 'Courtier', hpMarked: 0, stressMarked: 0, usedFeatures: [] },
     ];
-    const html = render(<GMPanel room={room} campaignName="Grupo" send={() => {}} />);
+    const html = render(<GMPanel room={room} campaignName="Grupo" authToken={null} send={() => {}} />);
     expect(html).toContain('Un secreto');
     expect(html).toContain(t('log.private'));
     expect(html).toContain(t('roll.privateToggle'));

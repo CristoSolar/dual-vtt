@@ -48,7 +48,29 @@ export async function uploadImage(file: File, token: string | null): Promise<Sce
   }
 
   const { width, height } = await readDimensions(file);
+  return { url: await postUpload(file, token), width, height };
+}
 
+/** Playlist tracks the server will accept. It re-checks the bytes regardless. */
+export const ACCEPTED_AUDIO_TYPES = ['audio/ogg', 'audio/mpeg', 'audio/mp3'];
+const AUDIO_EXTENSION = /\.(ogg|mp3)$/i;
+
+/**
+ * Uploads a playlist track and returns the path it is served from. Some browsers
+ * report no type for an .ogg, so the extension is enough to try; the server
+ * decides from the bytes either way.
+ */
+export async function uploadAudio(file: File, token: string | null): Promise<string> {
+  if (token === null || token === '') throw new Error(t('auth.sessionExpired'));
+  if (!ACCEPTED_AUDIO_TYPES.includes(file.type) && !AUDIO_EXTENSION.test(file.name)) {
+    throw new Error(t('gm.playlist.badType'));
+  }
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error(t('gm.playlist.tooLarge'));
+  return postUpload(file, token);
+}
+
+/** Sends a file's raw bytes to `POST /uploads` and returns the URL it is served at. */
+async function postUpload(file: File, token: string): Promise<string> {
   const response = await fetch(`${SERVER_URL}/uploads`, {
     method: 'POST',
     headers: { 'content-type': file.type, authorization: `Bearer ${token}` },
@@ -66,7 +88,7 @@ export async function uploadImage(file: File, token: string | null): Promise<Sce
     const message =
       typeof body === 'object' && body !== null && 'error' in body
         ? String((body as { error: unknown }).error)
-        : 'The server rejected that image.';
+        : 'The server rejected that file.';
     throw new Error(message);
   }
 
@@ -75,5 +97,5 @@ export async function uploadImage(file: File, token: string | null): Promise<Sce
     throw new Error('The server sent an unreadable response.');
   }
 
-  return { url: String((body as { url: unknown }).url), width, height };
+  return String((body as { url: unknown }).url);
 }

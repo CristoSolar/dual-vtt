@@ -1,4 +1,5 @@
 import {
+  MAX_TRACKS,
   outcomeTone,
   type AdversaryInstance,
   type Countdown,
@@ -28,12 +29,15 @@ import { t, type MessageKey } from '../../i18n/index.js';
 import { chatRecipients, mergeFeed } from '../../state/feed.js';
 import { label as prettify } from '../../state/selectors.js';
 import { adversaryTargetOf, pcTargetOf } from '../../state/targets.js';
+import { uploadAudio } from '../../state/uploadMap.js';
 import { SectionHead } from '../SectionHead.js';
 import { ChatBox, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
 
 interface GMPanelProps {
   room: RoomState;
   campaignName: string;
+  /** The session token, for uploading playlist tracks. */
+  authToken: string | null;
   send: (event: RoomEvent) => void;
 }
 
@@ -157,7 +161,7 @@ function Downtime({ room, send }: { room: RoomState; send: (event: RoomEvent) =>
  * The GM's screen. Every control emits an intent; the server validates it, applies
  * it, and broadcasts the result — nothing here changes state directly.
  */
-export function GMPanel({ room, campaignName, send }: GMPanelProps) {
+export function GMPanel({ room, campaignName, authToken, send }: GMPanelProps) {
   return (
     <section className="gm-scope">
       <p className="gm-banner">
@@ -184,6 +188,7 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
           <Hazards send={send} />
           <Adversaries room={room} send={send} />
           <EnvironmentPicker activeEnvironment={room.activeEnvironment} send={send} />
+          <Playlist audio={room.audio} authToken={authToken} send={send} />
         </div>
 
         <aside>
@@ -192,6 +197,124 @@ export function GMPanel({ room, campaignName, send }: GMPanelProps) {
         </aside>
       </div>
     </section>
+  );
+}
+
+/**
+ * The GM's music. Playing a track only names it and whether it loops; the server
+ * stamps when it started, and every tab seeks to that. The table volume is sent
+ * when the slider is let go, not on every step of the drag.
+ */
+function Playlist({
+  audio,
+  authToken,
+  send,
+}: {
+  audio: RoomState['audio'];
+  authToken: string | null;
+  send: (event: RoomEvent) => void;
+}) {
+  const [loop, setLoop] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [volumeDraft, setVolumeDraft] = useState<number | null>(null);
+  const { tracks, playing } = audio;
+
+  const onUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (file === undefined) return;
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const url = await uploadAudio(file, authToken);
+      const stem = file.name.replace(/\.[^.]+$/, '').trim();
+      const name = (stem === '' ? file.name : stem).slice(0, 80);
+      send({ type: 'addTrack', track: { id: nextId('track'), name, url } });
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : t('map.uploadFailed'));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const commitVolume = () => {
+    if (volumeDraft === null) return;
+    send({ type: 'setTrackVolume', volume: volumeDraft });
+    setVolumeDraft(null);
+  };
+
+  return (
+    <div className="panel">
+      <SectionHead>{t('gm.playlist.title')}</SectionHead>
+      <p className="muted">{t('gm.playlist.hint')}</p>
+      {tracks.length === 0 ? <p className="muted">{t('gm.playlist.empty')}</p> : null}
+      {tracks.map((track) => {
+        const isPlaying = playing?.trackId === track.id;
+        return (
+          <div className="card-head" key={track.id}>
+            <strong>
+              {track.name}{' '}
+              {isPlaying ? <span className="badge">{t('gm.playlist.playing')}</span> : null}
+            </strong>
+            <div className="row">
+              {isPlaying ? (
+                <button type="button" onClick={() => send({ type: 'stopTrack' })}>
+                  {t('gm.playlist.stop')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => send({ type: 'playTrack', trackId: track.id, loop })}
+                >
+                  {t('gm.playlist.play')}
+                </button>
+              )}
+              <button type="button" onClick={() => send({ type: 'removeTrack', id: track.id })}>
+                {t('gm.remove')}
+              </button>
+            </div>
+          </div>
+        );
+      })}
+      <div className="row mt-3">
+        <label>
+          <input
+            type="checkbox"
+            checked={loop}
+            onChange={(event) => setLoop(event.target.checked)}
+          />{' '}
+          {t('gm.playlist.loop')}
+        </label>
+        <label>
+          {t('gm.playlist.volume')}{' '}
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            disabled={playing === null}
+            value={volumeDraft ?? playing?.volume ?? 1}
+            onChange={(event) => setVolumeDraft(Number(event.target.value))}
+            onPointerUp={commitVolume}
+            onKeyUp={commitVolume}
+            onBlur={commitVolume}
+          />
+        </label>
+      </div>
+      <div className="row mt-3">
+        <label htmlFor="playlist-upload">{t('gm.playlist.upload')}</label>
+        <input
+          id="playlist-upload"
+          type="file"
+          accept="audio/ogg,audio/mpeg,.ogg,.mp3"
+          disabled={uploading || tracks.length >= MAX_TRACKS}
+          onChange={(event) => void onUpload(event)}
+        />
+        {uploading ? <span className="muted">{t('map.uploading')}</span> : null}
+      </div>
+      {uploadError === null ? null : <p className="field-error">{uploadError}</p>}
+    </div>
   );
 }
 
