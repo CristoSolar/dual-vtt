@@ -27,6 +27,7 @@ const token = (id: string, over: Partial<Token> = {}): Token => ({
   showRings: false,
   ownerId: null,
   conditions: [],
+  dragFrom: null,
   visionRadius: 300,
   ...over,
 });

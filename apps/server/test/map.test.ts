@@ -16,6 +16,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   ownerId: null,
   hidden: false,
   conditions: [],
+  dragFrom: null,
   showRings: false,
   color: '#e2b857',
   image: null,

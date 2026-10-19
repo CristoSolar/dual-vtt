@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { GridModeSchema } from './ranges.js';
+import { MAX_SCENE_REGIONS, RegionSchema } from './regions.js';
 
 /**
  * The map slice of a room: a set of scenes, one of which is active.
@@ -63,6 +64,12 @@ export const TokenSchema = z.object({
    */
   conditions: z.array(z.string().min(1).max(40)).max(8).default([]),
   visionRadius: z.number().min(0).max(4000).default(720),
+  /**
+   * Where the drag in progress started, set by its first preview and cleared on
+   * release. Previews move the token, so without this the release would compare
+   * against the last preview and miss a region it had already crossed into.
+   */
+  dragFrom: z.object({ x: z.number(), y: z.number() }).nullable().default(null),
 });
 export type Token = z.infer<typeof TokenSchema>;
 
@@ -141,6 +148,7 @@ export const SceneSchema = z.object({
   walls: z.array(WallSchema).max(500).default([]),
   visionMode: VisionModeSchema.default('manual'),
   notes: z.array(MapNoteSchema).max(MAX_SCENE_NOTES).default([]),
+  regions: z.array(RegionSchema).max(MAX_SCENE_REGIONS).default([]),
 });
 export type Scene = z.infer<typeof SceneSchema>;
 
@@ -177,6 +185,7 @@ export function createScene(id: string, name: string): Scene {
     walls: [],
     visionMode: 'manual',
     notes: [],
+    regions: [],
   };
 }
 
@@ -299,7 +308,8 @@ const EMPTY_PLAYER_MAP: MapState = Object.freeze({ scenes: [], activeSceneId: nu
 /**
  * What a player is allowed to see of the map: the active scene only, without
  * GM-only tokens. Unrevealed fog is absent by construction — `revealed` lists what
- * players can see, so hidden regions are never transmitted.
+ * players can see, so hidden areas are never transmitted. Of the drawn regions,
+ * only those marked visible arrive, and a hazard arrives without its text.
  */
 export function mapForPlayer(map: MapState): MapState {
   const active = map.scenes.find((scene) => scene.id === map.activeSceneId);
@@ -307,6 +317,15 @@ export function mapForPlayer(map: MapState): MapState {
 
   return {
     activeSceneId: map.activeSceneId,
-    scenes: [{ ...active, tokens: active.tokens.filter((token) => !token.hidden), walls: [] }],
+    scenes: [
+      {
+        ...active,
+        tokens: active.tokens.filter((token) => !token.hidden),
+        walls: [],
+        regions: active.regions
+          .filter((region) => region.visibleToPlayers)
+          .map((region) => (region.effect === 'hazard' ? { ...region, text: '' } : region)),
+      },
+    ],
   };
 }

@@ -49,6 +49,7 @@ import {
   type Scene,
   type Token,
 } from './map.js';
+import { MAX_SCENE_REGIONS, regionsEntered } from './regions.js';
 import { computeVisionPolygon } from './vision.js';
 import {
   ActionOutcomeSchema,
@@ -1296,6 +1297,8 @@ export function applyRoomEvent(
     case 'removeWall':
     case 'updateWall':
     case 'setSceneVisionMode':
+    case 'upsertRegion':
+    case 'removeRegion':
       return applyMapEvent(state, actor, event);
 
     case 'addToken': {
@@ -1341,11 +1344,33 @@ export function applyRoomEvent(
         return fail('unknownScene', 'that scene is not active');
       }
 
+      // A preview remembers where its drag began; the release forgets it and is
+      // what counts, so a region is entered once per drag, measured from its start.
+      const dragFrom = event.commit ? null : token.dragFrom ?? { x: token.x, y: token.y };
+      const after = { ...token, x: event.x, y: event.y, dragFrom };
       const moved = {
         ...scene,
-        tokens: scene.tokens.map((t) => (t.id === token.id ? { ...t, x: event.x, y: event.y } : t)),
+        tokens: scene.tokens.map((t) => (t.id === token.id ? after : t)),
       };
-      return ok(withScene(state, scene.id, revealVisionFor(moved, token, event.x, event.y)));
+      const next = withScene(state, scene.id, revealVisionFor(moved, token, event.x, event.y));
+      if (!event.commit) return ok(next);
+
+      const before = { ...token, ...(token.dragFrom ?? {}) };
+      const notices = regionsEntered(before, after, scene.regions)
+        .filter((region) => region.effect === 'hazard')
+        .map(
+          (region): RollEntry => ({
+            kind: 'message',
+            id: `${now.toString(36)}-${token.id}-${region.id}-rgn`,
+            at: now,
+            by: token.name,
+            byId: actor.id,
+            text: `«${token.name}» entró en «${region.name}»${region.text === '' ? '' : `: ${region.text}`}`.slice(0, 500),
+          }),
+        );
+      // The GM's alone: the region may be one the players cannot see.
+      const logged = logEntries(next, actor, notices, 'private', []);
+      return ok(logged.state, null, [], logged.privateEntries);
     }
 
     case 'updateAdversary': {
@@ -2038,6 +2063,28 @@ function applyMapEvent(
         }
       }
       return ok(withScene(state, scene.id, next));
+    }
+    case 'upsertRegion': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      const exists = scene.regions.some((region) => region.id === event.region.id);
+      if (!exists && scene.regions.length >= MAX_SCENE_REGIONS) {
+        return fail('rejected', 'region limit reached');
+      }
+      const regions = exists
+        ? scene.regions.map((region) => (region.id === event.region.id ? event.region : region))
+        : [...scene.regions, event.region];
+      return ok(withScene(state, scene.id, { ...scene, regions }));
+    }
+    case 'removeRegion': {
+      const scene = findScene(event.sceneId);
+      if (scene === undefined) return fail('unknownScene', 'no such scene');
+      return ok(
+        withScene(state, scene.id, {
+          ...scene,
+          regions: scene.regions.filter((region) => region.id !== event.regionId),
+        }),
+      );
     }
   }
 }

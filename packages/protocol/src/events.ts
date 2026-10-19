@@ -12,6 +12,7 @@ import {
   VisionModeSchema,
   WallSchema,
 } from './map.js';
+import { RegionSchema } from './regions.js';
 import { PrivateEntrySchema, RollEntrySchema, VisibilitySchema } from './rollLog.js';
 import {
   DeathMoveChoiceSchema,
@@ -461,6 +462,9 @@ export const MapRoomEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('removeWall'), sceneId, wallId: z.string().min(1).max(64) }),
   z.object({ type: z.literal('updateWall'), sceneId, wall: WallSchema }),
   z.object({ type: z.literal('setSceneVisionMode'), sceneId, visionMode: VisionModeSchema }),
+  // Adds the region, or replaces the one with the same id.
+  z.object({ type: z.literal('upsertRegion'), sceneId, region: RegionSchema }),
+  z.object({ type: z.literal('removeRegion'), sceneId, regionId: z.string().min(1).max(64) }),
 ]);
 export type MapRoomEvent = z.infer<typeof MapRoomEventSchema>;
 

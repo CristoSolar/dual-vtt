@@ -41,6 +41,7 @@ const token = (over: Partial<Token> = {}): Token => ({
   image: null,
   colorFrame: false,
   conditions: [],
+  dragFrom: null,
   visionRadius: 720,
   ...over,
 });

@@ -1344,6 +1344,7 @@ describe('map events', () => {
     showRings: false,
     ownerId: ALEX.id,
     conditions: [],
+    dragFrom: null,
     visionRadius: 300,
     ...over,
   });
@@ -1494,6 +1495,7 @@ describe('per-account targets', () => {
     showRings: false,
     ownerId: ALEX.id,
     conditions: [],
+    dragFrom: null,
     visionRadius: 300,
     ...over,
   });
@@ -1591,6 +1593,7 @@ describe('rolling against a target and damaging adversaries', () => {
     showRings: false,
     ownerId: null,
     conditions: [],
+    dragFrom: null,
     visionRadius: 300,
     ...over,
   });
