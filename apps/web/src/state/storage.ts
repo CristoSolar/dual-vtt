@@ -1,6 +1,8 @@
 import { deserialize, serialize, type CreationState } from '@daggerheart/character';
 import { z } from 'zod';
 
+import { emptyHotbar, HotbarSchema, type Hotbar } from './hotbar.js';
+
 /**
  * localStorage persistence for an in-progress character creation only. The
  * finished character itself is never stored locally — it is claimed straight into
@@ -96,5 +98,33 @@ export function saveDicePreference(storage: StorageLike, enabled: boolean): void
     storage.setItem(DICE_KEY, JSON.stringify(enabled));
   } catch {
     // Private mode or quota: the choice lasts until the page reloads.
+  }
+}
+
+const hotbarKey = (campaignId: string, accountId: string): string =>
+  `${KEY_PREFIX}:hotbar:${campaignId}:${accountId}`;
+
+/** This account's hotbar in this campaign; anything unreadable is an empty bar. */
+export function loadHotbar(storage: StorageLike, campaignId: string, accountId: string): Hotbar {
+  try {
+    const raw = storage.getItem(hotbarKey(campaignId, accountId));
+    if (raw === null) return emptyHotbar();
+    const parsed = HotbarSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : emptyHotbar();
+  } catch {
+    return emptyHotbar();
+  }
+}
+
+export function saveHotbar(
+  storage: StorageLike,
+  campaignId: string,
+  accountId: string,
+  bar: Hotbar,
+): void {
+  try {
+    storage.setItem(hotbarKey(campaignId, accountId), JSON.stringify(bar));
+  } catch {
+    // Private mode or quota: the bar lasts until the page reloads.
   }
 }
