@@ -27,7 +27,48 @@ function duality(advantageRoll: number | null, disadvantageRoll: number | null):
   };
 }
 
+function trayRoll(groups: { sides: 4 | 6 | 8 | 10 | 12 | 20 | 100; rolls: number[] }[]): RollEntry {
+  return { kind: 'dice', id: 'd1', at: 0, by: 'Ash', byId: 'p1', label: 'x', groups, modifier: 0, total: 0 };
+}
+
 describe('notationFor', () => {
+  it('throws every set of tray dice with its own faces', () => {
+    expect(
+      notationFor(
+        trayRoll([
+          { sides: 6, rolls: [3, 5] },
+          { sides: 20, rolls: [17] },
+        ]),
+      ),
+    ).toEqual([
+      { notation: '2d6@3,5', color: 'neutral' },
+      { notation: '1d20@17', color: 'neutral' },
+    ]);
+  });
+
+  it('throws a d100 as a tens die and a units die, the way percentile dice read', () => {
+    // 47 is "40" and "7"; 100 is "00" and "0"; 7 is "00" and "7"; 30 is "30" and "0".
+    // The library's tens die reads 100 as "00", and its d10 reads 10 as "0".
+    expect(notationFor(trayRoll([{ sides: 100, rolls: [47, 100, 7, 30] }]))).toEqual([
+      { notation: '4d100+4d10@40,100,100,30,7,10,7,10', color: 'neutral' },
+    ]);
+  });
+
+  it('has nothing to throw for a used feature or spell', () => {
+    const effect: RollEntry = {
+      kind: 'effect',
+      id: 'e1',
+      at: 0,
+      by: 'Ash',
+      byId: 'p1',
+      source: 'domainCard',
+      ref: 'card',
+      feature: null,
+      title: 'Card',
+    };
+    expect(notationFor(effect)).toBeNull();
+  });
+
   it('shows a duality roll as a gold Hope d12 and a violet Fear d12', () => {
     expect(notationFor(duality(null, null))).toEqual([
       { notation: '1d12@7', color: 'hope' },

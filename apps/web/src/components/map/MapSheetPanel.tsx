@@ -340,6 +340,14 @@ export function MapSheetPanel({
                     <span className="domain-mini-cost-label">{t('map.sheet.costLabel')}</span>
                     <span className="muted">{t('map.sheet.recallCostLine', { cost: card.recallCost })}</span>
                   </div>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    title={t('sheet.loadout.useTitle')}
+                    onClick={() => send(forMe({ type: 'useDomainCard', cardId: card.id }))}
+                  >
+                    {t('sheet.loadout.use')}
+                  </button>
                 </article>
               ))
             )}
@@ -414,5 +422,8 @@ export function MapSheetPanel({
 
 /** The label of the most recent roll; the log is newest first and chat lines have none. */
 function lastRollLabel(log: readonly RollEntry[]): string {
-  return log.find((entry) => entry.kind !== 'message')?.label ?? '';
+  for (const entry of log) {
+    if (entry.kind !== 'message' && entry.kind !== 'effect') return entry.label;
+  }
+  return '';
 }

@@ -13,7 +13,14 @@ import {
   WallSchema,
 } from './map.js';
 import { RegionSchema } from './regions.js';
-import { PrivateEntrySchema, RollEntrySchema, VisibilitySchema } from './rollLog.js';
+import {
+  DICE_SIDES,
+  DieSidesSchema,
+  MAX_DICE_PER_GROUP,
+  PrivateEntrySchema,
+  RollEntrySchema,
+  VisibilitySchema,
+} from './rollLog.js';
 import {
   DeathMoveChoiceSchema,
   DowntimeMoveSchema,
@@ -116,6 +123,13 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     // client cannot activate one it cannot afford.
     type: z.literal('useHopeFeature'),
     characterId,
+  }),
+  z.object({
+    // Casts a spell or uses an ability off a loadout card. Nothing is spent or
+    // rolled; the card's own text is logged where the table can read it.
+    type: z.literal('useDomainCard'),
+    characterId,
+    cardId: z.string().min(1).max(64),
   }),
   z.object({
     // Changing armor rebuilds the Armor Score and the damage thresholds, which the
@@ -348,6 +362,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     type: z.literal('useEnvironmentFeature'),
     featureName: z.string().min(1).max(80),
     fearCost: z.number().int().min(0).max(MAX_FEAR).default(0),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     // Uses a feature off the stat block. The text says what it costs, so the GM
@@ -356,6 +371,7 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     instanceId: z.string().min(1),
     featureName: z.string().min(1).max(80),
     fearCost: z.number().int().min(0).max(MAX_FEAR).default(0),
+    visibility: VisibilitySchema.default('public'),
   }),
   z.object({
     type: z.literal('rollAdversaryDamage'),
@@ -482,6 +498,18 @@ export const TableRoomEventSchema = z.discriminatedUnion('type', [
     // array clears the sender's own entry rather than leaving a stale one behind.
     type: z.literal('setTargets'),
     tokenIds: z.array(tokenId).max(6),
+  }),
+  z.object({
+    // The dice tray: loose dice for anybody at the table, a GM's d20 or a player's
+    // stray d6. The client names the dice; the server rolls them.
+    type: z.literal('rollDice'),
+    dice: z
+      .array(z.object({ sides: DieSidesSchema, count: z.number().int().min(1).max(MAX_DICE_PER_GROUP) }))
+      .min(1)
+      .max(DICE_SIDES.length),
+    modifier: z.number().int().min(-99).max(99).default(0),
+    label: z.string().trim().min(1).max(60).optional(),
+    visibility: VisibilitySchema.default('public'),
   }),
 ]);
 export type TableRoomEvent = z.infer<typeof TableRoomEventSchema>;

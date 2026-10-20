@@ -41,6 +41,34 @@ export const AdversaryAttackRollSchema = z.object({
   success: z.boolean().nullable(),
 });
 
+/** The loose dice the tray offers, as Foundry's does: everything but the d12s of a duality roll. */
+export const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100] as const;
+export const DieSidesSchema = z.union([
+  z.literal(4),
+  z.literal(6),
+  z.literal(8),
+  z.literal(10),
+  z.literal(12),
+  z.literal(20),
+  z.literal(100),
+]);
+export type DieSides = z.infer<typeof DieSidesSchema>;
+
+/** Most dice of one size a single tray roll may throw. */
+export const MAX_DICE_PER_GROUP = 20;
+
+/**
+ * Where a logged effect came from. `ref` is the SRD id of the card, class,
+ * adversary or environment, so each client reads its text in its own language.
+ */
+export const EffectSourceSchema = z.enum([
+  'hopeFeature',
+  'domainCard',
+  'adversaryFeature',
+  'environmentFeature',
+]);
+export type EffectSource = z.infer<typeof EffectSourceSchema>;
+
 /**
  * One entry in the shared roll log. `by` is the display name of whoever rolled, so
  * the whole table can see who did what.
@@ -118,6 +146,43 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     result: z.string().min(1),
     index: z.number().int(),
   }),
+  z.object({
+    /** Loose dice from the tray: any seat, any mix of sizes, plus a flat modifier. */
+    kind: z.literal('dice'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    byId: z.string().min(1),
+    label: z.string().min(1).max(60),
+    groups: z
+      .array(
+        z.object({
+          sides: DieSidesSchema,
+          rolls: z.array(z.number().int().min(1).max(100)).min(1).max(MAX_DICE_PER_GROUP),
+        }),
+      )
+      .min(1)
+      .max(DICE_SIDES.length),
+    modifier: z.number().int(),
+    total: z.number().int(),
+  }),
+  z.object({
+    /**
+     * A feature or spell somebody used. Nothing is rolled; the entry says what was
+     * used so the table can read it back. `title` is the name as the server read
+     * it, for a client that cannot find `ref` in its own SRD data.
+     */
+    kind: z.literal('effect'),
+    id: z.string().min(1),
+    at: z.number(),
+    by: z.string().min(1),
+    byId: z.string().min(1),
+    source: EffectSourceSchema,
+    ref: z.string().min(1),
+    /** The feature's place in its stat block, for adversary and environment features. */
+    feature: z.number().int().min(0).nullable(),
+    title: z.string().min(1),
+  }),
 ]);
 export type RollEntry = z.infer<typeof RollEntrySchema>;
 
@@ -154,6 +219,16 @@ export function outcomeTone(
 ): 'critical' | 'success' | 'failure' {
   if (outcome === 'criticalSuccess') return 'critical';
   return outcome === 'successHope' || outcome === 'successFear' ? 'success' : 'failure';
+}
+
+/** A tray roll written out, `2d6+1d20+1`: the label a roll gets when nobody named it. */
+export function formatDiceTray(
+  dice: readonly { sides: number; count: number }[],
+  modifier: number,
+): string {
+  const sets = dice.map(({ count, sides }) => `${count}d${sides}`).join('+');
+  if (modifier === 0) return sets;
+  return `${sets}${modifier > 0 ? '+' : '-'}${Math.abs(modifier)}`;
 }
 
 /** Newest first, capped so a long session can't grow without bound. */

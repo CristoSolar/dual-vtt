@@ -25,6 +25,8 @@ interface LoadoutPanelProps {
   onToggleRest: () => void;
   onRecall: (cardId: string, vaulting: string | undefined) => void;
   onVault: (cardId: string) => void;
+  /** Uses or casts a loadout card, logging its text; only in a campaign. */
+  onUse?: ((cardId: string) => void) | undefined;
   /** Lets a loadout card be dragged onto the hotbar, where there is one. */
   draggableCards?: boolean;
 }
@@ -38,6 +40,7 @@ export function LoadoutPanel({
   onToggleRest,
   onRecall,
   onVault,
+  onUse,
   draggableCards = false,
 }: LoadoutPanelProps) {
   const [vaulting, setVaulting] = useState<string>('');
@@ -82,6 +85,11 @@ export function LoadoutPanel({
               <span className="domain-title">{card.name}</span>
             </span>
             <span className="row">
+              {onUse === undefined ? null : (
+                <button type="button" title={t('sheet.loadout.useTitle')} onClick={() => onUse(card.id)}>
+                  {t('sheet.loadout.use')}
+                </button>
+              )}
               {/* Straight to this card's compendium entry, which carries the
                   full text and whatever it cross-references. */}
               <a href={`#/help#compendium/domainCards/${card.id}`}>

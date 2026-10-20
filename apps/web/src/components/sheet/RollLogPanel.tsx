@@ -3,7 +3,7 @@ import { useId, useMemo, useState, type FormEvent, type KeyboardEvent } from 're
 
 import { t, type MessageKey } from '../../i18n/index.js';
 import { mergeFeed } from '../../state/feed.js';
-import { outcomeTone, type RollEntry } from '../../state/rollLog.js';
+import { effectCopy, outcomeTone, type RollEntry } from '../../state/rollLog.js';
 import { SectionHead } from '../SectionHead.js';
 
 /** Who a chat line can go to, and how to send it. Present only in a campaign. */
@@ -26,7 +26,7 @@ interface RollLogPanelProps {
 const NO_PRIVATE: readonly PrivateEntry[] = [];
 
 /** What a filter narrows the log to. */
-type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'fate' | 'message' | 'table';
+type LogFilter = 'all' | 'duality' | 'attack' | 'damage' | 'dice' | 'effect' | 'fate' | 'message' | 'table';
 
 /**
  * The session's rolls and chat, most recent first.
@@ -68,7 +68,7 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
           value={filter}
           onChange={(event) => setFilter(event.target.value as LogFilter)}
         >
-          {(['all', 'duality', 'attack', 'damage', 'fate', 'message', 'table'] as const).map((kind) => (
+          {(['all', 'duality', 'attack', 'damage', 'dice', 'effect', 'fate', 'message', 'table'] as const).map((kind) => (
             <option key={kind} value={kind}>
               {t(`sheet.log.filter.${kind}` as MessageKey)}
             </option>
@@ -87,6 +87,10 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
             {isPrivate ? <PrivateBadge /> : null}
             {entry.kind === 'message' ? (
               <MessageLine by={entry.by} text={entry.text} />
+            ) : entry.kind === 'effect' ? (
+              <EffectLine entry={entry} />
+            ) : entry.kind === 'dice' ? (
+              <DiceLine entry={entry} />
             ) : entry.kind === 'duality' ? (
               <>
                 <div className="row spread">
@@ -180,6 +184,48 @@ export function RollLogPanel({ entries, privateEntries = NO_PRIVATE, chat }: Rol
       )}
       {chat === undefined ? null : <ChatBox key="chat" {...chat} />}
     </div>
+  );
+}
+
+/** A feature or spell somebody used, with its text in the reader's language. */
+export function EffectLine({ entry }: { entry: Extract<RollEntry, { kind: 'effect' }> }) {
+  const { title, text } = effectCopy(entry);
+  return (
+    <>
+      <div className="row spread">
+        <strong>
+          {entry.by} · {title}
+        </strong>
+        <span className="muted">{t(`sheet.log.effect.${entry.source}` as MessageKey)}</span>
+      </div>
+      {/* A card's text runs long; folded, a cast spell does not bury the chat. */}
+      {text === null ? null : (
+        <details>
+          <summary className="muted">{t('sheet.log.effectText')}</summary>
+          <p className="chat-text">{text}</p>
+        </details>
+      )}
+    </>
+  );
+}
+
+/** Loose dice from the tray: the total, then each size's faces. */
+export function DiceLine({ entry }: { entry: Extract<RollEntry, { kind: 'dice' }> }) {
+  return (
+    <>
+      <div className="row spread">
+        <strong>
+          {entry.by} · {entry.label}
+        </strong>
+        <span>{entry.total}</span>
+      </div>
+      <span className="muted">
+        {entry.groups
+          .map((group) => t('sheet.log.diceGroup', { sides: group.sides, rolls: group.rolls.join(', ') }))
+          .join(' · ')}
+        {entry.modifier !== 0 ? t('sheet.log.modifier', { mod: entry.modifier }) : ''}
+      </span>
+    </>
   );
 }
 

@@ -37,11 +37,41 @@ export function notationFor(entry: RollEntry): DiceThrow[] | null {
       if (rolls.length === 0 || die === null) return null;
       return [{ notation: `${rolls.length}d${die}@${rolls.join(',')}`, color: 'neutral' }];
     }
+    case 'dice':
+      return entry.groups.map(({ sides, rolls }) => ({
+        notation: sides === 100 ? percentileNotation(rolls) : `${rolls.length}d${sides}@${rolls.join(',')}`,
+        color: 'neutral',
+      }));
     case 'fate':
     case 'message':
     case 'table':
+    case 'effect':
       return null;
   }
+}
+
+/**
+ * The dice library's d100 is the tens die of a percentile pair (faces 10…90 and
+ * "00"), so a d100 is thrown as that die beside a d10, read together the usual
+ * way: 47 is "40" + "7", 7 is "00" + "7", 100 is "00" + "0". The library takes
+ * 100 for "00" and 10 for the d10's "0".
+ */
+function percentileNotation(rolls: readonly number[]): string {
+  const tens = rolls.map((roll) => {
+    const value = roll - (roll % 10);
+    return value === 0 || value === 100 ? 100 : value;
+  });
+  const units = rolls.map((roll) => (roll % 10 === 0 ? 10 : roll % 10));
+  return `${rolls.length}d100+${rolls.length}d10@${[...tens, ...units].join(',')}`;
+}
+
+/** How long dice stay fully visible once they settle, then how long they fade. */
+const LINGER_MS = 4500;
+const FADE_MS = 1500;
+
+/** With reduced motion the dice still stay up as long, then simply disappear. */
+export function diceTimings(reducedMotion: boolean): { lingerMs: number; fadeMs: number } {
+  return { lingerMs: LINGER_MS, fadeMs: reducedMotion ? 0 : FADE_MS };
 }
 
 /**

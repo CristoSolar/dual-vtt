@@ -2927,6 +2927,11 @@ button.link {
   overflow-y: auto;
 }
 
+/* A log in a floating panel leaves room for the chat box under it. */
+.floating-panel-body .log {
+  max-height: 40vh;
+}
+
 .floating-panel-body .panel,
 .floating-panel-body fieldset {
   margin-bottom: 0;
@@ -3155,6 +3160,54 @@ details summary {
   pointer-events: none;
 }
 
+/* ================================================================= dice tray */
+
+.dice-tray {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 18rem;
+}
+
+.dice-tray-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.dice-tray-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  flex: 1 1 6rem;
+}
+
+.dice-tray-dice {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-2);
+}
+
+.dice-tray-die {
+  position: relative;
+  min-height: 2.75rem;
+  font-weight: var(--fw-semibold);
+}
+
+.dice-tray-count {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  min-width: 1.4rem;
+  padding: 0 var(--sp-1);
+  border-radius: var(--radius-pill);
+  background: var(--c-hope-fill);
+  color: var(--c-hope-ink);
+  font-size: var(--fs-xs);
+  line-height: 1.4rem;
+}
+
 /* ============================================================== dice overlay */
 
 /* Thrown dice: drawn over the whole window, never in the way of a click. Kept
@@ -3170,6 +3223,20 @@ details summary {
 
 .dice-overlay--visible {
   visibility: visible;
+}
+
+/* Settled dice stay a few seconds, then fade out. A new roll drops this class,
+   which snaps the overlay back to full opacity at once (no transition back). */
+.dice-overlay--fading {
+  visibility: visible;
+  opacity: 0;
+  transition: opacity 1.5s ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-overlay--fading {
+    transition: none;
+  }
 }
 
 .dice-overlay-layer {

@@ -1,5 +1,5 @@
 import { createSheet, makeDualityRoll } from '@daggerheart/protocol';
-import { resolveActionRoll, rollDuality } from '@daggerheart/rules';
+import { resolveActionRoll, rollDice, rollDuality } from '@daggerheart/rules';
 import { describe, expect, it } from 'vitest';
 
 import { CampaignStore, rngForRoll } from '../src/campaigns.js';
@@ -120,6 +120,27 @@ describe('server-side dice', () => {
 
     expect(outcome.ok).toBe(true);
     expect(store.get(campaign.id)?.rollCount).toBe(1);
+  });
+
+  it('advances the roll index for loose dice from the tray, and replays them', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Tray Test', 777);
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.seatFor(campaign.id, 'u-player', 'player');
+
+    // A player with no character yet may still roll from the tray.
+    const outcome = store.apply(campaign.id, { id: 'u-player', role: 'player' }, {
+      type: 'rollDice',
+      dice: [{ sides: 6, count: 2 }],
+      modifier: 1,
+      visibility: 'public',
+    });
+
+    expect(outcome.ok).toBe(true);
+    expect(store.get(campaign.id)?.rollCount).toBe(1);
+    const entry = outcome.entries[0];
+    if (entry === undefined || entry.kind !== 'dice') throw new Error('no roll');
+    expect(entry.groups[0]?.rolls).toEqual(rollDice(2, 6, rngForRoll(777, 0)));
   });
 
   it('leaves the roll index unchanged for an event that never touches the rng', () => {

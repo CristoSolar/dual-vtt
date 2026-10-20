@@ -12,8 +12,10 @@ export {
 import { formatDice, type Dice } from '@daggerheart/srd-data';
 
 export { describeRollEntry } from '../i18n/index.js';
+export { effectCopy } from './effectCopy.js';
 
 /** Renders a damage expression for display, e.g. "2d8+3". */
 export function describeDamage(dice: Dice): string {
   return formatDice(dice);
 }
+

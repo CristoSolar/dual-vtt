@@ -18,11 +18,13 @@ import { FloatingPanel } from '../components/map/FloatingPanel.js';
 import { GMPanel } from '../components/gm/GMPanel.js';
 import { MapCanvas } from '../components/map/MapCanvas.js';
 import { MapSheetPanel } from '../components/map/MapSheetPanel.js';
+import { DiceTrayPanel } from '../components/dice/DiceTrayPanel.js';
+import { RollLogPanel } from '../components/sheet/RollLogPanel.js';
 import { RegionForm } from '../components/map/RegionForm.js';
 import { Hotbar, isTypingTarget, useHotbar, useHotbarKeys } from '../components/sheet/Hotbar.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
-import { canRollPrivately } from '../state/feed.js';
+import { canRollPrivately, chatRecipients } from '../state/feed.js';
 import { newlyShared } from '../state/journal.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
 import { colorFor } from '../state/playerColor.js';
@@ -47,7 +49,7 @@ interface MapRouteProps {
   /** Pings currently on the map, for every scene; only this scene's are drawn. */
   pings?: readonly ActivePing[];
   onPing?: (sceneId: string, x: number, y: number) => void;
-  /** Whether rolls are thrown as 3D dice on this device; the switch sits in the rail. */
+  /** Whether rolls are thrown as 3D dice on this device; the switch sits in the dice tray. */
   diceOn?: boolean;
   onToggleDice?: () => void;
 }
@@ -70,7 +72,9 @@ type PanelId =
   | 'walls'
   | 'regions'
   | 'gm'
-  | 'journal';
+  | 'journal'
+  | 'dice'
+  | 'history';
 
 /** Panel titles, resolved at call time so a locale switch is reflected immediately. */
 function panelTitle(id: PanelId): string {
@@ -95,6 +99,10 @@ function panelTitle(id: PanelId): string {
       return t('map.panel.gm');
     case 'journal':
       return t('map.panel.journal');
+    case 'dice':
+      return t('map.panel.dice');
+    case 'history':
+      return t('map.panel.history');
   }
 }
 
@@ -113,6 +121,8 @@ const defaultPanels = (): PanelStore => ({
   regions: { x: 90, y: 96, z: 1, open: false },
   gm: { x: 90, y: 96, z: 1, open: false },
   journal: { x: 90, y: 96, z: 1, open: false },
+  dice: { x: 90, y: 96, z: 1, open: false },
+  history: { x: 420, y: 96, z: 1, open: false },
 });
 
 /** Reads saved panel positions; any corruption just falls back to defaults. */
@@ -490,7 +500,9 @@ export function MapRoute({
         ) : null}
       </div>
 
-      {isGameMaster || mySheet !== null ? (
+      {/* Every seat gets the rail: a player still making a character can read the
+          history, chat, roll loose dice and open the journal. */}
+      {isGameMaster || viewerId !== null ? (
         <div className="map-rail">
           {isGameMaster ? (
             <>
@@ -506,10 +518,12 @@ export function MapRoute({
             </>
           ) : (
             <>
-              {toolButton('sheet', 'shield', t('app.characterSheet'))}
+              {mySheet === null ? null : toolButton('sheet', 'shield', t('app.characterSheet'))}
               {toolButton('journal', 'journal', t('map.panel.journal'))}
             </>
           )}
+          {toolButton('dice', 'dice', t('map.panel.dice'))}
+          {toolButton('history', 'chat', t('map.panel.history'))}
           {/* Measuring changes nothing on the table: it is a ruler, and a player
               asking "can I reach them?" needs it as much as the GM does. */}
           <button
@@ -532,18 +546,6 @@ export function MapRoute({
           >
             <Icon name="measure" size={20} />
           </button>
-          {onToggleDice === undefined ? null : (
-            <button
-              type="button"
-              className="map-rail-button"
-              aria-pressed={diceOn}
-              aria-label={t('map.dice3d')}
-              title={diceOn ? t('map.dice3dOn') : t('map.dice3dOff')}
-              onClick={onToggleDice}
-            >
-              <Icon name="dice" size={20} />
-            </button>
-          )}
         </div>
       ) : null}
 
@@ -759,6 +761,44 @@ export function MapRoute({
           wide
         >
           <GMPanel room={room} campaignName={campaignName} authToken={authToken} send={send} />
+        </FloatingPanel>
+      ) : null}
+
+      {panels.dice.open ? (
+        <FloatingPanel
+          title={panelTitle('dice')}
+          layout={panels.dice}
+          onLayoutChange={(l) => movePanel('dice', l)}
+          onFocus={() => focusPanel('dice')}
+          onClose={() => closePanel('dice')}
+        >
+          <DiceTrayPanel
+            send={send}
+            characterId={!isGameMaster && viewerId !== null && mySheet !== null ? viewerId : null}
+            canRollDualityPrivately={viewerId !== null && canRollPrivately(room, viewerId)}
+            targetTokenId={myTarget?.id ?? null}
+            diceOn={diceOn}
+            onToggleDice={onToggleDice}
+          />
+        </FloatingPanel>
+      ) : null}
+
+      {panels.history.open && viewerId !== null ? (
+        <FloatingPanel
+          title={panelTitle('history')}
+          layout={panels.history}
+          onLayoutChange={(l) => movePanel('history', l)}
+          onFocus={() => focusPanel('history')}
+          onClose={() => closePanel('history')}
+        >
+          <RollLogPanel
+            entries={room.rollLog}
+            privateEntries={room.privateLog}
+            chat={{
+              ...chatRecipients(room, viewerId),
+              onSend: (text, whisperTo) => send({ type: 'sendMessage', text, whisperTo }),
+            }}
+          />
         </FloatingPanel>
       ) : null}
 

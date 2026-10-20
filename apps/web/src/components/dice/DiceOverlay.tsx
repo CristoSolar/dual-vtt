@@ -2,12 +2,12 @@ import type DiceBox from '@3d-dice/dice-box-threejs';
 import type { DiceColorset } from '@3d-dice/dice-box-threejs';
 import { useEffect, useRef, useState } from 'react';
 
-import { groupByColor, notationFor, type DiceColor } from '../../state/diceNotation.js';
+import { diceTimings, groupByColor, notationFor, type DiceColor } from '../../state/diceNotation.js';
 import type { RollEntry } from '../../state/rollLog.js';
 import { token } from '../../styles/canvasTokens.js';
 
-/** How long thrown dice stay on screen before the overlay clears. */
-const SHOW_MS = 3000;
+/** The longest a throw is waited on before its dice start to linger anyway. */
+const SETTLE_CAP_MS = 6000;
 
 const COLORS: readonly DiceColor[] = ['hope', 'fear', 'neutral'];
 
@@ -32,7 +32,7 @@ function colorset(color: DiceColor): DiceColorset {
  */
 export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly RollEntry[] } | null }) {
   const boxes = useRef(new Map<DiceColor, Promise<DiceBox>>());
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState<'hidden' | 'shown' | 'fading'>('hidden');
 
   const boxFor = (color: DiceColor): Promise<DiceBox> => {
     const existing = boxes.current.get(color);
@@ -55,30 +55,46 @@ export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly Ro
     if (throws.length === 0) return;
 
     let cancelled = false;
-    let timer: number | undefined;
+    const timers: number[] = [];
+    const later = (ms: number, run: () => void) => timers.push(window.setTimeout(run, ms));
     for (const color of COLORS) {
       if (throws.some((t) => t.color === color)) continue;
       void boxes.current.get(color)?.then((box) => box.clearDice(), () => {});
     }
-    // The table shows, and its timer starts, once the dice are actually thrown.
-    // The first roll fetches the library, which over a slow link can take longer
-    // than the dice stay up: timed from the broadcast, they landed unseen.
+    // The table shows once the dice are actually thrown. The first roll fetches
+    // the library, which over a slow link can take longer than the dice stay up:
+    // timed from the broadcast, they landed unseen.
     void Promise.allSettled(
       throws.map(({ color, notation }) => boxFor(color).then((box) => ({ box, notation }))),
     ).then((settled) => {
       if (cancelled) return;
       const ready = settled.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
-      setVisible(ready.length > 0);
+      // A roll that lands mid-fade takes the dice straight back to full opacity.
+      setPhase(ready.length > 0 ? 'shown' : 'hidden');
       if (ready.length === 0) return;
-      for (const { box, notation } of ready) void box.roll(notation);
-      timer = window.setTimeout(() => {
-        setVisible(false);
-        for (const box of boxes.current.values()) void box.then((b) => b.clearDice(), () => {});
-      }, SHOW_MS);
+      const landed = Promise.allSettled(ready.map(({ box, notation }) => box.roll(notation)));
+      // The dice linger once they settle; a throw that never reports settling
+      // (a backgrounded tab pauses the animation) still clears eventually.
+      const settledOrCapped = Promise.race([
+        landed,
+        new Promise<void>((resolve) => later(SETTLE_CAP_MS, resolve)),
+      ]);
+      void settledOrCapped.then(() => {
+        if (cancelled) return;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+        const { lingerMs, fadeMs } = diceTimings(reducedMotion);
+        later(lingerMs, () => {
+          setPhase('fading');
+          later(fadeMs, () => {
+            setPhase('hidden');
+            for (const box of boxes.current.values()) void box.then((b) => b.clearDice(), () => {});
+          });
+        });
+      });
     });
     return () => {
       cancelled = true;
-      window.clearTimeout(timer);
+      for (const timer of timers) window.clearTimeout(timer);
     };
     // `boxFor` only reads a ref. Every broadcast is a new object, so `roll`
     // changes exactly when there is something new to throw.
@@ -101,7 +117,16 @@ export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly Ro
   }, []);
 
   return (
-    <div className={visible ? 'dice-overlay dice-overlay--visible' : 'dice-overlay'} aria-hidden="true">
+    <div
+      className={
+        phase === 'shown'
+          ? 'dice-overlay dice-overlay--visible'
+          : phase === 'fading'
+            ? 'dice-overlay dice-overlay--fading'
+            : 'dice-overlay'
+      }
+      aria-hidden="true"
+    >
       {COLORS.map((color) => (
         <div key={color} id={`dice-layer-${color}`} className="dice-overlay-layer" />
       ))}

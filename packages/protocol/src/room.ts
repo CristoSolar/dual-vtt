@@ -14,6 +14,7 @@ import {
   rollFallDamage,
   rollFate,
   rollAdversaryDamage,
+  rollDice,
   spendFear,
   type DowntimeMove,
   type LevelUpChoices,
@@ -53,6 +54,7 @@ import { MAX_SCENE_REGIONS, regionsEntered } from './regions.js';
 import { computeVisionPolygon } from './vision.js';
 import {
   ActionOutcomeSchema,
+  formatDiceTray,
   PrivateEntrySchema,
   RollEntrySchema,
   type PrivateEntry,
@@ -692,6 +694,7 @@ export function applyRoomEvent(
     case 'setConditions':
     case 'setInventory':
     case 'useHopeFeature':
+    case 'useDomainCard':
     case 'equipArmor':
     case 'equipWeapon':
     case 'setTransformation':
@@ -759,6 +762,26 @@ export function applyRoomEvent(
       // The private log's schema holds at most 12; past that a snapshot would not load.
       if (audience.length > 12) return fail('rejected', 'too many people to whisper to');
       return okLogged(state, actor, null, [entry], 'private', audience);
+    }
+
+    case 'rollDice': {
+      // Any seat may roll, a player with no character yet included: these dice
+      // touch nothing but the log.
+      const groups = event.dice.map(({ sides, count }) => ({ sides, rolls: rollDice(count, sides, rng) }));
+      const total =
+        groups.reduce((sum, group) => sum + group.rolls.reduce((a, b) => a + b, 0), 0) + event.modifier;
+      const entry: RollEntry = {
+        kind: 'dice',
+        id: `${now.toString(36)}-${Math.floor(rng() * 36 ** 4).toString(36)}-dice`,
+        at: now,
+        by: nameOf(state, actor),
+        byId: actor.id,
+        label: event.label ?? formatDiceTray(event.dice, event.modifier),
+        groups,
+        modifier: event.modifier,
+        total,
+      };
+      return okLogged(state, actor, null, [entry], event.visibility);
     }
 
     case 'setTargets': {
@@ -1011,14 +1034,24 @@ export function applyRoomEvent(
       if (environment === undefined) {
         return fail('noEnvironment', 'that environment is not in the SRD');
       }
-      if (!environment.features.some((f) => f.name === event.featureName)) {
+      const featureIndex = environment.features.findIndex((f) => f.name === event.featureName);
+      if (featureIndex === -1) {
         return fail('unknownFeature', 'this environment has no such feature');
       }
 
-      if (event.fearCost === 0) return ok(state);
-      const spent = spendFear(state.fear, event.fearCost);
-      if (spent === null) return fail('notEnoughFear', 'not enough Fear for that feature');
-      return ok({ ...state, fear: spent });
+      let fear = state.fear;
+      if (event.fearCost > 0) {
+        const spent = spendFear(fear, event.fearCost);
+        if (spent === null) return fail('notEnoughFear', 'not enough Fear for that feature');
+        fear = spent;
+      }
+      const entry = effectEntry(now, environment.name, actor, {
+        source: 'environmentFeature',
+        ref: environment.id,
+        feature: featureIndex,
+        title: event.featureName,
+      });
+      return okLogged({ ...state, fear }, actor, null, [entry], event.visibility);
     }
 
     case 'useAdversaryFeature': {
@@ -1029,7 +1062,8 @@ export function applyRoomEvent(
       const block = srd().adversaries.find((a) => a.id === instance.adversaryId);
       if (block === undefined) return fail('unknownAdversary', 'that stat block is not in the SRD');
 
-      const feature = block.features.find((f) => f.name === event.featureName);
+      const featureIndex = block.features.findIndex((f) => f.name === event.featureName);
+      const feature = block.features[featureIndex];
       if (feature === undefined) return fail('unknownFeature', 'that adversary has no such feature');
 
       // An Evolution is a one-shot: once this adversary has used it, it is spent.
@@ -1049,13 +1083,25 @@ export function applyRoomEvent(
           ? [...instance.usedFeatures, feature.name]
           : instance.usedFeatures;
 
-      return ok({
-        ...state,
-        fear,
-        adversaryInstances: state.adversaryInstances.map((a) =>
-          a.instanceId === event.instanceId ? { ...a, usedFeatures } : a,
-        ),
+      const entry = effectEntry(now, instance.name, actor, {
+        source: 'adversaryFeature',
+        ref: block.id,
+        feature: featureIndex,
+        title: feature.name,
       });
+      return okLogged(
+        {
+          ...state,
+          fear,
+          adversaryInstances: state.adversaryInstances.map((a) =>
+            a.instanceId === event.instanceId ? { ...a, usedFeatures } : a,
+          ),
+        },
+        actor,
+        null,
+        [entry],
+        event.visibility,
+      );
     }
 
     case 'rollAdversaryDamage': {
@@ -1534,10 +1580,40 @@ function applyCharacterEvent(
       const t = spendSheetHope(sheet, HOPE_FEATURE_COST);
       // spendSheetHope leaves the sheet alone when it cannot pay, and says why.
       if (t.sheet === sheet) return fail('rejected', t.effect.message ?? 'not enough Hope');
+      const classId = sheet.character.classId;
+      const feature = srd().classes.find((c) => c.id === classId)?.hopeFeature;
+      // A Hope feature is used in the open, so the table reads what it does.
+      const entries =
+        feature === undefined
+          ? []
+          : [
+              effectEntry(now, rollerName, actor, {
+                source: 'hopeFeature',
+                ref: classId,
+                feature: null,
+                title: feature.name,
+              }),
+            ];
       return ok(
-        withCharacter(state, event.characterId, t.sheet),
+        appendEntries(withCharacter(state, event.characterId, t.sheet), entries),
         coded('hopeFeatureUsed', 'Hope feature used.', { cost: HOPE_FEATURE_COST }),
+        entries,
       );
+    }
+
+    case 'useDomainCard': {
+      if (!sheet.loadout.includes(event.cardId)) {
+        return fail('rejected', 'that card is not in the loadout');
+      }
+      const card = srd().domainCards.find((c) => c.id === event.cardId);
+      if (card === undefined) return fail('rejected', 'that domain card does not exist');
+      const entry = effectEntry(now, rollerName, actor, {
+        source: 'domainCard',
+        ref: card.id,
+        feature: null,
+        title: card.name,
+      });
+      return ok(appendEntries(state, [entry]), null, [entry]);
     }
 
     case 'equipArmor': {
@@ -1858,6 +1934,23 @@ function applyCharacterEvent(
 
 
 /** The display name the log signs an actor's entries with. */
+/** A log line for a feature or spell somebody used. */
+function effectEntry(
+  now: number,
+  by: string,
+  actor: Actor,
+  what: Pick<Extract<RollEntry, { kind: 'effect' }>, 'source' | 'ref' | 'feature' | 'title'>,
+): RollEntry {
+  return {
+    kind: 'effect',
+    id: `${now.toString(36)}-${actor.id}-${what.source}-${what.ref}-${what.feature ?? 0}`,
+    at: now,
+    by,
+    byId: actor.id,
+    ...what,
+  };
+}
+
 function nameOf(state: RoomState, actor: Actor): string {
   return actor.role === 'gm'
     ? state.gm.name

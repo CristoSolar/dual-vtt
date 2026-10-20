@@ -3,6 +3,8 @@ import type { EffectMessage, RollEntry } from '@daggerheart/protocol';
 import { LOCALES, setLocale as setSrdLocale, type Locale } from '@daggerheart/srd-data';
 import { useSyncExternalStore } from 'react';
 
+import { effectCopy } from '../state/effectCopy.js';
+
 import { en } from './en.js';
 import { es } from './es.js';
 
@@ -157,6 +159,12 @@ export function describeRollEntry(entry: RollEntry): string {
   if (entry.kind === 'message') return t('roll.messageLine', { by: entry.by, text: entry.text });
   if (entry.kind === 'table') {
     return t('roll.tableLine', { by: entry.by, label: entry.label, result: entry.result });
+  }
+  if (entry.kind === 'dice') {
+    return t('roll.diceLine', { by: entry.by, label: entry.label, total: entry.total });
+  }
+  if (entry.kind === 'effect') {
+    return t('roll.effectLine', { by: entry.by, title: effectCopy(entry).title });
   }
   return t('roll.damageLine', { by: entry.by, label: entry.label, total: entry.roll.total });
 }

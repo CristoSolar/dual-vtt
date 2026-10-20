@@ -666,7 +666,7 @@ describe('the GM rolling for an adversary', () => {
 
     const withFear = apply(room, GM, { type: 'gainFear', amount: 3 });
     const used = apply(withFear, GM, {
-      type: 'useAdversaryFeature',
+      type: 'useAdversaryFeature', visibility: 'public',
       instanceId: 'a-1',
       featureName: feature.name,
       fearCost: 2,
@@ -675,7 +675,7 @@ describe('the GM rolling for an adversary', () => {
 
     expect(
       refusal(room, GM, {
-        type: 'useAdversaryFeature',
+        type: 'useAdversaryFeature', visibility: 'public',
         instanceId: 'a-1',
         featureName: feature.name,
         fearCost: 5,
@@ -699,7 +699,7 @@ describe('the GM rolling for an adversary', () => {
       name: 'It',
     });
     next = apply(next, GM, {
-      type: 'useAdversaryFeature',
+      type: 'useAdversaryFeature', visibility: 'public',
       instanceId: 'a-2',
       featureName: evolution.name,
       fearCost: 0,
@@ -708,7 +708,7 @@ describe('the GM rolling for an adversary', () => {
 
     expect(
       refusal(next, GM, {
-        type: 'useAdversaryFeature',
+        type: 'useAdversaryFeature', visibility: 'public',
         instanceId: 'a-2',
         featureName: evolution.name,
         fearCost: 0,
@@ -985,7 +985,7 @@ describe('the GM rolling for an adversary', () => {
     next = apply(next, GM, { type: 'gainFear', amount: 3 });
     const before = next.fear;
     next = apply(next, GM, {
-      type: 'useEnvironmentFeature',
+      type: 'useEnvironmentFeature', visibility: 'public',
       featureName: feature.name,
       fearCost: 2,
     });
@@ -993,7 +993,7 @@ describe('the GM rolling for an adversary', () => {
 
     expect(
       refusal(next, GM, {
-        type: 'useEnvironmentFeature',
+        type: 'useEnvironmentFeature', visibility: 'public',
         featureName: 'Not A Real Feature',
         fearCost: 0,
       }),
@@ -1001,7 +1001,7 @@ describe('the GM rolling for an adversary', () => {
 
     expect(
       refusal(next, ALEX, {
-        type: 'useEnvironmentFeature',
+        type: 'useEnvironmentFeature', visibility: 'public',
         featureName: feature.name,
         fearCost: 0,
       }),
@@ -1010,7 +1010,7 @@ describe('the GM rolling for an adversary', () => {
     // With no environment on the table there is nothing to use.
     expect(
       refusal(room, GM, {
-        type: 'useEnvironmentFeature',
+        type: 'useEnvironmentFeature', visibility: 'public',
         featureName: feature.name,
         fearCost: 0,
       }),
@@ -1020,7 +1020,7 @@ describe('the GM rolling for an adversary', () => {
   it('refuses a feature the adversary does not have, and any of this from a player', () => {
     expect(
       refusal(room, GM, {
-        type: 'useAdversaryFeature',
+        type: 'useAdversaryFeature', visibility: 'public',
         instanceId: 'a-1',
         featureName: 'Not A Real Feature',
         fearCost: 0,
@@ -1029,7 +1029,7 @@ describe('the GM rolling for an adversary', () => {
 
     expect(
       refusal(room, ALEX, {
-        type: 'useAdversaryFeature',
+        type: 'useAdversaryFeature', visibility: 'public',
         instanceId: 'a-1',
         featureName: 'Anything',
         fearCost: 0,

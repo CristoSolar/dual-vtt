@@ -829,6 +829,7 @@ export function SheetRoute({
               )
             }
             onVault={(cardId) => run((s) => sendToVault(s, cardId), forMe({ type: 'vaultCard', cardId }))}
+            onUse={online ? (cardId) => send(forMe({ type: 'useDomainCard', cardId })) : undefined}
             draggableCards={hotbarOn}
           />
           <RollLogPanel entries={sharedLog ?? log} privateEntries={privateLog} chat={chat} />

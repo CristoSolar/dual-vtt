@@ -33,7 +33,7 @@ import { label as prettify } from '../../state/selectors.js';
 import { adversaryTargetOf, newestDamageIds, pcTargetOf } from '../../state/targets.js';
 import { uploadAudio } from '../../state/uploadMap.js';
 import { SectionHead } from '../SectionHead.js';
-import { ChatBox, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
+import { ChatBox, DiceLine, EffectLine, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
 
 interface GMPanelProps {
   room: RoomState;
@@ -671,6 +671,7 @@ function FeatureRow({
   send: (event: RoomEvent) => void;
 }) {
   const [fearCost, setFearCost] = useState(feature.costsFear ? 1 : 0);
+  const [visibility, setVisibility] = useState<Visibility>('public');
   const spent = feature.type === 'evolution' && instance.usedFeatures.includes(feature.name);
 
   return (
@@ -709,11 +710,13 @@ function FeatureRow({
               instanceId: instance.instanceId,
               featureName: feature.name,
               fearCost,
+              visibility,
             })
           }
         >
           {spent ? t('gm.adversaries.featureSpent') : t('gm.adversaries.useFeature')}
         </button>
+        <PrivateToggle value={visibility} onChange={setVisibility} />
       </div>
     </div>
   );
@@ -1291,6 +1294,7 @@ function EnvironmentFeatureRow({
   send: (event: RoomEvent) => void;
 }) {
   const [fearCost, setFearCost] = useState(feature.costsFear ? 1 : 0);
+  const [visibility, setVisibility] = useState<Visibility>('public');
 
   return (
     <div className="card-text">
@@ -1320,11 +1324,12 @@ function EnvironmentFeatureRow({
         <button
           type="button"
           onClick={() =>
-            send({ type: 'useEnvironmentFeature', featureName: feature.name, fearCost })
+            send({ type: 'useEnvironmentFeature', featureName: feature.name, fearCost, visibility })
           }
         >
           {t('gm.adversaries.useFeature')}
         </button>
+        <PrivateToggle value={visibility} onChange={setVisibility} />
       </div>
     </div>
   );
@@ -1537,6 +1542,10 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
             {isPrivate ? <PrivateBadge /> : null}
             {entry.kind === 'message' ? (
               <MessageLine by={entry.by} text={entry.text} />
+            ) : entry.kind === 'effect' ? (
+              <EffectLine entry={entry} />
+            ) : entry.kind === 'dice' ? (
+              <DiceLine entry={entry} />
             ) : (
               <>
                 <div className="row spread">
