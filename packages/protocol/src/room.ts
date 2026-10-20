@@ -1045,12 +1045,18 @@ export function applyRoomEvent(
         if (spent === null) return fail('notEnoughFear', 'not enough Fear for that feature');
         fear = spent;
       }
-      const entry = effectEntry(now, environment.name, actor, {
-        source: 'environmentFeature',
-        ref: environment.id,
-        feature: featureIndex,
-        title: event.featureName,
-      });
+      const entry = effectEntry(
+        now,
+        environment.name,
+        actor,
+        {
+          source: 'environmentFeature',
+          ref: environment.id,
+          feature: featureIndex,
+          title: event.featureName,
+        },
+        state,
+      );
       return okLogged({ ...state, fear }, actor, null, [entry], event.visibility);
     }
 
@@ -1083,12 +1089,18 @@ export function applyRoomEvent(
           ? [...instance.usedFeatures, feature.name]
           : instance.usedFeatures;
 
-      const entry = effectEntry(now, instance.name, actor, {
-        source: 'adversaryFeature',
-        ref: block.id,
-        feature: featureIndex,
-        title: feature.name,
-      });
+      const entry = effectEntry(
+        now,
+        instance.name,
+        actor,
+        {
+          source: 'adversaryFeature',
+          ref: block.id,
+          feature: featureIndex,
+          title: feature.name,
+        },
+        state,
+      );
       return okLogged(
         {
           ...state,
@@ -1587,12 +1599,18 @@ function applyCharacterEvent(
         feature === undefined
           ? []
           : [
-              effectEntry(now, rollerName, actor, {
-                source: 'hopeFeature',
-                ref: classId,
-                feature: null,
-                title: feature.name,
-              }),
+              effectEntry(
+                now,
+                rollerName,
+                actor,
+                {
+                  source: 'hopeFeature',
+                  ref: classId,
+                  feature: null,
+                  title: feature.name,
+                },
+                state,
+              ),
             ];
       return ok(
         appendEntries(withCharacter(state, event.characterId, t.sheet), entries),
@@ -1607,12 +1625,18 @@ function applyCharacterEvent(
       }
       const card = srd().domainCards.find((c) => c.id === event.cardId);
       if (card === undefined) return fail('rejected', 'that domain card does not exist');
-      const entry = effectEntry(now, rollerName, actor, {
-        source: 'domainCard',
-        ref: card.id,
-        feature: null,
-        title: card.name,
-      });
+      const entry = effectEntry(
+        now,
+        rollerName,
+        actor,
+        {
+          source: 'domainCard',
+          ref: card.id,
+          feature: null,
+          title: card.name,
+        },
+        state,
+      );
       return ok(appendEntries(state, [entry]), null, [entry]);
     }
 
@@ -1933,17 +1957,18 @@ function applyCharacterEvent(
 }
 
 
-/** The display name the log signs an actor's entries with. */
 /** A log line for a feature or spell somebody used. */
 function effectEntry(
   now: number,
   by: string,
   actor: Actor,
   what: Pick<Extract<RollEntry, { kind: 'effect' }>, 'source' | 'ref' | 'feature' | 'title'>,
+  state: RoomState,
 ): RollEntry {
+  const disambiguator = state.rollLog.length + state.privateLog.length;
   return {
     kind: 'effect',
-    id: `${now.toString(36)}-${actor.id}-${what.source}-${what.ref}-${what.feature ?? 0}`,
+    id: `${now.toString(36)}-${actor.id}-${what.source}-${what.ref}-${what.feature ?? 0}-${disambiguator}`,
     at: now,
     by,
     byId: actor.id,
@@ -1951,6 +1976,7 @@ function effectEntry(
   };
 }
 
+/** The display name the log signs an actor's entries with. */
 function nameOf(state: RoomState, actor: Actor): string {
   return actor.role === 'gm'
     ? state.gm.name

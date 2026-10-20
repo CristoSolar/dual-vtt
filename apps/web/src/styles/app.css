@@ -3230,7 +3230,7 @@ details summary {
 .dice-overlay--fading {
   visibility: visible;
   opacity: 0;
-  transition: opacity 1.5s ease-in;
+  transition: opacity var(--dice-fade-ms) ease-in;
 }
 
 @media (prefers-reduced-motion: reduce) {

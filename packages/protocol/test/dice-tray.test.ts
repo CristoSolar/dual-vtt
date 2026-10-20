@@ -282,6 +282,19 @@ describe('features and spells in the log', () => {
     });
   });
 
+  it('gives two identical domain card uses at the same instant different ids', () => {
+    const state = room();
+    const cardId = state.characters[ALEX.id]?.loadout[0] ?? '';
+    const event: RoomEvent = { type: 'useDomainCard', characterId: ALEX.id, cardId };
+    const first = accepted(applyRoomEvent(state, ALEX, event, seededRng(1), NOW));
+    const second = accepted(applyRoomEvent(first.state, ALEX, event, seededRng(1), NOW));
+    const firstId = first.state.rollLog[0]?.id;
+    const secondId = second.state.rollLog[0]?.id;
+    expect(firstId).toBeDefined();
+    expect(secondId).toBeDefined();
+    expect(secondId).not.toBe(firstId);
+  });
+
   it('still loads a snapshot, and one holding the new kinds', () => {
     const dice: RollEntry = {
       kind: 'dice',

@@ -1,8 +1,8 @@
 import type DiceBox from '@3d-dice/dice-box-threejs';
 import type { DiceColorset } from '@3d-dice/dice-box-threejs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
-import { diceTimings, groupByColor, notationFor, type DiceColor } from '../../state/diceNotation.js';
+import { diceTimings, FADE_MS, groupByColor, notationFor, type DiceColor } from '../../state/diceNotation.js';
 import type { RollEntry } from '../../state/rollLog.js';
 import { token } from '../../styles/canvasTokens.js';
 
@@ -125,6 +125,9 @@ export function DiceOverlay({ roll }: { roll: { id: string; entries: readonly Ro
             ? 'dice-overlay dice-overlay--fading'
             : 'dice-overlay'
       }
+      // The fade's duration lives in JS (`FADE_MS`); the CSS transition reads it
+      // from this custom property instead of repeating the number.
+      style={{ '--dice-fade-ms': `${FADE_MS}ms` } as CSSProperties}
       aria-hidden="true"
     >
       {COLORS.map((color) => (

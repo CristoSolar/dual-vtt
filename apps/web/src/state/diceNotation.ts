@@ -67,7 +67,8 @@ function percentileNotation(rolls: readonly number[]): string {
 
 /** How long dice stay fully visible once they settle, then how long they fade. */
 const LINGER_MS = 4500;
-const FADE_MS = 1500;
+/** Also the fade's CSS transition duration (`--dice-fade-ms`, set by `DiceOverlay`). */
+export const FADE_MS = 1500;
 
 /** With reduced motion the dice still stay up as long, then simply disappear. */
 export function diceTimings(reducedMotion: boolean): { lingerMs: number; fadeMs: number } {
