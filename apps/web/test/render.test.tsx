@@ -32,6 +32,7 @@ import {
 } from '../src/state/sheet.js';
 import { emptyHotbar, setSlot } from '../src/state/hotbar.js';
 import { saveCreation } from '../src/state/storage.js';
+import { DRAFT_SCOPE } from '../src/state/library.js';
 import { buildCharacter, buildCreationState, fakeStorage } from './helpers.js';
 
 /**
@@ -186,11 +187,8 @@ describe('wizard renders', () => {
             element={
               <WizardRoute
                 storage={store}
-                campaignId="campaign-1"
-                onClaim={() => {}}
+                onSave={() => Promise.resolve(true)}
                 onFinish={() => {}}
-                claimed={false}
-                error={null}
               />
             }
           />
@@ -215,7 +213,7 @@ describe('wizard renders', () => {
 
   it('resumes a saved creation at its step with choices intact', () => {
     const store = storage();
-    saveCreation(store, 'campaign-1', buildCreationState('sorcerer'));
+    saveCreation(store, DRAFT_SCOPE, buildCreationState('sorcerer'));
     const html = wizardAt('/create/8', store);
 
     expect(html).toContain(t('wizard.stepHeading', { step: 8, title: t('wizard.stepTitle.8') }));

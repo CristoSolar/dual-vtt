@@ -10,6 +10,10 @@ import { LocaleToggle } from './components/LocaleToggle.js';
 import { Toast, ToastStack } from './components/Toast.js';
 import { t } from './i18n/index.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
+import { CharacterViewRoute } from './routes/CharacterViewRoute.js';
+import { MyCampaignsRoute } from './routes/MyCampaignsRoute.js';
+import { MyCharactersRoute } from './routes/MyCharactersRoute.js';
+import { PlayerHomeRoute } from './routes/PlayerHomeRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
 import { MapRoute } from './routes/MapRoute.js';
@@ -28,6 +32,7 @@ import {
 } from './state/storage.js';
 import { firstTarget } from './state/targets.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
+import { useLibrary } from './state/useLibrary.js';
 
 /**
  * Dice come from here for the sheet's optimistic local echo — a campaign's real
@@ -44,6 +49,13 @@ function Shell() {
   const isMapRoute = useLocation().pathname === '/map';
   const auth = useAuth(storage);
   const campaign = useCampaign(storage, auth.token, auth.user?.id ?? null, auth.expire);
+  const library = useLibrary(auth.token, auth.expire);
+  const { refreshCampaigns } = campaign;
+  const { refresh: refreshLibrary } = library;
+  const refreshTable = useCallback(() => {
+    void refreshCampaigns();
+    void refreshLibrary();
+  }, [refreshCampaigns, refreshLibrary]);
 
   const accountId = auth.user?.id ?? null;
   const [diceOn, setDiceOn] = useState(() =>
@@ -186,7 +198,14 @@ function Shell() {
             <Link to="/players">
               <button type="button">{t('app.players')}</button>
             </Link>
-          ) : null}
+          ) : (
+            <Link to="/campaigns">
+              <button type="button">{t('app.myCampaigns')}</button>
+            </Link>
+          )}
+          <Link to="/characters">
+            <button type="button">{t('app.myCharacters')}</button>
+          </Link>
           {inCampaign ? (
             <>
               <Link to="/map">
@@ -235,8 +254,11 @@ function Shell() {
       {/* Toasts stack rather than replace one another: a rejection and the roll
           that provoked it are both worth reading, and losing one to the other is
           how a refusal goes unexplained. */}
-      {campaign.error !== null || campaign.lastRoll !== null ? (
+      {campaign.error !== null || campaign.lastRoll !== null || library.error !== null ? (
         <ToastStack>
+          {library.error !== null ? (
+            <Toast tone="alert" message={library.error} onDismiss={library.dismissError} />
+          ) : null}
           {campaign.error !== null ? (
             <Toast tone="alert" message={campaign.error} onDismiss={campaign.dismissError} />
           ) : null}
@@ -256,8 +278,8 @@ function Shell() {
             <span>
               {t('app.inCampaignPrefix')} <strong>{activeCampaignName}</strong> {t('app.inCampaignSuffix')}
             </span>
-            <Link to="/create/1">
-              <button type="button">{t('app.createCharacter')}</button>
+            <Link to="/characters">
+              <button type="button">{t('app.linkCharacter')}</button>
             </Link>
           </div>
         </div>
@@ -289,9 +311,9 @@ function Shell() {
                       <span className="option-meta">{t('app.characterSheetDesc')}</span>
                     </Link>
                   ) : (
-                    <Link to="/create/1" className="option home-option">
-                      <span className="option-name">{t('app.createCharacter')}</span>
-                      <span className="option-meta">{t('app.createCharacterDesc')}</span>
+                    <Link to="/characters" className="option home-option">
+                      <span className="option-name">{t('app.linkCharacter')}</span>
+                      <span className="option-meta">{t('app.linkCharacterDesc')}</span>
                     </Link>
                   )}
                 </div>
@@ -313,6 +335,12 @@ function Shell() {
                   ) : null}
                 </div>
               </section>
+            ) : account.role !== 'gm' ? (
+              <PlayerHomeRoute
+                username={account.username}
+                invitationCount={campaign.invited.length}
+                onRefresh={refreshCampaigns}
+              />
             ) : (
               <CampaignsRoute
                 accountId={account.id}
@@ -322,7 +350,8 @@ function Shell() {
                   campaign.join(campaignId);
                   navigate('/');
                 }}
-                onAddPlayer={(campaignId, username) => void campaign.addPlayer(campaignId, username)}
+                onInvite={(campaignId, username) => void campaign.invitePlayer(campaignId, username)}
+                onCancelInvite={(campaignId, userId) => void campaign.cancelInvite(campaignId, userId)}
                 token={auth.token ?? ''}
                 pending={campaign.pending}
                 tunnelUrl={tunnelUrl}
@@ -335,22 +364,44 @@ function Shell() {
         <Route
           path="/create/:step"
           element={
-            // Not just activeCampaignId: the socket must have actually finished
-            // joining (room !== null) before the wizard can claim a character —
-            // otherwise a fast finish can race the join and the server rejects
-            // the claim with 'noSeat'.
-            campaign.activeCampaignId === null || campaign.room === null ? (
-              <Navigate to="/" replace />
-            ) : (
-              <WizardRoute
-                storage={storage}
-                campaignId={campaign.activeCampaignId}
-                onClaim={campaign.claimCharacter}
-                onFinish={() => navigate('/sheet')}
-                claimed={hasClaimedCharacter}
-                error={campaign.error}
-              />
-            )
+            <WizardRoute
+              storage={storage}
+              onSave={async (sheet) => (await library.create(sheet)) !== null}
+              onFinish={() => navigate('/characters')}
+            />
+          }
+        />
+        <Route
+          path="/characters"
+          element={
+            <MyCharactersRoute
+              accountId={account.id}
+              storage={storage}
+              library={library}
+              campaigns={campaign.campaigns}
+            />
+          }
+        />
+        <Route
+          path="/characters/:id"
+          element={<CharacterViewRoute characters={library.characters} loaded={library.loaded} />}
+        />
+        <Route
+          path="/campaigns"
+          element={
+            <MyCampaignsRoute
+              accountId={account.id}
+              campaigns={campaign.campaigns}
+              invited={campaign.invited}
+              characters={library.characters}
+              pending={campaign.pending}
+              onAnswer={(campaignId, answer) => void campaign.answerInvite(campaignId, answer)}
+              onEnter={(campaignId) => {
+                campaign.join(campaignId);
+                navigate('/');
+              }}
+              onRefresh={refreshTable}
+            />
           }
         />
         <Route

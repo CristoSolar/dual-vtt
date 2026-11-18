@@ -1,5 +1,5 @@
 import { finalize, STEPS, validateStep, type Step } from '@daggerheart/character';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
@@ -18,8 +18,8 @@ import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { CreationSummary } from '../components/wizard/CreationSummary.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
 import { t, type MessageKey } from '../i18n/index.js';
-import { claimLanded, type ClaimStatus } from '../state/claim.js';
-import { createSheet } from '../state/sheet.js';
+import { DRAFT_SCOPE } from '../state/library.js';
+import { createSheet, type SheetState } from '../state/sheet.js';
 import { useCreation } from '../state/useCreation.js';
 
 const STEP_TITLE_KEYS: Record<Step, MessageKey> = {
@@ -50,47 +50,23 @@ const isStep = (value: number): value is Step => STEPS.includes(value as Step);
 
 interface WizardRouteProps {
   storage: Storage;
-  campaignId: string;
+  /** Saves the finished character to the account's library. Resolves true once
+   * the server has it; false leaves the draft in place to try again. */
+  onSave: (sheet: SheetState) => Promise<boolean>;
   onFinish: () => void;
-  onClaim: (sheet: ReturnType<typeof createSheet>) => void;
-  /** Whether the server has actually confirmed the claim (the character shows up
-   * in the room state) — not just that we asked. */
-  claimed: boolean;
-  /** Set when the server rejects something — including our claim — so the button
-   * can re-enable instead of being stuck on the saving label forever. */
-  error: string | null;
 }
 
-/** The nine-step creation wizard: one route per step, always for one specific campaign. */
-export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, error }: WizardRouteProps) {
+/**
+ * The nine-step creation wizard: one route per step. The draft lives in this
+ * browser until the character is finished; then it goes to the account's library,
+ * not to any campaign — linking is a separate, later choice.
+ */
+export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
   const { step: stepParam } = useParams();
   const navigate = useNavigate();
-  const { state, dispatch, discard, reset } = useCreation(storage, campaignId);
-  // Leaves 'idle' once the finish button is clicked and stays out of it until the
-  // player navigates away and back. Only then does a later `claimed` flip mean
-  // "the claim we just sent" rather than some pre-existing state.
-  const [claim, setClaim] = useState<ClaimStatus>('idle');
-  const submitting = claim === 'saving';
+  const { state, dispatch, discard, reset } = useCreation(storage, DRAFT_SCOPE);
+  const [submitting, setSubmitting] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
-
-  // Only clear the local draft and leave the wizard once the server has actually
-  // confirmed the claim — sending the intent is not the same as it having landed.
-  // A rejection (bad request, no seat, etc.) surfaces via the shared error toast
-  // and leaves the draft and this screen exactly as they were, so the player can
-  // just press the button again instead of having already lost their work.
-  useEffect(() => {
-    if (claimLanded(claim, claimed)) {
-      discard();
-      onFinish();
-    }
-  }, [claim, claimed, discard, onFinish]);
-
-  // A rejection re-enables the button instead of leaving it stuck on the saving label
-  // with no way to retry. A failed reconnect does too, though the claim may still be
-  // buffered and land afterwards — which is why this is 'retry', not 'idle'.
-  useEffect(() => {
-    if (submitting && !claimed && error !== null) setClaim('retry');
-  }, [submitting, claimed, error]);
 
   const parsed = Number(stepParam ?? '1');
   const step: Step = isStep(parsed) ? parsed : 1;
@@ -105,10 +81,17 @@ export function WizardRoute({ storage, campaignId, onFinish, onClaim, claimed, e
     navigate(`/create/${next}`);
   };
 
+  // The draft is cleared only once the server has the character; a failure (shown
+  // by the library's error) leaves this screen and the draft exactly as they were.
   const finish = () => {
-    const character = finalize(state);
-    onClaim(createSheet(character));
-    setClaim('saving');
+    const sheet = createSheet(finalize(state));
+    setSubmitting(true);
+    void onSave(sheet).then((saved) => {
+      setSubmitting(false);
+      if (!saved) return;
+      discard();
+      onFinish();
+    });
   };
 
   return (

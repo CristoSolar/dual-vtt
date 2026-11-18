@@ -14,12 +14,12 @@ import {
   type PingedMessage,
   type RoomEvent,
   type RoomState,
-  type SheetState,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
 import { isAuthRejection } from './auth.js';
 import { hasDice, joinBurst, type DiceRoll } from './diceNotation.js';
 import { appendPrivate } from './feed.js';
+import { parseCampaignList } from './library.js';
 import { describeRollEntry } from './rollLog.js';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
@@ -45,6 +45,8 @@ export interface CampaignConnection {
   status: ConnectionStatus;
   /** Every campaign this account owns or belongs to, from `GET /campaigns`. */
   campaigns: readonly CampaignSummary[];
+  /** Campaigns that invited this account and are waiting on its answer. */
+  invited: readonly CampaignSummary[];
   /** The live room state for the campaign currently joined, or null if none. */
   room: RoomState | null;
   /**
@@ -79,11 +81,15 @@ export interface CampaignConnection {
   pending: boolean;
   refreshCampaigns: () => Promise<void>;
   createCampaign: (name: string) => Promise<CampaignSummary | null>;
-  addPlayer: (campaignId: string, username: string) => Promise<boolean>;
+  /** GM: invites a player account; it joins once it accepts. */
+  invitePlayer: (campaignId: string, username: string) => Promise<boolean>;
+  /** GM: withdraws a pending invitation. */
+  cancelInvite: (campaignId: string, userId: string) => Promise<boolean>;
+  /** The invited player answers. */
+  answerInvite: (campaignId: string, answer: 'accept' | 'decline') => Promise<boolean>;
   removePlayer: (campaignId: string, userId: string) => Promise<boolean>;
   /** Joins a campaign's live room over the socket. */
   join: (campaignId: string) => void;
-  claimCharacter: (sheet: SheetState) => void;
   /** Sends an intent. The server decides the result; this never mutates locally. */
   send: (event: RoomEvent) => void;
   leave: () => void;
@@ -105,6 +111,7 @@ export function useCampaign(
 ): CampaignConnection {
   const [status, setStatus] = useState<ConnectionStatus>('idle');
   const [campaigns, setCampaigns] = useState<CampaignSummary[]>([]);
+  const [invited, setInvited] = useState<CampaignSummary[]>([]);
   const [room, setRoom] = useState<RoomState | null>(null);
   const [activeCampaignId, setActiveCampaignId] = useState<string | null>(() => loadActiveCampaignId(storage));
   const [error, setError] = useState<string | null>(null);
@@ -120,17 +127,18 @@ export function useCampaign(
   const refreshCampaigns = useCallback(async () => {
     if (token === null) {
       setCampaigns([]);
+      setInvited([]);
       return;
     }
     const response = await fetch(`${SERVER_URL}/campaigns`, {
       headers: { authorization: `Bearer ${token}` },
-    });
+    }).catch(() => null);
+    if (response === null) return;
     if (response.status === 401) return onSessionExpired();
     if (!response.ok) return;
-    const body = (await response.json()) as unknown;
-    if (!Array.isArray(body)) return;
-    const parsed = body.map((c) => CampaignSummarySchema.safeParse(c)).filter((r) => r.success);
-    setCampaigns(parsed.map((r) => r.data));
+    const list = parseCampaignList(await response.json());
+    setCampaigns(list.member);
+    setInvited(list.invited);
   }, [token, onSessionExpired]);
 
   useEffect(() => {
@@ -278,12 +286,12 @@ export function useCampaign(
     [token, refreshCampaigns, onSessionExpired],
   );
 
-  const addPlayer = useCallback(
+  const invitePlayer = useCallback(
     async (campaignId: string, username: string): Promise<boolean> => {
       if (token === null) return false;
       setPending(true);
       try {
-        const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/players`, {
+        const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/invites`, {
           method: 'POST',
           headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
           body: JSON.stringify({ username }),
@@ -294,9 +302,50 @@ export function useCampaign(
           onSessionExpired();
         } else {
           // A 404 here is the ordinary case: the GM typed a username that has no
-          // account. Saying nothing made it look like the player had been added.
-          setError(response.status === 404 ? t('campaign.noSuchPlayer') : t('campaign.addPlayerFailed'));
+          // account. Saying nothing made it look like the player had been invited.
+          setError(
+            response.status === 404
+              ? t('campaign.noSuchPlayer')
+              : response.status === 409
+                ? t('campaign.alreadyMember')
+                : t('campaign.invitePlayerFailed'),
+          );
         }
+        return response.ok;
+      } finally {
+        setPending(false);
+      }
+    },
+    [token, refreshCampaigns, onSessionExpired],
+  );
+
+  const cancelInvite = useCallback(
+    async (campaignId: string, userId: string): Promise<boolean> => {
+      if (token === null) return false;
+      const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/invites/${userId}`, {
+        method: 'DELETE',
+        headers: { authorization: `Bearer ${token}` },
+      });
+      if (response.ok) await refreshCampaigns();
+      if (response.status === 401) onSessionExpired();
+      return response.ok;
+    },
+    [token, refreshCampaigns, onSessionExpired],
+  );
+
+  const answerInvite = useCallback(
+    async (campaignId: string, answer: 'accept' | 'decline'): Promise<boolean> => {
+      if (token === null) return false;
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/invites/${answer}`, {
+          method: 'POST',
+          headers: { authorization: `Bearer ${token}` },
+        });
+        if (response.status === 401) onSessionExpired();
+        // Refreshed either way: a 404 means the GM withdrew it in the meantime.
+        await refreshCampaigns();
+        if (!response.ok && response.status !== 401) setError(t('campaign.invitationGone'));
         return response.ok;
       } finally {
         setPending(false);
@@ -331,10 +380,6 @@ export function useCampaign(
     [storage, ensureSocket],
   );
 
-  const claimCharacter = useCallback((sheet: SheetState) => {
-    socketRef.current?.emit(CHANNEL.claimCharacter, { sheet });
-  }, []);
-
   const send = useCallback((event: RoomEvent) => {
     socketRef.current?.emit(CHANNEL.intent, event);
   }, []);
@@ -367,6 +412,7 @@ export function useCampaign(
     () => ({
       status,
       campaigns,
+      invited,
       room,
       role,
       activeCampaignId,
@@ -381,10 +427,11 @@ export function useCampaign(
       pending,
       refreshCampaigns,
       createCampaign,
-      addPlayer,
+      invitePlayer,
+      cancelInvite,
+      answerInvite,
       removePlayer,
       join,
-      claimCharacter,
       send,
       leave,
       dismissError,
@@ -392,6 +439,7 @@ export function useCampaign(
     [
       status,
       campaigns,
+      invited,
       room,
       role,
       activeCampaignId,
@@ -406,10 +454,11 @@ export function useCampaign(
       pending,
       refreshCampaigns,
       createCampaign,
-      addPlayer,
+      invitePlayer,
+      cancelInvite,
+      answerInvite,
       removePlayer,
       join,
-      claimCharacter,
       send,
       leave,
       dismissError,

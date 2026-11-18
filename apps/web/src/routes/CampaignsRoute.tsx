@@ -9,8 +9,10 @@ interface CampaignsRouteProps {
   campaigns: readonly CampaignSummary[];
   onCreate: (name: string) => void;
   onJoin: (campaignId: string) => void;
-  onAddPlayer: (campaignId: string, username: string) => void;
-  /** Session token — the player list behind "add player" is GM-only. */
+  /** Invites a player account; it becomes a member once it accepts. */
+  onInvite: (campaignId: string, username: string) => void;
+  onCancelInvite: (campaignId: string, userId: string) => void;
+  /** Session token — the player list behind "invite player" is GM-only. */
   token: string;
   /** True while creating a campaign or adding a player — disables the relevant
    * form so a double-click can't fire the request twice. */
@@ -32,7 +34,8 @@ export function CampaignsRoute({
   campaigns,
   onCreate,
   onJoin,
-  onAddPlayer,
+  onInvite,
+  onCancelInvite,
   token,
   pending,
   tunnelUrl,
@@ -44,11 +47,10 @@ export function CampaignsRoute({
   const [username, setUsername] = useState('');
   const [copied, setCopied] = useState(false);
   /** The accounts that exist, so the GM picks one instead of typing a name that
-   * may not match any. Loaded once, when the first "add player" form opens. */
+   * may not match any, and so pending invitations show a name, not an id. */
   const [players, setPlayers] = useState<readonly User[]>([]);
 
   useEffect(() => {
-    if (addingTo === null) return;
     const controller = new AbortController();
     void fetch(`${SERVER_URL}/users`, {
       headers: { authorization: `Bearer ${token}` },
@@ -60,6 +62,9 @@ export function CampaignsRoute({
       .catch(() => undefined);
     return () => controller.abort();
   }, [addingTo, token]);
+
+  const usernameOf = (userId: string): string =>
+    players.find((player) => player.id === userId)?.username ?? userId;
 
   return (
     <section>
@@ -133,7 +138,9 @@ export function CampaignsRoute({
                   {addingTo === campaign.id ? (
                     (() => {
                       const candidates = players.filter(
-                        (player) => !campaign.memberIds.includes(player.id),
+                        (player) =>
+                          !campaign.memberIds.includes(player.id) &&
+                          !campaign.invitedIds.includes(player.id),
                       );
                       if (candidates.length === 0) {
                         return <p className="muted mt-3">{t('campaigns.noPlayersToAdd')}</p>;
@@ -144,7 +151,7 @@ export function CampaignsRoute({
                           onSubmit={(event) => {
                             event.preventDefault();
                             if (pending || username === '') return;
-                            onAddPlayer(campaign.id, username);
+                            onInvite(campaign.id, username);
                             setUsername('');
                             setAddingTo(null);
                           }}
@@ -171,6 +178,26 @@ export function CampaignsRoute({
                         </form>
                       );
                     })()
+                  ) : null}
+                  {isOwner && campaign.invitedIds.length > 0 ? (
+                    <div className="pending-invites">
+                      <p className="muted">{t('campaigns.pendingInvites')}</p>
+                      <ul>
+                        {campaign.invitedIds.map((userId) => (
+                          <li key={userId} className="row spread">
+                            <span>{usernameOf(userId)}</span>
+                            <button
+                              type="button"
+                              className="btn-ghost"
+                              aria-label={t('campaigns.cancelInviteLabel', { username: usernameOf(userId) })}
+                              onClick={() => onCancelInvite(campaign.id, userId)}
+                            >
+                              {t('campaigns.cancelInvite')}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ) : null}
                   {isOwner ? (
                     <div className="row mt-3">
