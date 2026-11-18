@@ -520,6 +520,25 @@ export function claimCharacterInRoom(
   };
 }
 
+/**
+ * The inverse of a claim: the account's character leaves the room, and its seat
+ * goes back to having none. The account stays seated — it is still a member, it
+ * just no longer plays that character here. Fear is left as it is; a PC leaving
+ * does not take back the Fear it brought.
+ */
+export function releaseCharacterInRoom(state: RoomState, accountId: string): RoomState {
+  if (state.characters[accountId] === undefined) return state;
+  const characters = { ...state.characters };
+  delete characters[accountId];
+  return {
+    ...state,
+    characters,
+    players: state.players.map((player) =>
+      player.id === accountId ? { ...player, characterId: null } : player,
+    ),
+  };
+}
+
 /** True when this actor may mutate the given character. */
 export function canControlCharacter(state: RoomState, actor: Actor, characterId: string): boolean {
   // The GM can act on any character; a player only on the one they claimed.

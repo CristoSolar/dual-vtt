@@ -14,6 +14,7 @@ describe('campaign schemas', () => {
       ownerId: 'u-1',
       ownerUsername: 'gm',
       memberIds: ['u-2', 'u-3'],
+      invitedIds: ['u-4'],
     };
     expect(CampaignSummarySchema.parse(summary)).toEqual(summary);
   });

@@ -12,3 +12,4 @@ export * from './tables.js';
 export * from './vision.js';
 export * from './auth.js';
 export * from './campaign.js';
+export * from './library.js';
