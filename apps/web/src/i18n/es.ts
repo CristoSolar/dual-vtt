@@ -290,7 +290,7 @@ export const es = {
   'wizard.back': '← Atrás',
   'wizard.next': 'Siguiente →',
   'wizard.saving': 'Guardando…',
-  'wizard.finish': 'Terminar y abrir hoja',
+  'wizard.finish': 'Terminar y guardar',
   'wizard.incompleteStepsHint':
     'Todavía hay pasos anteriores incompletos — los botones numerados de arriba indican cuáles.',
   'wizard.errorSummary.title': 'Todavía falta terminar',
@@ -775,7 +775,7 @@ export const es = {
   'sheet.route.dead': 'El viaje terminó',
   'sheet.route.scars': 'Cicatrices: {count, plural, one{# ranura de Esperanza tachada} other{# ranuras de Esperanza tachadas}} para siempre.',
   'sheet.route.exportPdf': 'Exportar PDF',
-  'sheet.route.charactersLink': 'Personajes',
+  'sheet.route.charactersLink': 'Mis personajes',
   'sheet.route.levelUp': 'Subir de nivel',
   'sheet.route.traitsTitle': 'Rasgos',
   'sheet.route.traitsHint': 'Haz clic en un rasgo para hacer una tirada de acción con él.',
@@ -1162,9 +1162,9 @@ export const es = {
   'guide.gm.5.title': 'Comparte la mesa',
   'guide.gm.5.body': 'Con "Generar enlace" abres un túnel público para jugar a distancia. Cambia el idioma con la bandera arriba a la derecha.',
   'guide.player.1.title': 'Entra a tu campaña',
-  'guide.player.1.body': 'El DJ te añadió a una campaña; ábrela desde Inicio.',
+  'guide.player.1.body': 'Cuando el DJ te invite, acepta en Mis campañas y entra desde ahí.',
   'guide.player.2.title': 'Crea tu personaje',
-  'guide.player.2.body': 'Nueve pasos guiados: clase y subclase, herencia, rasgos, estadísticas derivadas, equipo, trasfondo, experiencias, cartas de dominio y conexiones. Se guarda al final.',
+  'guide.player.2.body': 'Nueve pasos guiados: clase y subclase, herencia, rasgos, estadísticas derivadas, equipo, trasfondo, experiencias, cartas de dominio y conexiones. Se guarda en Mis personajes; desde ahí lo vinculas a una campaña.',
   'guide.player.3.title': 'Tu hoja',
   'guide.player.3.body': 'Marca daño, gasta Esperanza, gestiona Estrés y armadura, mueve cartas entre equipo activo y bóveda. Las tiradas las hace el servidor.',
   'guide.player.4.title': 'El mapa',
@@ -1186,7 +1186,7 @@ export const es = {
     'Desde Inicio, el DJ usa "Crear campaña" para abrir una partida y "Agregar jugador" en el panel de Jugadores para dar de alta cada cuenta con una contraseña inicial que el jugador debe cambiar en su primer ingreso. Con "Invitar jugador" la campaña aparece en Mis campañas del jugador; al aceptar, se une. Cada jugador crea sus personajes en Mis personajes y vincula uno a la campaña. "Generar enlace para jugadores" abre un túnel público para que la gente se conecte desde fuera de tu red sin configurar nada más. Cada jugador solo ve las campañas a las que pertenece, nunca las de otra mesa.',
   'help.app.creation.title': 'Creación de personaje',
   'help.app.creation.body':
-    'Crear personaje recorre nueve pasos en orden: Clase y Subclase, Herencia, Rasgos, Estadísticas derivadas, Equipo, Trasfondo, Experiencias, Cartas de Dominio y Conexiones. El borrador se guarda solo en el navegador de ese dispositivo, uno por campaña, así que cerrar la pestaña o recargar no pierde el progreso. Al terminar el último paso el personaje queda reclamado en la campaña y sustituye el borrador por la ficha real.',
+    'Crear personaje recorre nueve pasos en orden: Clase y Subclase, Herencia, Rasgos, Estadísticas derivadas, Equipo, Trasfondo, Experiencias, Cartas de Dominio y Conexiones. El borrador se guarda solo en el navegador de ese dispositivo, así que cerrar la pestaña o recargar no pierde el progreso. Al terminar, el personaje se guarda en tu cuenta (Mis personajes) y lo puedes usar desde cualquier dispositivo. Vincúlalo a una campaña para jugar: un personaje está en una sola campaña a la vez, y tú tienes uno por campaña. Al desvincularlo vuelve a tu lista con la hoja tal como quedó.',
   'help.app.sheet.title': 'La hoja de personaje',
   'help.app.sheet.body':
     'El botón "Recibir daño" abre un diálogo que compara el golpe con los umbrales del personaje para calcular cuántos PV marcar, con casillas de armadura opcionales para reducir el impacto. La Esperanza se gana con tiradas favorables y se gasta en habilidades de clase; el Estrés se marca por esfuerzo y, al llenarse, deja al personaje Vulnerable. Las cartas activas viven en el equipo activo y las demás en la bóveda; recuperar una desde la bóveda cuesta Estrés igual a su Costo de Recuperación, y es gratis durante un descanso. "Subir de nivel" aplica las mejoras del siguiente nivel, y si los PV llegan a marcarse por completo se activa la tirada de Movimiento de Muerte. "Exportar PDF" genera una ficha imprimible con los mismos datos.',

@@ -275,7 +275,7 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.back': '← Back',
   'wizard.next': 'Next →',
   'wizard.saving': 'Saving…',
-  'wizard.finish': 'Finish and open sheet',
+  'wizard.finish': 'Finish and save',
   'wizard.incompleteStepsHint':
     'Earlier steps are still incomplete — the numbered buttons above show which ones.',
   'wizard.errorSummary.title': 'Still missing',
@@ -756,7 +756,7 @@ export const en: Record<keyof typeof es, string> = {
   'sheet.route.dead': 'The journey ended',
   'sheet.route.scars': 'Scars: {count, plural, one{# Hope slot} other{# Hope slots}} crossed out for good.',
   'sheet.route.exportPdf': 'Export PDF',
-  'sheet.route.charactersLink': 'Characters',
+  'sheet.route.charactersLink': 'My characters',
   'sheet.route.levelUp': 'Level up',
   'sheet.route.traitsTitle': 'Traits',
   'sheet.route.traitsHint': 'Click a trait to make an action roll with it.',
@@ -1142,9 +1142,9 @@ export const en: Record<keyof typeof es, string> = {
   'guide.gm.5.title': 'Share the table',
   'guide.gm.5.body': '"Generate link" opens a public tunnel so people can play remotely. Switch language with the flag in the top right.',
   'guide.player.1.title': 'Join your campaign',
-  'guide.player.1.body': 'Your GM added you to a campaign; open it from Home.',
+  'guide.player.1.body': 'When your GM invites you, accept under My campaigns and enter from there.',
   'guide.player.2.title': 'Create your character',
-  'guide.player.2.body': 'Nine guided steps: class and subclass, heritage, traits, derived stats, equipment, background, experiences, domain cards, and connections. It saves at the end.',
+  'guide.player.2.body': 'Nine guided steps: class and subclass, heritage, traits, derived stats, equipment, background, experiences, domain cards, and connections. It is saved to My characters; link it to a campaign from there.',
   'guide.player.3.title': 'Your sheet',
   'guide.player.3.body': 'Mark damage, spend Hope, manage Stress and armor, and move cards between loadout and vault. Rolls happen on the server.',
   'guide.player.4.title': 'The map',
@@ -1166,7 +1166,7 @@ export const en: Record<keyof typeof es, string> = {
     'From Home, the GM uses "Create campaign" to open a game and "Create player" on the Players panel to set up each account with an initial password the player must change on first sign-in. "Invite player" puts the campaign under the player\'s My campaigns; accepting makes them a member. Each player creates characters under My characters and links one to the campaign. "Generate link for players" opens a public tunnel so people can connect from outside your network without any extra setup. Each player only ever sees the campaigns they belong to, never another table\'s.',
   'help.app.creation.title': 'Character creation',
   'help.app.creation.body':
-    'Creating a character walks through nine steps in order: Class and Subclass, Heritage, Traits, Derived Stats, Equipment, Background, Experiences, Domain Cards, and Connections. The draft is saved only in that device\'s browser, one per campaign, so closing the tab or reloading never loses progress. Finishing the last step claims the character into the campaign and replaces the draft with the real sheet.',
+    'Creating a character walks through nine steps in order: Class and Subclass, Heritage, Traits, Derived Stats, Equipment, Background, Experiences, Domain Cards, and Connections. The draft is saved only in that device\'s browser, so closing the tab or reloading never loses progress. Finishing saves the character to your account (My characters), usable from any device. Link it to a campaign to play: a character is in one campaign at a time, and you have one per campaign. Unlinking brings it back to your list with its sheet as it stood.',
   'help.app.sheet.title': 'The character sheet',
   'help.app.sheet.body':
     'The "Take damage" button opens a dialog that checks the hit against the character\'s thresholds to work out how many HP to mark, with optional armor slots to soften the blow. Hope is gained from favorable rolls and spent on class features; Stress is marked from strain and, once full, leaves the character Vulnerable. Active cards live in the loadout and the rest sit in the vault; recalling one from the vault costs Stress equal to its Recall Cost, and is free during a rest. "Level up" applies the next level\'s advancements, and if HP ends up fully marked the death move roll kicks in. "Export PDF" produces a printable sheet with the same data.',

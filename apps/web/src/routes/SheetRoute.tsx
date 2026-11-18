@@ -429,7 +429,7 @@ export function SheetRoute({
           <button type="button" onClick={() => setShowPrint(true)}>
             {t('sheet.route.exportPdf')}
           </button>
-          <Link to="/">
+          <Link to="/characters">
             <button type="button">{t('sheet.route.charactersLink')}</button>
           </Link>
         </div>

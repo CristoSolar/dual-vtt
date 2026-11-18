@@ -46,10 +46,8 @@ export function listLibrary(
   campaigns: CampaignStore,
   ownerId: string,
 ): LibraryCharacter[] {
-  return characters
-    .listFor(ownerId)
-    .sort((a, b) => a.updatedAt - b.updatedAt)
-    .map((record) => toLibraryCharacter(record, campaigns));
+  // Creation order (the store's insertion order), so linking does not reshuffle the list.
+  return characters.listFor(ownerId).map((record) => toLibraryCharacter(record, campaigns));
 }
 
 /** Every record with its live sheet, for the disk snapshot. */
