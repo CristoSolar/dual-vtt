@@ -89,6 +89,12 @@ describe('releaseCharacterInRoom', () => {
     expect(released.players[0]?.id).toBe('alex');
   });
 
+  it('brings Fear only when told the account is new to the party', () => {
+    const empty = createRoomState('c-1', { id: 'gm', name: 'GM', connected: true });
+    expect(claimCharacterInRoom(empty, 'alex', sheet(), false).fear).toBe(empty.fear);
+    expect(claimCharacterInRoom(empty, 'alex', sheet(), true).fear).toBe(empty.fear + 1);
+  });
+
   it('leaves the room alone when the account has no character there', () => {
     const before = room();
     expect(releaseCharacterInRoom(before, 'sam')).toBe(before);

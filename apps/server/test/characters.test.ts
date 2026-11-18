@@ -104,6 +104,46 @@ describe('linking', () => {
   });
 });
 
+describe('Fear from new party members', () => {
+  it('counts an account once per campaign, however often it swaps characters', () => {
+    const { campaigns, characters, campaignId } = table();
+    const fear = () => campaigns.get(campaignId)?.state.fear ?? 0;
+    const start = fear();
+    const first = characters.create('u-alex', buildSheet());
+    const second = characters.create('u-alex', buildSheet('ranger'));
+
+    linkCharacter(characters, campaigns, 'u-alex', first.id, campaignId);
+    unlinkCharacter(characters, campaigns, 'u-alex', first.id);
+    linkCharacter(characters, campaigns, 'u-alex', second.id, campaignId);
+    unlinkCharacter(characters, campaigns, 'u-alex', second.id);
+    linkCharacter(characters, campaigns, 'u-alex', first.id, campaignId);
+    expect(fear()).toBe(start + 1);
+
+    campaigns.addMember(campaignId, 'u-gm', 'u-sam');
+    const sams = characters.create('u-sam', buildSheet());
+    linkCharacter(characters, campaigns, 'u-sam', sams.id, campaignId);
+    expect(fear()).toBe(start + 2);
+  });
+
+  it('treats accounts already holding a character in an old snapshot as in the party', () => {
+    const { campaigns, characters, campaignId } = table();
+    campaigns.claimCharacter(campaignId, 'u-alex', buildSheet());
+    const [saved] = campaigns.serialize();
+    if (saved === undefined) throw new Error('no campaign');
+    const { partyIds: _dropped, ...old } = saved;
+    const restored = new CampaignStore();
+    restored.restore([old as typeof saved]);
+    const fear = restored.get(campaignId)?.state.fear ?? 0;
+
+    adoptRoomCharacters(characters, restored);
+    const [entry] = characters.listFor('u-alex');
+    if (entry === undefined) throw new Error('not adopted');
+    unlinkCharacter(characters, restored, 'u-alex', entry.id);
+    linkCharacter(characters, restored, 'u-alex', entry.id, campaignId);
+    expect(restored.get(campaignId)?.state.fear).toBe(fear);
+  });
+});
+
 describe('reading and unlinking', () => {
   it('lists a linked character with the room’s live sheet and the campaign name', () => {
     const { campaigns, characters, campaignId } = table();

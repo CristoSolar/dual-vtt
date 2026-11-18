@@ -508,8 +508,14 @@ export function claimCharacterInRoom(
   state: RoomState,
   accountId: string,
   sheet: SheetState,
+  /**
+   * Whether this account is joining the party for the first time, which is what
+   * brings the GM a Fear (SRD: 1 per PC). The room alone cannot tell — a character
+   * unlinked and replaced leaves no trace in it — so the server, which remembers
+   * who has played here, says. Defaults to "no character here yet".
+   */
+  isNewToTheParty: boolean = state.characters[accountId] === undefined,
 ): RoomState {
-  const isNewToTheParty = state.characters[accountId] === undefined;
   return {
     ...state,
     characters: { ...state.characters, [accountId]: sheet },

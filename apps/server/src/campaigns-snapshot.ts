@@ -14,6 +14,8 @@ const SerializedCampaignSchema = z.object({
   memberIds: z.array(z.string().min(1)),
   /** Absent from snapshots written before invitations existed. */
   invitedIds: z.array(z.string().min(1)).default([]),
+  /** Absent from older snapshots; `CampaignStore.restore` derives it from the room. */
+  partyIds: z.array(z.string().min(1)).optional(),
   state: RoomStateSchema,
   seed: z.number(),
   rollCount: z.number().int().nonnegative(),

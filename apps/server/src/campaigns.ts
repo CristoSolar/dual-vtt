@@ -33,6 +33,11 @@ export interface CampaignRecord {
   ownerId: string;
   memberIds: string[];
   invitedIds: string[];
+  /**
+   * Every account that has ever had a character in this room. Joining it is what
+   * brings the GM a Fear; swapping characters later does not.
+   */
+  partyIds: string[];
   state: RoomState;
   /** Seeds every roll in this campaign, so results are reproducible and auditable. */
   seed: number;
@@ -129,6 +134,7 @@ export class CampaignStore {
       ownerId,
       memberIds: [],
       invitedIds: [],
+      partyIds: [],
       state: createRoomState(id, gm),
       seed,
       rollCount: 0,
@@ -269,7 +275,9 @@ export class CampaignStore {
     const before = campaign.state;
     // The reducer lives in `protocol` with every other room rule, including the
     // Fear a new PC brings to the GM's pool.
-    campaign.state = claimCharacterInRoom(before, accountId, sheet);
+    const isNewToTheParty = !campaign.partyIds.includes(accountId);
+    campaign.state = claimCharacterInRoom(before, accountId, sheet, isNewToTheParty);
+    if (isNewToTheParty) campaign.partyIds.push(accountId);
     campaign.updatedAt = this.now();
     return { ok: true, ...patchesFor(before, campaign.state), entries: [], privateEntries: [] };
   }
@@ -327,6 +335,8 @@ export class CampaignStore {
         ownerId: record.ownerId,
         memberIds: [...record.memberIds],
         invitedIds: [...record.invitedIds],
+        // Snapshots from before this field: whoever holds a character has joined.
+        partyIds: [...(record.partyIds ?? Object.keys(record.state.characters))],
         state: record.state,
         seed: record.seed,
         rollCount: record.rollCount,
@@ -342,6 +352,7 @@ export class CampaignStore {
       ownerId: c.ownerId,
       memberIds: c.memberIds,
       invitedIds: c.invitedIds,
+      partyIds: c.partyIds,
       state: c.state,
       seed: c.seed,
       rollCount: c.rollCount,
@@ -356,6 +367,8 @@ export interface SerializedCampaign {
   ownerId: string;
   memberIds: string[];
   invitedIds: string[];
+  /** Absent from snapshots written before it existed; `restore` derives it. */
+  partyIds?: string[] | undefined;
   state: RoomState;
   seed: number;
   rollCount: number;
