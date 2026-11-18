@@ -6,7 +6,11 @@ import { handleAuth } from './auth-http.js';
 import { CampaignStore } from './campaigns.js';
 import { handleCampaigns } from './campaigns-http.js';
 import { readCampaignsSnapshot, writeCampaignsSnapshot } from './campaigns-snapshot.js';
-import { registerGateway } from './gateway.js';
+import { CharacterStore } from './characters.js';
+import { handleCharacters } from './characters-http.js';
+import { readCharactersSnapshot, writeCharactersSnapshot } from './characters-snapshot.js';
+import { broadcastPatches, registerGateway } from './gateway.js';
+import { adoptRoomCharacters, serializeLibrary, type Patches } from './library.js';
 import { SessionStore } from './sessions.js';
 import { handleStatic } from './static.js';
 import { handleTunnel } from './tunnel-http.js';
@@ -24,6 +28,8 @@ const UPLOAD_DIR = process.env.UPLOAD_DIR ?? '.data/uploads';
  * itself there. Present when run via `pnpm host` (see host.ts). */
 const WEB_DIST_DIR = process.env.WEB_DIST_DIR ?? '../web/dist';
 const USERS_SNAPSHOT_PATH = process.env.USERS_SNAPSHOT_PATH ?? '.data/users.json';
+/** Every account's character library. */
+const CHARACTERS_SNAPSHOT_PATH = process.env.CHARACTERS_SNAPSHOT_PATH ?? '.data/characters.json';
 /** The first GM account, created on boot if no account by this name exists yet. */
 const GM_USERNAME = process.env.GM_USERNAME ?? 'gm';
 const GM_PASSWORD = process.env.GM_PASSWORD ?? 'gm';
@@ -46,6 +52,24 @@ async function main(): Promise<void> {
     );
   };
 
+  // Characters are restored after campaigns: the library reads linked sheets from
+  // the rooms, and the first boot with a library adopts every character already
+  // sitting in one (see `adoptRoomCharacters`; idempotent on later boots).
+  const characters = new CharacterStore();
+  characters.restore(await readCharactersSnapshot(CHARACTERS_SNAPSHOT_PATH));
+  const adopted = adoptRoomCharacters(characters, campaigns);
+  if (adopted > 0) console.log(`filed ${adopted} character(s) from campaign rooms into their owners' libraries`);
+  const writeCharacters = (): Promise<void> =>
+    writeCharactersSnapshot(CHARACTERS_SNAPSHOT_PATH, serializeLibrary(characters, campaigns));
+  const persistCharacters = (): void => {
+    void writeCharacters().catch((error: unknown) => console.error('characters snapshot failed', error));
+  };
+  const persistTable = (): void => {
+    persistCampaigns();
+    persistCharacters();
+  };
+  if (adopted > 0) persistCharacters();
+
   const users = new UserStore();
   users.restore(await readUsersSnapshot(USERS_SNAPSHOT_PATH));
   const persistUsers = (): void => {
@@ -67,11 +91,16 @@ async function main(): Promise<void> {
   const sessions = new SessionStore();
   const tunnel = new TunnelManager(PORT, WEB_DIST_DIR);
 
+  // The HTTP routes are built before the socket server exists; this is only called
+  // once a request arrives, by which point `io` is set.
+  const broadcast = (campaignId: string, outcome: Patches): void => broadcastPatches(io, campaignId, outcome);
+  const tableDeps = { campaigns, characters, users, sessions, persist: persistTable, broadcast };
+
   type Route = (request: IncomingMessage, response: ServerResponse) => Promise<boolean>;
   const routes: readonly Route[] = [
     (request, response) => handleAuth(request, response, { users, sessions, persist: persistUsers }),
-    (request, response) =>
-      handleCampaigns(request, response, { campaigns, users, sessions, persist: persistCampaigns }),
+    (request, response) => handleCampaigns(request, response, tableDeps),
+    (request, response) => handleCharacters(request, response, tableDeps),
     (request, response) => handleTunnel(request, response, { tunnel, users, sessions }),
     (request, response) => handleUploads(request, response, { directory: UPLOAD_DIR, users, sessions }),
     (request, response) => handleStatic(request, response, WEB_DIST_DIR),
@@ -118,9 +147,9 @@ async function main(): Promise<void> {
   });
 
   const io = new Server(http, { cors: { origin: ALLOWED_ORIGINS } });
-  registerGateway(io, campaigns, sessions, users, persistCampaigns);
+  registerGateway(io, campaigns, sessions, users, persistTable, characters);
 
-  const stopSnapshots = setInterval(persistCampaigns, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
+  const stopSnapshots = setInterval(persistTable, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
   stopSnapshots.unref();
 
   let shuttingDown = false;
@@ -139,6 +168,7 @@ async function main(): Promise<void> {
       writeUsersSnapshot(USERS_SNAPSHOT_PATH, users.serialize()).catch((error: unknown) =>
         console.error('final users snapshot failed', error),
       ),
+      writeCharacters().catch((error: unknown) => console.error('final characters snapshot failed', error)),
     ]);
     // io.close() closes the http server it is attached to and waits for sockets.
     await io.close();

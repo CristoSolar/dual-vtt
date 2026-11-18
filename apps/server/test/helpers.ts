@@ -15,6 +15,7 @@ import { Server } from 'socket.io';
 import { io as connect, type Socket } from 'socket.io-client';
 
 import { CampaignStore } from '../src/campaigns.js';
+import { CharacterStore } from '../src/characters.js';
 import { registerGateway } from '../src/gateway.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
@@ -77,6 +78,7 @@ export const buildSheet = (classId: ClassId = 'guardian'): SheetState =>
 export interface TestServer {
   url: string;
   campaigns: CampaignStore;
+  characters: CharacterStore;
   users: UserStore;
   sessions: SessionStore;
   /** Times `registerGateway`'s persist callback has fired — lets a test confirm an
@@ -97,11 +99,12 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
 
   const users = new UserStore();
   const sessions = new SessionStore();
+  const characters = new CharacterStore();
 
   let persists = 0;
   registerGateway(io, campaigns, sessions, users, () => {
     persists += 1;
-  });
+  }, characters);
 
   await new Promise<void>((resolve) => http.listen(0, resolve));
   const address = http.address() as AddressInfo;
@@ -109,6 +112,7 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
   return {
     url: `http://localhost:${address.port}`,
     campaigns,
+    characters,
     users,
     sessions,
     persistCount: () => persists,

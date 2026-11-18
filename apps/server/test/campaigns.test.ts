@@ -85,6 +85,81 @@ describe('CampaignStore', () => {
     expect(store.get(campaign.id)?.state.players[0]?.characterId).toBe('u-player');
   });
 
+  it('invites a player, who becomes a member only on accepting', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+
+    expect(store.invite(campaign.id, 'u-someone-else', 'u-player')).toBe('forbidden');
+    expect(store.invite(campaign.id, 'u-gm', 'u-gm')).toBe('alreadyMember');
+    expect(store.invite(campaign.id, 'u-gm', 'u-player')).toBe('ok');
+    expect(store.roleOf(campaign.id, 'u-player')).toBeNull();
+    expect(store.listInvitedFor('u-player').map((c) => c.id)).toEqual([campaign.id]);
+    expect(store.listFor('u-player')).toEqual([]);
+
+    expect(store.acceptInvite(campaign.id, 'u-player')).toBe(true);
+    expect(store.roleOf(campaign.id, 'u-player')).toBe('player');
+    expect(store.listInvitedFor('u-player')).toEqual([]);
+    expect(store.invite(campaign.id, 'u-gm', 'u-player')).toBe('alreadyMember');
+  });
+
+  it('accepting or declining needs a pending invitation', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    expect(store.acceptInvite(campaign.id, 'u-player')).toBe(false);
+    expect(store.roleOf(campaign.id, 'u-player')).toBeNull();
+
+    store.invite(campaign.id, 'u-gm', 'u-player');
+    expect(store.declineInvite(campaign.id, 'u-player')).toBe(true);
+    expect(store.listInvitedFor('u-player')).toEqual([]);
+    expect(store.roleOf(campaign.id, 'u-player')).toBeNull();
+    expect(store.declineInvite(campaign.id, 'u-player')).toBe(false);
+  });
+
+  it('only the owner cancels a pending invitation', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    store.invite(campaign.id, 'u-gm', 'u-player');
+
+    expect(store.cancelInvite(campaign.id, 'u-player', 'u-player')).toBe(false);
+    expect(store.listInvitedFor('u-player')).toHaveLength(1);
+    expect(store.cancelInvite(campaign.id, 'u-gm', 'u-player')).toBe(true);
+    expect(store.listInvitedFor('u-player')).toEqual([]);
+  });
+
+  it('seats a player whose character was linked before they ever joined as controlling it', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.claimCharacter(campaign.id, 'u-player', { fake: 'sheet' } as never);
+
+    store.seatFor(campaign.id, 'u-player', 'alex');
+    expect(store.get(campaign.id)?.state.players[0]?.characterId).toBe('u-player');
+  });
+
+  it('releases a character from the room and hands back its live sheet', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    store.addMember(campaign.id, 'u-gm', 'u-player');
+    store.seatFor(campaign.id, 'u-player', 'alex');
+    const sheet = { fake: 'sheet' } as never;
+    store.claimCharacter(campaign.id, 'u-player', sheet);
+
+    const released = store.releaseCharacter(campaign.id, 'u-player');
+    expect(released.sheet).toBe(sheet);
+    expect(released.patch.characters).toEqual({});
+    expect(store.get(campaign.id)?.state.characters['u-player']).toBeUndefined();
+    expect(store.releaseCharacter(campaign.id, 'u-player').sheet).toBeNull();
+  });
+
+  it('round-trips invitations through serialize/restore', () => {
+    const store = new CampaignStore();
+    const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');
+    store.invite(campaign.id, 'u-gm', 'u-player');
+    const restored = new CampaignStore();
+    restored.restore(store.serialize());
+    expect(restored.listInvitedFor('u-player').map((c) => c.id)).toEqual([campaign.id]);
+  });
+
   it('round-trips through serialize/restore', () => {
     const store = new CampaignStore();
     const campaign = store.createCampaign('u-gm', 'gm', 'Grupo Martes');

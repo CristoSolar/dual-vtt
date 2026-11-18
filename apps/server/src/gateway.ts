@@ -12,6 +12,8 @@ import {
 import type { Server, Socket } from 'socket.io';
 
 import type { CampaignStore } from './campaigns.js';
+import type { CharacterStore } from './characters.js';
+import { adoptRoomCharacters } from './library.js';
 import type { SessionStore } from './sessions.js';
 import type { UserStore } from './users.js';
 
@@ -76,7 +78,8 @@ function stillMember(
   return false;
 }
 
-function broadcastPatches(
+/** Sends a room change to a campaign's GM and player channels, each its own view. */
+export function broadcastPatches(
   io: Server,
   campaignId: string,
   outcome: { patch: RoomPatch; playerPatch: RoomPatch },
@@ -95,6 +98,8 @@ export function registerGateway(
   sessions: SessionStore,
   users: UserStore,
   persist: () => void,
+  /** A character claimed over the socket is filed in its owner's library. */
+  characters: CharacterStore,
 ): void {
   // Auth runs in connection middleware, not the `connection` handler: by the time
   // that handler fires the client has already seen a `connect` event, so rejecting
@@ -163,6 +168,7 @@ export function registerGateway(
       const outcome = campaigns.claimCharacter(seat.campaignId, account, parsed.data.sheet);
       if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'claim rejected');
       broadcastPatches(io, seat.campaignId, outcome);
+      adoptRoomCharacters(characters, campaigns);
       // A one-time, high-value event per player — worth an immediate snapshot rather
       // than waiting on the periodic interval, so a restart between now and the next
       // tick can never quietly lose the character they just spent the wizard on.

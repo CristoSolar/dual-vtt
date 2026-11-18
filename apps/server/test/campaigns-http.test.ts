@@ -1,10 +1,12 @@
 import { createServer, type Server as HttpServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
+import { CampaignListSchema } from '@daggerheart/protocol';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { CampaignStore } from '../src/campaigns.js';
 import { handleCampaigns } from '../src/campaigns-http.js';
+import { CharacterStore } from '../src/characters.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
 import { createUserOrFail } from './helpers.js';
@@ -14,7 +16,15 @@ async function startCampaignsServer() {
   const sessions = new SessionStore();
   const campaigns = new CampaignStore();
   const http: HttpServer = createServer((request, response) => {
-    void handleCampaigns(request, response, { campaigns, users, sessions, persist: () => {} }).then(
+    const characters = new CharacterStore();
+    void handleCampaigns(request, response, {
+      campaigns,
+      characters,
+      users,
+      sessions,
+      persist: () => {},
+      broadcast: () => {},
+    }).then(
       (handled) => {
         if (!handled) {
           response.writeHead(404);
@@ -29,6 +39,7 @@ async function startCampaignsServer() {
     url: `http://localhost:${address.port}`,
     users,
     sessions,
+    campaigns,
     close: () => new Promise<void>((resolve) => http.close(() => resolve())),
   };
 }
@@ -73,75 +84,110 @@ describe('campaigns HTTP endpoints', () => {
     expect(summary.memberIds).toEqual([]);
 
     const list = await fetch(`${server.url}/campaigns`, { headers: { authorization: `Bearer ${gmToken}` } });
-    const campaigns = (await list.json()) as { id: string }[];
-    expect(campaigns.some((c) => c.id === summary.id)).toBe(true);
+    const campaigns = CampaignListSchema.parse(await list.json());
+    expect(campaigns.member.some((c) => c.id === summary.id)).toBe(true);
 
-    // A player not yet added sees no campaigns.
+    // A player not yet invited sees no campaigns.
     const playerList = await fetch(`${server.url}/campaigns`, {
       headers: { authorization: `Bearer ${playerToken}` },
     });
-    expect(((await playerList.json()) as unknown[])).toEqual([]);
+    expect(CampaignListSchema.parse(await playerList.json())).toEqual({ member: [], invited: [] });
   });
 
-  it('lets only the owner add a player, then that player sees the campaign', async () => {
+  const newCampaign = async (name: string): Promise<string> => {
     const created = await fetch(`${server.url}/campaigns`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ name: 'Otra campaña' }),
+      body: JSON.stringify({ name }),
     });
-    const { id: campaignId } = (await created.json()) as { id: string };
+    return ((await created.json()) as { id: string }).id;
+  };
 
-    const forbidden = await fetch(`${server.url}/campaigns/${campaignId}/players`, {
+  const post = (token: string, path: string, body?: unknown) =>
+    fetch(`${server.url}${path}`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${playerToken}` },
-      body: JSON.stringify({ username: 'alex' }),
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+
+  const listAs = async (token: string) =>
+    CampaignListSchema.parse(
+      await (await fetch(`${server.url}/campaigns`, { headers: { authorization: `Bearer ${token}` } })).json(),
+    );
+
+  it('lets only the owner invite; the player sees it as invited, not as a member', async () => {
+    const campaignId = await newCampaign('Otra campaña');
+
+    expect((await post(playerToken, `/campaigns/${campaignId}/invites`, { username: 'alex' })).status).toBe(403);
+    expect((await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' })).status).toBe(204);
+
+    const asPlayer = await listAs(playerToken);
+    expect(asPlayer.invited.map((c) => c.id)).toContain(campaignId);
+    expect(asPlayer.member.map((c) => c.id)).not.toContain(campaignId);
+    // Who else was invited is the GM's business.
+    expect(asPlayer.invited.find((c) => c.id === campaignId)?.invitedIds).toEqual([]);
+
+    const asGm = await listAs(gmToken);
+    expect(asGm.member.find((c) => c.id === campaignId)?.invitedIds).toEqual([playerId]);
+    expect(server.campaigns.roleOf(campaignId, playerId)).toBeNull();
+  });
+
+  it('accepting makes the player a member', async () => {
+    const campaignId = await newCampaign('Aceptada');
+    await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' });
+
+    expect((await post(playerToken, `/campaigns/${campaignId}/invites/accept`)).status).toBe(204);
+    const asPlayer = await listAs(playerToken);
+    expect(asPlayer.member.find((c) => c.id === campaignId)?.memberIds).toContain(playerId);
+    expect(asPlayer.invited.map((c) => c.id)).not.toContain(campaignId);
+    // Inviting a member again is refused.
+    expect((await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' })).status).toBe(409);
+  });
+
+  it('declining removes the invitation without joining', async () => {
+    const campaignId = await newCampaign('Rechazada');
+    await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' });
+
+    expect((await post(playerToken, `/campaigns/${campaignId}/invites/decline`)).status).toBe(204);
+    const asPlayer = await listAs(playerToken);
+    expect([...asPlayer.member, ...asPlayer.invited].map((c) => c.id)).not.toContain(campaignId);
+    // Nothing left to accept.
+    expect((await post(playerToken, `/campaigns/${campaignId}/invites/accept`)).status).toBe(404);
+    expect(server.campaigns.roleOf(campaignId, playerId)).toBeNull();
+  });
+
+  it('lets the owner cancel a pending invitation', async () => {
+    const campaignId = await newCampaign('Cancelada');
+    await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' });
+
+    const forbidden = await fetch(`${server.url}/campaigns/${campaignId}/invites/${playerId}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${playerToken}` },
     });
     expect(forbidden.status).toBe(403);
-
-    const added = await fetch(`${server.url}/campaigns/${campaignId}/players`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'alex' }),
+    const cancelled = await fetch(`${server.url}/campaigns/${campaignId}/invites/${playerId}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${gmToken}` },
     });
-    expect(added.status).toBe(204);
-
-    const playerList = await fetch(`${server.url}/campaigns`, {
-      headers: { authorization: `Bearer ${playerToken}` },
-    });
-    const playerCampaigns = (await playerList.json()) as { id: string; memberIds: string[] }[];
-    expect(playerCampaigns.some((c) => c.id === campaignId && c.memberIds.includes(playerId))).toBe(true);
+    expect(cancelled.status).toBe(204);
+    expect((await listAs(playerToken)).invited.map((c) => c.id)).not.toContain(campaignId);
   });
 
-  it('403s a non-owner adding a nonexistent username, not 404 — ownership is checked before the username lookup', async () => {
-    const created = await fetch(`${server.url}/campaigns`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ name: 'No leak' }),
-    });
-    const { id: campaignId } = (await created.json()) as { id: string };
-
-    const response = await fetch(`${server.url}/campaigns/${campaignId}/players`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${playerToken}` },
-      body: JSON.stringify({ username: 'nobody-here' }),
-    });
-    expect(response.status).toBe(403);
+  it('403s a non-owner inviting a nonexistent username, not 404 — ownership is checked first', async () => {
+    const campaignId = await newCampaign('No leak');
+    expect((await post(playerToken, `/campaigns/${campaignId}/invites`, { username: 'nobody-here' })).status).toBe(403);
   });
 
-  it('404s adding an unknown username', async () => {
-    const created = await fetch(`${server.url}/campaigns`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ name: 'Tercera' }),
-    });
-    const { id: campaignId } = (await created.json()) as { id: string };
+  it('404s inviting an unknown username and 400s a bad body', async () => {
+    const campaignId = await newCampaign('Tercera');
+    expect((await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'nobody-here' })).status).toBe(404);
+    expect((await post(gmToken, `/campaigns/${campaignId}/invites`, { username: '' })).status).toBe(400);
+  });
 
-    const response = await fetch(`${server.url}/campaigns/${campaignId}/players`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'nobody-here' }),
-    });
-    expect(response.status).toBe(404);
+  it('no longer adds a player directly', async () => {
+    const campaignId = await newCampaign('Directo');
+    expect((await post(gmToken, `/campaigns/${campaignId}/players`, { username: 'alex' })).status).toBe(404);
+    expect(server.campaigns.roleOf(campaignId, playerId)).toBeNull();
   });
 
   it('lets the owner remove a member', async () => {
@@ -151,11 +197,8 @@ describe('campaigns HTTP endpoints', () => {
       body: JSON.stringify({ name: 'Cuarta' }),
     });
     const { id: campaignId } = (await created.json()) as { id: string };
-    await fetch(`${server.url}/campaigns/${campaignId}/players`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${gmToken}` },
-      body: JSON.stringify({ username: 'alex' }),
-    });
+    await post(gmToken, `/campaigns/${campaignId}/invites`, { username: 'alex' });
+    await post(playerToken, `/campaigns/${campaignId}/invites/accept`);
 
     const removed = await fetch(`${server.url}/campaigns/${campaignId}/players/${playerId}`, {
       method: 'DELETE',
@@ -166,7 +209,7 @@ describe('campaigns HTTP endpoints', () => {
     const playerList = await fetch(`${server.url}/campaigns`, {
       headers: { authorization: `Bearer ${playerToken}` },
     });
-    const playerCampaigns = (await playerList.json()) as { id: string }[];
+    const playerCampaigns = CampaignListSchema.parse(await playerList.json()).member;
     expect(playerCampaigns.some((c) => c.id === campaignId)).toBe(false);
   });
 });

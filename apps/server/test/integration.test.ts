@@ -87,6 +87,26 @@ describe('campaign lifecycle over a socket', () => {
     alice.client.close();
   });
 
+  it('files a character claimed over the socket in the player’s library, linked there', async () => {
+    const gm = await accountFor(server, 'gm-library', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-library');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Library Test');
+    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+
+    const claimed = gmClient.until<RoomPatch>(
+      CHANNEL.roomPatch,
+      (p) => p.characters?.[alicePlayer.id] !== undefined,
+    );
+    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    await claimed;
+
+    const entries = server.characters.listFor(alicePlayer.id);
+    expect(entries.map((e) => e.campaignId)).toEqual([campaignId]);
+
+    gmClient.close();
+    alice.client.close();
+  });
+
   it('broadcasts one client’s damage to the other within a single broadcast', async () => {
     const gm = await accountFor(server, 'gm4', 'gm');
     const alicePlayer = await accountFor(server, 'alice4');

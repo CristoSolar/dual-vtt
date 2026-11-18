@@ -12,6 +12,8 @@ const SerializedCampaignSchema = z.object({
   name: z.string().min(1),
   ownerId: z.string().min(1),
   memberIds: z.array(z.string().min(1)),
+  /** Absent from snapshots written before invitations existed. */
+  invitedIds: z.array(z.string().min(1)).default([]),
   state: RoomStateSchema,
   seed: z.number(),
   rollCount: z.number().int().nonnegative(),

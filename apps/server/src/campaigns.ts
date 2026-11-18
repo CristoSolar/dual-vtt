@@ -4,6 +4,7 @@ import {
   applyRoomEvent,
   claimCharacterInRoom,
   createRoomState,
+  releaseCharacterInRoom,
   roomForRole,
   roomPatch,
   type Actor,
@@ -23,12 +24,15 @@ import { seededRng, type Rng } from '@daggerheart/rules';
  * account-based ownership. Where the old `RoomStore` gated entry with a shared
  * 6-character code and an ephemeral seat token, a campaign gates entry with account
  * membership — `ownerId` is always seated as GM, `memberIds` as players.
+ * `invitedIds` are accounts the GM invited that have not answered yet; they are
+ * not members, and nothing lets them in until they accept.
  */
 export interface CampaignRecord {
   id: string;
   name: string;
   ownerId: string;
   memberIds: string[];
+  invitedIds: string[];
   state: RoomState;
   /** Seeds every roll in this campaign, so results are reproducible and auditable. */
   seed: number;
@@ -92,11 +96,20 @@ export class CampaignStore {
     return this.campaigns.get(campaignId) ?? null;
   }
 
+  all(): CampaignRecord[] {
+    return [...this.campaigns.values()];
+  }
+
   /** Every campaign this account owns or belongs to. */
   listFor(accountId: string): CampaignRecord[] {
     return [...this.campaigns.values()].filter(
       (c) => c.ownerId === accountId || c.memberIds.includes(accountId),
     );
+  }
+
+  /** Every campaign that has invited this account and is waiting on its answer. */
+  listInvitedFor(accountId: string): CampaignRecord[] {
+    return [...this.campaigns.values()].filter((c) => c.invitedIds.includes(accountId));
   }
 
   roleOf(campaignId: string, accountId: string): 'gm' | 'player' | null {
@@ -115,6 +128,7 @@ export class CampaignStore {
       name,
       ownerId,
       memberIds: [],
+      invitedIds: [],
       state: createRoomState(id, gm),
       seed,
       rollCount: 0,
@@ -129,6 +143,44 @@ export class CampaignStore {
     const campaign = this.campaigns.get(campaignId);
     if (campaign === undefined || campaign.ownerId !== requesterId) return false;
     if (!campaign.memberIds.includes(memberId)) campaign.memberIds.push(memberId);
+    campaign.updatedAt = this.now();
+    return true;
+  }
+
+  /** Only the owner invites; the owner and current members cannot be invited. */
+  invite(campaignId: string, requesterId: string, accountId: string): 'ok' | 'forbidden' | 'alreadyMember' {
+    const campaign = this.campaigns.get(campaignId);
+    if (campaign === undefined || campaign.ownerId !== requesterId) return 'forbidden';
+    if (this.roleOf(campaignId, accountId) !== null) return 'alreadyMember';
+    if (!campaign.invitedIds.includes(accountId)) campaign.invitedIds.push(accountId);
+    campaign.updatedAt = this.now();
+    return 'ok';
+  }
+
+  /** The owner withdraws an invitation. False if not the owner or nothing was pending. */
+  cancelInvite(campaignId: string, requesterId: string, accountId: string): boolean {
+    const campaign = this.campaigns.get(campaignId);
+    if (campaign === undefined || campaign.ownerId !== requesterId) return false;
+    return this.dropInvite(campaign, accountId);
+  }
+
+  /** The invited account joins as a player. False if it had no pending invitation. */
+  acceptInvite(campaignId: string, accountId: string): boolean {
+    const campaign = this.campaigns.get(campaignId);
+    if (campaign === undefined || !this.dropInvite(campaign, accountId)) return false;
+    if (!campaign.memberIds.includes(accountId)) campaign.memberIds.push(accountId);
+    return true;
+  }
+
+  /** The invited account says no; the invitation is gone. */
+  declineInvite(campaignId: string, accountId: string): boolean {
+    const campaign = this.campaigns.get(campaignId);
+    return campaign !== undefined && this.dropInvite(campaign, accountId);
+  }
+
+  private dropInvite(campaign: CampaignRecord, accountId: string): boolean {
+    if (!campaign.invitedIds.includes(accountId)) return false;
+    campaign.invitedIds = campaign.invitedIds.filter((id) => id !== accountId);
     campaign.updatedAt = this.now();
     return true;
   }
@@ -172,7 +224,17 @@ export class CampaignStore {
         ...campaign.state,
         players: already
           ? campaign.state.players.map((p) => (p.id === accountId ? { ...p, connected: true } : p))
-          : [...campaign.state.players, { id: accountId, name: username, connected: true, characterId: null }],
+          : [
+              ...campaign.state.players,
+              {
+                id: accountId,
+                name: username,
+                connected: true,
+                // A character linked from the library before this account ever sat
+                // down is already in the room; the seat must control it.
+                characterId: campaign.state.characters[accountId] === undefined ? null : accountId,
+              },
+            ],
       };
     }
     campaign.updatedAt = this.now();
@@ -212,6 +274,23 @@ export class CampaignStore {
     return { ok: true, ...patchesFor(before, campaign.state), entries: [], privateEntries: [] };
   }
 
+  /**
+   * Takes this account's character out of the room and returns the sheet as it
+   * stood there — the live copy, for the library to keep.
+   */
+  releaseCharacter(
+    campaignId: string,
+    accountId: string,
+  ): { sheet: SheetState | null; patch: RoomPatch; playerPatch: RoomPatch } {
+    const campaign = this.campaigns.get(campaignId);
+    const sheet = campaign?.state.characters[accountId];
+    if (campaign === undefined || sheet === undefined) return { sheet: null, patch: {}, playerPatch: {} };
+    const before = campaign.state;
+    campaign.state = releaseCharacterInRoom(before, accountId);
+    campaign.updatedAt = this.now();
+    return { sheet, ...patchesFor(before, campaign.state) };
+  }
+
   /** Applies one validated intent. The actor's role must already be known (via `seatFor`). */
   apply(campaignId: string, actor: Actor, event: RoomEvent): ApplyOutcome {
     const campaign = this.campaigns.get(campaignId);
@@ -247,6 +326,7 @@ export class CampaignStore {
         name: record.name,
         ownerId: record.ownerId,
         memberIds: [...record.memberIds],
+        invitedIds: [...record.invitedIds],
         state: record.state,
         seed: record.seed,
         rollCount: record.rollCount,
@@ -261,6 +341,7 @@ export class CampaignStore {
       name: c.name,
       ownerId: c.ownerId,
       memberIds: c.memberIds,
+      invitedIds: c.invitedIds,
       state: c.state,
       seed: c.seed,
       rollCount: c.rollCount,
@@ -274,6 +355,7 @@ export interface SerializedCampaign {
   name: string;
   ownerId: string;
   memberIds: string[];
+  invitedIds: string[];
   state: RoomState;
   seed: number;
   rollCount: number;

@@ -1,51 +1,48 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import {
-  AddPlayerRequestSchema,
   CreateCampaignRequestSchema,
+  InvitePlayerRequestSchema,
+  type CampaignList,
   type CampaignSummary,
   type User,
 } from '@daggerheart/protocol';
 
 import type { CampaignRecord, CampaignStore } from './campaigns.js';
+import type { CharacterStore } from './characters.js';
 import { actorFor } from './http-auth.js';
+import { json, noContent, readJsonBody } from './http-json.js';
+import { detachMember, type Patches } from './library.js';
 import type { SessionStore } from './sessions.js';
-import { readBody } from './uploads.js';
 import type { UserStore } from './users.js';
 
-const MAX_CAMPAIGNS_BODY_BYTES = 64 * 1024;
-
-const json = (response: ServerResponse, status: number, body: unknown): void => {
-  response.writeHead(status, { 'content-type': 'application/json' });
-  response.end(JSON.stringify(body));
-};
-
-const noContent = (response: ServerResponse): void => {
-  response.writeHead(204);
-  response.end();
-};
-
-async function readJsonBody(request: IncomingMessage): Promise<unknown> {
-  const bytes = await readBody(request, MAX_CAMPAIGNS_BODY_BYTES);
-  return JSON.parse(new TextDecoder().decode(bytes)) as unknown;
-}
-
-function toSummary(campaign: CampaignRecord, ownerUsername: string): CampaignSummary {
+/**
+ * Only the owner learns who is invited. Someone who is merely invited is not told
+ * who the members are either — that is for the table to see once they join.
+ */
+function toSummary(campaign: CampaignRecord, ownerUsername: string, viewerId: string): CampaignSummary {
+  const isOwner = campaign.ownerId === viewerId;
+  const isMember = isOwner || campaign.memberIds.includes(viewerId);
   return {
     id: campaign.id,
     name: campaign.name,
     ownerId: campaign.ownerId,
     ownerUsername,
-    memberIds: campaign.memberIds,
+    memberIds: isMember ? campaign.memberIds : [],
+    invitedIds: isOwner ? campaign.invitedIds : [],
   };
 }
 
 export interface CampaignsDeps {
   campaigns: CampaignStore;
+  /** A removed member's linked character is written back into their library. */
+  characters: CharacterStore;
   users: UserStore;
   sessions: SessionStore;
   /** Called after any mutation, so the caller can snapshot to disk right away. */
   persist: () => void;
+  /** Sends a room change to the campaign's live sockets. */
+  broadcast: (campaignId: string, outcome: Patches) => void;
 }
 
 /**
@@ -55,55 +52,52 @@ export interface CampaignsDeps {
 export async function handleCampaigns(
   request: IncomingMessage,
   response: ServerResponse,
-  { campaigns, users, sessions, persist }: CampaignsDeps,
+  { campaigns, characters, users, sessions, persist, broadcast }: CampaignsDeps,
 ): Promise<boolean> {
   const url = request.url ?? '';
   const method = request.method ?? 'GET';
 
+  const isCampaignsRoute = url === '/campaigns' || url.startsWith('/campaigns/');
+  if (!isCampaignsRoute) return false;
+
+  const actor: User | null = actorFor(request, sessions, users);
+  if (actor === null) {
+    json(response, 401, { error: 'unauthorized' });
+    return true;
+  }
+  const summaryFor = (c: CampaignRecord): CampaignSummary =>
+    toSummary(c, users.findById(c.ownerId)?.username ?? c.state.gm.name, actor.id);
+
   if (method === 'POST' && url === '/campaigns') {
-    const actor = actorFor(request, sessions, users);
-    if (actor === null) {
-      json(response, 401, { error: 'unauthorized' });
-      return true;
-    }
-    const parsed = CreateCampaignRequestSchema.safeParse(await readJsonBody(request).catch(() => null));
+    const parsed = CreateCampaignRequestSchema.safeParse(await readJsonBody(request));
     if (!parsed.success) {
       json(response, 400, { error: 'badRequest' });
       return true;
     }
     const created = campaigns.createCampaign(actor.id, actor.username, parsed.data.name);
     persist();
-    json(response, 201, toSummary(created, actor.username));
+    json(response, 201, summaryFor(created));
     return true;
   }
 
   if (method === 'GET' && url === '/campaigns') {
-    const actor = actorFor(request, sessions, users);
-    if (actor === null) {
-      json(response, 401, { error: 'unauthorized' });
-      return true;
-    }
-    const list = campaigns.listFor(actor.id).map((c) => {
-      const owner = users.findById(c.ownerId);
-      return toSummary(c, owner?.username ?? c.state.gm.name);
-    });
+    const list: CampaignList = {
+      member: campaigns.listFor(actor.id).map(summaryFor),
+      invited: campaigns.listInvitedFor(actor.id).map(summaryFor),
+    };
     json(response, 200, list);
     return true;
   }
 
-  const addPlayerMatch = /^\/campaigns\/([^/]+)\/players$/.exec(url);
-  if (method === 'POST' && addPlayerMatch !== null) {
-    const actor = actorFor(request, sessions, users);
-    if (actor === null) {
-      json(response, 401, { error: 'unauthorized' });
-      return true;
-    }
-    const parsed = AddPlayerRequestSchema.safeParse(await readJsonBody(request).catch(() => null));
+  const inviteMatch = /^\/campaigns\/([^/]+)\/invites$/.exec(url);
+  if (method === 'POST' && inviteMatch !== null) {
+    const parsed = InvitePlayerRequestSchema.safeParse(await readJsonBody(request));
     if (!parsed.success) {
       json(response, 400, { error: 'badRequest' });
       return true;
     }
-    const campaignId = addPlayerMatch[1] ?? '';
+    const campaignId = inviteMatch[1] ?? '';
+    // Ownership before the username lookup, so a non-owner cannot probe for names.
     if (campaigns.roleOf(campaignId, actor.id) !== 'gm') {
       json(response, 403, { error: 'forbidden' });
       return true;
@@ -113,9 +107,40 @@ export async function handleCampaigns(
       json(response, 404, { error: 'unknownUsername' });
       return true;
     }
-    // Ownership already confirmed above, so this can only fail if the campaign
-    // vanished between the roleOf check and here — treat that as a benign no-op.
-    campaigns.addMember(campaignId, actor.id, target.id);
+    const result = campaigns.invite(campaignId, actor.id, target.id);
+    if (result !== 'ok') {
+      json(response, result === 'forbidden' ? 403 : 409, { error: result });
+      return true;
+    }
+    persist();
+    noContent(response);
+    return true;
+  }
+
+  const answerMatch = /^\/campaigns\/([^/]+)\/invites\/(accept|decline)$/.exec(url);
+  if (method === 'POST' && answerMatch !== null) {
+    const campaignId = answerMatch[1] ?? '';
+    const ok =
+      answerMatch[2] === 'accept'
+        ? campaigns.acceptInvite(campaignId, actor.id)
+        : campaigns.declineInvite(campaignId, actor.id);
+    if (!ok) {
+      json(response, 404, { error: 'noInvitation' });
+      return true;
+    }
+    persist();
+    noContent(response);
+    return true;
+  }
+
+  const cancelMatch = /^\/campaigns\/([^/]+)\/invites\/([^/]+)$/.exec(url);
+  if (method === 'DELETE' && cancelMatch !== null) {
+    const campaignId = cancelMatch[1] ?? '';
+    if (campaigns.roleOf(campaignId, actor.id) !== 'gm') {
+      json(response, 403, { error: 'forbidden' });
+      return true;
+    }
+    campaigns.cancelInvite(campaignId, actor.id, cancelMatch[2] ?? '');
     persist();
     noContent(response);
     return true;
@@ -123,18 +148,17 @@ export async function handleCampaigns(
 
   const removePlayerMatch = /^\/campaigns\/([^/]+)\/players\/([^/]+)$/.exec(url);
   if (method === 'DELETE' && removePlayerMatch !== null) {
-    const actor = actorFor(request, sessions, users);
-    if (actor === null) {
-      json(response, 401, { error: 'unauthorized' });
-      return true;
-    }
     const campaignId = removePlayerMatch[1] ?? '';
     if (campaigns.roleOf(campaignId, actor.id) !== 'gm') {
       json(response, 403, { error: 'forbidden' });
       return true;
     }
     const memberId = removePlayerMatch[2] ?? '';
+    // The character they played goes home to their library with its current sheet
+    // before the room forgets them.
+    const released = detachMember(characters, campaigns, campaignId, memberId);
     campaigns.removeMember(campaignId, actor.id, memberId);
+    broadcast(campaignId, released);
     persist();
     noContent(response);
     return true;

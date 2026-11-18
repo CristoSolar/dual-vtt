@@ -13,6 +13,7 @@ const good = (id: string): SerializedCampaign => ({
   name: `Campaign ${id}`,
   ownerId: 'gm-1',
   memberIds: [],
+  invitedIds: [],
   state: createRoomState(id, { id: 'gm-1', name: 'GM', connected: true }),
   seed: 1,
   rollCount: 0,
@@ -55,6 +56,16 @@ describe('campaigns snapshot', () => {
     const path = join(dir, 'campaigns.json');
     await writeFile(path, JSON.stringify({ version: 99, campaigns: [good('a')] }), 'utf8');
     expect(await readCampaignsSnapshot(path)).toEqual([]);
+  });
+
+  it('reads a campaign saved before invitations existed as having none', async () => {
+    dir = await mkdtemp(join(tmpdir(), 'daggerheart-test-'));
+    const path = join(dir, 'campaigns.json');
+    const { invitedIds: _omitted, ...old } = good('old');
+    await writeFile(path, JSON.stringify({ version: 1, campaigns: [old] }), 'utf8');
+
+    const restored = await readCampaignsSnapshot(path);
+    expect(restored.map((c) => [c.id, c.invitedIds])).toEqual([['old', []]]);
   });
 
   it('returns nothing when the file does not exist', async () => {
