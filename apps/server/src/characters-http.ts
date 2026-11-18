@@ -57,7 +57,13 @@ export async function handleCharacters(
       json(response, 400, { error: 'badRequest' });
       return true;
     }
-    const record = characters.create(actor.id, parsed.data.sheet);
+    const { sheet, importId } = parsed.data;
+    const already = importId === undefined ? null : characters.imported(actor.id, importId);
+    if (already !== null) {
+      json(response, 200, toLibraryCharacter(already, campaigns));
+      return true;
+    }
+    const record = characters.create(actor.id, sheet, null, importId);
     persist();
     json(response, 201, toLibraryCharacter(record, campaigns));
     return true;

@@ -13,6 +13,8 @@ export interface CharacterRecord {
   sheet: SheetState;
   campaignId: string | null;
   updatedAt: number;
+  /** Where an imported character came from in its browser; see `CreateCharacterRequest`. */
+  importId?: string | undefined;
 }
 
 /** In-memory character libraries for every account, snapshotted like the others. */
@@ -33,6 +35,14 @@ export class CharacterStore {
     return [...this.characters.values()].filter((c) => c.ownerId === ownerId);
   }
 
+  /** The character this owner already imported under `importId`, if any. */
+  imported(ownerId: string, importId: string): CharacterRecord | null {
+    for (const c of this.characters.values()) {
+      if (c.ownerId === ownerId && c.importId === importId) return c;
+    }
+    return null;
+  }
+
   /** This owner's character linked to this campaign, if any. */
   linkedIn(campaignId: string, ownerId: string): CharacterRecord | null {
     for (const c of this.characters.values()) {
@@ -45,13 +55,19 @@ export class CharacterStore {
     return [...this.characters.values()];
   }
 
-  create(ownerId: string, sheet: SheetState, campaignId: string | null = null): CharacterRecord {
+  create(
+    ownerId: string,
+    sheet: SheetState,
+    campaignId: string | null = null,
+    importId?: string,
+  ): CharacterRecord {
     const record: CharacterRecord = {
       id: `ch-${randomBytes(8).toString('hex')}`,
       ownerId,
       sheet,
       campaignId,
       updatedAt: this.now(),
+      ...(importId === undefined ? {} : { importId }),
     };
     this.characters.set(record.id, record);
     return record;

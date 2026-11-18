@@ -88,6 +88,21 @@ describe('characters left in this browser by the old flow', () => {
     expect(found.drafts.map((d) => d.key)).toEqual(['daggerheart-vtt:creation:c-2']);
   });
 
+  it('gives each importable character a stable, distinct import id', () => {
+    const sheet = createSheet(buildCharacter());
+    const storage = fakeStorage({
+      'daggerheart-vtt:characters': JSON.stringify([
+        { id: 'old-1', sheet, updatedAt: 1 },
+        { id: 'old-2', sheet, updatedAt: 2 },
+      ]),
+      'daggerheart-vtt:creation:c-1': serialize(buildCreationState()),
+    });
+    const first = findLegacyCharacters(storage, [...storage.data.keys()]).importable.map((i) => i.importId);
+    const second = findLegacyCharacters(storage, [...storage.data.keys()]).importable.map((i) => i.importId);
+    expect(first).toEqual(second);
+    expect(new Set(first).size).toBe(3);
+  });
+
   it('finds nothing in a clean browser', () => {
     const storage = fakeStorage();
     expect(findLegacyCharacters(storage, [])).toEqual({ importable: [], drafts: [], unreadable: 0 });

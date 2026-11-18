@@ -13,7 +13,8 @@ export interface LibraryConnection {
   error: string | null;
   dismissError: () => void;
   refresh: () => Promise<void>;
-  create: (sheet: SheetState) => Promise<LibraryCharacter | null>;
+  /** `importId` makes the create idempotent; see `CreateCharacterRequest`. */
+  create: (sheet: SheetState, importId?: string) => Promise<LibraryCharacter | null>;
   remove: (characterId: string) => Promise<boolean>;
   link: (characterId: string, campaignId: string) => Promise<boolean>;
   unlink: (characterId: string) => Promise<boolean>;
@@ -106,8 +107,8 @@ export function useLibrary(token: string | null, onSessionExpired: () => void): 
   );
 
   const create = useCallback(
-    async (sheet: SheetState): Promise<LibraryCharacter | null> => {
-      const response = await mutate('POST', '/characters', { sheet });
+    async (sheet: SheetState, importId?: string): Promise<LibraryCharacter | null> => {
+      const response = await mutate('POST', '/characters', importId === undefined ? { sheet } : { sheet, importId });
       if (response === null) return null;
       const parsed = LibraryCharacterSchema.safeParse(await response.json());
       return parsed.success ? parsed.data : null;

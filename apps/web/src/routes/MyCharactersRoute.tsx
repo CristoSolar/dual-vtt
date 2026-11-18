@@ -143,7 +143,9 @@ export function MyCharactersRoute({ accountId, storage, library, campaigns }: My
     try {
       const failedKeys = new Set<string>();
       for (const item of legacy.importable) {
-        const created = await library.create(item.sheet);
+        // The import id makes a retry after a partial failure safe: the server
+        // returns what it already filed instead of a second copy.
+        const created = await library.create(item.sheet, item.importId);
         if (created === null) failedKeys.add(item.key);
       }
       // A key is set aside only once everything in it made it to the server.

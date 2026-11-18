@@ -13,6 +13,7 @@ const CharacterRecordSchema = z.object({
   sheet: SheetStateSchema,
   campaignId: z.string().min(1).nullable().default(null),
   updatedAt: z.number().default(0),
+  importId: z.string().min(1).optional(),
 });
 
 const SnapshotEnvelopeSchema = z.object({

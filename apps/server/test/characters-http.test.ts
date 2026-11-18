@@ -119,6 +119,22 @@ describe('character library HTTP', () => {
     expect(theirs.some((c) => c.id === created.id)).toBe(false);
   });
 
+  it('files an import once, however often it is retried', async () => {
+    const body = { sheet: buildSheet(), importId: 'legacy:daggerheart-vtt:characters:old-1' };
+    const first = await call(alex, 'POST', '/characters', body);
+    expect(first.status).toBe(201);
+    const again = await call(alex, 'POST', '/characters', body);
+    expect(again.status).toBe(200);
+    const a = LibraryCharacterSchema.parse(await first.json());
+    const b = LibraryCharacterSchema.parse(await again.json());
+    expect(b.id).toBe(a.id);
+    expect(server.characters.listFor(alexId).filter((c) => c.id === a.id)).toHaveLength(1);
+    expect(server.characters.listFor(alexId).filter((c) => c.importId === body.importId)).toHaveLength(1);
+
+    // Another account importing the same id is its own character.
+    expect((await call(sam, 'POST', '/characters', body)).status).toBe(201);
+  });
+
   it('lets only the owner delete, and only while unlinked', async () => {
     const created = await create(alex);
     expect((await call(sam, 'DELETE', `/characters/${created.id}`)).status).toBe(404);

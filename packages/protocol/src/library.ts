@@ -24,6 +24,11 @@ export const LibraryListSchema = z.array(LibraryCharacterSchema);
 /** `POST /characters`: a finished character from the creation wizard (or an import). */
 export const CreateCharacterRequestSchema = z.object({
   sheet: SheetStateSchema,
+  /**
+   * Set when importing a character an older version left in the browser. The server
+   * files each (account, importId) once, so a retried import cannot duplicate.
+   */
+  importId: z.string().min(1).max(300).optional(),
 });
 export type CreateCharacterRequest = z.infer<typeof CreateCharacterRequestSchema>;
 

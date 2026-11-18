@@ -73,7 +73,7 @@ const OldLibrarySchema = z.array(z.object({ sheet: z.unknown() }).passthrough())
 
 export interface LegacyFinds {
   /** Finished characters, ready to send to the library. */
-  importable: Array<{ key: string; sheet: SheetState }>;
+  importable: Array<{ key: string; sheet: SheetState; importId: string }>;
   /** Unfinished wizard drafts, which can be resumed in the wizard. */
   drafts: Array<{ key: string; state: CreationState }>;
   /** Entries that no longer parse; left where they are, never deleted. */
@@ -84,6 +84,13 @@ const isOldDraftKey = (key: string): boolean =>
   (key === DRAFT_PREFIX || key.startsWith(`${DRAFT_PREFIX}:`)) &&
   key !== `${DRAFT_PREFIX}:${DRAFT_SCOPE}` &&
   !key.endsWith(':unreadable');
+
+/** A short, stable fingerprint, so the same local entry always imports under one id. */
+function fingerprint(text: string): string {
+  let hash = 5381;
+  for (let i = 0; i < text.length; i += 1) hash = (Math.imul(hash, 33) ^ text.charCodeAt(i)) >>> 0;
+  return hash.toString(36);
+}
 
 const isComplete = (state: CreationState): boolean => STEPS.every((step) => validateStep(state, step).ok);
 
@@ -113,11 +120,19 @@ export function findLegacyCharacters(storage: StorageLike, keys: readonly string
         found.unreadable += 1;
         continue;
       }
-      for (const item of list.data) {
+      list.data.forEach((item, index) => {
         const sheet = SheetStateSchema.safeParse(item.sheet);
-        if (sheet.success) found.importable.push({ key, sheet: sheet.data });
-        else found.unreadable += 1;
-      }
+        if (!sheet.success) {
+          found.unreadable += 1;
+          return;
+        }
+        const localId = typeof item.id === 'string' ? item.id : `#${index}`;
+        found.importable.push({
+          key,
+          sheet: sheet.data,
+          importId: `legacy:${key}:${localId}:${fingerprint(JSON.stringify(item.sheet))}`,
+        });
+      });
       continue;
     }
 
@@ -129,7 +144,13 @@ export function findLegacyCharacters(storage: StorageLike, keys: readonly string
         found.unreadable += 1;
         continue;
       }
-      if (isComplete(state)) found.importable.push({ key, sheet: createSheet(finalize(state)) });
+      if (isComplete(state)) {
+        found.importable.push({
+          key,
+          sheet: createSheet(finalize(state)),
+          importId: `legacy:${key}:${fingerprint(raw)}`,
+        });
+      }
       else found.drafts.push({ key, state });
     }
   }
