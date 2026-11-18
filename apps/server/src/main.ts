@@ -56,11 +56,16 @@ async function main(): Promise<void> {
   // the rooms, and the first boot with a library adopts every character already
   // sitting in one (see `adoptRoomCharacters`; idempotent on later boots).
   const characters = new CharacterStore();
-  characters.restore(await readCharactersSnapshot(CHARACTERS_SNAPSHOT_PATH));
+  const charactersSnapshot = await readCharactersSnapshot(CHARACTERS_SNAPSHOT_PATH);
+  characters.restore(charactersSnapshot.characters);
   const adopted = adoptRoomCharacters(characters, campaigns);
   if (adopted > 0) console.log(`filed ${adopted} character(s) from campaign rooms into their owners' libraries`);
   const writeCharacters = (): Promise<void> =>
-    writeCharactersSnapshot(CHARACTERS_SNAPSHOT_PATH, serializeLibrary(characters, campaigns));
+    writeCharactersSnapshot(
+      CHARACTERS_SNAPSHOT_PATH,
+      serializeLibrary(characters, campaigns),
+      charactersSnapshot.unreadable,
+    );
   const persistCharacters = (): void => {
     void writeCharacters().catch((error: unknown) => console.error('characters snapshot failed', error));
   };

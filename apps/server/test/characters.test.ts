@@ -1,8 +1,8 @@
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { CampaignStore } from '../src/campaigns.js';
 import { CharacterStore } from '../src/characters.js';
@@ -247,19 +247,47 @@ describe('characters snapshot', () => {
     await writeCharactersSnapshot(path, characters.serialize());
 
     const restored = new CharacterStore();
-    restored.restore(await readCharactersSnapshot(path));
+    restored.restore((await readCharactersSnapshot(path)).characters);
     expect(restored.listFor('u-alex')).toEqual(characters.listFor('u-alex'));
   });
 
-  it('drops one unreadable entry, not the whole file, and tolerates a missing file', async () => {
+  it('keeps an unreadable entry aside and writes it back untouched', async () => {
     const path = join(directory, 'mixed.json');
     const good = new CharacterStore().create('u-alex', buildSheet());
-    await writeFile(
-      path,
-      JSON.stringify({ version: 1, characters: [good, { id: 'bad', sheet: 'nope' }] }),
-      'utf8',
-    );
-    expect((await readCharactersSnapshot(path)).map((c) => c.id)).toEqual([good.id]);
-    expect(await readCharactersSnapshot(join(directory, 'missing.json'))).toEqual([]);
+    const bad = { id: 'bad', sheet: 'nope' };
+    await writeFile(path, JSON.stringify({ version: 1, characters: [good, bad] }), 'utf8');
+
+    const read = await readCharactersSnapshot(path);
+    expect(read.characters.map((c) => c.id)).toEqual([good.id]);
+    expect(read.unreadable).toEqual([bad]);
+
+    await writeCharactersSnapshot(path, read.characters, read.unreadable);
+    const raw = JSON.parse(await readFile(path, 'utf8')) as { characters: unknown[] };
+    expect(raw.characters).toContainEqual(bad);
+    expect(raw.characters).toHaveLength(2);
+  });
+
+  it('tolerates a missing file without setting anything aside', async () => {
+    expect(await readCharactersSnapshot(join(directory, 'missing.json'))).toEqual({
+      characters: [],
+      unreadable: [],
+    });
+    expect((await readdir(directory)).some((f) => f.startsWith('missing.json.bad-'))).toBe(false);
+  });
+
+  it('copies a file it cannot read at all aside before anything can overwrite it', async () => {
+    for (const [name, payload] of [
+      ['broken.json', '{"version":1,"characters":[{"id"'],
+      ['future.json', JSON.stringify({ version: 99, characters: [] })],
+    ] as const) {
+      const path = join(directory, name);
+      await writeFile(path, payload, 'utf8');
+      const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      expect(await readCharactersSnapshot(path, () => 1234)).toEqual({ characters: [], unreadable: [] });
+      expect(await readFile(`${path}.bad-1234`, 'utf8')).toBe(payload);
+      expect(errors).toHaveBeenCalled();
+      errors.mockRestore();
+    }
   });
 });
