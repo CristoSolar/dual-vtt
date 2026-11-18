@@ -36,7 +36,6 @@ export const CHANNEL = {
   /** client -> server */
   intent: 'intent',
   joinCampaign: 'joinCampaign',
-  claimCharacter: 'claimCharacter',
   /** A map ping: ephemeral, never stored in the room. */
   ping: 'ping',
   /** server -> client */
@@ -534,12 +533,6 @@ export const JoinCampaignSchema = z.object({
   campaignId: z.string().min(1),
 });
 export type JoinCampaignMessage = z.infer<typeof JoinCampaignSchema>;
-
-/** A player claims their one character for the campaign they are seated in. */
-export const ClaimCharacterSchema = z.object({
-  sheet: SheetStateSchema,
-});
-export type ClaimCharacterMessage = z.infer<typeof ClaimCharacterSchema>;
 
 /**
  * A slice-level diff. Only the top-level slices that actually changed are sent;

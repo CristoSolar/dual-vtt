@@ -6,8 +6,8 @@ import { dirname } from 'node:path';
  * Write a file so that a crash mid-write never leaves a truncated one, and so that
  * two overlapping writes to the same path cannot interleave.
  *
- * Both snapshots are written from several places at once — the periodic interval,
- * `claimCharacter`, and every campaigns-HTTP mutation — so a shared temp name would
+ * Snapshots are written from several places at once — the periodic interval, every
+ * characters- and campaigns-HTTP mutation, and shutdown — so a shared temp name would
  * let one writer's bytes land under another writer's rename. Each write gets its own
  * temp file, and writes to the same path queue behind each other.
  */

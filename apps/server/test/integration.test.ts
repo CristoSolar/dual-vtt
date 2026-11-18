@@ -65,43 +65,21 @@ describe('campaign lifecycle over a socket', () => {
     });
   });
 
-  it('persists immediately when a character is claimed, not just on the periodic snapshot', async () => {
-    const gm = await accountFor(server, 'gm-persist', 'gm');
-    const alicePlayer = await accountFor(server, 'alice-persist');
-    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Persist Test');
+  it('ignores the retired socket claim, so a linked character is never overwritten', async () => {
+    const gm = await accountFor(server, 'gm-no-claim', 'gm');
+    const alicePlayer = await accountFor(server, 'alice-no-claim');
+    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'No Claim');
     const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
+    const original = buildSheet('guardian');
+    await server.link(campaignId, alicePlayer.id, original);
 
-    const before = server.persistCount();
-    const claimed = gmClient.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.characters?.[alicePlayer.id] !== undefined,
-    );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
-    await claimed;
+    alice.client.emit('claimCharacter', { sheet: buildSheet('ranger') });
+    // A round trip after the claim: the full state comes back once it is processed.
+    const state = alice.client.next<RoomState>(CHANNEL.roomState);
+    alice.client.emit(CHANNEL.joinCampaign, { campaignId });
 
-    // No periodic timer runs in this test harness — a restart between the claim
-    // and the next tick would otherwise lose the character with no warning.
-    expect(server.persistCount()).toBeGreaterThan(before);
-
-    gmClient.close();
-    alice.client.close();
-  });
-
-  it('files a character claimed over the socket in the player’s library, linked there', async () => {
-    const gm = await accountFor(server, 'gm-library', 'gm');
-    const alicePlayer = await accountFor(server, 'alice-library');
-    const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Library Test');
-    const alice = await joinCampaignAs(server, gm, campaignId, alicePlayer);
-
-    const claimed = gmClient.until<RoomPatch>(
-      CHANNEL.roomPatch,
-      (p) => p.characters?.[alicePlayer.id] !== undefined,
-    );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
-    await claimed;
-
-    const entries = server.characters.listFor(alicePlayer.id);
-    expect(entries.map((e) => e.campaignId)).toEqual([campaignId]);
+    expect((await state).characters[alicePlayer.id]).toEqual(original);
+    expect(server.characters.listFor(alicePlayer.id)).toHaveLength(1);
 
     gmClient.close();
     alice.client.close();
@@ -120,7 +98,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet });
+    void server.link(campaignId, alicePlayer.id, sheet);
     await claimed;
 
     const thresholds = sheet.character.thresholds;
@@ -158,7 +136,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet });
+    void server.link(campaignId, alicePlayer.id, sheet);
     await claimed;
 
     const seen = gmClient.until<RoomPatch>(
@@ -193,7 +171,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    void server.link(campaignId, alicePlayer.id, buildSheet());
     await claimed;
 
     const before = server.campaigns.get(campaignId)?.state.characters[alicePlayer.id]?.hpMarked;
@@ -219,7 +197,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    void server.link(campaignId, alicePlayer.id, buildSheet());
     await claimed;
 
     // The GM removes them while their socket is still open and seated.
@@ -291,7 +269,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    void server.link(campaignId, alicePlayer.id, buildSheet());
     await claimed;
 
     const stressed = gmClient.until<RoomPatch>(
@@ -334,7 +312,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    void server.link(campaignId, alicePlayer.id, buildSheet());
     await claimed;
 
     const rolled = gmClient.next<{ entries: { by: string; kind: string }[] }>(CHANNEL.rolled);
@@ -409,7 +387,7 @@ describe('campaign lifecycle over a socket', () => {
       CHANNEL.roomPatch,
       (p) => p.characters?.[alicePlayer.id] !== undefined,
     );
-    alice.client.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    void server.link(campaignId, alicePlayer.id, buildSheet());
     await claimed;
 
     const delivered = alice.client.next(CHANNEL.privateRolled);

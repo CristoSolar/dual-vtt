@@ -16,7 +16,8 @@ import { io as connect, type Socket } from 'socket.io-client';
 
 import { CampaignStore } from '../src/campaigns.js';
 import { CharacterStore } from '../src/characters.js';
-import { registerGateway } from '../src/gateway.js';
+import { broadcastPatches, registerGateway } from '../src/gateway.js';
+import { linkCharacter } from '../src/library.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
 
@@ -81,10 +82,9 @@ export interface TestServer {
   characters: CharacterStore;
   users: UserStore;
   sessions: SessionStore;
-  /** Times `registerGateway`'s persist callback has fired — lets a test confirm an
-   * event triggered an immediate snapshot rather than waiting on a periodic timer,
-   * which nothing in this harness runs. */
-  persistCount: () => number;
+  /** Files `sheet` in the account's library and links it into the campaign, the way
+   * `POST /characters/:id/link` does, broadcasting the room change. */
+  link: (campaignId: string, accountId: string, sheet: SheetState) => Promise<void>;
   close: () => Promise<void>;
 }
 
@@ -101,10 +101,7 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
   const sessions = new SessionStore();
   const characters = new CharacterStore();
 
-  let persists = 0;
-  registerGateway(io, campaigns, sessions, users, () => {
-    persists += 1;
-  }, characters);
+  registerGateway(io, campaigns, sessions, users);
 
   await new Promise<void>((resolve) => http.listen(0, resolve));
   const address = http.address() as AddressInfo;
@@ -115,7 +112,12 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
     characters,
     users,
     sessions,
-    persistCount: () => persists,
+    link: async (campaignId, accountId, sheet) => {
+      const record = characters.create(accountId, sheet);
+      const result = linkCharacter(characters, campaigns, accountId, record.id, campaignId);
+      if (!result.ok) throw new Error(`test fixture: link failed: ${result.error}`);
+      broadcastPatches(io, campaignId, result.outcome);
+    },
     close: async () => {
       await io.close();
       await new Promise<void>((resolve) => http.close(() => resolve()));

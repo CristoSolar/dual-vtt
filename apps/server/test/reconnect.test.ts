@@ -8,7 +8,7 @@ import { accountFor, buildSheet, createCampaignAs, startTestServer, type TestSer
  * A seat belongs to one server-side socket, and a reconnect gets a new one. The
  * client buffers whatever it emits while disconnected and socket.io flushes that
  * buffer *before* any 'connect' listener runs, so a seat re-established by a
- * `joinCampaign` sent from 'connect' arrives after the buffered claim — which the
+ * `joinCampaign` sent from 'connect' arrives after the buffered intent — which the
  * server then rejects with 'noSeat'. Seating from the handshake closes that gap.
  */
 describe('a socket that reconnects mid-session', () => {
@@ -22,11 +22,12 @@ describe('a socket that reconnects mid-session', () => {
     await server.close();
   });
 
-  it('is seated from the handshake, so a claim sent while disconnected lands after reconnecting', async () => {
+  it('is seated from the handshake, so an intent sent while disconnected lands after reconnecting', async () => {
     const gm = await accountFor(server, 'gm-reconnect', 'gm');
     const player = await accountFor(server, 'alice-reconnect');
     const { client: gmClient, campaignId } = await createCampaignAs(server, gm, 'Reconnect');
     server.campaigns.addMember(campaignId, gm.id, player.id);
+    await server.link(campaignId, player.id, buildSheet());
 
     const socket = connect(server.url, {
       transports: ['websocket'],
@@ -40,22 +41,22 @@ describe('a socket that reconnects mid-session', () => {
     // No explicit joinCampaign: the handshake alone seats the socket.
     await new Promise<RoomState>((resolve) => socket.once(CHANNEL.roomState, resolve));
 
-    // Drop the transport (a Wi-Fi blip, a phone waking up) and finish the wizard
+    // Drop the transport (a Wi-Fi blip, a phone waking up) and act on the sheet
     // before the client has reconnected.
     const disconnected = new Promise<void>((resolve) => socket.once('disconnect', () => resolve()));
     socket.io.engine.close();
     await disconnected;
-    const claimed = new Promise<RoomPatch>((resolve) => {
+    const marked = new Promise<RoomPatch>((resolve) => {
       const onPatch = (patch: RoomPatch): void => {
-        if (patch.characters?.[player.id] === undefined) return;
+        if (patch.characters?.[player.id]?.hpMarked !== 1) return;
         gmClient.socket.off(CHANNEL.roomPatch, onPatch);
         resolve(patch);
       };
       gmClient.socket.on(CHANNEL.roomPatch, onPatch);
     });
-    socket.emit(CHANNEL.claimCharacter, { sheet: buildSheet() });
+    socket.emit(CHANNEL.intent, { type: 'markHP', characterId: player.id, amount: 1 });
 
-    await claimed;
+    await marked;
     expect(rejections).toEqual([]);
 
     socket.disconnect();

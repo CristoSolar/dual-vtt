@@ -5,11 +5,11 @@ import { emptyHotbar, HotbarSchema, type Hotbar } from './hotbar.js';
 
 /**
  * localStorage persistence for an in-progress character creation only. The
- * finished character itself is never stored locally — it is claimed straight into
- * the campaign it was created for (see `useCampaign`'s `claimCharacter`).
+ * finished character itself is never stored locally — it goes to the account's
+ * library on the server (see `useLibrary`).
  *
- * Draft state is scoped per campaign, so switching between campaigns (or starting a
- * second character in a different one) never clobbers another campaign's progress.
+ * Drafts are keyed by a scope; the wizard uses `DRAFT_SCOPE` from `library.ts`.
+ * Older per-campaign scopes are what `findLegacyCharacters` picks up.
  */
 
 const KEY_PREFIX = 'daggerheart-vtt';

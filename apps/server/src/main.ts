@@ -147,7 +147,7 @@ async function main(): Promise<void> {
   });
 
   const io = new Server(http, { cors: { origin: ALLOWED_ORIGINS } });
-  registerGateway(io, campaigns, sessions, users, persistTable, characters);
+  registerGateway(io, campaigns, sessions, users);
 
   const stopSnapshots = setInterval(persistTable, CAMPAIGNS_SNAPSHOT_INTERVAL_MS);
   stopSnapshots.unref();

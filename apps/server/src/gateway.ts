@@ -1,6 +1,5 @@
 import {
   CHANNEL,
-  ClaimCharacterSchema,
   JoinCampaignSchema,
   PING_COOLDOWN_MS,
   PingSchema,
@@ -12,8 +11,6 @@ import {
 import type { Server, Socket } from 'socket.io';
 
 import type { CampaignStore } from './campaigns.js';
-import type { CharacterStore } from './characters.js';
-import { adoptRoomCharacters } from './library.js';
 import type { SessionStore } from './sessions.js';
 import type { UserStore } from './users.js';
 
@@ -97,9 +94,6 @@ export function registerGateway(
   campaigns: CampaignStore,
   sessions: SessionStore,
   users: UserStore,
-  persist: () => void,
-  /** A character claimed over the socket is filed in its owner's library. */
-  characters: CharacterStore,
 ): void {
   // Auth runs in connection middleware, not the `connection` handler: by the time
   // that handler fires the client has already seen a `connect` event, so rejecting
@@ -149,31 +143,14 @@ export function registerGateway(
     // A client that names its campaign in the handshake is seated before it can
     // send anything. On a reconnect, socket.io flushes whatever the client emitted
     // while offline *before* its 'connect' listeners run, so a seat re-established
-    // by a `joinCampaign` from there arrives after a buffered claim or intent, and
+    // by a `joinCampaign` from there arrives after a buffered intent, and
     // that message is rejected with 'noSeat'.
     const handshakeCampaignId = socket.handshake.auth?.campaignId as unknown;
     if (handshakeCampaignId !== undefined) joinCampaign({ campaignId: handshakeCampaignId });
 
-    socket.on(CHANNEL.claimCharacter, (payload: unknown) => {
-      const seat = seatOf.get(socket);
-      if (seat === undefined) return reject(socket, 'noSeat', 'join a campaign first');
-
-      const parsed = ClaimCharacterSchema.safeParse(payload);
-      if (!parsed.success) return reject(socket, 'badRequest', 'invalid character');
-
-      const account = accountOf.get(socket);
-      if (account === undefined) return;
-      if (!stillMember(socket, campaigns, seat, account)) return;
-
-      const outcome = campaigns.claimCharacter(seat.campaignId, account, parsed.data.sheet);
-      if (!outcome.ok) return reject(socket, outcome.error ?? 'rejected', outcome.message ?? 'claim rejected');
-      broadcastPatches(io, seat.campaignId, outcome);
-      adoptRoomCharacters(characters, campaigns);
-      // A one-time, high-value event per player — worth an immediate snapshot rather
-      // than waiting on the periodic interval, so a restart between now and the next
-      // tick can never quietly lose the character they just spent the wizard on.
-      persist();
-    });
+    // There is no socket claim: a character enters a room only by being linked from
+    // its owner's library over HTTP (`POST /characters/:id/link`), which refuses a
+    // seat that already has one. A socket claim used to overwrite a linked sheet.
 
     socket.on(CHANNEL.intent, (payload: unknown) => {
       const seat = seatOf.get(socket);
