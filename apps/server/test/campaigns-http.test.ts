@@ -184,7 +184,7 @@ describe('campaigns HTTP endpoints', () => {
     expect((await post(gmToken, `/campaigns/${campaignId}/invites`, { username: '' })).status).toBe(400);
   });
 
-  it('no longer adds a player directly', async () => {
+  it('has no direct add on purpose: invitations are the only way into a campaign', async () => {
     const campaignId = await newCampaign('Directo');
     expect((await post(gmToken, `/campaigns/${campaignId}/players`, { username: 'alex' })).status).toBe(404);
     expect(server.campaigns.roleOf(campaignId, playerId)).toBeNull();

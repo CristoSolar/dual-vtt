@@ -58,7 +58,7 @@ export interface ApplyOutcome {
   message?: string;
 }
 
-function patchesFor(before: RoomState, after: RoomState): Pick<ApplyOutcome, 'patch' | 'playerPatch'> {
+export function patchesFor(before: RoomState, after: RoomState): Pick<ApplyOutcome, 'patch' | 'playerPatch'> {
   return {
     patch: roomPatch(before, after),
     playerPatch: roomPatch(roomForRole(before, 'player'), roomForRole(after, 'player')),

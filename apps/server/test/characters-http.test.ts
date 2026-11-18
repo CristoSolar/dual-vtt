@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CampaignStore } from '../src/campaigns.js';
 import { handleCampaigns } from '../src/campaigns-http.js';
 import { CharacterStore } from '../src/characters.js';
+import type { Patches } from '../src/library.js';
 import { handleCharacters } from '../src/characters-http.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
@@ -17,7 +18,7 @@ async function startServer() {
   const sessions = new SessionStore();
   const campaigns = new CampaignStore();
   const characters = new CharacterStore();
-  const broadcasts: string[] = [];
+  const broadcasts: Array<{ campaignId: string; outcome: Patches }> = [];
   let persists = 0;
   const deps = {
     campaigns,
@@ -27,8 +28,8 @@ async function startServer() {
     persist: () => {
       persists += 1;
     },
-    broadcast: (campaignId: string) => {
-      broadcasts.push(campaignId);
+    broadcast: (campaignId: string, outcome: Patches) => {
+      broadcasts.push({ campaignId, outcome });
     },
   };
   const http: HttpServer = createServer((request, response) => {
@@ -156,7 +157,7 @@ describe('character library HTTP', () => {
     expect(linked.status).toBe(200);
     const body = LibraryCharacterSchema.parse(await linked.json());
     expect(body).toMatchObject({ campaignId, campaignName: 'Martes' });
-    expect(server.broadcasts).toContain(campaignId);
+    expect(server.broadcasts.map((b) => b.campaignId)).toContain(campaignId);
     expect(server.campaigns.get(campaignId)?.state.characters[alexId]).toBeDefined();
   });
 
@@ -202,6 +203,24 @@ describe('character library HTTP', () => {
     expect(LibraryCharacterSchema.parse(await unlinked.json())).toMatchObject({ campaignId: null });
     expect(server.characters.get(created.id)?.sheet.stressMarked).toBe(2);
     expect(server.campaigns.get(campaignId)?.state.characters[alexId]).toBeUndefined();
+  });
+
+  it('tells the table once that a removed member and their character are gone', async () => {
+    const created = await create(alex);
+    const campaignId = campaignWithAlex('Una vez');
+    server.campaigns.seatFor(campaignId, alexId, 'alex');
+    await call(alex, 'POST', `/characters/${created.id}/link`, { campaignId });
+    const before = server.broadcasts.length;
+
+    await call(gm, 'DELETE', `/campaigns/${campaignId}/players/${alexId}`);
+    const sent = server.broadcasts.slice(before);
+    expect(sent).toHaveLength(1);
+    const [only] = sent;
+    for (const patch of [only?.outcome.patch, only?.outcome.playerPatch]) {
+      expect(patch?.players?.some((p) => p.id === alexId)).toBe(false);
+      expect(patch?.characters?.[alexId]).toBeUndefined();
+      expect(patch?.characters).toBeDefined();
+    }
   });
 
   it('brings a removed member’s character home', async () => {

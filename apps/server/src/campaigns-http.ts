@@ -8,7 +8,7 @@ import {
   type User,
 } from '@daggerheart/protocol';
 
-import type { CampaignRecord, CampaignStore } from './campaigns.js';
+import { patchesFor, type CampaignRecord, type CampaignStore } from './campaigns.js';
 import type { CharacterStore } from './characters.js';
 import { actorFor } from './http-auth.js';
 import { json, noContent, readJsonBody } from './http-json.js';
@@ -155,10 +155,13 @@ export async function handleCampaigns(
     }
     const memberId = removePlayerMatch[2] ?? '';
     // The character they played goes home to their library with its current sheet
-    // before the room forgets them.
-    const released = detachMember(characters, campaigns, campaignId, memberId);
+    // before the room forgets them. One diff over both steps, so the table hears
+    // once that the seat and the character are gone.
+    const before = campaigns.get(campaignId)?.state;
+    detachMember(characters, campaigns, campaignId, memberId);
     campaigns.removeMember(campaignId, actor.id, memberId);
-    broadcast(campaignId, released);
+    const after = campaigns.get(campaignId)?.state;
+    if (before !== undefined && after !== undefined) broadcast(campaignId, patchesFor(before, after));
     persist();
     noContent(response);
     return true;
