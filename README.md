@@ -60,7 +60,9 @@ pnpm dev
 Open http://localhost:5173 and sign in as `gm` / `gm` (set `GM_USERNAME` /
 `GM_PASSWORD` to change the first account; you are asked to change the password on
 first login anyway). Create a campaign, then create player accounts from
-**Players** and add them to the campaign. Everything is saved under `.data/` next to
+**Players** and invite them to the campaign. A player signs in to two choices: **My
+characters** (create as many as they like, link one to a campaign) and **My
+campaigns** (accept invitations, enter a table). Everything is saved under `.data/` next to
 the server — back that folder up if you care about the campaign.
 
 To play with people who are not on your network:
@@ -98,8 +100,12 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 - Help lives at `/help`: an app guide, a short rules primer (hand-written, with
   SRD page references), and a compendium that browses the bundled SRD data in
   the active language. A first-run guide opens once per account per device.
-- In-progress character creations are saved to `localStorage` per campaign; a
-  finished character is claimed into its campaign on the server.
+- Characters are stored on the server, in the account's library, so they follow the
+  player to any device. A character is linked to at most one campaign at a time, and
+  a player has at most one per campaign. While linked, the campaign's copy is the live
+  sheet; unlinking writes it back to the library. Only an unfinished creation draft is
+  kept in the browser's `localStorage`. Characters saved in a browser by an older
+  version can be imported from **My characters**.
 - In a campaign the **server is authoritative**: clients send intents, never results.
   A client asks to `takeDamage`; the server computes the HP with `applyDamage` and
   broadcasts it. Dice are rolled server-side from a per-room seed, so every roll is
@@ -107,9 +113,11 @@ The app is bilingual; the flag in the top bar switches between English and Spani
 - Permissions are enforced server-side: a player may only mutate their own character,
   and only the GM may touch Fear, spotlight, countdowns, adversaries, or the
   environment.
-- Campaigns and accounts live in memory and are snapshotted to `.data/campaigns.json`
-  and `.data/users.json` every few seconds; losing `.data/` loses the campaigns and
-  their characters, so back it up.
+- Campaigns, accounts and character libraries live in memory and are snapshotted to
+  `.data/campaigns.json`, `.data/users.json` and `.data/characters.json` every few
+  seconds; losing `.data/` loses the campaigns and the characters, so back it up. On
+  first boot with this version, every character already in a campaign is filed into
+  its owner's library, linked to that campaign.
 - The map has no grid by default: distances are reported as Daggerheart's range
   bands (Melee / Very Close / Close / Far / Very Far), with the SRD's optional
   1-inch-grid rule available per scene. The band maths lives in

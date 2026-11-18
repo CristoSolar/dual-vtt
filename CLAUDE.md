@@ -29,6 +29,7 @@ static gate. Do not add one unasked.
 
 Server env vars (all optional, defaults in `apps/server/src/main.ts`): `PORT`,
 `CAMPAIGNS_SNAPSHOT_PATH`, `CAMPAIGNS_SNAPSHOT_INTERVAL_MS`, `USERS_SNAPSHOT_PATH`,
+`CHARACTERS_SNAPSHOT_PATH`,
 `UPLOAD_DIR`, `WEB_DIST_DIR`, `GM_USERNAME` / `GM_PASSWORD` (first GM account, created
 on boot), `ALLOWED_ORIGINS`. Web reads `VITE_SERVER_URL`; `host` sets it empty so the
 app talks to its own origin. `/health` on the server reports campaign count.
@@ -57,26 +58,49 @@ srd-data  →  rules  →  character  →  protocol  →  server
   `src/room.ts` is the single choke point where room state changes, permissions
   included; the server calls it, and the client calls the same sheet reducers
   underneath for its optimistic echo. New room behaviour goes here, not in the server.
-  `auth.ts` and `campaign.ts` hold the HTTP request/response schemas for accounts and
-  campaign membership — no `RoomState` travels over HTTP, only over the socket.
+  `auth.ts`, `campaign.ts` and `library.ts` hold the HTTP request/response schemas for
+  accounts, campaign membership/invitations and the character library — no
+  `RoomState` travels over HTTP, only over the socket (a library entry carries a
+  `SheetState`, never a room).
+  `claimCharacterInRoom` / `releaseCharacterInRoom` are how a sheet enters and leaves a
+  room; linking from the library goes through them, Fear-on-new-PC included.
 - **server** — transport only. Two layers:
-  - HTTP (`auth-http.ts`, `campaigns-http.ts`, `uploads.ts`, `tunnel-http.ts`,
-    `static.ts`): login issues a token (`sessions.ts`, in-memory — restart signs
-    everyone out, by design); GM creates player accounts and campaigns, adds members.
+  - HTTP (`auth-http.ts`, `campaigns-http.ts`, `characters-http.ts`, `uploads.ts`,
+    `tunnel-http.ts`, `static.ts`): login issues a token (`sessions.ts`, in-memory —
+    restart signs everyone out, by design); GM creates player accounts and campaigns
+    and invites players (`invitedIds`); a player accepts or declines, which is the only
+    way to become a member. `/characters` is each account's own library (owner-only;
+    someone else's id answers 404). HTTP routes that change a room get a `broadcast`
+    callback (the gateway's `broadcastPatches`) so live sockets see the change.
   - Socket (`gateway.ts`): authenticates once at connect with that same token, then
     `joinCampaign` seats the socket after a membership check. The web client names its
     campaign in the handshake `auth` instead, so a reconnect is seated before socket.io
     flushes messages buffered while offline (otherwise they bounce with `noSeat`). Membership is re-checked
     on every message, so a removed player is cut off mid-session.
   - `campaigns.ts` owns the in-memory store, ownership (`ownerId` is GM, `memberIds`
-    are players), and the per-campaign dice seed. `users.ts` holds accounts with
-    password hashes that never leave the server. Neither contains game logic.
+    are players, `invitedIds` are pending invitations), and the per-campaign dice seed.
+    `users.ts` holds accounts with password hashes that never leave the server.
+    `characters.ts` holds every account's character library. None contains game logic.
+  - `library.ts` keeps library and rooms in agreement: a character is linked to at
+    most one campaign, a player has at most one character per campaign (the room
+    still keys characters by account id), and while linked **the room's sheet is the
+    live one** — the library reads through to it (`liveSheet`) and unlinking, or the
+    GM removing the member, writes it back. `adoptRoomCharacters` runs at boot and
+    after a socket claim: it files any room character with no library entry as a
+    linked entry (that is the migration from before the library) and unlinks entries
+    whose room no longer holds them. Idempotent.
   - `tunnel.ts` opens at most one Cloudflare quick tunnel for the whole server,
     triggered by the GM from the UI.
 - **web** — renders and dispatches. No game logic; state transitions live in
   `apps/web/src/state` as pure functions. Routing is `HashRouter`, so the static
   server never sees app paths. UI text goes through `t()` from `apps/web/src/i18n`;
-  `es.ts` is the source of keys and `en.ts` is typed against it. The tree remounts on
+  `es.ts` is the source of keys and `en.ts` is typed against it. A player account lands
+  on two doors, **Mis personajes** (`/characters`) and **Mis campañas** (`/campaigns`);
+  a GM account lands on the campaigns list. The wizard (`/create/:step`) needs no
+  campaign: its draft stays in `localStorage` (scope `library`) and finishing saves to
+  the server library. `state/library.ts` also finds characters and drafts the old flow
+  left in `localStorage` and offers a one-time import; imported keys are moved aside
+  under `daggerheart-vtt:imported:`, never deleted. The tree remounts on
   locale switch (`key={locale}` in `main.tsx`). The remount also tears down and
   reopens the campaign socket, so a mid-session toggle briefly reconnects; nothing is
   lost because room state is server-authoritative. Switching locale mid-creation makes
@@ -105,8 +129,11 @@ srd-data  →  rules  →  character  →  protocol  →  server
   (`apps/web/src/state/storage.ts`), every HTTP body and socket message (Zod schemas
   from `protocol`), and map uploads (checked by magic bytes, not the browser's content
   type).
-- **Snapshots are disposable state, not the source of characters.** Campaigns and
-  users snapshot to `.data/`; characters live in each player's `localStorage`.
+- **Characters live on the server, tied to the account.** Campaigns, users and the
+  character library snapshot to `.data/` (`campaigns.json`, `users.json`,
+  `characters.json`); losing `.data/` loses characters too. Only an unfinished wizard
+  draft stays in the browser. A linked character's snapshot copy is taken from the
+  room at write time, so the two files never disagree for long.
 
 ## tsconfig friction
 
