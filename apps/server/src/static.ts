@@ -37,17 +37,44 @@ const MIME_BY_EXTENSION: Record<string, string> = {
  */
 const IMMUTABLE = 'public, max-age=31536000, immutable';
 const NEVER = 'no-cache, no-store, must-revalidate';
+/**
+ * Files copied from `public/` (art under `/images`) keep their names across builds,
+ * so they can be replaced in place: the browser keeps them but asks first, and a
+ * 304 against `last-modified` makes that cheap.
+ */
+const REVALIDATE = 'no-cache';
 
-async function serveFile(response: ServerResponse, path: string): Promise<boolean> {
+function cacheControlFor(path: string, distDir: string): string {
+  if (path.endsWith('index.html')) return NEVER;
+  return path.startsWith(join(distDir, 'assets')) ? IMMUTABLE : REVALIDATE;
+}
+
+async function serveFile(
+  request: IncomingMessage,
+  response: ServerResponse,
+  path: string,
+  distDir: string,
+): Promise<boolean> {
   const mime = MIME_BY_EXTENSION[extname(path)];
   if (mime === undefined) return false;
 
   try {
     const info = await stat(path);
+    const cacheControl = cacheControlFor(path, distDir);
+    const lastModified = new Date(Math.floor(info.mtimeMs / 1000) * 1000).toUTCString();
+    if (cacheControl === REVALIDATE) {
+      const since = Date.parse(request.headers['if-modified-since'] ?? '');
+      if (!Number.isNaN(since) && Math.floor(info.mtimeMs / 1000) * 1000 <= since) {
+        response.writeHead(304, { 'cache-control': cacheControl, 'last-modified': lastModified });
+        response.end();
+        return true;
+      }
+    }
     response.writeHead(200, {
       'content-type': mime,
       'content-length': info.size,
-      'cache-control': path.endsWith('index.html') ? NEVER : IMMUTABLE,
+      'cache-control': cacheControl,
+      ...(cacheControl === REVALIDATE ? { 'last-modified': lastModified } : {}),
     });
     createReadStream(path).pipe(response);
     return true;
@@ -71,7 +98,7 @@ export async function handleStatic(
   const path = url.split('?')[0] ?? '/';
 
   if (path === '/' || path === '/index.html') {
-    return serveFile(response, join(distDir, 'index.html'));
+    return serveFile(request, response, join(distDir, 'index.html'), distDir);
   }
 
   // Reject anything that could escape distDir, same guard as uploads.ts's
@@ -81,9 +108,9 @@ export async function handleStatic(
     return false;
   }
 
-  const served = await serveFile(response, join(distDir, relative));
+  const served = await serveFile(request, response, join(distDir, relative), distDir);
   if (served) return true;
 
   // Not a real asset — the HashRouter's job, so hand it index.html too.
-  return serveFile(response, join(distDir, 'index.html'));
+  return serveFile(request, response, join(distDir, 'index.html'), distDir);
 }

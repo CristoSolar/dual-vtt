@@ -34,6 +34,8 @@ describe('serving the web build', () => {
     await writeFile(join(distDir, 'index.html'), '<html>index</html>');
     await mkdir(join(distDir, 'assets'), { recursive: true });
     await writeFile(join(distDir, 'assets', 'app.js'), 'console.log("app")');
+    await mkdir(join(distDir, 'images'), { recursive: true });
+    await writeFile(join(distDir, 'images', 'elf.png'), 'png');
     server = await startStaticServer(distDir);
   });
 
@@ -66,6 +68,21 @@ describe('serving the web build', () => {
 
     const asset = await fetch(`${server.url}/assets/app.js`);
     expect(asset.headers.get('cache-control')).toContain('immutable');
+  });
+
+  it('revalidates un-fingerprinted public files, so replaced art shows up', async () => {
+    // `public/images/*` keeps its name across builds; caching it forever pinned
+    // browsers to the old art after it was replaced.
+    const image = await fetch(`${server.url}/images/elf.png`);
+    expect(image.status).toBe(200);
+    expect(image.headers.get('cache-control')).toBe('no-cache');
+    const lastModified = image.headers.get('last-modified');
+    expect(lastModified).not.toBeNull();
+
+    const again = await fetch(`${server.url}/images/elf.png`, {
+      headers: { 'if-modified-since': lastModified ?? '' },
+    });
+    expect(again.status).toBe(304);
   });
 
   it('does not cache the index.html served as a client-route fallback', async () => {
