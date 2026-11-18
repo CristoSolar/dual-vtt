@@ -116,6 +116,22 @@ export function detachMember(
 }
 
 /**
+ * Sheets carry no id of their own, so "the same character" is the choices made at
+ * creation that play never changes: name, class, subclass, heritage, community.
+ */
+function sameCharacter(a: SheetState, b: SheetState): boolean {
+  const identity = (s: SheetState) =>
+    JSON.stringify([
+      s.character.name,
+      s.character.classId,
+      s.character.subclassId,
+      s.character.heritage,
+      s.character.communityId,
+    ]);
+  return identity(a) === identity(b);
+}
+
+/**
  * Brings the library and the rooms into agreement. Run at boot (it migrates rooms
  * from before the library existed) and after a socket claim. Idempotent.
  *
@@ -139,6 +155,16 @@ export function adoptRoomCharacters(characters: CharacterStore, campaigns: Campa
     for (const [accountId, sheet] of Object.entries(campaign.state.characters)) {
       if (campaigns.roleOf(campaign.id, accountId) !== 'player') continue;
       if (characters.linkedIn(campaign.id, accountId) !== null) continue;
+      // A crash between the campaigns and characters writes can leave the room
+      // holding a character whose library entry still reads unlinked. Relink that
+      // entry rather than filing a second copy of the same character.
+      const twin = characters
+        .listFor(accountId)
+        .find((c) => c.campaignId === null && sameCharacter(c.sheet, sheet));
+      if (twin !== undefined) {
+        characters.update(twin.id, { campaignId: campaign.id });
+        continue;
+      }
       characters.create(accountId, sheet, campaign.id);
       adopted += 1;
     }

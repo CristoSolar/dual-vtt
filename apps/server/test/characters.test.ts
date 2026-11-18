@@ -221,6 +221,19 @@ describe('boot migration', () => {
     expect(entries[0]?.campaignId).toBe(campaignId);
   });
 
+  it('relinks the library entry a crash left unlinked instead of filing a copy', () => {
+    const { campaigns, characters, campaignId } = table();
+    const entry = characters.create('u-alex', buildSheet());
+    // campaigns.json was written after the link, characters.json was not.
+    campaigns.claimCharacter(campaignId, 'u-alex', { ...entry.sheet, hpMarked: 3 });
+    const other = characters.create('u-alex', buildSheet('ranger'));
+
+    expect(adoptRoomCharacters(characters, campaigns)).toBe(0);
+    expect(characters.listFor('u-alex')).toHaveLength(2);
+    expect(characters.get(entry.id)?.campaignId).toBe(campaignId);
+    expect(characters.get(other.id)?.campaignId).toBeNull();
+  });
+
   it('unlinks an entry whose room character is gone, keeping its last sheet', () => {
     const { campaigns, characters, campaignId } = table();
     const entry = characters.create('u-alex', buildSheet());
