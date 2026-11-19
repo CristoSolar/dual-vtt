@@ -280,6 +280,8 @@ function gmRoom(): RoomState {
     journal: [],
     audio: { tracks: [], playing: null },
     tables: [],
+    story: { pitch: '', body: '' },
+    prepAdversaries: [],
     rollLog: [],
     privateLog: [],
   };
@@ -416,6 +418,8 @@ describe('GM panel renders', () => {
       journal: [],
       audio: { tracks: [], playing: null },
       tables: [],
+      story: { pitch: '', body: '' },
+      prepAdversaries: [],
       privateLog: [],
       rollLog: [
         {

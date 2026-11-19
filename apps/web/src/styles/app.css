@@ -2701,6 +2701,22 @@ button.link {
     linear-gradient(200deg, var(--c-surface-3), var(--c-bg));
 }
 
+.home-door--gm-campaigns {
+  background:
+    linear-gradient(180deg, rgb(11 8 18 / 0%) 35%, rgb(11 8 18 / 92%) 100%),
+    url('/images/home/gm-campaigns.webp') center / cover no-repeat,
+    radial-gradient(circle at 30% 25%, rgb(184 68 60 / 26%), transparent 60%),
+    linear-gradient(160deg, var(--c-surface-3), var(--c-bg));
+}
+
+.home-door--gm-players {
+  background:
+    linear-gradient(180deg, rgb(11 8 18 / 0%) 35%, rgb(11 8 18 / 92%) 100%),
+    url('/images/home/gm-players.webp') center / cover no-repeat,
+    radial-gradient(circle at 70% 25%, rgb(126 208 160 / 20%), transparent 60%),
+    linear-gradient(200deg, var(--c-surface-3), var(--c-bg));
+}
+
 .home-door:hover,
 .home-door:focus-visible {
   border-color: var(--c-line-bronze-hover);
@@ -3704,4 +3720,79 @@ details summary {
 .dice-overlay-layer {
   position: absolute;
   inset: 0;
+}
+
+/* ============================================================ GM home */
+
+/* Status chips on campaign cards: active is brass (the default chip), the others
+   dim so a paused or finished table reads as resting at a glance. */
+.status-chip--paused {
+  color: var(--c-violet-bright);
+  border-color: rgb(123 107 196 / 45%);
+}
+
+.status-chip--finished {
+  color: var(--c-text-faint);
+  border-color: var(--c-line);
+}
+
+.campaign-card-art {
+  gap: var(--sp-2);
+}
+
+.campaign-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.campaign-page-controls {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.campaign-page textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.prep-qty {
+  width: 4.5rem;
+}
+
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.players-table-wrap {
+  overflow-x: auto;
+}
+
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.players-table th,
+.players-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: var(--size-rule) solid var(--c-line);
+}
+
+.players-table thead th {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-faint);
+}
+
+.players-table-campaign {
+  display: block;
 }

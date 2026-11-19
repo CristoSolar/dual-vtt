@@ -29,6 +29,7 @@ import { useId, useMemo, useState, type ChangeEvent } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
 import { chatRecipients, mergeFeed } from '../../state/feed.js';
+import { encounterEvents } from '../../state/gmHome.js';
 import { label as prettify } from '../../state/selectors.js';
 import { adversaryTargetOf, newestDamageIds, pcTargetOf } from '../../state/targets.js';
 import { uploadAudio } from '../../state/uploadMap.js';
@@ -1017,22 +1018,10 @@ function Adversaries({
   const [query, setQuery] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  /**
-   * Adds `count` of an adversary at once, lettering them when there is more than
-   * one: a fight with four guards needs four names the table can say out loud,
-   * not four identical rows.
-   */
+  /** Adds `count` of an adversary at once, lettered (see `encounterEvents`). */
   const addAdversaries = (adversaryId: string, baseName: string, count: number) => {
-    const existing = room.adversaryInstances.filter((i) => i.adversaryId === adversaryId).length;
-    for (let i = 0; i < count; i++) {
-      const index = existing + i;
-      const letter = String.fromCharCode(65 + (index % 26));
-      send({
-        type: 'addAdversary',
-        instanceId: nextId('adv'),
-        adversaryId,
-        name: count === 1 && existing === 0 ? baseName : `${baseName} ${letter}`,
-      });
+    for (const event of encounterEvents(room.adversaryInstances, adversaryId, baseName, count, () => nextId('adv'))) {
+      send(event);
     }
   };
 
@@ -1049,6 +1038,30 @@ function Adversaries({
   return (
     <div className="panel">
       <SectionHead>{t('gm.adversaries.title')}</SectionHead>
+
+      {/* The campaign page's prep list, one click from the encounter. GM-only:
+          `roomForRole` never sends it to a player. */}
+      <h3>{t('gm.prep.title')}</h3>
+      {room.prepAdversaries.length === 0 ? <p className="muted">{t('gm.prep.empty')}</p> : null}
+      {room.prepAdversaries.map((entry) => {
+        const stat = srd().adversaries.find((a) => a.id === entry.adversaryId);
+        const name = stat?.name ?? entry.adversaryId;
+        return (
+          <div className="card" key={entry.id}>
+            <div className="card-head">
+              <strong>
+                {name} <span className="option-meta">{t('gm.prep.count', { count: entry.quantity })}</span>
+              </strong>
+              <button type="button" onClick={() => addAdversaries(entry.adversaryId, name, entry.quantity)}>
+                {t('gm.prep.add')}
+              </button>
+            </div>
+            {entry.note === '' ? null : <span className="option-meta">{entry.note}</span>}
+          </div>
+        );
+      })}
+
+      <h3 className="mt-5">{t('gm.adversaries.searchLabel')}</h3>
 
       <label htmlFor="adversary-search">{t('gm.adversaries.searchLabel')}</label>
       <input

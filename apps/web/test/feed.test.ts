@@ -36,6 +36,8 @@ function room(overrides: Partial<RoomState> = {}): RoomState {
     journal: [],
     audio: { tracks: [], playing: null },
     tables: [],
+    story: { pitch: '', body: '' },
+    prepAdversaries: [],
     rollLog: [],
     privateLog: [],
     ...overrides,

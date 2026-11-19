@@ -14,6 +14,7 @@ import {
   type PingedMessage,
   type RoomEvent,
   type RoomState,
+  type UpdateCampaignRequest,
 } from '@daggerheart/protocol';
 import { describeRejection, t } from '../i18n/index.js';
 import { isAuthRejection } from './auth.js';
@@ -83,6 +84,8 @@ export interface CampaignConnection {
   createCampaign: (name: string) => Promise<CampaignSummary | null>;
   /** GM: invites a player account; it joins once it accepts. */
   invitePlayer: (campaignId: string, username: string) => Promise<boolean>;
+  /** GM: renames the campaign or changes its status. */
+  updateCampaign: (campaignId: string, update: UpdateCampaignRequest) => Promise<boolean>;
   /** GM: withdraws a pending invitation. */
   cancelInvite: (campaignId: string, userId: string) => Promise<boolean>;
   /** The invited player answers. */
@@ -144,6 +147,9 @@ export function useCampaign(
   useEffect(() => {
     void refreshCampaigns();
   }, [refreshCampaigns]);
+  /** For the socket handlers, which outlive any one `refreshCampaigns`. */
+  const refreshCampaignsRef = useRef(refreshCampaigns);
+  refreshCampaignsRef.current = refreshCampaigns;
 
   const ensureSocket = useCallback((): Socket | null => {
     if (token === null) return null;
@@ -244,6 +250,17 @@ export function useCampaign(
     socket.on(CHANNEL.rejected, (payload: unknown) => {
       const parsed = RejectedSchema.safeParse(payload);
       setError(parsed.success ? describeRejection(parsed.data.error) : t('reject.rejected'));
+      // The GM paused or finished the campaign: the server has already dropped the
+      // seat, so stop reconnecting into it and go back to the campaign list.
+      if (parsed.success && parsed.data.error === 'campaignNotActive') {
+        storage.removeItem(ACTIVE_CAMPAIGN_KEY);
+        setActiveCampaignId(null);
+        socket.close();
+        if (socketRef.current === socket) socketRef.current = null;
+        setRoom(null);
+        setStatus('idle');
+        void refreshCampaignsRef.current();
+      }
     });
 
     return socket;
@@ -315,6 +332,23 @@ export function useCampaign(
       } finally {
         setPending(false);
       }
+    },
+    [token, refreshCampaigns, onSessionExpired],
+  );
+
+  const updateCampaign = useCallback(
+    async (campaignId: string, update: UpdateCampaignRequest): Promise<boolean> => {
+      if (token === null) return false;
+      const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}`, {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+        body: JSON.stringify(update),
+      }).catch(() => null);
+      if (response === null) return false;
+      if (response.status === 401) onSessionExpired();
+      else if (!response.ok) setError(t('campaignPage.saveFailed'));
+      else await refreshCampaigns();
+      return response.ok;
     },
     [token, refreshCampaigns, onSessionExpired],
   );
@@ -428,6 +462,7 @@ export function useCampaign(
       refreshCampaigns,
       createCampaign,
       invitePlayer,
+      updateCampaign,
       cancelInvite,
       answerInvite,
       removePlayer,
@@ -455,6 +490,7 @@ export function useCampaign(
       refreshCampaigns,
       createCampaign,
       invitePlayer,
+      updateCampaign,
       cancelInvite,
       answerInvite,
       removePlayer,

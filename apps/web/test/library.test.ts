@@ -23,6 +23,7 @@ const summary = (id: string, ownerId = 'u-gm'): CampaignSummary => ({
   ownerUsername: 'gm',
   memberIds: [ME],
   invitedIds: [],
+  status: 'active',
 });
 
 const entry = (id: string, campaignId: string | null): LibraryCharacter => ({

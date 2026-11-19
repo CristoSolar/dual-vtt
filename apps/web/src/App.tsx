@@ -9,7 +9,9 @@ import { GuideDialog } from './components/GuideDialog.js';
 import { LocaleToggle } from './components/LocaleToggle.js';
 import { Toast, ToastStack } from './components/Toast.js';
 import { t } from './i18n/index.js';
+import { CampaignPageRoute } from './routes/CampaignPageRoute.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
+import { GmHomeRoute } from './routes/GmHomeRoute.js';
 import { CharacterViewRoute } from './routes/CharacterViewRoute.js';
 import { MyCampaignsRoute } from './routes/MyCampaignsRoute.js';
 import { MyCharactersRoute } from './routes/MyCharactersRoute.js';
@@ -194,15 +196,14 @@ function Shell() {
           <Link to="/">
             <button type="button">{t('app.home')}</button>
           </Link>
+          <Link to="/campaigns">
+            <button type="button">{t('app.myCampaigns')}</button>
+          </Link>
           {account.role === 'gm' ? (
             <Link to="/players">
-              <button type="button">{t('app.players')}</button>
+              <button type="button">{t('app.myPlayers')}</button>
             </Link>
-          ) : (
-            <Link to="/campaigns">
-              <button type="button">{t('app.myCampaigns')}</button>
-            </Link>
-          )}
+          ) : null}
           <Link to="/characters">
             <button type="button">{t('app.myCharacters')}</button>
           </Link>
@@ -342,21 +343,11 @@ function Shell() {
                 onRefresh={refreshCampaigns}
               />
             ) : (
-              <CampaignsRoute
-                accountId={account.id}
-                campaigns={campaign.campaigns}
-                onCreate={(name) => void campaign.createCampaign(name)}
-                onJoin={(campaignId) => {
-                  campaign.join(campaignId);
-                  navigate('/');
-                }}
-                onInvite={(campaignId, username) => void campaign.invitePlayer(campaignId, username)}
-                onCancelInvite={(campaignId, userId) => void campaign.cancelInvite(campaignId, userId)}
-                token={auth.token ?? ''}
-                pending={campaign.pending}
-                tunnelUrl={tunnelUrl}
-                tunnelLoading={tunnelLoading}
-                onGenerateTunnel={generateTunnel}
+              <GmHomeRoute
+                username={account.username}
+                activeCount={
+                  campaign.campaigns.filter((c) => c.ownerId === account.id && c.status === 'active').length
+                }
               />
             )
           }
@@ -389,19 +380,56 @@ function Shell() {
         <Route
           path="/campaigns"
           element={
-            <MyCampaignsRoute
-              accountId={account.id}
-              campaigns={campaign.campaigns}
-              invited={campaign.invited}
-              characters={library.characters}
-              pending={campaign.pending}
-              onAnswer={(campaignId, answer) => void campaign.answerInvite(campaignId, answer)}
-              onEnter={(campaignId) => {
-                campaign.join(campaignId);
-                navigate('/');
-              }}
-              onRefresh={refreshTable}
-            />
+            account.role === 'gm' ? (
+              <CampaignsRoute
+                accountId={account.id}
+                campaigns={campaign.campaigns}
+                onCreate={(name) => void campaign.createCampaign(name)}
+                onEnter={(campaignId) => {
+                  campaign.join(campaignId);
+                  navigate('/');
+                }}
+                pending={campaign.pending}
+                tunnelUrl={tunnelUrl}
+                tunnelLoading={tunnelLoading}
+                onGenerateTunnel={generateTunnel}
+              />
+            ) : (
+              <MyCampaignsRoute
+                accountId={account.id}
+                campaigns={campaign.campaigns}
+                invited={campaign.invited}
+                characters={library.characters}
+                pending={campaign.pending}
+                onAnswer={(campaignId, answer) => void campaign.answerInvite(campaignId, answer)}
+                onEnter={(campaignId) => {
+                  campaign.join(campaignId);
+                  navigate('/');
+                }}
+                onRefresh={refreshTable}
+              />
+            )
+          }
+        />
+        <Route
+          path="/campaigns/:id"
+          element={
+            account.role !== 'gm' || auth.token === null ? (
+              <Navigate to="/campaigns" replace />
+            ) : (
+              <CampaignPageRoute
+                token={auth.token}
+                onSessionExpired={auth.expire}
+                onUpdate={campaign.updateCampaign}
+                onEnter={(campaignId) => {
+                  campaign.join(campaignId);
+                  navigate('/');
+                }}
+                onInvite={campaign.invitePlayer}
+                onCancelInvite={campaign.cancelInvite}
+                onRemove={campaign.removePlayer}
+              />
+            )
           }
         />
         <Route
@@ -410,7 +438,12 @@ function Shell() {
             account.role !== 'gm' || auth.token === null ? (
               <Navigate to="/" replace />
             ) : (
-              <PlayersRoute token={auth.token} />
+              <PlayersRoute
+                token={auth.token}
+                accountId={account.id}
+                campaigns={campaign.campaigns}
+                onInvite={campaign.invitePlayer}
+              />
             )
           }
         />

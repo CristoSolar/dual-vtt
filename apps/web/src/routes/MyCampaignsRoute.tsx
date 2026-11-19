@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { t } from '../i18n/index.js';
+import { canEnter } from '../state/gmHome.js';
 import { characterIn } from '../state/library.js';
 
 interface MyCampaignsRouteProps {
@@ -88,6 +89,11 @@ export function MyCampaignsRoute({
               <div className="campaign-card" key={campaign.id}>
                 <div className="campaign-card-art">
                   {isOwner ? <span className="campaign-card-chip">{t('campaigns.gmChip')}</span> : null}
+                  {campaign.status === 'active' ? null : (
+                    <span className={`campaign-card-chip status-chip--${campaign.status}`}>
+                      {t(`status.${campaign.status}`)}
+                    </span>
+                  )}
                 </div>
                 <div className="campaign-card-body">
                   <h2>{campaign.name}</h2>
@@ -99,11 +105,19 @@ export function MyCampaignsRoute({
                       {t('myCampaigns.noCharacter')} <Link to="/characters">{t('myCampaigns.linkOne')}</Link>
                     </p>
                   )}
-                  <div className="campaign-card-footer">
-                    <button type="button" className="btn-primary" onClick={() => onEnter(campaign.id)}>
-                      {t('campaigns.join')}
-                    </button>
-                  </div>
+                  {/* A paused or finished table seats only its GM; the server refuses
+                      the rest, so there is no button to press. */}
+                  {canEnter(campaign, accountId) ? (
+                    <div className="campaign-card-footer">
+                      <button type="button" className="btn-primary" onClick={() => onEnter(campaign.id)}>
+                        {t('campaigns.join')}
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="muted campaign-card-footer">
+                      {campaign.status === 'paused' ? t('myCampaigns.pausedNote') : t('myCampaigns.finishedNote')}
+                    </p>
+                  )}
                 </div>
               </div>
             );
