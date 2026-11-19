@@ -35,7 +35,7 @@ import { AudioStateSchema, MAX_TRACKS } from './audio.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
 import { MAX_TABLES, RollTableSchema } from './tables.js';
-import { CampaignStorySchema, MAX_PREP_ADVERSARIES, PrepAdversarySchema } from './prep.js';
+import { CampaignStorySchema, MAX_PREP_ADVERSARIES, MAX_PREP_QUANTITY, PrepAdversarySchema } from './prep.js';
 import {
   MAX_SCENE_NOTES,
   MapStateSchema,
@@ -1364,6 +1364,35 @@ export function applyRoomEvent(
         prepAdversaries: exists
           ? state.prepAdversaries.map((entry) => (entry.id === event.entry.id ? event.entry : entry))
           : [...state.prepAdversaries, event.entry],
+      });
+    }
+    case 'addPrepAdversary': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!srd().adversaries.some((a) => a.id === event.adversaryId)) {
+        return fail('unknownAdversary', 'no such adversary');
+      }
+      const existing = state.prepAdversaries.find((entry) => entry.adversaryId === event.adversaryId);
+      if (existing === undefined && state.prepAdversaries.length >= MAX_PREP_ADVERSARIES) {
+        return fail('rejected', 'the prep list is full');
+      }
+      return ok({
+        ...state,
+        prepAdversaries:
+          existing === undefined
+            ? [
+                ...state.prepAdversaries,
+                { id: event.id, adversaryId: event.adversaryId, quantity: event.quantity, note: event.note },
+              ]
+            : state.prepAdversaries.map((entry) =>
+                entry === existing
+                  ? {
+                      ...entry,
+                      quantity: Math.min(MAX_PREP_QUANTITY, entry.quantity + event.quantity),
+                      note: event.note === '' ? entry.note : event.note,
+                    }
+                  : entry,
+              ),
       });
     }
     case 'removePrepAdversary': {

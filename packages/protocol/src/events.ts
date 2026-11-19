@@ -428,6 +428,16 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('upsertPrepAdversary'), entry: PrepAdversarySchema }),
   z.object({ type: z.literal('removePrepAdversary'), id: z.string().min(1).max(64) }),
   z.object({
+    // Additive, so two quick clicks built from the same stale view both count:
+    // the server bumps the existing row for that adversary (capped), or files a
+    // new one under `id`. A non-empty note replaces the row's note.
+    type: z.literal('addPrepAdversary'),
+    id: PrepAdversarySchema.shape.id,
+    adversaryId: PrepAdversarySchema.shape.adversaryId,
+    quantity: PrepAdversarySchema.shape.quantity,
+    note: PrepAdversarySchema.shape.note,
+  }),
+  z.object({
     // Picks a row uniformly at random on the server; the client only names the table.
     type: z.literal('rollTable'),
     tableId: z.string().min(1).max(64),

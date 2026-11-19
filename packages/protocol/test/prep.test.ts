@@ -89,6 +89,36 @@ describe('prep intents', () => {
     expect(refusal(room, GM, { type: 'removePrepAdversary', id: 'p-1' })).toBe('unknownPrepAdversary');
   });
 
+  it('addPrepAdversary adds a row, then increments it server-side, capped at 20', () => {
+    let room = apply(preparedRoom(), GM, {
+      type: 'addPrepAdversary',
+      id: 'p-new',
+      adversaryId: 'ahuizotl',
+      quantity: 3,
+      note: 'en el lago',
+    });
+    expect(room.prepAdversaries.find((p) => p.adversaryId === 'ahuizotl')).toEqual({
+      id: 'p-new',
+      adversaryId: 'ahuizotl',
+      quantity: 3,
+      note: 'en el lago',
+    });
+    // Two quick clicks built from the same stale view both count.
+    room = apply(room, GM, { type: 'addPrepAdversary', id: 'p-x', adversaryId: 'ahuizotl', quantity: 3, note: '' });
+    room = apply(room, GM, { type: 'addPrepAdversary', id: 'p-y', adversaryId: 'ahuizotl', quantity: 3, note: '' });
+    const row = room.prepAdversaries.filter((p) => p.adversaryId === 'ahuizotl');
+    expect(row).toHaveLength(1);
+    expect(row[0]).toMatchObject({ id: 'p-new', quantity: 9, note: 'en el lago' });
+    room = apply(room, GM, { type: 'addPrepAdversary', id: 'p-z', adversaryId: 'ahuizotl', quantity: 20, note: 'nuevo' });
+    expect(room.prepAdversaries.find((p) => p.adversaryId === 'ahuizotl')).toMatchObject({ quantity: 20, note: 'nuevo' });
+  });
+
+  it('addPrepAdversary is GM-only and refuses an unknown adversary', () => {
+    const event: RoomEvent = { type: 'addPrepAdversary', id: 'p-9', adversaryId: 'ahuizotl', quantity: 1, note: '' };
+    expect(refusal(preparedRoom(), ALEX, event)).toBe('notGameMaster');
+    expect(refusal(preparedRoom(), GM, { ...event, adversaryId: 'no-such' })).toBe('unknownAdversary');
+  });
+
   it('does not touch the encounter: preparing is not fielding', () => {
     expect(preparedRoom().adversaryInstances).toEqual([]);
   });
@@ -138,6 +168,10 @@ describe('CampaignPrepEventSchema', () => {
   it('admits only the intents the campaign page sends', () => {
     expect(CampaignPrepEventSchema.safeParse({ type: 'setStory', story: { pitch: '', body: '' } }).success).toBe(true);
     expect(CampaignPrepEventSchema.safeParse({ type: 'removePrepAdversary', id: 'p-1' }).success).toBe(true);
+    expect(
+      CampaignPrepEventSchema.safeParse({ type: 'addPrepAdversary', id: 'p', adversaryId: 'a', quantity: 2, note: '' })
+        .success,
+    ).toBe(true);
     expect(
       CampaignPrepEventSchema.safeParse({
         type: 'upsertJournalEntry',

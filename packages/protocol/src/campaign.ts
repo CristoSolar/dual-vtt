@@ -95,6 +95,7 @@ export type CampaignDetail = z.infer<typeof CampaignDetailSchema>;
 export const CAMPAIGN_PREP_EVENT_TYPES = [
   'setStory',
   'upsertPrepAdversary',
+  'addPrepAdversary',
   'removePrepAdversary',
   'upsertJournalEntry',
   'removeJournalEntry',
