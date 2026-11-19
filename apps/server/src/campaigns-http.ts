@@ -16,6 +16,7 @@ import type { CharacterStore } from './characters.js';
 import { actorFor } from './http-auth.js';
 import { json, noContent, readJsonBody } from './http-json.js';
 import { detachMember, type Patches } from './library.js';
+import { claimLegacyPlayer, managesPlayer } from './managed-players.js';
 import type { SessionStore } from './sessions.js';
 import type { UserStore } from './users.js';
 
@@ -72,6 +73,8 @@ export interface CampaignsDeps {
   sessions: SessionStore;
   /** Called after any mutation, so the caller can snapshot to disk right away. */
   persist: () => void;
+  /** Snapshots accounts, when an invitation claims a legacy player. */
+  persistUsers: () => void;
   /** Sends a room change to the campaign's live sockets. */
   broadcast: (campaignId: string, outcome: Patches) => void;
   /** Cuts the campaign's seated players off, when it stops being active. */
@@ -85,7 +88,7 @@ export interface CampaignsDeps {
 export async function handleCampaigns(
   request: IncomingMessage,
   response: ServerResponse,
-  { campaigns, characters, users, sessions, persist, broadcast, unseatPlayers }: CampaignsDeps,
+  { campaigns, characters, users, sessions, persist, persistUsers, broadcast, unseatPlayers }: CampaignsDeps,
 ): Promise<boolean> {
   const url = request.url ?? '';
   const method = request.method ?? 'GET';
@@ -199,7 +202,7 @@ export async function handleCampaigns(
     }
     const target = users.findByUsername(parsed.data.username);
     // A player another GM manages answers exactly like a missing one.
-    if (target === null || !users.isManagedBy(target.id, actor.id)) {
+    if (target === null || !managesPlayer(users, campaigns, actor.id, target.id)) {
       json(response, 404, { error: 'unknownUsername' });
       return true;
     }
@@ -208,6 +211,7 @@ export async function handleCampaigns(
       json(response, result === 'forbidden' ? 403 : 409, { error: result });
       return true;
     }
+    if (claimLegacyPlayer(users, campaigns, actor.id, target.id)) persistUsers();
     persist();
     noContent(response);
     return true;

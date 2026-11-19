@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { writeFileAtomic } from '../src/atomic-write.js';
+import { CampaignStore } from '../src/campaigns.js';
 import { handleAuth, resetLoginLimits } from '../src/auth-http.js';
 import { RateLimiter } from '../src/rate-limit.js';
 import { SessionStore } from '../src/sessions.js';
@@ -158,7 +159,7 @@ describe('login rate limiting', () => {
     const users = new UserStore();
     const sessions = new SessionStore();
     const http: HttpServer = createServer((request, response) => {
-      void handleAuth(request, response, { users, sessions, persist: () => {} }).then((handled) => {
+      void handleAuth(request, response, { users, campaigns: new CampaignStore(), sessions, persist: () => {} }).then((handled) => {
         if (!handled) {
           response.writeHead(404);
           response.end();

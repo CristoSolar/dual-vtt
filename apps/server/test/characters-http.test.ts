@@ -32,6 +32,7 @@ async function startServer() {
       broadcasts.push({ campaignId, outcome });
     },
     unseatPlayers: () => {},
+    persistUsers: () => {},
   };
   const http: HttpServer = createServer((request, response) => {
     void (async () => {

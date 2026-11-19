@@ -12,6 +12,8 @@ import { actorFor, bearerToken } from './http-auth.js';
 import { RateLimiter } from './rate-limit.js';
 import type { SessionStore } from './sessions.js';
 import { readBody } from './uploads.js';
+import type { CampaignStore } from './campaigns.js';
+import { claimLegacyPlayer, managesPlayer, playersManagedBy } from './managed-players.js';
 import { toPublic, type UserStore } from './users.js';
 
 const MAX_AUTH_BODY_BYTES = 64 * 1024;
@@ -46,6 +48,8 @@ async function readJsonBody(request: IncomingMessage): Promise<unknown> {
 
 export interface AuthDeps {
   users: UserStore;
+  /** Which GM manages a legacy player depends on whose tables it sits at. */
+  campaigns: CampaignStore;
   sessions: SessionStore;
   /** Called after any mutation, so the caller can snapshot to disk right away. */
   persist: () => void;
@@ -59,7 +63,7 @@ export interface AuthDeps {
 export async function handleAuth(
   request: IncomingMessage,
   response: ServerResponse,
-  { users, sessions, persist }: AuthDeps,
+  { users, campaigns, sessions, persist }: AuthDeps,
 ): Promise<boolean> {
   const url = request.url ?? '';
   const method = request.method ?? 'GET';
@@ -142,7 +146,7 @@ export async function handleAuth(
       return true;
     }
     // Only the players this GM manages — never another GM's.
-    json(response, 200, users.managedBy(actor.id).map(toPublic));
+    json(response, 200, playersManagedBy(users, campaigns, actor.id).map(toPublic));
     return true;
   }
 
@@ -193,13 +197,16 @@ export async function handleAuth(
     }
     const targetId = resetMatch[1] ?? '';
     // Another GM's player, or a GM, answers exactly like a missing account.
-    const ok = users.isManagedBy(targetId, actor.id) && (await users.setPassword(targetId, parsed.data.newPassword, true));
+    const ok =
+      managesPlayer(users, campaigns, actor.id, targetId) &&
+      (await users.setPassword(targetId, parsed.data.newPassword, true));
     if (!ok) {
       json(response, 404, { error: 'notFound' });
       return true;
     }
     // The old password is gone, so any token issued against it must go too.
     sessions.destroyAllFor(targetId);
+    claimLegacyPlayer(users, campaigns, actor.id, targetId);
     persist();
     noContent(response);
     return true;

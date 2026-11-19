@@ -101,6 +101,7 @@ export async function startTestServer(seed = 1234): Promise<TestServer> {
       users,
       sessions,
       persist: () => {},
+      persistUsers: () => {},
       broadcast: (campaignId: string, outcome: { patch: RoomPatch; playerPatch: RoomPatch }) =>
         broadcastPatches(io, campaignId, outcome),
       unseatPlayers: (campaignId: string) => unseatPlayers(io, campaigns, campaignId),

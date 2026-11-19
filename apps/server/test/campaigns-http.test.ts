@@ -23,6 +23,7 @@ async function startCampaignsServer() {
       users,
       sessions,
       persist: () => {},
+      persistUsers: () => {},
       broadcast: () => {},
       unseatPlayers: () => {},
     }).then(

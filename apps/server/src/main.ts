@@ -106,13 +106,14 @@ async function main(): Promise<void> {
     users,
     sessions,
     persist: persistTable,
+    persistUsers,
     broadcast,
     unseatPlayers: (campaignId: string): void => unseatPlayers(io, campaigns, campaignId),
   };
 
   type Route = (request: IncomingMessage, response: ServerResponse) => Promise<boolean>;
   const routes: readonly Route[] = [
-    (request, response) => handleAuth(request, response, { users, sessions, persist: persistUsers }),
+    (request, response) => handleAuth(request, response, { users, campaigns, sessions, persist: persistUsers }),
     (request, response) => handleCampaigns(request, response, tableDeps),
     (request, response) => handleCharacters(request, response, tableDeps),
     (request, response) => handlePlayers(request, response, { campaigns, users, sessions }),

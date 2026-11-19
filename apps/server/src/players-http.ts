@@ -5,6 +5,7 @@ import type { ManagedPlayer } from '@daggerheart/protocol';
 import type { CampaignStore } from './campaigns.js';
 import { actorFor } from './http-auth.js';
 import { json } from './http-json.js';
+import { playersManagedBy } from './managed-players.js';
 import type { SessionStore } from './sessions.js';
 import type { UserStore } from './users.js';
 
@@ -16,7 +17,7 @@ export interface PlayersDeps {
 
 /**
  * `GET /players`: the GM's "Mis jugadores". Each player this GM manages (see
- * `UserStore.managedBy`), with the GM's own campaigns they belong to or are invited
+ * `managed-players.ts`), with the GM's own campaigns they belong to or are invited
  * to — never another GM's — and when they last signed in. Creating a player and
  * resetting a password stay on `/users` (`auth-http.ts`).
  */
@@ -39,7 +40,7 @@ export async function handlePlayers(
   }
 
   const mine = campaigns.all().filter((c) => c.ownerId === actor.id);
-  const rows: ManagedPlayer[] = users.managedBy(actor.id).map((player) => ({
+  const rows: ManagedPlayer[] = playersManagedBy(users, campaigns, actor.id).map((player) => ({
     id: player.id,
     username: player.username,
     mustChangePassword: player.mustChangePassword,

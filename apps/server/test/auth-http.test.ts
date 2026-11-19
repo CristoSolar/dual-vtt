@@ -3,6 +3,7 @@ import type { AddressInfo } from 'node:net';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { CampaignStore } from '../src/campaigns.js';
 import { handleAuth } from '../src/auth-http.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
@@ -11,7 +12,7 @@ async function startAuthServer() {
   const users = new UserStore();
   const sessions = new SessionStore();
   const http: HttpServer = createServer((request, response) => {
-    void handleAuth(request, response, { users, sessions, persist: () => {} }).then((handled) => {
+    void handleAuth(request, response, { users, campaigns: new CampaignStore(), sessions, persist: () => {} }).then((handled) => {
       if (!handled) {
         response.writeHead(404);
         response.end();

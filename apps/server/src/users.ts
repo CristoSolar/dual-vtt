@@ -15,7 +15,8 @@ export interface StoredUser extends User {
   passwordHash: string;
   /**
    * The GM who created this account, or null for accounts made before this was
-   * recorded (and for the boot GM). A null player is "legacy": every GM manages it.
+   * recorded (and for the boot GM). Who manages a null ("legacy") player is
+   * decided in `managed-players.ts`.
    */
   createdBy: string | null;
   /** When it last signed in successfully, or null if never since this was recorded. */
@@ -56,21 +57,17 @@ export class UserStore {
     return this.users.get(id) ?? null;
   }
 
-  /**
-   * The player accounts a GM manages: the ones they created, plus legacy ones with
-   * no recorded creator. Before `createdBy` existed every GM saw every player, so
-   * hiding those would lose a GM their own table; with one GM per server, which is
-   * how this is run, the two readings agree.
-   */
-  managedBy(gmId: string): StoredUser[] {
-    return [...this.users.values()].filter(
-      (user) => user.role === 'player' && (user.createdBy === null || user.createdBy === gmId),
-    );
+  /** Every player account, hashes included — server code only. See `managed-players.ts`. */
+  players(): StoredUser[] {
+    return [...this.users.values()].filter((user) => user.role === 'player');
   }
 
-  isManagedBy(userId: string, gmId: string): boolean {
+  /** Records `gmId` as the creator of a legacy account. False if it already had one. */
+  claim(userId: string, gmId: string): boolean {
     const user = this.users.get(userId);
-    return user !== undefined && user.role === 'player' && (user.createdBy === null || user.createdBy === gmId);
+    if (user === undefined || user.createdBy !== null) return false;
+    user.createdBy = gmId;
+    return true;
   }
 
   findById(id: string): User | null {

@@ -272,16 +272,16 @@ describe('Mis jugadores', () => {
     expect((await call('GET', '/players', ana.token)).status).toBe(403);
   });
 
-  it("lists the GM's own players and legacy ones, never another GM's", async () => {
+  it("lists the GM's own players and the legacy ones at their tables, never another GM's", async () => {
     const otherGm = await accountFor(server, 'gm2', 'gm');
     await call('POST', '/users', gm.token, { username: 'carla', password: 'password1' });
     await call('POST', '/users', otherGm.token, { username: 'dario', password: 'password1' });
 
+    // `ana` predates `createdBy` (the fixture leaves it null) and sits at gm's table.
     const mine = z.array(ManagedPlayerSchema).parse((await call('GET', '/players', gm.token)).body);
-    // `ana` predates `createdBy` (the fixture leaves it null): every GM manages her.
     expect(mine.map((p) => p.username).sort()).toEqual(['ana', 'carla']);
     const theirs = z.array(ManagedPlayerSchema).parse((await call('GET', '/players', otherGm.token)).body);
-    expect(theirs.map((p) => p.username).sort()).toEqual(['ana', 'dario']);
+    expect(theirs.map((p) => p.username).sort()).toEqual(['dario']);
 
     // GET /users is scoped the same way.
     const users = (await call('GET', '/users', gm.token)).body as { username: string }[];
@@ -327,6 +327,57 @@ describe('Mis jugadores', () => {
     const response = await call('POST', `/campaigns/${campaignId}/invites`, gm.token, { username: 'dario' });
     expect(response.status).toBe(404);
     expect(server.campaigns.get(campaignId)?.invitedIds).toEqual([]);
+  });
+});
+
+describe('legacy players (createdBy null)', () => {
+  const reset = (token: string, id: string) =>
+    call('POST', `/users/${id}/reset-password`, token, { newPassword: 'newpass-123' });
+
+  it("another GM can neither reset nor invite a legacy player who only sits at someone else's table", async () => {
+    const otherGm = await accountFor(server, 'gm2', 'gm');
+    const theirCampaign = server.campaigns.createCampaign(otherGm.id, 'gm2', 'Suya');
+    expect((await reset(otherGm.token, ana.id)).status).toBe(404);
+    expect((await call('POST', `/campaigns/${theirCampaign.id}/invites`, otherGm.token, { username: 'ana' })).status).toBe(404);
+    expect(server.users.findStored(ana.id)?.createdBy).toBeNull();
+    expect(await server.users.verifyLogin('ana', 'newpass-123')).toBeNull();
+  });
+
+  it('the GM of their table may reset them, and that claims them', async () => {
+    await accountFor(server, 'gm2', 'gm');
+    expect((await reset(gm.token, ana.id)).status).toBe(204);
+    expect(server.users.findStored(ana.id)?.createdBy).toBe(gm.id);
+  });
+
+  it("is not claimed while they also sit at another GM's table, though their own GM may still reset", async () => {
+    const otherGm = await accountFor(server, 'gm2', 'gm');
+    const theirs = server.campaigns.createCampaign(otherGm.id, 'gm2', 'Suya');
+    server.campaigns.addMember(theirs.id, otherGm.id, ana.id);
+    expect((await reset(gm.token, ana.id)).status).toBe(204);
+    expect(server.users.findStored(ana.id)?.createdBy).toBeNull();
+  });
+
+  it('inviting claims a legacy player already at one of my tables', async () => {
+    await accountFor(server, 'gm2', 'gm');
+    const second = server.campaigns.createCampaign(gm.id, 'gm', 'Viernes');
+    expect((await call('POST', `/campaigns/${second.id}/invites`, gm.token, { username: 'ana' })).status).toBe(204);
+    expect(server.users.findStored(ana.id)?.createdBy).toBe(gm.id);
+  });
+
+  it('with several GMs, a legacy player at nobody\'s table belongs to none of them', async () => {
+    const otherGm = await accountFor(server, 'gm2', 'gm');
+    const loose = await accountFor(server, 'loose');
+    expect((await reset(gm.token, loose.id)).status).toBe(404);
+    expect((await reset(otherGm.token, loose.id)).status).toBe(404);
+    expect((await call('POST', `/campaigns/${campaignId}/invites`, gm.token, { username: 'loose' })).status).toBe(404);
+  });
+
+  it('with a single GM, a legacy player at nobody\'s table is that GM\'s, and inviting claims them', async () => {
+    const loose = await accountFor(server, 'loose');
+    const rows = z.array(ManagedPlayerSchema).parse((await call('GET', '/players', gm.token)).body);
+    expect(rows.map((p) => p.username)).toContain('loose');
+    expect((await call('POST', `/campaigns/${campaignId}/invites`, gm.token, { username: 'loose' })).status).toBe(204);
+    expect(server.users.findStored(loose.id)?.createdBy).toBe(gm.id);
   });
 });
 
