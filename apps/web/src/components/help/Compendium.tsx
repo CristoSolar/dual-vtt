@@ -2,6 +2,7 @@ import { srd, type SrdData } from '@daggerheart/srd-data';
 import { useState } from 'react';
 
 import { t, type MessageKey } from '../../i18n/index.js';
+import { domainName } from '../../state/domains.js';
 import { COLLECTIONS, isCollection, type CollectionKey } from './collections.js';
 import { EntryDetail } from './details.js';
 
@@ -29,7 +30,7 @@ function metaLine(collection: CollectionKey, entry: SrdData[CollectionKey][numbe
   if (collection === 'classes' || collection === 'ancestries' || collection === 'communities' || collection === 'domains') {
     return '';
   }
-  if ('level' in entry && 'domain' in entry) return `${t('compendium.field.level')} ${entry.level} · ${entry.domain}`;
+  if ('level' in entry && 'domain' in entry) return `${t('compendium.field.level')} ${entry.level} · ${domainName(entry.domain)}`;
   if ('tier' in entry) return `${t('compendium.field.tier')} ${entry.tier}`;
   if ('roll' in entry) return `${t('compendium.field.roll')} ${entry.roll}`;
   return '';

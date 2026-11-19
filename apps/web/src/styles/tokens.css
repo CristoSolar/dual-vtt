@@ -173,11 +173,15 @@
   --icon-box: 24px;
   --icon-hit: 36px;
 
-  /* --- domain colours, for domain cards ---------------------------------- */
+  /* --- domain colours, for domain cards ----------------------------------
+   * Fills and rules. Text in a domain's hue is mixed toward --c-text at the
+   * point of use (domainStyle in components/Domain.tsx), so the darker hues
+   * like midnight still read on the obsidian surfaces. */
   --c-domain-arcana: #8d6fd1;
   --c-domain-blade: #b8443c;
   --c-domain-bone: #b9ac96;
   --c-domain-codex: #4f7fc4;
+  --c-domain-dread: #4a8e93;
   --c-domain-grace: #c4699f;
   --c-domain-midnight: #5b5f8c;
   --c-domain-sage: #6fae7c;

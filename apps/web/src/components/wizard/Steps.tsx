@@ -11,9 +11,12 @@ import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
 import { artUrl } from '../../state/art.js';
+import { domainName, groupCardsByDomain } from '../../state/domains.js';
 import { fieldErrors } from '../../state/useCreation.js';
 import { formatSigned, label as prettify } from '../../state/selectors.js';
+import { DomainHeader } from '../Domain.js';
 import { OptionList } from '../OptionList.js';
+import { DomainCardPick } from './DomainCardPick.js';
 import { FieldErrors, TextField } from './StepFields.js';
 
 export interface StepProps {
@@ -35,7 +38,7 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
           meta: t('wizard.step1.classMeta', {
             evasion: c.startingEvasion,
             hp: c.startingHP,
-            domains: c.domains.join(` ${t('wizard.and')} `),
+            domains: c.domains.map(domainName).join(` ${t('wizard.and')} `),
           }),
           image: artUrl('classes', c.id),
         }))}
@@ -472,31 +475,35 @@ export function StepDomainCards({ state, dispatch, errors }: StepProps) {
     dispatch({ type: 'chooseDomainCards', cardIds: next });
   };
 
+  const classDomains = srd().classes.find((c) => c.id === state.classId)?.domains ?? [];
+  const groups = groupCardsByDomain(options.cards, classDomains);
+
   return (
     <>
-      <p className="muted">{t('wizard.step8.hint', { count: options.count })}</p>
-      <ul className="options">
-        {options.cards.map((card) => (
-          <li key={card.id}>
-            <button
-              type="button"
-              className="option"
-              aria-pressed={selected.includes(card.id)}
-              onClick={() => toggle(card.id)}
-            >
-              <span className="option-name">{card.name}</span>
-              <span className="option-meta">
-                {t('wizard.step8.cardMeta', {
-                  domain: prettify(card.domain),
-                  type: prettify(card.type),
-                  recall: card.recallCost,
-                })}
-              </span>
-              <p className="card-text">{card.text}</p>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="row spread mb-3">
+        <p className="muted mb-0">{t('wizard.step8.hint', { count: options.count })}</p>
+        <span
+          className={selected.length === options.count ? 'badge domain-pick-count is-done' : 'badge domain-pick-count'}
+          aria-live="polite"
+        >
+          {t('wizard.step8.picked', { picked: selected.length, count: options.count })}
+        </span>
+      </div>
+      {groups.map((group) => (
+        <section className="domain-group" key={group.domain} aria-labelledby={`domain-group-${group.domain}`}>
+          <DomainHeader domain={group.domain} id={`domain-group-${group.domain}`} />
+          <ul className="domain-pick-grid">
+            {group.cards.map((card) => (
+              <DomainCardPick
+                key={card.id}
+                card={card}
+                selected={selected.includes(card.id)}
+                onToggle={() => toggle(card.id)}
+              />
+            ))}
+          </ul>
+        </section>
+      ))}
       <FieldErrors errors={fieldErrors(errors, 'domainCardIds')} />
     </>
   );

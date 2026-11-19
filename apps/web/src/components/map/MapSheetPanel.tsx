@@ -3,6 +3,8 @@ import type { RoomEvent, Token, Visibility } from '@daggerheart/protocol';
 import { useEffect, useMemo, useState } from 'react';
 
 import { t } from '../../i18n/index.js';
+import { cardTypeLabel, domainName } from '../../state/domains.js';
+import { domainStyle } from '../Domain.js';
 import { DamageDialog } from '../sheet/DamageDialog.js';
 import { hotbarDrag } from '../sheet/Hotbar.js';
 import { RollDialog, type RollDialogSpec } from '../sheet/RollDialog.js';
@@ -325,7 +327,7 @@ export function MapSheetPanel({
                 <article
                   className="domain-mini"
                   key={card.id}
-                  style={{ ['--domain-color' as string]: `var(--c-domain-${card.domain})` }}
+                  style={domainStyle(card.domain)}
                   {...hotbarDrag({ kind: 'card', cardId: card.id })}
                 >
                   <div className="domain-mini-head">
@@ -333,7 +335,7 @@ export function MapSheetPanel({
                     <span className="domain-mini-level">{card.level}</span>
                   </div>
                   <span className="domain-mini-type">
-                    {prettify(card.domain)} · {prettify(card.type)}
+                    {domainName(card.domain)} · {cardTypeLabel(card.type)}
                   </span>
                   <p className="domain-mini-text">{card.text}</p>
                   <div className="domain-mini-cost">

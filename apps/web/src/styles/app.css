@@ -2235,6 +2235,275 @@ button.link {
   color: var(--c-brass);
 }
 
+/* --- domain icon, badge and section header ------------------------------ */
+
+/* The icon is a mask over a solid fill, so one monochrome SVG takes any domain's
+ * colour. Until the file is known to load, the disc shows the domain's initial. */
+.domain-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-pill);
+  border: var(--size-rule) solid var(--domain-color);
+  background: color-mix(in oklab, var(--domain-color) 18%, var(--c-surface-1));
+  color: var(--domain-ink);
+}
+
+.domain-icon-sm {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 0;
+  background: none;
+}
+
+.domain-icon-glyph {
+  width: 72%;
+  height: 72%;
+  background-color: var(--domain-ink);
+  -webkit-mask: var(--domain-icon) center / contain no-repeat;
+  mask: var(--domain-icon) center / contain no-repeat;
+}
+
+.domain-icon-sm .domain-icon-glyph {
+  width: 100%;
+  height: 100%;
+}
+
+.domain-icon-initial {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-base);
+  line-height: 1;
+}
+
+.domain-icon-sm .domain-icon-initial {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--domain-color);
+  color: var(--c-bg);
+  font-size: 0.7rem;
+}
+
+.domain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  color: var(--domain-ink);
+  vertical-align: middle;
+}
+
+.domain-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid var(--domain-color);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--domain-color) 22%, transparent),
+    transparent 85%
+  );
+}
+
+.domain-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.domain-header-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--domain-ink);
+}
+
+.domain-header-summary {
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
+/* --- wizard step 8: domain cards grouped by domain ---------------------- */
+
+.domain-pick-count.is-done {
+  border-color: var(--c-brass);
+  color: var(--c-brass-bright);
+}
+
+.domain-group + .domain-group {
+  margin-top: var(--sp-6);
+}
+
+.domain-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  align-items: start;
+  gap: var(--sp-3);
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+}
+
+.domain-pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-top: 3px solid var(--domain-color);
+  border-radius: var(--radius-ctl);
+  background: var(--c-surface-2);
+  transition:
+    border-color var(--motion-fast) var(--ease),
+    box-shadow var(--motion-fast) var(--ease);
+}
+
+.domain-pick:hover {
+  border-color: var(--c-line-bronze-hover);
+  border-top-color: var(--domain-color);
+}
+
+.domain-pick.is-selected {
+  border-color: var(--c-brass);
+  border-top-color: var(--domain-color);
+  background: var(--sel-bg);
+  box-shadow: var(--sel-ring), var(--sel-glow);
+}
+
+/* The face is a plain block, not a raised button: the card is the control. */
+.domain-pick-select,
+.domain-pick-select[aria-pressed='true'],
+.domain-pick-select:hover:not(:disabled),
+.domain-pick-select:active:not(:disabled) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+  text-align: left;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  color: var(--c-text);
+}
+
+.domain-pick.is-selected .domain-pick-name {
+  color: var(--c-brass-bright);
+}
+
+.domain-pick-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.domain-pick-level {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--domain-color);
+  color: var(--c-bg);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.domain-pick-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.domain-pick-check {
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.domain-pick.is-selected .domain-pick-check {
+  border-color: var(--c-brass);
+  background: var(--c-brass);
+  color: var(--c-on-brass);
+}
+
+.domain-pick-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--c-text-muted);
+}
+
+.domain-pick-type {
+  padding: 0 var(--sp-2);
+  border: var(--size-rule) solid var(--domain-color);
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  color: var(--domain-ink);
+}
+
+.domain-pick-text {
+  display: block;
+  white-space: pre-wrap;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--c-text-muted);
+}
+
+.domain-pick-text.is-clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+}
+
+.domain-pick-more,
+.domain-pick-more:hover:not(:disabled),
+.domain-pick-more:active:not(:disabled) {
+  align-self: flex-start;
+  min-height: 0;
+  margin: 0 var(--sp-4) var(--sp-3);
+  padding: var(--sp-1) 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+  color: var(--domain-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ================================================================= GM panel */
 
 /*

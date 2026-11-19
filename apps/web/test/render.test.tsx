@@ -31,6 +31,7 @@ import {
   type SheetState,
 } from '../src/state/sheet.js';
 import { emptyHotbar, setSlot } from '../src/state/hotbar.js';
+import { domainName } from '../src/state/domains.js';
 import { saveCreation } from '../src/state/storage.js';
 import { DRAFT_SCOPE } from '../src/state/library.js';
 import { buildCharacter, buildCreationState, fakeStorage } from './helpers.js';
@@ -218,9 +219,9 @@ describe('wizard renders', () => {
 
     expect(html).toContain(t('wizard.stepHeading', { step: 8, title: t('wizard.stepTitle.8') }));
     // A Sorcerer's domains are Arcana and Midnight, so only those cards are offered.
-    expect(html).toContain('Arcana');
-    expect(html).toContain('Midnight');
-    expect(html).not.toContain('Codex');
+    expect(html).toContain(domainName('arcana'));
+    expect(html).toContain(domainName('midnight'));
+    expect(html).not.toContain(domainName('codex'));
   });
 });
 

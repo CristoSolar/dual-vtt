@@ -1,15 +1,12 @@
 import type { DomainCard } from '@daggerheart/srd-data';
 import { MAX_LOADOUT } from '@daggerheart/rules';
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
-import { label as prettify } from '../../state/selectors.js';
+import { cardTypeLabel } from '../../state/domains.js';
+import { DomainBadge, domainStyle } from '../Domain.js';
 import { SectionHead } from '../SectionHead.js';
 import { hotbarDrag } from './Hotbar.js';
-
-/** Domain colours live in the token file; this maps a domain id onto its token. */
-const domainStyle = (domain: string): CSSProperties =>
-  ({ '--domain-color': `var(--c-domain-${domain})` }) as CSSProperties;
 
 interface LoadoutPanelProps {
   loadout: readonly DomainCard[];
@@ -79,7 +76,7 @@ export function LoadoutPanel({
           <div className="card-head">
             <span>
               <span className="domain-type">
-                {prettify(card.domain)} · {prettify(card.type)}
+                <DomainBadge domain={card.domain} /> · {cardTypeLabel(card.type)}
               </span>
               <br />
               <span className="domain-title">{card.name}</span>
@@ -145,7 +142,9 @@ export function LoadoutPanel({
                 : t('sheet.loadout.recallWithCost', { cost: card.recallCost })}
             </button>
           </div>
-          <span className="domain-type">{prettify(card.domain)}</span>
+          <span className="domain-type">
+            <DomainBadge domain={card.domain} />
+          </span>
         </div>
       ))}
     </div>

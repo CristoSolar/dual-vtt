@@ -350,7 +350,11 @@ export const es = {
   'wizard.step7.placeholder2': 'Lengua de Plata',
 
   'wizard.step8.hint': 'Elige {count} — una de cada uno de tus Dominios, o ambas del mismo.',
-  'wizard.step8.cardMeta': '{domain} · {type} · Recuperación {recall}',
+  'wizard.step8.picked': '{picked} de {count} elegidas',
+  'wizard.step8.level': 'Nivel {level}',
+  'wizard.step8.recall': 'Recuperación {recall}',
+  'wizard.step8.showMore': 'Ver más',
+  'wizard.step8.showLess': 'Ver menos',
 
   'wizard.step9.hint': 'Opcional — no pasa nada si no hay una conexión entre cada par de PJ.',
   'wizard.step9.withLabel': 'Con',
@@ -1346,7 +1350,7 @@ export const es = {
   'compendium.environmentType.traversal': 'Travesía',
 
   'compendium.cardType.ability': 'Habilidad',
-  'compendium.cardType.spell': 'Conjuro',
+  'compendium.cardType.spell': 'Hechizo',
   'compendium.cardType.grimoire': 'Grimorio',
 
   'compendium.weaponCategory.primary': 'Primaria',

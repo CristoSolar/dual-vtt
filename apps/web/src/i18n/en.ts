@@ -335,7 +335,11 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.step7.placeholder2': 'Silver Tongue',
 
   'wizard.step8.hint': 'Choose {count} — one from each of your Domains, or both from the same one.',
-  'wizard.step8.cardMeta': '{domain} · {type} · Recall {recall}',
+  'wizard.step8.picked': '{picked} of {count} chosen',
+  'wizard.step8.level': 'Level {level}',
+  'wizard.step8.recall': 'Recall {recall}',
+  'wizard.step8.showMore': 'Show more',
+  'wizard.step8.showLess': 'Show less',
 
   'wizard.step9.hint': "Optional — it's okay if there isn't a connection between every pair of PCs.",
   'wizard.step9.withLabel': 'With',
