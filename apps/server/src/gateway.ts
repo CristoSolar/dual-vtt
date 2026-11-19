@@ -53,10 +53,32 @@ function joinChannels(socket: Socket, campaignId: string, actor: Actor): void {
   void socket.join(userChannelFor(campaignId, actor.id));
 }
 
+/** Drops a socket's seat and every channel it had joined for that campaign. */
+function unseat(
+  socket: Socket,
+  campaigns: CampaignStore,
+  seat: { campaignId: string; role: 'gm' | 'player' },
+  account: string,
+  error: string,
+  message: string,
+): void {
+  seatOf.delete(socket);
+  // The table stops showing them as present; nothing else will, since their
+  // eventual disconnect finds no seat.
+  const patch = campaigns.setConnected(seat.campaignId, account, false);
+  if (patch !== null) socket.to(channelFor(seat.campaignId)).emit(CHANNEL.roomPatch, patch);
+  void socket.leave(channelFor(seat.campaignId));
+  void socket.leave(gmChannelFor(seat.campaignId));
+  void socket.leave(playerChannelFor(seat.campaignId));
+  void socket.leave(userChannelFor(seat.campaignId, account));
+  reject(socket, error, message);
+}
+
 /**
  * Membership is re-checked on every seated message, not just at join: the GM can
  * remove a player while their socket is still open, and until they disconnect that
- * socket would otherwise keep sending intents and receiving broadcasts. On failure
+ * socket would otherwise keep sending intents and receiving broadcasts. The same
+ * goes for a campaign the GM paused or finished: it seats only the GM. On failure
  * the seat is dropped and the socket leaves every channel for that campaign.
  */
 function stillMember(
@@ -65,14 +87,29 @@ function stillMember(
   seat: { campaignId: string; role: 'gm' | 'player' },
   account: string,
 ): boolean {
-  if (campaigns.roleOf(seat.campaignId, account) !== null) return true;
-  seatOf.delete(socket);
-  void socket.leave(channelFor(seat.campaignId));
-  void socket.leave(gmChannelFor(seat.campaignId));
-  void socket.leave(playerChannelFor(seat.campaignId));
-  void socket.leave(userChannelFor(seat.campaignId, account));
-  reject(socket, 'forbidden', 'no longer a member of that campaign');
+  const entry = campaigns.mayEnter(seat.campaignId, account);
+  if (entry === 'gm' || entry === 'player') return true;
+  if (entry === 'notActive') {
+    unseat(socket, campaigns, seat, account, 'campaignNotActive', 'that campaign is not active');
+  } else {
+    unseat(socket, campaigns, seat, account, 'forbidden', 'no longer a member of that campaign');
+  }
   return false;
+}
+
+/**
+ * Cuts every seated player socket out of a campaign at once — called when the GM
+ * pauses or finishes it, so nobody keeps receiving the table until their next
+ * message trips the per-message check. The GM's own sockets stay seated.
+ */
+export function unseatPlayers(io: Server, campaigns: CampaignStore, campaignId: string): void {
+  for (const socket of io.sockets.sockets.values()) {
+    const seat = seatOf.get(socket);
+    const account = accountOf.get(socket);
+    if (seat === undefined || account === undefined) continue;
+    if (seat.campaignId !== campaignId || seat.role !== 'player') continue;
+    unseat(socket, campaigns, seat, account, 'campaignNotActive', 'that campaign is not active');
+  }
 }
 
 /** Sends a room change to a campaign's GM and player channels, each its own view. */
@@ -119,6 +156,9 @@ export function registerGateway(
       const account = accountOf.get(socket);
       if (account === undefined) return; // unreachable: connection already required auth
 
+      if (campaigns.mayEnter(parsed.data.campaignId, account) === 'notActive') {
+        return reject(socket, 'campaignNotActive', 'that campaign is not active');
+      }
       const user = users.findById(account);
       const seat = campaigns.seatFor(parsed.data.campaignId, account, user?.username ?? 'Jugador');
       if (seat === null) return reject(socket, 'forbidden', 'not a member of that campaign');

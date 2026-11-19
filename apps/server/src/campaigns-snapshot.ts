@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-import { RoomStateSchema } from '@daggerheart/protocol';
+import { CampaignStatusSchema, RoomStateSchema } from '@daggerheart/protocol';
 import { z } from 'zod';
 
 import { writeFileAtomic } from './atomic-write.js';
@@ -14,6 +14,8 @@ const SerializedCampaignSchema = z.object({
   memberIds: z.array(z.string().min(1)),
   /** Absent from snapshots written before invitations existed. */
   invitedIds: z.array(z.string().min(1)).default([]),
+  /** Absent from snapshots written before campaigns had a status. */
+  status: CampaignStatusSchema.default('active'),
   /** Absent from older snapshots; `CampaignStore.restore` derives it from the room. */
   partyIds: z.array(z.string().min(1)).optional(),
   state: RoomStateSchema,

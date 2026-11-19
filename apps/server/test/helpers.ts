@@ -14,9 +14,12 @@ import { srd, type ClassId } from '@daggerheart/srd-data';
 import { Server } from 'socket.io';
 import { io as connect, type Socket } from 'socket.io-client';
 
+import { handleAuth } from '../src/auth-http.js';
 import { CampaignStore } from '../src/campaigns.js';
+import { handleCampaigns } from '../src/campaigns-http.js';
 import { CharacterStore } from '../src/characters.js';
-import { broadcastPatches, registerGateway } from '../src/gateway.js';
+import { broadcastPatches, registerGateway, unseatPlayers } from '../src/gateway.js';
+import { handlePlayers } from '../src/players-http.js';
 import { linkCharacter } from '../src/library.js';
 import { SessionStore } from '../src/sessions.js';
 import { UserStore } from '../src/users.js';
@@ -89,7 +92,27 @@ export interface TestServer {
 }
 
 export async function startTestServer(seed = 1234): Promise<TestServer> {
-  const http: HttpServer = createServer();
+  // The same HTTP routes `main.ts` serves, wired to the same live sockets, so a
+  // test can change a campaign over HTTP and watch the table hear it.
+  const http: HttpServer = createServer((request, response) => {
+    const deps = {
+      campaigns,
+      characters,
+      users,
+      sessions,
+      persist: () => {},
+      broadcast: (campaignId: string, outcome: { patch: RoomPatch; playerPatch: RoomPatch }) =>
+        broadcastPatches(io, campaignId, outcome),
+      unseatPlayers: (campaignId: string) => unseatPlayers(io, campaigns, campaignId),
+    };
+    void (async () => {
+      for (const route of [handleAuth, handleCampaigns, handlePlayers] as const) {
+        if (await route(request, response, deps)) return;
+      }
+      response.writeHead(404);
+      response.end();
+    })();
+  });
   const io = new Server(http, { cors: { origin: '*' } });
 
   const campaigns = new CampaignStore();

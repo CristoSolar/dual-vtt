@@ -8,6 +8,7 @@ import {
   roomForRole,
   roomPatch,
   type Actor,
+  type CampaignStatus,
   type GameMaster,
   type PrivateEntry,
   type RoomEvent,
@@ -33,6 +34,8 @@ export interface CampaignRecord {
   ownerId: string;
   memberIds: string[];
   invitedIds: string[];
+  /** Players may sit only at an active campaign; the GM may always. */
+  status: CampaignStatus;
   /**
    * Every account that has ever had a character in this room. Joining it is what
    * brings the GM a Fear; swapping characters later does not.
@@ -125,6 +128,35 @@ export class CampaignStore {
     return null;
   }
 
+  /**
+   * Whether this account may sit at the table now: its role, or why not. A paused
+   * or finished campaign seats only its GM, who may still prepare or review it.
+   */
+  mayEnter(campaignId: string, accountId: string): 'gm' | 'player' | 'notMember' | 'notActive' {
+    const role = this.roleOf(campaignId, accountId);
+    if (role === null) return 'notMember';
+    if (role === 'player' && this.campaigns.get(campaignId)?.status !== 'active') return 'notActive';
+    return role;
+  }
+
+  /** Only the owner changes a campaign's status. False if not the owner or unknown. */
+  setStatus(campaignId: string, requesterId: string, status: CampaignStatus): boolean {
+    const campaign = this.campaigns.get(campaignId);
+    if (campaign === undefined || campaign.ownerId !== requesterId) return false;
+    campaign.status = status;
+    campaign.updatedAt = this.now();
+    return true;
+  }
+
+  /** Only the owner renames a campaign. False if not the owner or unknown. */
+  rename(campaignId: string, requesterId: string, name: string): boolean {
+    const campaign = this.campaigns.get(campaignId);
+    if (campaign === undefined || campaign.ownerId !== requesterId) return false;
+    campaign.name = name;
+    campaign.updatedAt = this.now();
+    return true;
+  }
+
   createCampaign(ownerId: string, ownerUsername: string, name: string, seed = randomInt(2 ** 31)): CampaignRecord {
     const id = `c-${randomBytes(8).toString('hex')}`;
     const gm: GameMaster = { id: ownerId, name: ownerUsername, connected: false };
@@ -134,6 +166,7 @@ export class CampaignStore {
       ownerId,
       memberIds: [],
       invitedIds: [],
+      status: 'active',
       partyIds: [],
       state: createRoomState(id, gm),
       seed,
@@ -214,13 +247,14 @@ export class CampaignStore {
 
   /**
    * Seats an account live in its campaign's room, adding it to the roster the first
-   * time it is seen. Returns its role, or null if it is not a member.
+   * time it is seen. Returns its role, or null if it may not sit (not a member, or a
+   * player at a campaign that is not active).
    */
   seatFor(campaignId: string, accountId: string, username: string): { role: 'gm' | 'player' } | null {
     const campaign = this.campaigns.get(campaignId);
     if (campaign === null || campaign === undefined) return null;
-    const role = this.roleOf(campaignId, accountId);
-    if (role === null) return null;
+    const role = this.mayEnter(campaignId, accountId);
+    if (role !== 'gm' && role !== 'player') return null;
 
     if (role === 'gm') {
       campaign.state = { ...campaign.state, gm: { ...campaign.state.gm, connected: true } };
@@ -335,6 +369,7 @@ export class CampaignStore {
         ownerId: record.ownerId,
         memberIds: [...record.memberIds],
         invitedIds: [...record.invitedIds],
+        status: record.status ?? 'active',
         // Snapshots from before this field: whoever holds a character has joined.
         partyIds: [...(record.partyIds ?? Object.keys(record.state.characters))],
         state: record.state,
@@ -352,6 +387,7 @@ export class CampaignStore {
       ownerId: c.ownerId,
       memberIds: c.memberIds,
       invitedIds: c.invitedIds,
+      status: c.status,
       partyIds: c.partyIds,
       state: c.state,
       seed: c.seed,
@@ -367,6 +403,8 @@ export interface SerializedCampaign {
   ownerId: string;
   memberIds: string[];
   invitedIds: string[];
+  /** Absent from snapshots written before it existed; `restore` makes it active. */
+  status?: CampaignStatus | undefined;
   /** Absent from snapshots written before it existed; `restore` derives it. */
   partyIds?: string[] | undefined;
   state: RoomState;

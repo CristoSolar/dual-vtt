@@ -24,6 +24,7 @@ async function startCampaignsServer() {
       sessions,
       persist: () => {},
       broadcast: () => {},
+      unseatPlayers: () => {},
     }).then(
       (handled) => {
         if (!handled) {

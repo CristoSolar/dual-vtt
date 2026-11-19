@@ -31,6 +31,7 @@ async function startServer() {
     broadcast: (campaignId: string, outcome: Patches) => {
       broadcasts.push({ campaignId, outcome });
     },
+    unseatPlayers: () => {},
   };
   const http: HttpServer = createServer((request, response) => {
     void (async () => {

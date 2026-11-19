@@ -1,8 +1,11 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import {
+  CampaignPrepEventSchema,
   CreateCampaignRequestSchema,
   InvitePlayerRequestSchema,
+  UpdateCampaignRequestSchema,
+  type CampaignDetail,
   type CampaignList,
   type CampaignSummary,
   type User,
@@ -30,6 +33,34 @@ function toSummary(campaign: CampaignRecord, ownerUsername: string, viewerId: st
     ownerUsername,
     memberIds: isMember ? campaign.memberIds : [],
     invitedIds: isOwner ? campaign.invitedIds : [],
+    status: campaign.status,
+  };
+}
+
+/**
+ * The GM's campaign page: members with the character each plays here, invitees by
+ * name, and the three GM slices the page edits. Not a room — nothing else of the
+ * state is sent, and none of this goes to anyone but the owner.
+ */
+function toDetail(campaign: CampaignRecord, summary: CampaignSummary, users: UserStore): CampaignDetail {
+  const usernameOf = (id: string): string => users.findById(id)?.username ?? id;
+  return {
+    campaign: summary,
+    members: campaign.memberIds.map((id) => {
+      const sheet = campaign.state.characters[id];
+      return {
+        id,
+        username: usernameOf(id),
+        character:
+          sheet === undefined
+            ? null
+            : { name: sheet.character.name, classId: sheet.character.classId, level: sheet.character.level },
+      };
+    }),
+    invited: campaign.invitedIds.map((id) => ({ id, username: usernameOf(id) })),
+    story: campaign.state.story,
+    prepAdversaries: campaign.state.prepAdversaries,
+    journal: campaign.state.journal,
   };
 }
 
@@ -43,6 +74,8 @@ export interface CampaignsDeps {
   persist: () => void;
   /** Sends a room change to the campaign's live sockets. */
   broadcast: (campaignId: string, outcome: Patches) => void;
+  /** Cuts the campaign's seated players off, when it stops being active. */
+  unseatPlayers: (campaignId: string) => void;
 }
 
 /**
@@ -52,7 +85,7 @@ export interface CampaignsDeps {
 export async function handleCampaigns(
   request: IncomingMessage,
   response: ServerResponse,
-  { campaigns, characters, users, sessions, persist, broadcast }: CampaignsDeps,
+  { campaigns, characters, users, sessions, persist, broadcast, unseatPlayers }: CampaignsDeps,
 ): Promise<boolean> {
   const url = request.url ?? '';
   const method = request.method ?? 'GET';
@@ -89,6 +122,68 @@ export async function handleCampaigns(
     return true;
   }
 
+  // --- the GM's campaign page ------------------------------------------------
+  const campaignMatch = /^\/campaigns\/([^/]+)$/.exec(url);
+  const prepMatch = /^\/campaigns\/([^/]+)\/prep$/.exec(url);
+  const ownedCampaign = (campaignId: string): CampaignRecord | null =>
+    campaigns.roleOf(campaignId, actor.id) === 'gm' ? campaigns.get(campaignId) : null;
+
+  if (method === 'GET' && campaignMatch !== null) {
+    const campaign = ownedCampaign(campaignMatch[1] ?? '');
+    if (campaign === null) {
+      json(response, 403, { error: 'forbidden' });
+      return true;
+    }
+    json(response, 200, toDetail(campaign, summaryFor(campaign), users));
+    return true;
+  }
+
+  if (method === 'PATCH' && campaignMatch !== null) {
+    const campaign = ownedCampaign(campaignMatch[1] ?? '');
+    if (campaign === null) {
+      json(response, 403, { error: 'forbidden' });
+      return true;
+    }
+    const parsed = UpdateCampaignRequestSchema.safeParse(await readJsonBody(request));
+    if (!parsed.success) {
+      json(response, 400, { error: 'badRequest' });
+      return true;
+    }
+    if (parsed.data.name !== undefined) campaigns.rename(campaign.id, actor.id, parsed.data.name);
+    if (parsed.data.status !== undefined) {
+      campaigns.setStatus(campaign.id, actor.id, parsed.data.status);
+      // Paused or finished: the players at the table leave it now, not at their
+      // next message. Their seats' connected flags change, so the GM hears it.
+      if (parsed.data.status !== 'active') unseatPlayers(campaign.id);
+    }
+    persist();
+    json(response, 200, summaryFor(campaign));
+    return true;
+  }
+
+  if (method === 'POST' && prepMatch !== null) {
+    const campaign = ownedCampaign(prepMatch[1] ?? '');
+    if (campaign === null) {
+      json(response, 403, { error: 'forbidden' });
+      return true;
+    }
+    const parsed = CampaignPrepEventSchema.safeParse(await readJsonBody(request));
+    if (!parsed.success) {
+      json(response, 400, { error: 'badRequest' });
+      return true;
+    }
+    // The same choke point as a socket intent, with the actor from the token.
+    const outcome = campaigns.apply(campaign.id, { id: actor.id, role: 'gm' }, parsed.data);
+    if (!outcome.ok) {
+      json(response, 409, { error: outcome.error ?? 'rejected' });
+      return true;
+    }
+    broadcast(campaign.id, outcome);
+    persist();
+    json(response, 200, toDetail(campaign, summaryFor(campaign), users));
+    return true;
+  }
+
   const inviteMatch = /^\/campaigns\/([^/]+)\/invites$/.exec(url);
   if (method === 'POST' && inviteMatch !== null) {
     const parsed = InvitePlayerRequestSchema.safeParse(await readJsonBody(request));
@@ -103,7 +198,8 @@ export async function handleCampaigns(
       return true;
     }
     const target = users.findByUsername(parsed.data.username);
-    if (target === null) {
+    // A player another GM manages answers exactly like a missing one.
+    if (target === null || !users.isManagedBy(target.id, actor.id)) {
       json(response, 404, { error: 'unknownUsername' });
       return true;
     }

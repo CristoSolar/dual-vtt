@@ -9,8 +9,9 @@ import { readCampaignsSnapshot, writeCampaignsSnapshot } from './campaigns-snaps
 import { CharacterStore } from './characters.js';
 import { handleCharacters } from './characters-http.js';
 import { readCharactersSnapshot, writeCharactersSnapshot } from './characters-snapshot.js';
-import { broadcastPatches, registerGateway } from './gateway.js';
+import { broadcastPatches, registerGateway, unseatPlayers } from './gateway.js';
 import { adoptRoomCharacters, serializeLibrary, type Patches } from './library.js';
+import { handlePlayers } from './players-http.js';
 import { SessionStore } from './sessions.js';
 import { handleStatic } from './static.js';
 import { handleTunnel } from './tunnel-http.js';
@@ -99,13 +100,22 @@ async function main(): Promise<void> {
   // The HTTP routes are built before the socket server exists; this is only called
   // once a request arrives, by which point `io` is set.
   const broadcast = (campaignId: string, outcome: Patches): void => broadcastPatches(io, campaignId, outcome);
-  const tableDeps = { campaigns, characters, users, sessions, persist: persistTable, broadcast };
+  const tableDeps = {
+    campaigns,
+    characters,
+    users,
+    sessions,
+    persist: persistTable,
+    broadcast,
+    unseatPlayers: (campaignId: string): void => unseatPlayers(io, campaigns, campaignId),
+  };
 
   type Route = (request: IncomingMessage, response: ServerResponse) => Promise<boolean>;
   const routes: readonly Route[] = [
     (request, response) => handleAuth(request, response, { users, sessions, persist: persistUsers }),
     (request, response) => handleCampaigns(request, response, tableDeps),
     (request, response) => handleCharacters(request, response, tableDeps),
+    (request, response) => handlePlayers(request, response, { campaigns, users, sessions }),
     (request, response) => handleTunnel(request, response, { tunnel, users, sessions }),
     (request, response) => handleUploads(request, response, { directory: UPLOAD_DIR, users, sessions }),
     (request, response) => handleStatic(request, response, WEB_DIST_DIR),
@@ -120,7 +130,7 @@ async function main(): Promise<void> {
     if (origin !== undefined && ALLOWED_ORIGINS.includes(origin)) {
       response.setHeader('access-control-allow-origin', origin);
       response.setHeader('access-control-allow-headers', 'content-type, authorization');
-      response.setHeader('access-control-allow-methods', 'GET,POST,DELETE,OPTIONS');
+      response.setHeader('access-control-allow-methods', 'GET,POST,PATCH,DELETE,OPTIONS');
     }
     if (request.method === 'OPTIONS') {
       response.writeHead(204);

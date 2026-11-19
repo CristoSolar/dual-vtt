@@ -68,6 +68,19 @@ describe('campaigns snapshot', () => {
     expect(restored.map((c) => [c.id, c.invitedIds])).toEqual([['old', []]]);
   });
 
+  it('reads a campaign saved before status existed as active, and one before prep as empty', async () => {
+    dir = await mkdtemp(join(tmpdir(), 'daggerheart-test-'));
+    const path = join(dir, 'campaigns.json');
+    const { status: _status, ...old } = good('old');
+    const { story: _story, prepAdversaries: _prep, ...oldState } = old.state;
+    await writeFile(path, JSON.stringify({ version: 1, campaigns: [{ ...old, state: oldState }] }), 'utf8');
+
+    const [restored] = await readCampaignsSnapshot(path);
+    expect(restored?.status).toBe('active');
+    expect(restored?.state.story).toEqual({ pitch: '', body: '' });
+    expect(restored?.state.prepAdversaries).toEqual([]);
+  });
+
   it('returns nothing when the file does not exist', async () => {
     expect(await readCampaignsSnapshot('/nonexistent/campaigns.json')).toEqual([]);
   });

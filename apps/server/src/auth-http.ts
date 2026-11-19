@@ -12,7 +12,7 @@ import { actorFor, bearerToken } from './http-auth.js';
 import { RateLimiter } from './rate-limit.js';
 import type { SessionStore } from './sessions.js';
 import { readBody } from './uploads.js';
-import type { UserStore } from './users.js';
+import { toPublic, type UserStore } from './users.js';
 
 const MAX_AUTH_BODY_BYTES = 64 * 1024;
 
@@ -82,6 +82,8 @@ export async function handleAuth(
       return true;
     }
     loginLimiter.succeed(key);
+    // `verifyLogin` stamped `lastLoginAt`; written now so a restart keeps it.
+    persist();
     const token = sessions.create(user.id);
     json(response, 200, { token, user });
     return true;
@@ -139,7 +141,8 @@ export async function handleAuth(
       json(response, 403, { error: 'forbidden' });
       return true;
     }
-    json(response, 200, users.list('player'));
+    // Only the players this GM manages — never another GM's.
+    json(response, 200, users.managedBy(actor.id).map(toPublic));
     return true;
   }
 
@@ -162,7 +165,7 @@ export async function handleAuth(
       json(response, 409, { error: 'usernameTaken' });
       return true;
     }
-    const created = await users.createUser(parsed.data.username, parsed.data.password, 'player');
+    const created = await users.createUser(parsed.data.username, parsed.data.password, 'player', actor.id);
     if (created === null) {
       json(response, 409, { error: 'usernameTaken' });
       return true;
@@ -189,7 +192,8 @@ export async function handleAuth(
       return true;
     }
     const targetId = resetMatch[1] ?? '';
-    const ok = await users.setPassword(targetId, parsed.data.newPassword, true);
+    // Another GM's player, or a GM, answers exactly like a missing account.
+    const ok = users.isManagedBy(targetId, actor.id) && (await users.setPassword(targetId, parsed.data.newPassword, true));
     if (!ok) {
       json(response, 404, { error: 'notFound' });
       return true;

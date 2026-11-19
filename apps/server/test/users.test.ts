@@ -100,6 +100,21 @@ describe('users snapshot file', () => {
     expect(await fresh.verifyLogin('alex', 'initial-pw')).not.toBeNull();
   });
 
+  it('reads an account saved before createdBy and lastLoginAt existed as legacy, never signed in', async () => {
+    const path = join(directory, 'old-users.json');
+    const { writeFile } = await import('node:fs/promises');
+    await writeFile(
+      path,
+      JSON.stringify({
+        version: 1,
+        users: [{ id: 'u-1', username: 'old', role: 'player', mustChangePassword: false, passwordHash: 'x:y' }],
+      }),
+      'utf8',
+    );
+    const [user] = await readUsersSnapshot(path);
+    expect(user).toMatchObject({ id: 'u-1', createdBy: null, lastLoginAt: null });
+  });
+
   it('returns an empty array when the file does not exist', async () => {
     expect(await readUsersSnapshot(join(directory, 'missing.json'))).toEqual([]);
   });

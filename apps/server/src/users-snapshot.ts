@@ -13,6 +13,9 @@ const StoredUserSchema = z.object({
   role: UserRoleSchema,
   mustChangePassword: z.boolean(),
   passwordHash: z.string().min(1),
+  /** Absent from snapshots written before it existed: a legacy account. */
+  createdBy: z.string().min(1).nullable().default(null),
+  lastLoginAt: z.number().nullable().default(null),
 });
 
 const SnapshotEnvelopeSchema = z.object({
