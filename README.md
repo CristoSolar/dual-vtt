@@ -59,10 +59,12 @@ pnpm dev
 
 Open http://localhost:5173 and sign in as `gm` / `gm` (set `GM_USERNAME` /
 `GM_PASSWORD` to change the first account; you are asked to change the password on
-first login anyway). Create a campaign, then create player accounts from
-**Players** and invite them to the campaign. A player signs in to two choices: **My
-characters** (create as many as they like, link one to a campaign) and **My
-campaigns** (accept invitations, enter a table). Everything is saved under `.data/` next to
+first login anyway). The GM lands on two choices: **My campaigns** (active, paused
+and finished, each with a page for its story, notes, the monsters you plan to use,
+and its players) and **My players** (create accounts, invite them, reset passwords).
+A paused or finished campaign lets only the GM sit down. A player signs in to two
+choices: **My characters** (create as many as they like, link one to a campaign) and
+**My campaigns** (accept invitations, enter a table). Everything is saved under `.data/` next to
 the server — back that folder up if you care about the campaign.
 
 To play with people who are not on your network:
@@ -71,7 +73,7 @@ To play with people who are not on your network:
 pnpm -F @daggerheart/server host   # builds the web app and serves it from :4000
 ```
 
-Then, from a campaign card, click **Generate link for players**. The server opens a Cloudflare
+Then, at the bottom of **My campaigns**, click **Generate link for players**. The server opens a Cloudflare
 quick tunnel and shows a public URL your players can open. The tunnel lives only
 while the server runs. Anyone with the URL reaches the login screen, so use real
 passwords.

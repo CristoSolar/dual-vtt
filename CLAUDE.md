@@ -59,9 +59,15 @@ srd-data  →  rules  →  character  →  protocol  →  server
   included; the server calls it, and the client calls the same sheet reducers
   underneath for its optimistic echo. New room behaviour goes here, not in the server.
   `auth.ts`, `campaign.ts` and `library.ts` hold the HTTP request/response schemas for
-  accounts, campaign membership/invitations and the character library — no
+  accounts (incl. `ManagedPlayer`, a "Mis jugadores" row), campaign
+  membership/invitations/status (`CampaignStatus`: `active | paused | finished`,
+  `UpdateCampaignRequest`, `CampaignDetail`) and the character library — no
   `RoomState` travels over HTTP, only over the socket (a library entry carries a
-  `SheetState`, never a room).
+  `SheetState`, never a room; `CampaignDetail` carries three GM slices — `story`,
+  `prepAdversaries`, `journal` — never the room). `CampaignPrepEventSchema` is the
+  subset of `RoomEvent` the GM's campaign page may send over HTTP (story, prep list,
+  journal); it still goes through `applyRoomEvent`. `story` (`prep.ts`) and
+  `prepAdversaries` are GM-only room slices, emptied by `roomForRole`.
   `claimCharacterInRoom` / `releaseCharacterInRoom` are how a sheet enters and leaves a
   room; linking from the library goes through them. Fear-on-new-PC is decided by the
   server (`CampaignRecord.partyIds`: once per account per campaign, so swapping
@@ -72,17 +78,27 @@ srd-data  →  rules  →  character  →  protocol  →  server
     `tunnel-http.ts`, `static.ts`): login issues a token (`sessions.ts`, in-memory —
     restart signs everyone out, by design); GM creates player accounts and campaigns
     and invites players (`invitedIds`); a player accepts or declines, which is the only
-    way to become a member. `/characters` is each account's own library (owner-only;
+    way to become a member. A GM manages the players it created (`createdBy`) plus
+    legacy ones with `createdBy: null`; `GET /users`, `GET /players`
+    (`players-http.ts`), reset-password and invites see only those — another GM's
+    player answers 404 like a missing one. The GM's campaign page uses
+    `GET /campaigns/:id` (detail), `PATCH /campaigns/:id` (name/status) and
+    `POST /campaigns/:id/prep` (one prep intent, broadcast to live sockets). All are
+    owner-only (403 otherwise, unknown id included). `/characters` is each account's own library (owner-only;
     someone else's id answers 404). HTTP routes that change a room get a `broadcast`
     callback (the gateway's `broadcastPatches`) so live sockets see the change.
   - Socket (`gateway.ts`): authenticates once at connect with that same token, then
     `joinCampaign` seats the socket after a membership check. The web client names its
     campaign in the handshake `auth` instead, so a reconnect is seated before socket.io
     flushes messages buffered while offline (otherwise they bounce with `noSeat`). Membership is re-checked
-    on every message, so a removed player is cut off mid-session.
+    on every message, so a removed player is cut off mid-session. Status too
+    (`CampaignStore.mayEnter`): a paused or finished campaign seats only its GM;
+    players get `campaignNotActive` at join and on their next message, and pausing
+    over HTTP calls `unseatPlayers` so they are cut off at once.
   - `campaigns.ts` owns the in-memory store, ownership (`ownerId` is GM, `memberIds`
-    are players, `invitedIds` are pending invitations), and the per-campaign dice seed.
-    `users.ts` holds accounts with password hashes that never leave the server.
+    are players, `invitedIds` are pending invitations, `status`), and the per-campaign
+    dice seed. `users.ts` holds accounts with password hashes that never leave the
+    server, plus `createdBy` and `lastLoginAt` (both null in old snapshots).
     `characters.ts` holds every account's character library. None contains game logic.
   - `library.ts` keeps library and rooms in agreement: a character is linked to at
     most one campaign, a player has at most one character per campaign (the room
@@ -100,7 +116,10 @@ srd-data  →  rules  →  character  →  protocol  →  server
   server never sees app paths. UI text goes through `t()` from `apps/web/src/i18n`;
   `es.ts` is the source of keys and `en.ts` is typed against it. A player account lands
   on two doors, **Mis personajes** (`/characters`) and **Mis campañas** (`/campaigns`);
-  a GM account lands on the campaigns list. The wizard (`/create/:step`) needs no
+  a GM account lands on **Mis campañas** (`/campaigns`, tabs by status) and **Mis
+  jugadores** (`/players`); `/campaigns/:id` is the GM's campaign page (Historia,
+  Notas = the room journal, Monstruos = the prep list, Jugadores). The GM panel shows
+  the prep list with "Añadir al encuentro" (`addAdversary`, via `encounterEvents`). The wizard (`/create/:step`) needs no
   campaign: its draft stays in `localStorage` (scope `library`) and finishing saves to
   the server library. `state/library.ts` also finds characters and drafts the old flow
   left in `localStorage` and offers a one-time import; imported keys are moved aside
@@ -119,7 +138,9 @@ srd-data  →  rules  →  character  →  protocol  →  server
   `roomPatch` twice — once raw for `campaign:<id>:gm`, once through `roomForRole(…,
   'player')` for `campaign:<id>:players`. `roomForRole` / `mapForPlayer` strip inactive
   scenes, GM-only tokens, and unrevealed fog *before* the send — a player's browser
-  never receives them. Any new GM-only state must be filtered there too.
+  never receives them. Any new GM-only state must be filtered there too (as `tables`,
+  `story` and `prepAdversaries` are — with a shared frozen empty value, so the player
+  view stays reference-stable and an unrelated change is not a player patch).
 - **Intents, not results.** A client sends `takeDamage { incoming }`; the server
   computes HP. Adding an event that carries a computed outcome breaks the model.
 - **Rolls are server-side** from the campaign's seed plus `rollCount`
