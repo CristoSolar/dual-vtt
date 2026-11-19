@@ -5,12 +5,14 @@ import { describe, expect, it } from 'vitest';
 import {
   campaignsByStatus,
   canEnter,
+  createLatestGate,
   encounterEvents,
   filterAdversaries,
   invitableCampaigns,
   invitablePlayers,
   parseCampaignDetail,
   parseManagedPlayers,
+  parseQuantityDraft,
 } from '../src/state/gmHome.js';
 
 const GM = 'u-gm';
@@ -136,5 +138,30 @@ describe('encounterEvents', () => {
     const events = encounterEvents(inPlay, 'acid-burrower', 'Acid Burrower', 2, nextId);
     expect(events.map((e) => e.name)).toEqual(['Acid Burrower B', 'Acid Burrower C']);
     expect(new Set(events.map((e) => e.instanceId)).size).toBe(2);
+  });
+});
+
+describe('parseQuantityDraft', () => {
+  it('reads a whole number, clamped to 1..20', () => {
+    expect(parseQuantityDraft('15')).toBe(15);
+    expect(parseQuantityDraft(' 7 ')).toBe(7);
+    expect(parseQuantityDraft('35')).toBe(20);
+    expect(parseQuantityDraft('0')).toBe(1);
+  });
+
+  it('has nothing to commit for an empty or unreadable draft', () => {
+    expect(parseQuantityDraft('')).toBeNull();
+    expect(parseQuantityDraft('abc')).toBeNull();
+    expect(parseQuantityDraft('2.5')).toBeNull();
+  });
+});
+
+describe('createLatestGate', () => {
+  it('only the most recent ticket is current, so an older response is dropped', () => {
+    const gate = createLatestGate();
+    const first = gate.begin();
+    const second = gate.begin();
+    expect(gate.isLatest(first)).toBe(false);
+    expect(gate.isLatest(second)).toBe(true);
   });
 });

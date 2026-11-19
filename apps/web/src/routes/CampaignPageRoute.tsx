@@ -8,7 +8,7 @@ import {
   type UpdateCampaignRequest,
 } from '@daggerheart/protocol';
 import { srd, type Adversary } from '@daggerheart/srd-data';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
@@ -16,10 +16,12 @@ import { JournalPanel } from '../components/journal/JournalPanel.js';
 import { t } from '../i18n/index.js';
 import {
   CAMPAIGN_STATUSES,
+  createLatestGate,
   filterAdversaries,
   invitablePlayers,
   parseCampaignDetail,
   parseManagedPlayers,
+  parseQuantityDraft,
 } from '../state/gmHome.js';
 import { label as prettify } from '../state/selectors.js';
 import { SERVER_URL } from '../state/useCampaign.js';
@@ -59,14 +61,19 @@ export function CampaignPageRoute({
   const [players, setPlayers] = useState<readonly ManagedPlayer[]>([]);
   const [tab, setTab] = useState<CampaignPageTab>('story');
   const headers = useMemo(() => ({ authorization: `Bearer ${token}` }), [token]);
+  // Every response here replaces the whole detail, so only the newest may land:
+  // a slow older one would otherwise put stale data back over a newer one.
+  const gate = useRef(createLatestGate()).current;
 
   const reload = useCallback(async (): Promise<void> => {
+    const ticket = gate.begin();
     const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}`, { headers }).catch(() => null);
     if (response?.status === 401) return onSessionExpired();
     const parsed = response?.ok === true ? parseCampaignDetail(await response.json()) : null;
+    if (!gate.isLatest(ticket)) return;
     setFailed(parsed === null);
     if (parsed !== null) setDetail(parsed);
-  }, [campaignId, headers, onSessionExpired]);
+  }, [campaignId, headers, onSessionExpired, gate]);
 
   useEffect(() => {
     void reload();
@@ -76,8 +83,16 @@ export function CampaignPageRoute({
       .catch(() => undefined);
   }, [reload, headers]);
 
+  // The GM may have changed the prep at the table, in another tab, meanwhile.
+  useEffect(() => {
+    const onFocus = (): void => void reload();
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [reload]);
+
   const sendPrep = useCallback(
     async (event: CampaignPrepEvent): Promise<boolean> => {
+      const ticket = gate.begin();
       const response = await fetch(`${SERVER_URL}/campaigns/${campaignId}/prep`, {
         method: 'POST',
         headers: { ...headers, 'content-type': 'application/json' },
@@ -85,10 +100,10 @@ export function CampaignPageRoute({
       }).catch(() => null);
       if (response?.status === 401) onSessionExpired();
       const parsed = response?.ok === true ? parseCampaignDetail(await response.json()) : null;
-      if (parsed !== null) setDetail(parsed);
+      if (parsed !== null && gate.isLatest(ticket)) setDetail(parsed);
       return parsed !== null;
     },
-    [campaignId, headers, onSessionExpired],
+    [campaignId, headers, onSessionExpired, gate],
   );
 
   const after = (action: Promise<boolean>): void => {
@@ -342,19 +357,9 @@ function MonstersTab({ detail, sendPrep }: Pick<CampaignPageViewProps, 'detail' 
   const byId = (id: string) => all.find((a) => a.id === id);
 
   const prepare = (adversary: Adversary): void => {
-    // Preparing one already on the list adds to its count rather than a second row.
-    const existing = detail.prepAdversaries.find((p) => p.adversaryId === adversary.id);
-    void sendPrep({
-      type: 'upsertPrepAdversary',
-      entry:
-        existing === undefined
-          ? { id: nextPrepId(), adversaryId: adversary.id, quantity, note: note.trim() }
-          : {
-              ...existing,
-              quantity: Math.min(20, existing.quantity + quantity),
-              note: note.trim() === '' ? existing.note : note.trim(),
-            },
-    });
+    // Additive on the server: preparing one already on the list adds to its count,
+    // and two quick clicks both count even though this view had not caught up.
+    void sendPrep({ type: 'addPrepAdversary', id: nextPrepId(), adversaryId: adversary.id, quantity, note: note.trim() });
     setNote('');
   };
 
@@ -373,17 +378,10 @@ function MonstersTab({ detail, sendPrep }: Pick<CampaignPageViewProps, 'detail' 
                   <label className="sr-only" htmlFor={`prep-qty-${entry.id}`}>
                     {t('monsters.quantity')}
                   </label>
-                  <input
+                  <PrepQuantity
                     id={`prep-qty-${entry.id}`}
-                    type="number"
-                    min={1}
-                    max={20}
-                    className="prep-qty"
                     value={entry.quantity}
-                    onChange={(e) => {
-                      const next = Math.max(1, Math.min(20, Number(e.target.value) || 1));
-                      void sendPrep({ type: 'upsertPrepAdversary', entry: { ...entry, quantity: next } });
-                    }}
+                    onCommit={(next) => void sendPrep({ type: 'upsertPrepAdversary', entry: { ...entry, quantity: next } })}
                   />
                   <button
                     type="button"
@@ -491,6 +489,36 @@ function MonstersTab({ detail, sendPrep }: Pick<CampaignPageViewProps, 'detail' 
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * A prep row's quantity: typed into a local draft and sent once, on blur or
+ * Enter. Sending per keystroke raced (typing 15 over 3 could land as 35) and an
+ * emptied field snapped to 1 mid-edit.
+ */
+function PrepQuantity({ id, value, onCommit }: { id: string; value: number; onCommit: (next: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+  const commit = (): void => {
+    const next = parseQuantityDraft(draft);
+    if (next === null || next === value) setDraft(String(value));
+    else onCommit(next);
+  };
+  return (
+    <input
+      id={id}
+      type="number"
+      min={1}
+      max={20}
+      className="prep-qty"
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') commit();
+      }}
+    />
   );
 }
 

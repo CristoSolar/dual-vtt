@@ -1,6 +1,7 @@
 import {
   CampaignDetailSchema,
   ManagedPlayerSchema,
+  MAX_PREP_QUANTITY,
   type AdversaryInstance,
   type CampaignDetail,
   type CampaignStatus,
@@ -106,4 +107,31 @@ export function encounterEvents(
       name: count === 1 && existing === 0 ? baseName : `${baseName} ${letter}`,
     };
   });
+}
+
+/**
+ * What a prep quantity field holds once the GM is done typing: a whole number
+ * clamped to 1..20, or null — nothing to commit — for an empty or unreadable
+ * draft, which then snaps back to the saved value.
+ */
+export function parseQuantityDraft(draft: string): number | null {
+  const trimmed = draft.trim();
+  if (!/^\d+$/.test(trimmed)) return null;
+  return Math.max(1, Math.min(MAX_PREP_QUANTITY, Number(trimmed)));
+}
+
+/**
+ * Tickets for requests whose responses replace the same state: only the newest
+ * ticket's response may land, so a slow older one never writes stale data over a
+ * newer one.
+ */
+export function createLatestGate(): { begin: () => number; isLatest: (ticket: number) => boolean } {
+  let latest = 0;
+  return {
+    begin: () => {
+      latest += 1;
+      return latest;
+    },
+    isLatest: (ticket) => ticket === latest,
+  };
 }
