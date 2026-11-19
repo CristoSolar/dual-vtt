@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { CampaignStatusSchema } from './campaign.js';
+
 export const UserRoleSchema = z.enum(['gm', 'player']);
 export type UserRole = z.infer<typeof UserRoleSchema>;
 
@@ -51,3 +53,20 @@ export const ResetPasswordRequestSchema = z.object({
   newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
 export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>;
+
+/**
+ * A row of the GM's "Mis jugadores": a player account they manage, the GM's own
+ * campaigns it belongs to or is invited to, and when it last signed in. Never a
+ * password hash, and never another GM's campaigns.
+ */
+export const ManagedPlayerSchema = z.object({
+  id: z.string().min(1),
+  username: z.string().min(1),
+  mustChangePassword: z.boolean(),
+  campaigns: z.array(
+    z.object({ id: z.string().min(1), name: z.string().min(1), status: CampaignStatusSchema }),
+  ),
+  invitedTo: z.array(z.object({ id: z.string().min(1), name: z.string().min(1) })),
+  lastLoginAt: z.number().nullable(),
+});
+export type ManagedPlayer = z.infer<typeof ManagedPlayerSchema>;

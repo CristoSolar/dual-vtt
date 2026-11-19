@@ -35,6 +35,7 @@ import { AudioStateSchema, MAX_TRACKS } from './audio.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
 import { MAX_TABLES, RollTableSchema } from './tables.js';
+import { CampaignStorySchema, MAX_PREP_ADVERSARIES, PrepAdversarySchema } from './prep.js';
 import {
   MAX_SCENE_NOTES,
   MapStateSchema,
@@ -268,6 +269,17 @@ export const RoomStateSchema = z.object({
    * `roomForRole('player')` empties this. Defaulted so an older snapshot loads.
    */
   tables: z.array(RollTableSchema).max(MAX_TABLES).default([]),
+  /**
+   * The campaign's pitch and story so far, written from the GM's campaign page.
+   * GM-only: `roomForRole('player')` empties it. Defaulted so an older snapshot loads.
+   */
+  story: CampaignStorySchema.default({ pitch: '', body: '' }),
+  /**
+   * Adversaries the GM plans to use, with how many and a note. GM-only, like
+   * `tables`; the GM panel fields them with `addAdversary`. Defaulted so an older
+   * snapshot loads.
+   */
+  prepAdversaries: z.array(PrepAdversarySchema).max(MAX_PREP_ADVERSARIES).default([]),
 });
 export type RoomState = z.infer<typeof RoomStateSchema>;
 
@@ -298,6 +310,8 @@ export function createRoomState(id: string, gm: GameMaster): RoomState {
     journal: [],
     audio: { tracks: [], playing: null },
     tables: [],
+    story: { pitch: '', body: '' },
+    prepAdversaries: [],
   };
 }
 
@@ -339,6 +353,10 @@ const EMPTY_JOURNAL = Object.freeze([]) as unknown as RoomState['journal'];
 
 /** A player never sees the GM's tables, so this is always what they get, by reference. */
 const EMPTY_TABLES = Object.freeze([]) as unknown as RoomState['tables'];
+
+/** Nor the GM's story or prep list: one shared empty value each, by reference. */
+const EMPTY_STORY = Object.freeze({ pitch: '', body: '' }) as RoomState['story'];
+const EMPTY_PREP = Object.freeze([]) as unknown as RoomState['prepAdversaries'];
 
 /**
  * First shared entry -> the last shared list built starting with it. Filtering
@@ -392,7 +410,8 @@ function notesForPlayer(map: MapState, journal: RoomState['journal']): MapState 
  * never receives the private log raw — whispers and private rolls reach a player
  * only through `roomForActor`, filtered to their own. Journal entries the GM has
  * not shared, and the map notes pointing at them, stay with the GM. The GM's random
- * tables stay with the GM entirely — there is no shared variant of one.
+ * tables, story and prep list stay with the GM entirely — there is no shared
+ * variant of any of them.
  */
 export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
   if (role === 'gm') return state;
@@ -416,6 +435,8 @@ export function roomForRole(state: RoomState, role: Actor['role']): RoomState {
     privateLog: EMPTY_PRIVATE_LOG,
     journal,
     tables: EMPTY_TABLES,
+    story: EMPTY_STORY,
+    prepAdversaries: EMPTY_PREP,
   };
 }
 
@@ -474,6 +495,7 @@ export type RoomError =
   | 'unknownJournalEntry'
   | 'unknownTrack'
   | 'unknownTable'
+  | 'unknownPrepAdversary'
   | 'rejected';
 
 export type RoomResult =
@@ -1319,6 +1341,38 @@ export function applyRoomEvent(
         ...state,
         audio: { ...state.audio, playing: { ...playing, volume: event.volume } },
       });
+    }
+
+    // --- GM: campaign prep -----------------------------------------------------
+    case 'setStory': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      return ok({ ...state, story: event.story });
+    }
+    case 'upsertPrepAdversary': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!srd().adversaries.some((a) => a.id === event.entry.adversaryId)) {
+        return fail('unknownAdversary', 'no such adversary');
+      }
+      const exists = state.prepAdversaries.some((entry) => entry.id === event.entry.id);
+      if (!exists && state.prepAdversaries.length >= MAX_PREP_ADVERSARIES) {
+        return fail('rejected', 'the prep list is full');
+      }
+      return ok({
+        ...state,
+        prepAdversaries: exists
+          ? state.prepAdversaries.map((entry) => (entry.id === event.entry.id ? event.entry : entry))
+          : [...state.prepAdversaries, event.entry],
+      });
+    }
+    case 'removePrepAdversary': {
+      const denied = gmOnly();
+      if (denied) return denied;
+      if (!state.prepAdversaries.some((entry) => entry.id === event.id)) {
+        return fail('unknownPrepAdversary', 'no such prepared adversary');
+      }
+      return ok({ ...state, prepAdversaries: state.prepAdversaries.filter((entry) => entry.id !== event.id) });
     }
 
     // --- GM: random tables ---------------------------------------------------

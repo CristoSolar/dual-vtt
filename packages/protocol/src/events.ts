@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { TrackSchema } from './audio.js';
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
 import { JournalEntrySchema } from './journal.js';
+import { CampaignStorySchema, PrepAdversarySchema } from './prep.js';
 import {
   GridSchema,
   MapNoteSchema,
@@ -421,6 +422,11 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     table: RollTableSchema,
   }),
   z.object({ type: z.literal('removeTable'), id: z.string().min(1).max(64) }),
+  // Campaign prep: the story and the adversaries the GM plans to use. Neither
+  // reaches a player; preparing an adversary fields nothing.
+  z.object({ type: z.literal('setStory'), story: CampaignStorySchema }),
+  z.object({ type: z.literal('upsertPrepAdversary'), entry: PrepAdversarySchema }),
+  z.object({ type: z.literal('removePrepAdversary'), id: z.string().min(1).max(64) }),
   z.object({
     // Picks a row uniformly at random on the server; the client only names the table.
     type: z.literal('rollTable'),
@@ -618,6 +624,8 @@ export function roomPatch(before: RoomState, after: RoomState): RoomPatch {
   if (before.journal !== after.journal) patch.journal = after.journal;
   if (before.audio !== after.audio) patch.audio = after.audio;
   if (before.tables !== after.tables) patch.tables = after.tables;
+  if (before.story !== after.story) patch.story = after.story;
+  if (before.prepAdversaries !== after.prepAdversaries) patch.prepAdversaries = after.prepAdversaries;
   return patch;
 }
 
@@ -654,5 +662,7 @@ export function applyRoomPatch(state: RoomState, patch: RoomPatch): RoomState {
     ...(patch.journal === undefined ? {} : { journal: patch.journal }),
     ...(patch.audio === undefined ? {} : { audio: patch.audio }),
     ...(patch.tables === undefined ? {} : { tables: patch.tables }),
+    ...(patch.story === undefined ? {} : { story: patch.story }),
+    ...(patch.prepAdversaries === undefined ? {} : { prepAdversaries: patch.prepAdversaries }),
   };
 }
