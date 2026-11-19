@@ -1061,7 +1061,7 @@ function Adversaries({
         );
       })}
 
-      <h3 className="mt-5">{t('gm.adversaries.searchLabel')}</h3>
+      <div className="mt-5" />
 
       <label htmlFor="adversary-search">{t('gm.adversaries.searchLabel')}</label>
       <input

@@ -3749,6 +3749,16 @@ details summary {
 .campaign-page-controls {
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+}
+
+.campaign-page-controls input,
+.campaign-page-controls select {
+  width: auto;
+}
+
+.campaign-page-controls label {
+  margin: 0;
 }
 
 .campaign-page textarea {

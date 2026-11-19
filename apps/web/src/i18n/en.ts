@@ -1136,9 +1136,9 @@ export const en: Record<keyof typeof es, string> = {
   'guide.done': 'Got it',
   'guide.openHelp': 'View the full guide',
   'guide.gm.1.title': 'Create a campaign',
-  'guide.gm.1.body': 'From Home, create a campaign. You are the GM; the room lives on the server and saves itself.',
+  'guide.gm.1.body': 'In My campaigns, create a campaign. You are the GM: its page holds the story, notes, the monsters you plan to use and the players; the room lives on the server and saves itself.',
   'guide.gm.2.title': 'Add players',
-  'guide.gm.2.body': 'In Players you create accounts with a starting password. Then, from the campaign card, add them by username.',
+  'guide.gm.2.body': 'In My players you create accounts with a starting password and invite them to your campaigns. A paused or finished campaign lets only you sit down.',
   'guide.gm.3.title': 'GM panel',
   'guide.gm.3.body': 'Fear, spotlight, countdowns, adversaries, and environments. Everything you change broadcasts to the table instantly.',
   'guide.gm.4.title': 'Tactical map',
@@ -1167,7 +1167,7 @@ export const en: Record<keyof typeof es, string> = {
     'The app has two audiences: the GM creates the campaign and all of its content, while players only join a campaign that already exists. The flag in the corner switches the whole interface and the SRD content into the other language at any time. The "?" button in the top bar opens this help from any screen. The first time you sign in, a quick guide tailored to your role opens automatically, and you can reopen it from here.',
   'help.app.campaigns.title': 'Campaigns and players',
   'help.app.campaigns.body':
-    'From Home, the GM uses "Create campaign" to open a game and "Create player" on the Players panel to set up each account with an initial password the player must change on first sign-in. "Invite player" puts the campaign under the player\'s My campaigns; accepting makes them a member. Each player creates characters under My characters and links one to the campaign. "Generate link for players" opens a public tunnel so people can connect from outside your network without any extra setup. Each player only ever sees the campaigns they belong to, never another table\'s.',
+    'In My campaigns, the GM uses "Create campaign" to open a game and "Create player" in My players to set up each account with an initial password the player must change on first sign-in. "Invite player" puts the campaign under the player\'s My campaigns; accepting makes them a member. Each player creates characters under My characters and links one to the campaign. "Generate link for players" opens a public tunnel so people can connect from outside your network without any extra setup. Each player only ever sees the campaigns they belong to, never another table\'s.',
   'help.app.creation.title': 'Character creation',
   'help.app.creation.body':
     'Creating a character walks through nine steps in order: Class and Subclass, Heritage, Traits, Derived Stats, Equipment, Background, Experiences, Domain Cards, and Connections. The draft is saved only in that device\'s browser, so closing the tab or reloading never loses progress. Finishing saves the character to your account (My characters), usable from any device. Link it to a campaign to play: a character is in one campaign at a time, and you have one per campaign. Unlinking brings it back to your list with its sheet as it stood.',

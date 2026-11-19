@@ -1156,9 +1156,9 @@ export const es = {
   'guide.done': 'Entendido',
   'guide.openHelp': 'Ver la ayuda completa',
   'guide.gm.1.title': 'Crea una campaña',
-  'guide.gm.1.body': 'Desde Inicio, crea una campaña. Tú eres el DJ; la sala vive en el servidor y se guarda sola.',
+  'guide.gm.1.body': 'En Mis campañas, crea una campaña. Tú eres el DJ: desde su página llevas la historia, las notas, los monstruos que vas a usar y los jugadores; la sala vive en el servidor y se guarda sola.',
   'guide.gm.2.title': 'Añade jugadores',
-  'guide.gm.2.body': 'En Jugadores creas cuentas con contraseña inicial. Luego, en la tarjeta de la campaña, los añades por nombre de usuario.',
+  'guide.gm.2.body': 'En Mis jugadores creas cuentas con contraseña inicial y las invitas a tus campañas. Una campaña en pausa o finalizada solo te deja entrar a ti.',
   'guide.gm.3.title': 'Panel del DJ',
   'guide.gm.3.body': 'Miedo, foco, cuentas atrás, adversarios y entornos. Todo lo que cambias se emite a la mesa al instante.',
   'guide.gm.4.title': 'Mapa táctico',
@@ -1187,7 +1187,7 @@ export const es = {
     'La app tiene dos audiencias: el DJ crea la campaña y todo su contenido, y los jugadores solo se unen a una campaña que ya existe. La bandera de la esquina cambia el idioma de toda la interfaz y del contenido del SRD en cualquier momento. El botón "?" de la barra superior abre esta ayuda desde cualquier pantalla. Si es la primera vez que entras, una guía rápida con pasos según tu rol aparece automáticamente y puedes volver a abrirla desde aquí.',
   'help.app.campaigns.title': 'Campañas y jugadores',
   'help.app.campaigns.body':
-    'Desde Inicio, el DJ usa "Crear campaña" para abrir una partida y "Agregar jugador" en el panel de Jugadores para dar de alta cada cuenta con una contraseña inicial que el jugador debe cambiar en su primer ingreso. Con "Invitar jugador" la campaña aparece en Mis campañas del jugador; al aceptar, se une. Cada jugador crea sus personajes en Mis personajes y vincula uno a la campaña. "Generar enlace para jugadores" abre un túnel público para que la gente se conecte desde fuera de tu red sin configurar nada más. Cada jugador solo ve las campañas a las que pertenece, nunca las de otra mesa.',
+    'En Mis campañas, el DJ usa "Crear campaña" para abrir una partida y "Crear jugador" en Mis jugadores para dar de alta cada cuenta con una contraseña inicial que el jugador debe cambiar en su primer ingreso. Con "Invitar jugador" la campaña aparece en Mis campañas del jugador; al aceptar, se une. Cada jugador crea sus personajes en Mis personajes y vincula uno a la campaña. "Generar enlace para jugadores" abre un túnel público para que la gente se conecte desde fuera de tu red sin configurar nada más. Cada jugador solo ve las campañas a las que pertenece, nunca las de otra mesa.',
   'help.app.creation.title': 'Creación de personaje',
   'help.app.creation.body':
     'Crear personaje recorre nueve pasos en orden: Clase y Subclase, Herencia, Rasgos, Estadísticas derivadas, Equipo, Trasfondo, Experiencias, Cartas de Dominio y Conexiones. El borrador se guarda solo en el navegador de ese dispositivo, así que cerrar la pestaña o recargar no pierde el progreso. Al terminar, el personaje se guarda en tu cuenta (Mis personajes) y lo puedes usar desde cualquier dispositivo. Vincúlalo a una campaña para jugar: un personaje está en una sola campaña a la vez, y tú tienes uno por campaña. Al desvincularlo vuelve a tu lista con la hoja tal como quedó.',
