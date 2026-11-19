@@ -65,8 +65,8 @@ srd-data  →  rules  →  character  →  protocol  →  server
   `RoomState` travels over HTTP, only over the socket (a library entry carries a
   `SheetState`, never a room; `CampaignDetail` carries three GM slices — `story`,
   `prepAdversaries`, `journal` — never the room). `CampaignPrepEventSchema` is the
-  subset of `RoomEvent` the GM's campaign page may send over HTTP (story, prep list,
-  journal); it still goes through `applyRoomEvent`. `story` (`prep.ts`) and
+  subset of `RoomEvent` the GM's campaign page may send over HTTP (story, prep list —
+  `addPrepAdversary` is additive, so quick repeated adds all count — and journal); it still goes through `applyRoomEvent`. `story` (`prep.ts`) and
   `prepAdversaries` are GM-only room slices, emptied by `roomForRole`.
   `claimCharacterInRoom` / `releaseCharacterInRoom` are how a sheet enters and leaves a
   room; linking from the library goes through them. Fear-on-new-PC is decided by the
@@ -78,10 +78,12 @@ srd-data  →  rules  →  character  →  protocol  →  server
     `tunnel-http.ts`, `static.ts`): login issues a token (`sessions.ts`, in-memory —
     restart signs everyone out, by design); GM creates player accounts and campaigns
     and invites players (`invitedIds`); a player accepts or declines, which is the only
-    way to become a member. A GM manages the players it created (`createdBy`) plus
-    legacy ones with `createdBy: null`; `GET /users`, `GET /players`
-    (`players-http.ts`), reset-password and invites see only those — another GM's
-    player answers 404 like a missing one. The GM's campaign page uses
+    way to become a member. A GM manages the players it created (`createdBy`) and
+    legacy ones (`createdBy: null`) that sit at one of its tables — member or invitee
+    — or, on a single-GM server, at no table (`managed-players.ts`). `GET /users`,
+    `GET /players` (`players-http.ts`), reset-password and invites see only those;
+    another GM's player answers 404 like a missing one. A reset or invite claims a
+    legacy player for that GM unless it also sits at another GM's table. The GM's campaign page uses
     `GET /campaigns/:id` (detail), `PATCH /campaigns/:id` (name/status) and
     `POST /campaigns/:id/prep` (one prep intent, broadcast to live sockets). All are
     owner-only (403 otherwise, unknown id included). `/characters` is each account's own library (owner-only;
