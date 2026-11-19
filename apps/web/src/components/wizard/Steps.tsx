@@ -10,6 +10,7 @@ import { srd } from '@daggerheart/srd-data';
 import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
+import { artUrl } from '../../state/art.js';
 import { fieldErrors } from '../../state/useCreation.js';
 import { formatSigned, label as prettify } from '../../state/selectors.js';
 import { OptionList } from '../OptionList.js';
@@ -36,7 +37,7 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
             hp: c.startingHP,
             domains: c.domains.join(` ${t('wizard.and')} `),
           }),
-          image: `/images/classes/${c.id}.png`,
+          image: artUrl('classes', c.id),
         }))}
         selectedId={state.classId}
         onSelect={(classId) => dispatch({ type: 'chooseClass', classId })}
@@ -111,7 +112,7 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
               id: a.id,
               name: a.name,
               meta: a.features.find((f) => f.slot === 'first')?.name,
-              image: `/images/ancestries/${a.id}.png`,
+              image: artUrl('ancestries', a.id),
             }))}
             selectedId={pendingFirst}
             onSelect={(id) => selectMixed('first', id)}
@@ -122,7 +123,7 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
               id: a.id,
               name: a.name,
               meta: a.features.find((f) => f.slot === 'second')?.name,
-              image: `/images/ancestries/${a.id}.png`,
+              image: artUrl('ancestries', a.id),
             }))}
             selectedId={pendingSecond}
             onSelect={(id) => selectMixed('second', id)}
@@ -135,7 +136,7 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
             id: a.id,
             name: a.name,
             meta: a.features.map((f) => f.name).join(' · '),
-            image: `/images/ancestries/${a.id}.png`,
+            image: artUrl('ancestries', a.id),
           }))}
           selectedId={heritage?.kind === 'single' ? heritage.ancestryId : null}
           onSelect={(ancestryId) => dispatch({ type: 'chooseAncestry', ancestryId })}
@@ -149,7 +150,7 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
           id: c.id,
           name: c.name,
           meta: c.feature.name,
-          image: `/images/communities/${c.id}.png`,
+          image: artUrl('communities', c.id),
         }))}
         selectedId={state.communityId}
         onSelect={(communityId) => dispatch({ type: 'chooseCommunity', communityId })}

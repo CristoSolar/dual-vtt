@@ -12,6 +12,7 @@ import {
 import { z } from 'zod';
 
 import type { StorageLike } from './storage.js';
+import { artUrl } from './art.js';
 
 /**
  * The player's character library, as pure functions over what the server sends.
@@ -59,7 +60,7 @@ export function linkableCampaigns(
 export function characterPortrait(sheet: SheetState): string {
   const { heritage } = sheet.character;
   const ancestryId = heritage.kind === 'single' ? heritage.ancestryId : heritage.first.ancestryId;
-  return `/images/ancestries/${ancestryId}.png`;
+  return artUrl('ancestries', ancestryId);
 }
 
 // --- characters left in this browser by the old flow -------------------------

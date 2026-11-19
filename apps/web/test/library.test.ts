@@ -63,7 +63,7 @@ describe('linking choices', () => {
   });
 
   it('points at the ancestry art', () => {
-    expect(characterPortrait(createSheet(buildCharacter()))).toBe('/images/ancestries/human.png');
+    expect(characterPortrait(createSheet(buildCharacter()))).toBe('/images/ancestries/human.png?v=2');
   });
 });
 
