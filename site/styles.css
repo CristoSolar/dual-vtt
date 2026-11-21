@@ -1,0 +1,916 @@
+/*
+ * Dual VTT project page. Colours, faces and radii come from the app's own
+ * tokens (apps/web/src/styles/tokens.css): bronze on obsidian, brass as ink and
+ * solid only on the primary action, violet for links and focus.
+ */
+
+@font-face {
+  font-family: 'Spectral';
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/spectral-600-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Spectral';
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/spectral-700-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/inter-var-latin.woff2') format('woff2');
+}
+
+:root {
+  --bg: #0b0812;
+  --surface-1: #17131f;
+  --surface-2: #1b1626;
+  --surface-3: #221c2e;
+  --text: #f2ece3;
+  --muted: #c3b9ae;
+  --faint: #8c8397;
+  --line: #2c2439;
+  --line-bronze: #3a2e1c;
+  --line-bronze-hover: #6b5426;
+  --brass: #d8a441;
+  --brass-bright: #eac77a;
+  --on-brass: #1e1405;
+  --violet: #7b6bc4;
+  --violet-bright: #a99be8;
+
+  --font-display: 'Spectral', 'Iowan Old Style', Palatino, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-ctl: 4px;
+  --radius-panel: 8px;
+  --content: 1180px;
+  --gutter: clamp(1.1rem, 4vw, 2.5rem);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Language swap: Spanish shows by default, so the page reads without JS. */
+html[lang='es'] [data-l='en'],
+html[lang='en'] [data-l='es'] {
+  display: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--violet-bright);
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.05em 0.35em;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 20;
+  background: var(--brass);
+  color: var(--on-brass);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-ctl);
+  font-weight: 600;
+}
+.skip:focus {
+  top: 1rem;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: 1.1rem var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The app's own wordmark: brass small caps, wide tracking. */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brass);
+  text-decoration: none;
+  margin-right: auto;
+}
+.wordmark:hover {
+  color: var(--brass-bright);
+}
+
+.topnav {
+  display: none;
+  gap: 1.6rem;
+}
+.topnav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.topnav a:hover {
+  color: var(--text);
+}
+
+.lang {
+  min-width: 44px;
+  min-height: 40px;
+  padding: 0 0.8rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--line-bronze);
+  border-radius: var(--radius-ctl);
+  font: 600 0.85rem var(--font-sans);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.lang:hover {
+  border-color: var(--line-bronze-hover);
+}
+
+@media (min-width: 720px) {
+  .topnav {
+    display: flex;
+  }
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 1.5rem;
+  border-radius: var(--radius-ctl);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.15s var(--ease),
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Solid brass is reserved for the one primary action, as in the app. */
+.btn-primary {
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass));
+  color: var(--on-brass);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 35%),
+    0 1px 0 rgb(0 0 0 / 60%),
+    0 8px 22px -10px rgb(216 164 65 / 60%);
+}
+.btn-primary:hover {
+  color: var(--on-brass);
+  background: var(--brass-bright);
+}
+
+.btn-ghost {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--line-bronze);
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--line-bronze-hover);
+}
+
+.text-link {
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gutter) clamp(3rem, 7vw, 6rem);
+  overflow: hidden;
+}
+
+.hero h1 {
+  font-size: clamp(3.2rem, 2rem + 6vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.pitch {
+  margin-top: 1.25rem;
+  max-width: 34ch;
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+  color: var(--muted);
+}
+
+.hero .cta-row {
+  margin-top: 2rem;
+}
+
+.hero-note {
+  margin-top: 1.4rem;
+  font-size: 0.9rem;
+  color: var(--faint);
+}
+
+/* The hand: five class cards fanned from a point below the table. */
+.hand {
+  position: relative;
+  height: clamp(250px, 62vw, 470px);
+  --w: clamp(130px, 30vw, 230px);
+}
+
+.card {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: var(--w);
+  aspect-ratio: 3 / 4;
+  margin: 0 0 0 calc(var(--w) / -2);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  border: 1px solid var(--line-bronze-hover);
+  background: var(--surface-1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 8%),
+    0 18px 48px rgb(0 0 0 / 60%);
+  transform-origin: 50% 160%;
+  transform: rotate(calc(var(--i) * 11deg)) translateY(calc(var(--i) * var(--i) * 4px));
+  transition: transform 0.5s var(--ease);
+}
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, transparent, rgb(11 8 18 / 92%));
+}
+.card figcaption {
+  display: none;
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.7rem;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1rem, 0.7rem + 1vw, 1.5rem);
+  text-shadow: 0 2px 8px rgb(0 0 0 / 70%);
+}
+.card-top figcaption {
+  display: block;
+}
+.card-top {
+  border-color: var(--brass);
+  box-shadow:
+    inset 0 0 0 1px var(--brass),
+    0 0 30px -8px rgb(216 164 65 / 55%),
+    0 22px 56px rgb(0 0 0 / 65%);
+  z-index: 2;
+}
+
+/* The single load moment: the hand fans open from a closed stack. */
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    animation: deal 0.9s var(--ease) both;
+    animation-delay: 0.15s;
+  }
+  @keyframes deal {
+    from {
+      transform: rotate(0deg) translateY(30px);
+      opacity: 0;
+    }
+  }
+  .hand:hover .card:not(.card-top) {
+    transform: rotate(calc(var(--i) * 13deg)) translateY(calc(var(--i) * var(--i) * 5px));
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr 1.05fr;
+    min-height: min(78dvh, 720px);
+  }
+  .hand {
+    height: 460px;
+    --w: 220px;
+  }
+}
+
+/* -------------------------------------------------------------- creation */
+
+.create {
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gutter) 0;
+  display: grid;
+  gap: 2.5rem;
+}
+
+.create-text p {
+  margin-top: 1rem;
+  max-width: 58ch;
+  color: var(--muted);
+}
+
+.domains {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem 0.5rem;
+  max-width: 34rem;
+}
+.domains li {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: center;
+}
+.domains li::before {
+  content: '';
+  width: 34px;
+  height: 34px;
+  background: var(--d);
+  -webkit-mask: var(--m) center / contain no-repeat;
+  mask: var(--m) center / contain no-repeat;
+}
+
+.shot {
+  margin: 0;
+}
+.shot img {
+  width: 100%;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--line-bronze);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 6%),
+    0 24px 60px -20px rgb(0 0 0 / 80%);
+}
+.shot figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Ancestries and communities: a horizontal shelf you can flick through. */
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(120px, 28vw, 168px);
+  gap: 0.9rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.3rem 0.1rem 1rem;
+  scrollbar-color: var(--line-bronze-hover) transparent;
+}
+.strip figure {
+  margin: 0;
+  scroll-snap-align: start;
+}
+.strip img {
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--line);
+}
+.strip figcaption {
+  margin-top: 0.45rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+@media (min-width: 900px) {
+  .create {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+  }
+  .strip {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ------------------------------------------------------------ fog compare */
+
+.fog {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7.5rem) var(--gutter) 0;
+}
+.fog h2,
+.fog-lede {
+  max-width: var(--content);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.fog-lede {
+  margin-top: 1rem;
+  max-width: 60ch;
+  color: var(--muted);
+}
+
+.compare {
+  position: relative;
+  margin-top: 2.5rem;
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  border: 1px solid var(--line-bronze);
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 90%);
+  aspect-ratio: 1440 / 900;
+  background: var(--surface-1);
+}
+.compare img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.compare-over {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+.compare-rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--brass);
+  box-shadow: 0 0 18px rgb(216 164 65 / 60%);
+  pointer-events: none;
+}
+.compare-rule::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  background: var(--bg);
+  border: 2px solid var(--brass);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.compare-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+.compare:has(.compare-range:focus-visible) {
+  outline: 2px solid var(--violet-bright);
+  outline-offset: 4px;
+}
+.compare-tag {
+  position: absolute;
+  bottom: 0.8rem;
+  padding: 0.25rem 0.7rem;
+  background: rgb(15 11 22 / 85%);
+  border: 1px solid var(--line-bronze);
+  border-radius: var(--radius-ctl);
+  font-size: 0.85rem;
+  font-weight: 600;
+  pointer-events: none;
+}
+.compare-tag-gm {
+  left: 0.8rem;
+  color: var(--violet-bright);
+}
+.compare-tag-pl {
+  right: 0.8rem;
+  color: var(--brass-bright);
+}
+
+/* --------------------------------------------------------------- features */
+
+.features {
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7.5rem) var(--gutter) 0;
+}
+
+.feature-groups {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 2.5rem;
+}
+
+.group h3 {
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line-bronze);
+  color: var(--brass-bright);
+}
+.group ul {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.group li {
+  position: relative;
+  padding-left: 1.3rem;
+  color: var(--muted);
+  max-width: 60ch;
+}
+/* The app's ornament: a small brass diamond. */
+.group li::before {
+  content: '';
+  position: absolute;
+  left: 0.1rem;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  background: var(--brass);
+  transform: rotate(45deg);
+}
+
+@media (min-width: 900px) {
+  .feature-groups {
+    grid-template-columns: 1.15fr 1fr;
+    column-gap: 4rem;
+  }
+  .group:first-child {
+    grid-row: span 2;
+  }
+}
+
+/* ---------------------------------------------------------------- screens */
+
+.screens {
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7.5rem) var(--gutter) 0;
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 900px) {
+  .screens {
+    grid-template-columns: 1.45fr 1fr;
+    align-items: end;
+  }
+  .shot-campaign {
+    margin-bottom: 4rem;
+  }
+}
+
+/* ------------------------------------------------------------ how to play */
+
+.play {
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7.5rem) var(--gutter) clamp(4rem, 8vw, 6rem);
+}
+
+.play-banner {
+  position: relative;
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  border: 1px solid var(--line-bronze);
+}
+.play-banner img {
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  object-position: center 40%;
+}
+.play-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(11 8 18 / 88%) 0%, rgb(11 8 18 / 40%) 55%, transparent 100%);
+}
+.play-banner h2 {
+  position: absolute;
+  left: clamp(1rem, 4vw, 2.5rem);
+  bottom: clamp(0.8rem, 3vw, 2rem);
+  z-index: 1;
+  font-size: clamp(2rem, 1.3rem + 3vw, 3.4rem);
+}
+
+.play-lede {
+  margin-top: 1.8rem;
+  max-width: 62ch;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.play-grid {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 2.5rem;
+}
+
+.play-main h3 + * {
+  margin-top: 0.8rem;
+}
+.play-main h3:not(:first-child) {
+  margin-top: 2.2rem;
+}
+.needs {
+  color: var(--muted);
+}
+
+/* A real sequence, so it carries real numbers. */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+  display: grid;
+  gap: 1.6rem;
+}
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 3rem;
+}
+.steps li::before,
+.steps li::after {
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 2rem;
+  height: 2rem;
+}
+/* The diamond turns; the numeral on top of it stays upright. */
+.steps li::before {
+  content: '';
+  background: var(--brass);
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.78);
+}
+.steps li::after {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--on-brass);
+}
+.steps li > p {
+  color: var(--muted);
+}
+.steps b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.code {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 0.7rem;
+  background: #120e1a;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-ctl);
+}
+.code pre {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+}
+.code code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  white-space: pre;
+}
+.copy {
+  flex: none;
+  margin: 0.45rem 0.45rem 0 0;
+  min-height: 34px;
+  padding: 0 0.75rem;
+  background: var(--surface-3);
+  color: var(--text);
+  border: 1px solid var(--line-bronze);
+  border-radius: var(--radius-ctl);
+  font: 600 0.8rem var(--font-sans);
+  cursor: pointer;
+}
+.copy:hover {
+  border-color: var(--line-bronze-hover);
+}
+.copy[data-done] {
+  color: #7ed0a0;
+}
+
+.play-side {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+.side-block {
+  background: var(--surface-1);
+  border: 1px solid var(--line-bronze);
+  border-radius: var(--radius-panel);
+  padding: 1.4rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%);
+}
+.side-block h3 + p {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+.side-block p + p,
+.side-block .code + p {
+  margin-top: 0.8rem;
+}
+.side-block b {
+  color: var(--text);
+  font-weight: 600;
+}
+.side-players {
+  padding-top: 0;
+  overflow: hidden;
+}
+.side-players img {
+  margin: 0 -1.4rem 1.2rem;
+  max-width: calc(100% + 2.8rem);
+  width: calc(100% + 2.8rem);
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  object-position: 70% 30%;
+}
+.side-players p {
+  color: var(--muted);
+}
+.backup {
+  padding: 0 0.2rem;
+}
+
+.cta-end {
+  margin-top: 3rem;
+  gap: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .play-grid {
+    grid-template-columns: 1.3fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.legal {
+  border-top: 1px solid var(--line);
+  background: #08060d;
+}
+.legal-inner {
+  max-width: var(--content);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 3.5rem;
+  display: grid;
+  gap: 2rem;
+}
+.compat {
+  width: 220px;
+  height: auto;
+}
+.legal-text {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 72ch;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+@media (min-width: 900px) {
+  .legal-inner {
+    grid-template-columns: 260px 1fr;
+    align-items: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+
+/* Grid children may shrink below their content, so a long code line or the
+   art shelf scrolls inside its box instead of widening the page. */
+.hero > *,
+.create > *,
+.feature-groups > *,
+.screens > *,
+.play-grid > *,
+.play-side > *,
+.steps > li {
+  min-width: 0;
+}

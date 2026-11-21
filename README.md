@@ -5,6 +5,8 @@ affiliated with or endorsed by Darrington Press. Create a character through
 the SRD's nine steps, play off an interactive sheet, run a live campaign room with a
 GM panel, and fight over a synced tactical map. Works fully offline too.
 
+Página del proyecto: https://cristosolar.github.io/dual-vtt/
+
 ## Screenshots
 
 | Login | Character creation |

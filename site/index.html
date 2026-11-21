@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0812">
+  <title>Dual VTT: mesa virtual gratuita para Daggerheart</title>
+  <meta name="description" content="Dual VTT es una mesa virtual gratuita y de código abierto, compatible con Daggerheart. Descárgala, ejecútala en tu equipo y comparte un enlace con tu mesa.">
+  <link rel="canonical" href="https://cristosolar.github.io/dual-vtt/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dual VTT">
+  <meta property="og:title" content="Dual VTT: mesa virtual gratuita para Daggerheart">
+  <meta property="og:description" content="Creación de personajes, ficha interactiva, mapa táctico con niebla y una sala de campaña en vivo. Se instala en tu equipo; tus jugadores entran con un enlace.">
+  <meta property="og:url" content="https://cristosolar.github.io/dual-vtt/">
+  <meta property="og:image" content="https://cristosolar.github.io/dual-vtt/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="El asistente de creación de Dual VTT mostrando un carrusel de clases ilustradas">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dual VTT: mesa virtual gratuita para Daggerheart">
+  <meta name="twitter:description" content="Mesa virtual libre y autoalojada, compatible con Daggerheart. Español e inglés.">
+  <meta name="twitter:image" content="https://cristosolar.github.io/dual-vtt/assets/og.jpg">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/spectral-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main"><span data-l="es">Saltar al contenido</span><span data-l="en">Skip to content</span></a>
+
+  <header class="topbar">
+    <a class="wordmark" href="#top" aria-label="Dual VTT">Dual VTT</a>
+    <nav class="topnav" aria-label="Principal" data-aria-es="Principal" data-aria-en="Main">
+      <a href="#funciones"><span data-l="es">Funciones</span><span data-l="en">Features</span></a>
+      <a href="#como-jugar"><span data-l="es">Cómo jugar</span><span data-l="en">How to play</span></a>
+      <a href="https://github.com/CristoSolar/dual-vtt">GitHub</a>
+    </nav>
+    <button class="lang" type="button" id="lang-toggle" aria-label="Switch to English" data-aria-es="Switch to English" data-aria-en="Cambiar a español">
+      <span data-l="es">EN</span><span data-l="en">ES</span>
+    </button>
+  </header>
+
+  <main id="main">
+    <!-- Hero: the name, one line, the download. The hand of class cards is the
+         app's own creation carousel, fanned out. -->
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <h1>Dual VTT</h1>
+        <p class="pitch">
+          <span data-l="es">Una mesa virtual gratuita para Daggerheart que instalas en tu equipo. Tú diriges desde casa y tus jugadores entran con un enlace.</span>
+          <span data-l="en">A free Daggerheart virtual tabletop you run on your own computer. You host from home; your players join with a link.</span>
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">
+            <span data-l="es">Descargar</span><span data-l="en">Download</span>
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt">
+            <span data-l="es">Ver en GitHub</span><span data-l="en">View on GitHub</span>
+          </a>
+        </div>
+        <p class="hero-note">
+          <span data-l="es">Código abierto (MIT). Daggerheart™ Compatible. Español e inglés.</span>
+          <span data-l="en">Open source (MIT). Daggerheart™ Compatible. English and Spanish.</span>
+        </p>
+      </div>
+
+      <div class="hand" aria-hidden="true">
+        <figure class="card" style="--i:-2"><img src="assets/art/class-witch.webp" alt="" width="420" height="420"><figcaption><span data-l="es">Bruja</span><span data-l="en">Witch</span></figcaption></figure>
+        <figure class="card" style="--i:-1"><img src="assets/art/class-ranger.webp" alt="" width="420" height="420"><figcaption><span data-l="es">Explorador</span><span data-l="en">Ranger</span></figcaption></figure>
+        <figure class="card" style="--i:2"><img src="assets/art/class-sorcerer.webp" alt="" width="420" height="420"><figcaption><span data-l="es">Hechicero</span><span data-l="en">Sorcerer</span></figcaption></figure>
+        <figure class="card" style="--i:1"><img src="assets/art/class-seraph.webp" alt="" width="420" height="420"><figcaption><span data-l="es">Serafín</span><span data-l="en">Seraph</span></figcaption></figure>
+        <figure class="card card-top" style="--i:0"><img src="assets/art/class-bard.webp" alt="" width="420" height="420" fetchpriority="high"><figcaption><span data-l="es">Bardo</span><span data-l="en">Bard</span></figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Creation -->
+    <section class="create" id="funciones" aria-labelledby="create-h">
+      <div class="create-text">
+        <h2 id="create-h">
+          <span data-l="es">Nueve pasos, de la clase a las conexiones</span>
+          <span data-l="en">Nine steps, from class to connections</span>
+        </h2>
+        <p>
+          <span data-l="es">El asistente sigue el SRD paso a paso: clase y subclase, herencia, rasgos, equipo, trasfondo, experiencias y cartas de dominio. Cada elección se muestra como una carta ilustrada, y el borrador se guarda solo hasta que terminas.</span>
+          <span data-l="en">The wizard follows the SRD step by step: class and subclass, heritage, traits, equipment, background, experiences and domain cards. Every option is an illustrated card, and the draft saves itself until you finish.</span>
+        </p>
+        <ul class="domains" aria-label="Los diez dominios" data-aria-es="Los diez dominios" data-aria-en="The ten domains">
+          <li style="--d:#8d6fd1;--m:url(assets/domains/arcana.svg)">Arcana</li>
+          <li style="--d:#d0625a;--m:url(assets/domains/blade.svg)"><span data-l="es">Filo</span><span data-l="en">Blade</span></li>
+          <li style="--d:#b9ac96;--m:url(assets/domains/bone.svg)"><span data-l="es">Hueso</span><span data-l="en">Bone</span></li>
+          <li style="--d:#6f9be0;--m:url(assets/domains/codex.svg)"><span data-l="es">Códice</span><span data-l="en">Codex</span></li>
+          <li style="--d:#5fb3b9;--m:url(assets/domains/dread.svg)"><span data-l="es">Pavor</span><span data-l="en">Dread</span></li>
+          <li style="--d:#d07fae;--m:url(assets/domains/grace.svg)"><span data-l="es">Gracia</span><span data-l="en">Grace</span></li>
+          <li style="--d:#9599c8;--m:url(assets/domains/midnight.svg)"><span data-l="es">Medianoche</span><span data-l="en">Midnight</span></li>
+          <li style="--d:#6fae7c;--m:url(assets/domains/sage.svg)"><span data-l="es">Sabio</span><span data-l="en">Sage</span></li>
+          <li style="--d:#d8a441;--m:url(assets/domains/splendor.svg)"><span data-l="es">Esplendor</span><span data-l="en">Splendor</span></li>
+          <li style="--d:#cf8340;--m:url(assets/domains/valor.svg)"><span data-l="es">Valor</span><span data-l="en">Valor</span></li>
+        </ul>
+      </div>
+      <figure class="shot shot-wizard">
+        <img src="assets/shots/wizard.webp" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Paso 1 del asistente: un carrusel de cartas de clase con Asesino al centro, Mago y Bardo a los lados"
+             data-alt-es="Paso 1 del asistente: un carrusel de cartas de clase con Asesino al centro, Mago y Bardo a los lados"
+             data-alt-en="Wizard step 1: a carousel of class cards with Assassin in the middle, Wizard and Bard on either side">
+      </figure>
+
+      <div class="strip" role="list" aria-label="Herencias y comunidades" data-aria-es="Herencias y comunidades" data-aria-en="Ancestries and communities">
+        <figure role="listitem"><img src="assets/art/ancestry-clank.webp" width="360" height="360" loading="lazy" alt=""><figcaption>Clank</figcaption></figure>
+        <figure role="listitem"><img src="assets/art/ancestry-drakona.webp" width="360" height="360" loading="lazy" alt=""><figcaption>Drakona</figcaption></figure>
+        <figure role="listitem"><img src="assets/art/ancestry-elf.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Elfo</span><span data-l="en">Elf</span></figcaption></figure>
+        <figure role="listitem"><img src="assets/art/ancestry-faun.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Fauno</span><span data-l="en">Faun</span></figcaption></figure>
+        <figure role="listitem"><img src="assets/art/ancestry-galapa.webp" width="360" height="360" loading="lazy" alt=""><figcaption>Galapa</figcaption></figure>
+        <figure role="listitem"><img src="assets/art/ancestry-katari.webp" width="360" height="360" loading="lazy" alt=""><figcaption>Katari</figcaption></figure>
+        <figure role="listitem"><img src="assets/art/community-highborne.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Alta Cuna</span><span data-l="en">Highborne</span></figcaption></figure>
+        <figure role="listitem"><img src="assets/art/community-seaborne.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Cuna del Mar</span><span data-l="en">Seaborne</span></figcaption></figure>
+        <figure role="listitem"><img src="assets/art/community-underborne.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Cuna Subterránea</span><span data-l="en">Underborne</span></figcaption></figure>
+        <figure role="listitem"><img src="assets/art/community-wildborne.webp" width="360" height="360" loading="lazy" alt=""><figcaption><span data-l="es">Cuna Salvaje</span><span data-l="en">Wildborne</span></figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Fog: the one interactive moment. Same scene, two audiences. -->
+    <section class="fog" aria-labelledby="fog-h">
+      <h2 id="fog-h">
+        <span data-l="es">Lo que ve el DJ. Lo que ven los jugadores.</span>
+        <span data-l="en">What the GM sees. What the players see.</span>
+      </h2>
+      <p class="fog-lede">
+        <span data-l="es">La niebla, las fichas ocultas y las regiones secretas se filtran en el servidor. Lo que no está revelado nunca llega al navegador de un jugador.</span>
+        <span data-l="en">Fog, hidden tokens and secret regions are filtered on the server. Anything unrevealed never reaches a player's browser.</span>
+      </p>
+      <div class="compare" style="--pos:50%">
+        <img class="compare-under" src="assets/shots/map-player.webp" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Vista del jugador: solo la sala revelada, con Aria, Bram y un bandido; el resto del mapa está a oscuras"
+             data-alt-es="Vista del jugador: solo la sala revelada, con Aria, Bram y un bandido; el resto del mapa está a oscuras"
+             data-alt-en="Player view: only the revealed room, with Aria, Bram and a bandit; the rest of the map is dark">
+        <img class="compare-over" src="assets/shots/map-gm.webp" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Vista del DJ: el mapa completo con muros, una puerta, un teniente oculto y una región de agua helada marcada como peligro"
+             data-alt-es="Vista del DJ: el mapa completo con muros, una puerta, un teniente oculto y una región de agua helada marcada como peligro"
+             data-alt-en="GM view: the whole map with walls, a door, a hidden lieutenant and an icy-water region marked as a hazard">
+        <span class="compare-tag compare-tag-gm"><span data-l="es">DJ</span><span data-l="en">GM</span></span>
+        <span class="compare-tag compare-tag-pl"><span data-l="es">Jugador</span><span data-l="en">Player</span></span>
+        <span class="compare-rule" aria-hidden="true"></span>
+        <input class="compare-range" type="range" min="0" max="100" value="50"
+               aria-label="Deslizar entre la vista del DJ y la del jugador"
+               data-aria-es="Deslizar entre la vista del DJ y la del jugador"
+               data-aria-en="Slide between the GM view and the player view">
+      </div>
+    </section>
+
+    <!-- Features, grouped by where they happen -->
+    <section class="features" aria-labelledby="features-h">
+      <h2 id="features-h">
+        <span data-l="es">Todo lo que hay en la mesa</span>
+        <span data-l="en">Everything on the table</span>
+      </h2>
+      <div class="feature-groups">
+        <div class="group">
+          <h3><span data-l="es">Durante la partida</span><span data-l="en">At the table</span></h3>
+          <ul>
+            <li><span data-l="es">Las tiradas se hacen en el servidor, con una semilla por campaña: nadie las maquilla y el registro se puede auditar.</span><span data-l="en">Rolls happen on the server from a per-campaign seed: nobody fudges them and the log can be audited.</span></li>
+            <li><span data-l="es">Dados 3D en pantalla y una bandeja para tiradas sueltas.</span><span data-l="en">3D dice on screen and a tray for loose rolls.</span></li>
+            <li><span data-l="es">Esperanza en cada ficha y el contador de Miedo del DJ, siempre a la vista.</span><span data-l="en">Hope on every sheet and the GM's Fear track, always in view.</span></li>
+            <li><span data-l="es">Chat con susurros y tiradas privadas que solo ven sus destinatarios y el DJ.</span><span data-l="en">Chat with whispers and private rolls seen only by their audience and the GM.</span></li>
+            <li><span data-l="es">Objetivos marcados en el mapa y pings para señalar un punto.</span><span data-l="en">Targets marked on the map and pings to point at a spot.</span></li>
+            <li><span data-l="es">Música sincronizada: quien entra a mitad de canción oye el mismo momento.</span><span data-l="en">Synced music: whoever joins mid-song hears the same moment.</span></li>
+            <li><span data-l="es">Tablas aleatorias del DJ, foco, cuentas atrás y adversarios del bestiario.</span><span data-l="en">GM random tables, spotlight, countdowns and adversaries from the bestiary.</span></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3><span data-l="es">En el mapa</span><span data-l="en">On the map</span></h3>
+          <ul>
+            <li><span data-l="es">Escenas con imagen propia, fichas con retrato y distancias en las bandas de alcance de Daggerheart. La cuadrícula es opcional.</span><span data-l="en">Scenes with your own image, portrait tokens and distances in Daggerheart's range bands. The grid is optional.</span></li>
+            <li><span data-l="es">Niebla de guerra a pincel, o calculada desde los muros según lo que ve cada ficha.</span><span data-l="en">Fog of war by brush, or computed from walls by what each token can see.</span></li>
+            <li><span data-l="es">Muros y puertas que bloquean la visión y la luz.</span><span data-l="en">Walls and doors that block vision and light.</span></li>
+            <li><span data-l="es">Regiones de terreno difícil, peligros y notas que avisan al DJ cuando alguien entra.</span><span data-l="en">Regions for difficult terrain, hazards and notes that tell the GM when someone walks in.</span></li>
+            <li><span data-l="es">Diario de campaña con entradas compartidas o solo para el DJ, y notas en el mapa que lo abren.</span><span data-l="en">A campaign journal with shared or GM-only entries, and map pins that open them.</span></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3><span data-l="es">Entre sesiones</span><span data-l="en">Between sessions</span></h3>
+          <ul>
+            <li><span data-l="es">Ficha interactiva: daño contra umbrales, subida de nivel, descansos y exportación a PDF.</span><span data-l="en">An interactive sheet: damage against thresholds, level up, downtime and PDF export.</span></li>
+            <li><span data-l="es">Cada jugador tiene su biblioteca de personajes en el servidor, disponible desde cualquier dispositivo.</span><span data-l="en">Each player keeps a character library on the server, reachable from any device.</span></li>
+            <li><span data-l="es">El DJ gestiona sus campañas (activas, en pausa o terminadas): historia, notas, monstruos preparados y jugadores invitados.</span><span data-l="en">The GM manages campaigns (active, paused or finished): story, notes, prepared monsters and invited players.</span></li>
+            <li><span data-l="es">Interfaz y contenido del SRD en español e inglés, con ayuda y compendio integrados.</span><span data-l="en">Interface and SRD content in Spanish and English, with built-in help and compendium.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two more screens, unequal on purpose: the sheet is the one you live in. -->
+    <section class="screens" aria-label="Más capturas" data-aria-es="Más capturas" data-aria-en="More screenshots">
+      <figure class="shot shot-sheet">
+        <img src="assets/shots/sheet.webp" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Ficha de Aria Vendrell, bardo de nivel 1: rasgos, defensas, umbrales de daño, equipo y el estado de la mesa"
+             data-alt-es="Ficha de Aria Vendrell, bardo de nivel 1: rasgos, defensas, umbrales de daño, equipo y el estado de la mesa"
+             data-alt-en="Aria Vendrell's sheet, a level 1 bard: traits, defenses, damage thresholds, equipment and the table status">
+        <figcaption><span data-l="es">La ficha. Un clic en un rasgo y se tira.</span><span data-l="en">The sheet. Click a trait to roll it.</span></figcaption>
+      </figure>
+      <figure class="shot shot-campaign">
+        <img src="assets/shots/campaign-monsters.webp" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Página de campaña del DJ, pestaña Monstruos: adversarios preparados con cantidad y nota, y un buscador del bestiario"
+             data-alt-es="Página de campaña del DJ, pestaña Monstruos: adversarios preparados con cantidad y nota, y un buscador del bestiario"
+             data-alt-en="The GM's campaign page, Monsters tab: prepared adversaries with quantity and note, and a bestiary search">
+        <figcaption><span data-l="es">La campaña del DJ: prepara los monstruos antes de la sesión.</span><span data-l="en">The GM's campaign page: prepare monsters before the session.</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- How to play -->
+    <section class="play" id="como-jugar" aria-labelledby="play-h">
+      <div class="play-banner">
+        <img src="assets/art/my-campaigns.webp" width="1200" height="600" loading="lazy" alt="">
+        <h2 id="play-h"><span data-l="es">Cómo jugar</span><span data-l="en">How to play</span></h2>
+      </div>
+
+      <p class="play-lede">
+        <span data-l="es">No hay un servidor público. Quien dirige descarga Dual VTT y lo ejecuta en su equipo; el resto de la mesa entra desde el navegador.</span>
+        <span data-l="en">There is no public server. Whoever runs the game downloads Dual VTT and runs it on their computer; everyone else joins from a browser.</span>
+      </p>
+
+      <div class="play-grid">
+        <div class="play-main">
+          <h3><span data-l="es">Necesitas</span><span data-l="en">You need</span></h3>
+          <p class="needs">
+            <span data-l="es"><a href="https://nodejs.org/">Node.js</a> 20 o superior y <a href="https://pnpm.io/installation">pnpm</a>. Si no tienes pnpm, instálalo con <code>npm install -g pnpm</code>.</span>
+            <span data-l="en"><a href="https://nodejs.org/">Node.js</a> 20 or newer and <a href="https://pnpm.io/installation">pnpm</a>. Without pnpm, install it with <code>npm install -g pnpm</code>.</span>
+          </p>
+
+          <h3><span data-l="es">Para el DJ</span><span data-l="en">For the GM</span></h3>
+          <ol class="steps">
+            <li>
+              <p><span data-l="es">Descarga el <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">zip</a> y descomprímelo, o clona el repositorio. Abre una terminal en esa carpeta.</span><span data-l="en">Download the <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">zip</a> and unpack it, or clone the repository. Open a terminal in that folder.</span></p>
+              <div class="code"><pre><code>git clone https://github.com/CristoSolar/dual-vtt.git
+cd dual-vtt</code></pre><button class="copy" type="button">Copiar</button></div>
+            </li>
+            <li>
+              <p><span data-l="es">Instala las dependencias.</span><span data-l="en">Install the dependencies.</span></p>
+              <div class="code"><pre><code>pnpm install</code></pre><button class="copy" type="button">Copiar</button></div>
+            </li>
+            <li>
+              <p><span data-l="es">Arranca el servidor. Compila la app y la sirve en <code>http://localhost:4000</code>.</span><span data-l="en">Start the server. It builds the app and serves it at <code>http://localhost:4000</code>.</span></p>
+              <div class="code"><pre><code>pnpm -F @daggerheart/server host</code></pre><button class="copy" type="button">Copiar</button></div>
+            </li>
+            <li>
+              <p><span data-l="es">Entra como <code>gm</code> / <code>gm</code>; te pedirá cambiar la contraseña. En <b>Mis jugadores</b> crea una cuenta para cada jugador, y en <b>Mis campañas</b> crea la campaña e invítalos.</span><span data-l="en">Sign in as <code>gm</code> / <code>gm</code>; you will be asked to change the password. Under <b>My players</b> create an account for each player, then create the campaign under <b>My campaigns</b> and invite them.</span></p>
+            </li>
+            <li>
+              <p><span data-l="es">Al final de <b>Mis campañas</b>, pulsa <b>Generar enlace para jugadores</b>. Se abre un túnel de Cloudflare con una dirección pública: compártela. Dura mientras el servidor siga encendido.</span><span data-l="en">At the bottom of <b>My campaigns</b>, click <b>Generate link for players</b>. It opens a Cloudflare tunnel with a public address: share it. It lasts as long as the server keeps running.</span></p>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="play-side">
+          <div class="side-block">
+            <h3><span data-l="es">Con Docker</span><span data-l="en">With Docker</span></h3>
+            <p><span data-l="es">Si prefieres no instalar Node, desde la carpeta del proyecto:</span><span data-l="en">If you would rather not install Node, from the project folder:</span></p>
+            <div class="code"><pre><code>GM_PASSWORD=elige-una docker compose up -d --build</code></pre><button class="copy" type="button">Copiar</button></div>
+            <p class="small"><span data-l="es">Queda en <code>http://localhost:4000</code>. Los datos viven en un volumen y sobreviven a <code>docker compose down</code>.</span><span data-l="en">It runs at <code>http://localhost:4000</code>. Data lives in a volume and survives <code>docker compose down</code>.</span></p>
+          </div>
+
+          <div class="side-block side-players">
+            <img src="assets/art/my-characters.webp" width="1200" height="600" loading="lazy" alt="">
+            <h3><span data-l="es">Para los jugadores</span><span data-l="en">For players</span></h3>
+            <p><span data-l="es">No instalan nada. Abren el enlace del DJ, entran con la cuenta que les creó, cambian la contraseña y aceptan la invitación en <b>Mis campañas</b>. Luego crean su personaje en <b>Mis personajes</b> y lo vinculan a la campaña.</span><span data-l="en">Nothing to install. They open the GM's link, sign in with the account the GM created, change the password and accept the invitation under <b>My campaigns</b>. Then they create a character under <b>My characters</b> and link it to the campaign.</span></p>
+            <p class="small"><span data-l="es">Cualquiera con el enlace llega a la pantalla de acceso, así que usa contraseñas de verdad.</span><span data-l="en">Anyone with the link reaches the sign-in screen, so use real passwords.</span></p>
+          </div>
+
+          <p class="small backup"><span data-l="es">Campañas, cuentas y personajes se guardan en <code>apps/server/.data/</code>. Haz copia de esa carpeta.</span><span data-l="en">Campaigns, accounts and characters are saved in <code>apps/server/.data/</code>. Back that folder up.</span></p>
+        </aside>
+      </div>
+
+      <div class="cta-row cta-end">
+        <a class="btn btn-primary" href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip"><span data-l="es">Descargar</span><span data-l="en">Download</span></a>
+        <a class="text-link" href="https://github.com/CristoSolar/dual-vtt/releases/latest"><span data-l="es">Versiones publicadas</span><span data-l="en">Published releases</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="legal">
+    <div class="legal-inner">
+      <img class="compat" src="assets/daggerheart-compatible.svg" width="220" height="54" loading="lazy" alt="Daggerheart Compatible">
+      <div class="legal-text">
+        <p>
+          <span data-l="es">Este producto incluye materiales del Daggerheart System Reference Document 2.0, © Critical Role, LLC, bajo los términos de la Darrington Press Community Gaming (DPCGL) License. Más información en <a href="https://www.daggerheart.com">daggerheart.com</a> y en <a href="https://www.darringtonpress.com/license/">darringtonpress.com/license</a>.</span>
+          <span data-l="en">This product includes materials from the Daggerheart System Reference Document 2.0, © Critical Role, LLC, under the terms of the Darrington Press Community Gaming (DPCGL) License. More information can be found at <a href="https://www.daggerheart.com">daggerheart.com</a> and at <a href="https://www.darringtonpress.com/license/">darringtonpress.com/license</a>.</span>
+        </p>
+        <p>
+          <span data-l="es">Dual VTT es una herramienta independiente, no oficial y hecha por fans. No está afiliada, avalada, patrocinada ni aprobada por Darrington Press ni por Critical Role. Daggerheart es una marca de Critical Role, LLC.</span>
+          <span data-l="en">Dual VTT is an independent, unofficial, fan-made tool. It is not affiliated with, endorsed, sponsored, or specifically approved by Darrington Press or Critical Role. Daggerheart is a trademark of Critical Role, LLC.</span>
+        </p>
+        <p>Daggerheart™ Compatible. Terms at Daggerheart.com</p>
+        <p class="small">
+          <span data-l="es">Gratis y sin fines de lucro. Código bajo licencia MIT; detalles en <a href="https://github.com/CristoSolar/dual-vtt/blob/main/NOTICE.md">NOTICE.md</a>.</span>
+          <span data-l="en">Free and not for profit. Code under the MIT licence; details in <a href="https://github.com/CristoSolar/dual-vtt/blob/main/NOTICE.md">NOTICE.md</a>.</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
