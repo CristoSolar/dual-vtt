@@ -261,7 +261,6 @@ export const es = {
   'auth.wrongCurrentPassword': 'La contraseña actual no es correcta.',
 
   // character-creation wizard
-  'wizard.and': 'y',
   'wizard.stepTitle.1': 'Clase y Subclase',
   'wizard.stepTitle.2': 'Herencia',
   'wizard.stepTitle.3': 'Rasgos',
@@ -296,7 +295,6 @@ export const es = {
   'wizard.errorSummary.title': 'Todavía falta terminar',
 
   'wizard.step1.classLegend': 'Clase',
-  'wizard.step1.classMeta': 'Evasión {evasion} · PV {hp} · {domains}',
   'wizard.step1.subclassLegend': 'Subclase',
   'wizard.step1.noSpellcastTrait': 'Sin rasgo de Lanzamiento de Conjuros',
   'wizard.step1.spellcastTrait': 'Lanzamiento de Conjuros: {trait}',
@@ -310,6 +308,26 @@ export const es = {
   'wizard.step2.secondSlotLegend': 'Segundo rasgo listado de',
   'wizard.step2.ancestryLegend': 'Ascendencia',
   'wizard.step2.communityLegend': 'Comunidad',
+
+  'wizard.card.evasion': 'Evasión {value}',
+  'wizard.card.hp': 'PV {value}',
+  'wizard.card.hopeFeature': 'Rasgo de Esperanza',
+  'wizard.card.classFeatures': 'Rasgos de clase',
+  'wizard.card.domains': 'Dominios',
+  'wizard.card.feature': 'Rasgo',
+
+  'carousel.roleDescription': 'carrusel',
+  'carousel.prev': 'Anterior',
+  'carousel.next': 'Siguiente',
+  'carousel.choose': 'Elegir',
+  'carousel.chooseNamed': 'Elegir {name}',
+  'carousel.chosen': 'Elegido',
+  'carousel.showDetail': 'Ver detalle',
+  'carousel.hideDetail': 'Ocultar detalle',
+  'carousel.position': '{name}, {index} de {total}',
+  'carousel.announceChosen': 'Elegiste {name}.',
+  'carousel.jumpTo': 'Ir a',
+  'carousel.hint': 'Flechas para recorrer, Intro para elegir.',
 
   'wizard.step3.assignHint': 'Asigna {modifiers} entre los seis Rasgos.',
   'wizard.step3.recommended': 'Reparto recomendado',

@@ -246,7 +246,6 @@ export const en: Record<keyof typeof es, string> = {
   'auth.wrongCurrentPassword': 'The current password is incorrect.',
 
   // character-creation wizard
-  'wizard.and': 'and',
   'wizard.stepTitle.1': 'Class and Subclass',
   'wizard.stepTitle.2': 'Heritage',
   'wizard.stepTitle.3': 'Traits',
@@ -281,7 +280,6 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.errorSummary.title': 'Still missing',
 
   'wizard.step1.classLegend': 'Class',
-  'wizard.step1.classMeta': 'Evasion {evasion} · HP {hp} · {domains}',
   'wizard.step1.subclassLegend': 'Subclass',
   'wizard.step1.noSpellcastTrait': 'No Spellcast trait',
   'wizard.step1.spellcastTrait': 'Spellcast: {trait}',
@@ -295,6 +293,26 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.step2.secondSlotLegend': 'Second-listed feature from',
   'wizard.step2.ancestryLegend': 'Ancestry',
   'wizard.step2.communityLegend': 'Community',
+
+  'wizard.card.evasion': 'Evasion {value}',
+  'wizard.card.hp': 'HP {value}',
+  'wizard.card.hopeFeature': 'Hope feature',
+  'wizard.card.classFeatures': 'Class features',
+  'wizard.card.domains': 'Domains',
+  'wizard.card.feature': 'Feature',
+
+  'carousel.roleDescription': 'carousel',
+  'carousel.prev': 'Previous',
+  'carousel.next': 'Next',
+  'carousel.choose': 'Choose',
+  'carousel.chooseNamed': 'Choose {name}',
+  'carousel.chosen': 'Chosen',
+  'carousel.showDetail': 'Show details',
+  'carousel.hideDetail': 'Hide details',
+  'carousel.position': '{name}, {index} of {total}',
+  'carousel.announceChosen': 'You chose {name}.',
+  'carousel.jumpTo': 'Go to',
+  'carousel.hint': 'Arrow keys to browse, Enter to choose.',
 
   'wizard.step3.assignHint': 'Assign {modifiers} across the six Traits.',
   'wizard.step3.recommended': 'Recommended spread',

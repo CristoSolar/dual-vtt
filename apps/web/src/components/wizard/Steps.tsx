@@ -10,12 +10,13 @@ import { srd } from '@daggerheart/srd-data';
 import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
-import { artUrl } from '../../state/art.js';
-import { domainName, groupCardsByDomain } from '../../state/domains.js';
+import { groupCardsByDomain } from '../../state/domains.js';
 import { fieldErrors } from '../../state/useCreation.js';
 import { formatSigned, label as prettify } from '../../state/selectors.js';
 import { DomainHeader } from '../Domain.js';
+import { CardCarousel } from '../CardCarousel.js';
 import { OptionList } from '../OptionList.js';
+import { ancestryItem, classItem, communityItem } from './cardItems.js';
 import { DomainCardPick } from './DomainCardPick.js';
 import { FieldErrors, TextField } from './StepFields.js';
 
@@ -30,18 +31,9 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
   const options = availableOptions(state, 1);
   return (
     <>
-      <OptionList
+      <CardCarousel
         legend={t('wizard.step1.classLegend')}
-        options={options.classes.map((c) => ({
-          id: c.id,
-          name: c.name,
-          meta: t('wizard.step1.classMeta', {
-            evasion: c.startingEvasion,
-            hp: c.startingHP,
-            domains: c.domains.map(domainName).join(` ${t('wizard.and')} `),
-          }),
-          image: artUrl('classes', c.id),
-        }))}
+        items={options.classes.map((c) => classItem(c))}
         selectedId={state.classId}
         onSelect={(classId) => dispatch({ type: 'chooseClass', classId })}
       />
@@ -109,52 +101,32 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
       {mixed ? (
         <>
           <p className="muted">{t('wizard.step2.mixedAncestryHint')}</p>
-          <OptionList
+          <CardCarousel
             legend={t('wizard.step2.firstSlotLegend')}
-            options={options.mixedFirstSlot.map((a) => ({
-              id: a.id,
-              name: a.name,
-              meta: a.features.find((f) => f.slot === 'first')?.name,
-              image: artUrl('ancestries', a.id),
-            }))}
+            items={options.mixedFirstSlot.map((a) => ancestryItem(a, 'first'))}
             selectedId={pendingFirst}
             onSelect={(id) => selectMixed('first', id)}
           />
-          <OptionList
+          <CardCarousel
             legend={t('wizard.step2.secondSlotLegend')}
-            options={options.mixedSecondSlot.map((a) => ({
-              id: a.id,
-              name: a.name,
-              meta: a.features.find((f) => f.slot === 'second')?.name,
-              image: artUrl('ancestries', a.id),
-            }))}
+            items={options.mixedSecondSlot.map((a) => ancestryItem(a, 'second'))}
             selectedId={pendingSecond}
             onSelect={(id) => selectMixed('second', id)}
           />
         </>
       ) : (
-        <OptionList
+        <CardCarousel
           legend={t('wizard.step2.ancestryLegend')}
-          options={options.ancestries.map((a) => ({
-            id: a.id,
-            name: a.name,
-            meta: a.features.map((f) => f.name).join(' · '),
-            image: artUrl('ancestries', a.id),
-          }))}
+          items={options.ancestries.map((a) => ancestryItem(a))}
           selectedId={heritage?.kind === 'single' ? heritage.ancestryId : null}
           onSelect={(ancestryId) => dispatch({ type: 'chooseAncestry', ancestryId })}
         />
       )}
       <FieldErrors errors={fieldErrors(errors, 'heritage')} />
 
-      <OptionList
+      <CardCarousel
         legend={t('wizard.step2.communityLegend')}
-        options={options.communities.map((c) => ({
-          id: c.id,
-          name: c.name,
-          meta: c.feature.name,
-          image: artUrl('communities', c.id),
-        }))}
+        items={options.communities.map((c) => communityItem(c))}
         selectedId={state.communityId}
         onSelect={(communityId) => dispatch({ type: 'chooseCommunity', communityId })}
       />

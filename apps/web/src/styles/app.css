@@ -791,6 +791,421 @@ button.link {
   font-size: var(--fs-sm);
 }
 
+/* ============================================================ card carousel */
+
+/*
+ * A coverflow of tall cards: the centre card faces the player, two neighbours
+ * each side turn inward and fall back, the rest wait off stage. Every card reads
+ * its place from three custom properties set inline (--offset: signed ring
+ * offset, --abs: its distance, --pos: eased horizontal slot), so all geometry
+ * lives here and the breakpoints only retune the numbers.
+ */
+.carousel {
+  --card-w: 310px;
+  --card-h: 450px;
+  --spread: 215px;
+  --tilt: 34deg;
+  --depth: 140px;
+  --shrink: 0;
+  --card-motion: 520ms;
+  --card-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Extra room under the cards; the narrow layout parks the arrows there. */
+  --foot: 0px;
+  min-width: 0;
+}
+
+.carousel-stage {
+  position: relative;
+  height: calc(var(--card-h) + 2 * var(--sp-5) + var(--foot));
+  overflow-x: clip;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.carousel-track {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  /* Cards pushed back in Z sit behind the list's own plane; let clicks through. */
+  pointer-events: none;
+}
+
+.carousel-track:focus-visible {
+  outline: none;
+}
+
+.carousel-card {
+  --card-accent-ink: color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 55%, var(--c-text));
+  position: absolute;
+  top: var(--sp-5);
+  left: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  margin-left: calc(var(--card-w) / -2);
+  overflow: hidden;
+  border-radius: var(--radius-modal);
+  border: var(--size-rule) solid color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 70%, transparent);
+  border-top: 3px solid var(--card-accent, var(--c-brass-dim));
+  background: var(--c-surface-2);
+  box-shadow: var(--shadow-3);
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateX(calc(var(--pos) * var(--spread)))
+    translateZ(calc(var(--abs) * var(--depth) * -1)) rotateY(calc(var(--offset) * var(--tilt) * -1))
+    scale(calc(1 - var(--abs) * var(--shrink)));
+  transition:
+    transform var(--card-motion) var(--card-ease),
+    opacity var(--card-motion) var(--card-ease),
+    box-shadow var(--motion-base) var(--ease),
+    visibility 0s;
+}
+
+/* Side cards sit in shadow: darker the further from the centre. */
+.carousel-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / calc(var(--abs) * 26%));
+  pointer-events: none;
+  transition: background var(--card-motion) var(--card-ease);
+}
+
+.carousel-card.is-centre {
+  cursor: default;
+}
+
+.carousel-card.is-offstage {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform var(--card-motion) var(--card-ease),
+    opacity var(--card-motion) var(--card-ease),
+    visibility 0s linear var(--card-motion);
+}
+
+.carousel-track:focus-visible .carousel-card.is-centre {
+  outline: var(--focus-ring) solid var(--c-focus);
+  outline-offset: 4px;
+}
+
+.carousel-card.is-chosen {
+  border-color: var(--c-brass-bright);
+  box-shadow:
+    0 0 0 2px var(--c-brass),
+    0 0 36px -8px rgb(216 164 65 / 70%),
+    var(--shadow-3);
+}
+
+.carousel-card-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  pointer-events: none;
+}
+
+.carousel-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    rgb(11 8 18 / 72%) 58%,
+    var(--c-bg) 92%
+  );
+}
+
+.carousel-card-check {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, #e3b75c, #c08f2e);
+  border: var(--size-rule) solid var(--c-brass-bright);
+  color: var(--c-on-brass);
+  font-weight: var(--fw-bold);
+  box-shadow: var(--shadow-2);
+}
+
+.carousel-card-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  /* Room at the foot for the Choose / details row laid over the centre card. */
+  padding: var(--sp-5) var(--sp-5) calc(var(--size-tap) + 2 * var(--sp-4));
+}
+
+.carousel-card-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--c-text);
+  text-shadow: 0 2px 12px rgb(0 0 0 / 80%);
+  overflow-wrap: anywhere;
+}
+
+.carousel-card-flavor {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-text-muted);
+}
+
+.carousel-card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-top: var(--sp-1);
+}
+
+/* Stats on one line, domains on the next. */
+.carousel-chip-break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.carousel-chip,
+.carousel-card-chips .domain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px 0.45rem;
+  border-radius: var(--radius-chip);
+  border: var(--size-rule) solid color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 60%, transparent);
+  background: rgb(11 8 18 / 62%);
+  color: var(--c-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.carousel-card-chips .domain-badge {
+  border-color: var(--domain-color);
+  background: color-mix(in oklab, var(--domain-color) 24%, rgb(11 8 18 / 70%));
+  color: var(--domain-ink);
+}
+
+/* Choose and details: laid over the foot of the centre card, outside the listbox. */
+.carousel-actions {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(var(--sp-5) + var(--sp-4) + var(--foot));
+  width: calc(var(--card-w) - 2 * var(--sp-5));
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.carousel-choose {
+  flex: 1;
+  color: var(--c-text);
+  border-color: var(--card-accent, var(--c-brass-dim));
+  background: color-mix(in oklab, var(--c-brass-dim) 30%, var(--c-surface-1));
+}
+
+.carousel-choose.is-chosen {
+  color: var(--c-brass-bright);
+  border-color: var(--c-brass);
+  background: var(--sel-bg);
+  box-shadow: var(--sel-ring), var(--sel-glow);
+}
+
+.carousel-detail-toggle {
+  background: rgb(11 8 18 / 70%);
+}
+
+.carousel-arrow {
+  position: absolute;
+  z-index: 30;
+  top: 50%;
+  width: var(--size-tap);
+  height: var(--size-tap);
+  padding: 0;
+  margin-top: calc(var(--size-tap) / -2);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xl);
+  line-height: 1;
+  color: var(--c-text);
+  background: var(--c-glass);
+}
+
+.carousel-arrow-prev {
+  left: var(--sp-2);
+}
+
+.carousel-arrow-next {
+  right: var(--sp-2);
+}
+
+.carousel-index {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 var(--sp-1);
+  margin: var(--sp-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carousel-index-item {
+  padding: 0 var(--sp-2);
+  border: 0;
+  border-bottom: var(--size-rule-thick) solid transparent;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--c-text-faint);
+}
+
+.carousel-index-item.is-chosen::before {
+  content: '✓ ';
+  color: var(--c-brass);
+}
+
+.carousel-index-item.is-current {
+  color: var(--c-text);
+  border-bottom-color: var(--c-brass);
+}
+
+.carousel-detail {
+  margin-top: var(--sp-5);
+  padding: var(--sp-5);
+  border-top: 3px solid var(--card-accent, var(--c-brass-dim));
+  border-radius: var(--radius-panel);
+  background: var(--c-surface-1);
+}
+
+.carousel-detail-title {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+}
+
+.carousel-detail-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.carousel-detail-domains {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.carousel-feature + .carousel-feature {
+  margin-top: var(--sp-4);
+}
+
+.carousel-feature-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-1);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--c-text);
+}
+
+.carousel-feature-kind {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--c-text-faint);
+}
+
+.carousel-feature-text {
+  margin: 0;
+  max-width: 68ch;
+  white-space: pre-line;
+  color: var(--c-text-muted);
+}
+
+@media (max-width: 1000px) {
+  .carousel {
+    --card-w: 260px;
+    --card-h: 400px;
+    --spread: 165px;
+    --tilt: 30deg;
+  }
+}
+
+/* One card, the neighbours peeking in from the edges; swipe to move. */
+@media (max-width: 699px) {
+  .carousel {
+    --card-w: min(70vw, 280px);
+    --card-h: calc(var(--card-w) * 1.5);
+    --spread: calc(var(--card-w) * 0.9);
+    --tilt: 16deg;
+    --depth: 90px;
+    --foot: calc(var(--size-tap) - var(--sp-3));
+  }
+
+  .carousel-card[data-abs='2'] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .carousel-card-name {
+    font-size: var(--fs-xl);
+  }
+
+  .carousel-arrow {
+    top: auto;
+    bottom: 0;
+    margin-top: 0;
+  }
+
+  .carousel-arrow-prev {
+    left: calc(50% - var(--size-tap) - var(--sp-2));
+  }
+
+  .carousel-arrow-next {
+    right: calc(50% - var(--size-tap) - var(--sp-2));
+  }
+}
+
+/* No turning, no travel: the cards just swap places in a flat row. */
+@media (prefers-reduced-motion: reduce) {
+  .carousel {
+    --tilt: 0deg;
+    --depth: 0px;
+    --shrink: 0.1;
+  }
+
+  .carousel-card,
+  .carousel-card.is-offstage,
+  .carousel-card::after {
+    transition: none;
+  }
+}
+
 /* ========================================================== wizard progress */
 
 .steps {
