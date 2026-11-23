@@ -1,5 +1,8 @@
 import {
   availableOptions,
+  findArmor,
+  findWeapon,
+  spellcastTrait,
   type CreationAction,
   type CreationState,
   type Equipment,
@@ -11,12 +14,14 @@ import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
 import { groupCardsByDomain } from '../../state/domains.js';
+import { rankWeapons } from '../../state/equipment.js';
 import { fieldErrors } from '../../state/useCreation.js';
 import { formatSigned, label as prettify } from '../../state/selectors.js';
 import { DomainHeader } from '../Domain.js';
 import { CardCarousel } from '../CardCarousel.js';
 import { OptionList } from '../OptionList.js';
-import { ancestryItem, classItem, communityItem } from './cardItems.js';
+import { ancestryItem, armorItem, classItem, communityItem, weaponItem } from './cardItems.js';
+import { EquipmentSummary } from './EquipmentSummary.js';
 import { DomainCardPick } from './DomainCardPick.js';
 import { FieldErrors, TextField } from './StepFields.js';
 
@@ -289,7 +294,9 @@ export function StepDerived({ state }: StepProps) {
 /** Step 5 — starting equipment. */
 export function StepEquipment({ state, dispatch, errors }: StepProps) {
   const options = availableOptions(state, 5);
+  const { derived } = availableOptions(state, 4);
   const equipment = state.equipment;
+  const spellcast = spellcastTrait(state);
 
   const update = (patch: Partial<Equipment>) => {
     const base: Equipment = equipment ?? {
@@ -303,48 +310,61 @@ export function StepEquipment({ state, dispatch, errors }: StepProps) {
     dispatch({ type: 'chooseEquipment', equipment: { ...base, ...patch } });
   };
 
+  // The lists are already only what this character may take (Tier 1, magic only
+  // with a Spellcast trait, no secondary beside a two-handed primary); ranking
+  // just puts what suits their traits first.
+  const primaries = rankWeapons(options.primaryWeapons, state.traits, spellcast);
+  const secondaries = rankWeapons(options.secondaryWeapons, state.traits, spellcast);
+  const primary = findWeapon(equipment?.primaryWeaponId ?? null);
+  const secondary = findWeapon(equipment?.secondaryWeaponId ?? null);
+  const handsFull = primary?.burden === 'twoHanded';
+
+  const choosePrimary = (primaryWeaponId: string) => {
+    const next = findWeapon(primaryWeaponId);
+    // A two-handed primary takes the secondary's hand: drop it rather than
+    // leave a choice the list no longer offers.
+    update(next?.burden === 'twoHanded' ? { primaryWeaponId, secondaryWeaponId: null } : { primaryWeaponId });
+  };
+
   return (
     <>
-      <OptionList
+      <EquipmentSummary
+        primary={primary}
+        secondary={secondary}
+        handsFull={handsFull}
+        armor={findArmor(equipment?.armorId ?? null)}
+        evasion={derived?.evasion ?? null}
+        level={derived?.level ?? 1}
+      />
+      {state.traits !== null ? <p className="muted">{t('wizard.step5.recommendHint')}</p> : null}
+
+      <CardCarousel
         legend={t('wizard.step5.primaryWeaponLegend')}
-        options={options.primaryWeapons.map((w) => ({
-          id: w.id,
-          name: w.name,
-          meta: `${prettify(w.trait)} · ${prettify(w.range)} · ${prettify(w.burden)}${
-            w.feature ? ` · ${w.feature.name}` : ''
-          }`,
-        }))}
+        items={primaries.map(weaponItem)}
         selectedId={equipment?.primaryWeaponId ?? null}
-        onSelect={(primaryWeaponId) => update({ primaryWeaponId })}
+        onSelect={choosePrimary}
       />
       <FieldErrors errors={fieldErrors(errors, 'equipment.primaryWeaponId')} />
 
-      <OptionList
+      <CardCarousel
         legend={t('wizard.step5.secondaryWeaponLegend')}
-        options={options.secondaryWeapons.map((w) => ({
-          id: w.id,
-          name: w.name,
-          meta: `${prettify(w.trait)} · ${prettify(w.range)}${w.feature ? ` · ${w.feature.name}` : ''}`,
-        }))}
+        items={secondaries.map(weaponItem)}
         selectedId={equipment?.secondaryWeaponId ?? null}
         onSelect={(id) =>
           update({ secondaryWeaponId: equipment?.secondaryWeaponId === id ? null : id })
         }
         emptyMessage={t('wizard.step5.noHandFree')}
       />
+      {equipment?.secondaryWeaponId != null ? (
+        <button type="button" className="gear-clear" onClick={() => update({ secondaryWeaponId: null })}>
+          {t('wizard.step5.clearSecondary')}
+        </button>
+      ) : null}
       <FieldErrors errors={fieldErrors(errors, 'equipment.secondaryWeaponId')} />
 
-      <OptionList
+      <CardCarousel
         legend={t('wizard.step5.armorLegend')}
-        options={options.armor.map((a) => ({
-          id: a.id,
-          name: a.name,
-          meta: t('wizard.step5.armorMeta', {
-            major: a.baseThresholds.major,
-            severe: a.baseThresholds.severe,
-            score: a.baseScore,
-          }) + (a.feature ? ` · ${a.feature.name}` : ''),
-        }))}
+        items={options.armor.map(armorItem)}
         selectedId={equipment?.armorId ?? null}
         onSelect={(armorId) => update({ armorId })}
       />

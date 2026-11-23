@@ -16,6 +16,17 @@ export interface CarouselItem {
   name: string;
   /** Full-bleed art. Omit for an item with no picture. */
   image?: string | undefined;
+  /**
+   * Drawn under the art, and alone if the art is missing or fails to load — so a
+   * card whose picture isn't drawn yet never shows a broken image.
+   */
+  fallback?: ReactNode;
+  /** A small label pinned to the card's top-left corner, e.g. "Recommended". */
+  badge?: ReactNode;
+  /** An extra line between the name and the flavor, e.g. why it's recommended. */
+  note?: ReactNode;
+  /** Extra classes on the card, for per-item styling (`is-magic`). */
+  className?: string | undefined;
   /** One or two lines of SRD text, already shortened (see `flavorText`). */
   flavor?: string | undefined;
   /** CSS custom properties for the card frame, e.g. `--card-accent`. */
@@ -68,6 +79,7 @@ export function CardCarousel({
   const [detailOpen, setDetailOpen] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const seen = useRef(new Set<string>());
+  const [broken, setBroken] = useState<ReadonlySet<string>>(() => new Set());
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const swiped = useRef(false);
 
@@ -175,6 +187,7 @@ export function CardCarousel({
               zIndex: 10 - distance,
             } as CSSProperties;
             const classes = ['carousel-card'];
+            if (item.className) classes.push(item.className);
             if (distance === 0) classes.push('is-centre');
             if (distance > RADIUS) classes.push('is-offstage');
             if (chosen) classes.push('is-chosen');
@@ -195,7 +208,12 @@ export function CardCarousel({
                   goTo(i, true);
                 }}
               >
-                {item.image !== undefined && seen.current.has(item.id) ? (
+                {item.fallback !== undefined ? (
+                  <span className="carousel-card-fallback" aria-hidden="true">
+                    {item.fallback}
+                  </span>
+                ) : null}
+                {item.image !== undefined && seen.current.has(item.id) && !broken.has(item.image) ? (
                   <img
                     className="carousel-card-art"
                     src={item.image}
@@ -203,9 +221,14 @@ export function CardCarousel({
                     loading={distance <= RADIUS ? 'eager' : 'lazy'}
                     decoding="async"
                     draggable={false}
+                    onError={() => {
+                      const src = item.image;
+                      if (src !== undefined) setBroken((prev) => new Set(prev).add(src));
+                    }}
                   />
                 ) : null}
                 <span className="carousel-card-shade" aria-hidden="true" />
+                {item.badge ? <span className="carousel-card-badge">{item.badge}</span> : null}
                 {chosen ? (
                   <span className="carousel-card-check" aria-hidden="true">
                     ✓
@@ -213,6 +236,7 @@ export function CardCarousel({
                 ) : null}
                 <span className="carousel-card-body">
                   <span className="carousel-card-name">{item.name}</span>
+                  {item.note ? <span className="carousel-card-note">{item.note}</span> : null}
                   {item.flavor ? <span className="carousel-card-flavor">{item.flavor}</span> : null}
                   {item.chips ? <span className="carousel-card-chips">{item.chips}</span> : null}
                 </span>

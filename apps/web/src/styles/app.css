@@ -1206,6 +1206,215 @@ button.link {
   }
 }
 
+/* ============================================== equipment cards (wizard 5) */
+
+/*
+ * Weapon and armor cards: art when it exists, and always a fallback face under
+ * it — a gradient in the card's accent with a big line glyph — so a missing
+ * picture reads as a designed card, never a broken image.
+ */
+.carousel-card-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12%;
+  background:
+    radial-gradient(
+      ellipse 80% 55% at 50% 30%,
+      color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 42%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 30%, var(--c-surface-3)),
+      var(--c-bg) 85%
+    );
+  color: color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 45%, var(--c-text));
+}
+
+.gear-glyph {
+  width: 58%;
+  height: auto;
+  opacity: 0.85;
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 55%));
+}
+
+.carousel-card-badge {
+  position: absolute;
+  top: var(--sp-4);
+  left: var(--sp-4);
+  padding: 3px 0.6rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, #e3b75c, #c08f2e);
+  border: var(--size-rule) solid var(--c-brass-bright);
+  color: var(--c-on-brass);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-2);
+}
+
+.carousel-card-note {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+
+.gear-note {
+  color: var(--c-text-faint);
+}
+
+.gear-note.is-recommended {
+  color: var(--c-brass-bright);
+  font-weight: var(--fw-semibold);
+}
+
+.gear-chip-damage {
+  border-color: color-mix(in oklab, var(--c-brass) 70%, transparent);
+  color: var(--c-brass-pale);
+}
+
+.gear-chip-damage.is-magic {
+  border-color: var(--c-violet-bright);
+  color: var(--c-violet-bright);
+}
+
+/* Magic weapons glow faintly violet, side cards included. */
+.gear-card.is-magic:not(.is-chosen) {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--c-violet) 55%, transparent),
+    0 0 34px -10px var(--c-violet-bright),
+    var(--shadow-3);
+}
+
+.gear-card.is-magic .gear-glyph {
+  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--c-violet-bright) 70%, transparent));
+}
+
+.gear-clear {
+  display: block;
+  margin: calc(var(--sp-2) * -1) auto var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+.gear-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-panel);
+  background: var(--c-surface-1);
+}
+
+.gear-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gear-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.gear-thumb {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  overflow: hidden;
+  border-radius: var(--radius-chip);
+  border: var(--size-rule) solid var(--c-line-bronze-hover);
+  background: linear-gradient(160deg, var(--c-surface-3), var(--c-bg));
+  color: var(--c-brass-label);
+}
+
+.gear-slot.is-empty .gear-thumb {
+  border-style: dashed;
+  border-color: var(--c-line);
+}
+
+.gear-thumb-glyph {
+  width: 70%;
+  height: 70%;
+}
+
+.gear-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gear-slot-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gear-slot-title {
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.gear-slot-name {
+  font-weight: var(--fw-semibold);
+  color: var(--c-text);
+}
+
+.gear-slot.is-empty .gear-slot-name {
+  font-weight: var(--fw-medium);
+  color: var(--c-text-muted);
+}
+
+.gear-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+}
+
+.gear-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  min-width: 4.5rem;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-chip);
+  background: var(--c-surface-2);
+}
+
+.gear-stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  line-height: 1.1;
+  color: var(--c-brass-bright);
+}
+
+.gear-stat dt {
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+  text-align: center;
+}
+
 /* ========================================================== wizard progress */
 
 .steps {

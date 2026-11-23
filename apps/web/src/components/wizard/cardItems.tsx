@@ -1,9 +1,13 @@
-import type { Ancestry, AncestrySlot, CharacterClass, Community } from '@daggerheart/srd-data';
+import type { Trait } from '@daggerheart/character';
+import type { Ancestry, AncestrySlot, Armor, CharacterClass, Community, Weapon } from '@daggerheart/srd-data';
 import type { CSSProperties } from 'react';
 
 import { t } from '../../i18n/index.js';
 import { artUrl } from '../../state/art.js';
 import { flavorText } from '../../state/carousel.js';
+import { armorGlyph, weaponGlyph, type RankedWeapon } from '../../state/equipment.js';
+import { formatSigned, label } from '../../state/selectors.js';
+import { GearGlyph } from './GearGlyph.js';
 import type { CarouselItem } from '../CardCarousel.js';
 import { DomainBadge, DomainHeader } from '../Domain.js';
 
@@ -111,5 +115,95 @@ export function communityItem(c: Community): CarouselItem {
         <FeatureBlock heading={t('wizard.card.feature')} feature={c.feature} />
       </div>
     ),
+  };
+}
+
+/** Steel for mundane gear, the arcane violet for anything that needs a Spellcast trait. */
+const STEEL_ACCENT = { '--card-accent': '#6f7d8f' } as CSSProperties;
+const ARCANE_ACCENT = { '--card-accent': 'var(--c-violet)' } as CSSProperties;
+
+/** "d8+1" — the printed die; Proficiency multiplies the count in play, not here. */
+export function printedDamage(weapon: Pick<Weapon, 'damage'>): string {
+  const { count, die, modifier } = weapon.damage;
+  const dice = `${count === 1 ? '' : count}d${die}`;
+  return modifier === 0 ? dice : `${dice}${formatSigned(modifier)}`;
+}
+
+/** A trait name for display; `spellcast` is resolved before this is called. */
+const traitName = (trait: Trait | 'spellcast'): string =>
+  trait === 'spellcast' ? t('trait.spellcast') : label(trait);
+
+/** "Uses your Agility +2" — highlighted when it's the reason for the badge. */
+export function weaponNote({ trait, modifier, reason }: RankedWeapon) {
+  if (trait === null || modifier === null) return undefined;
+  const params = { trait: label(trait), modifier: formatSigned(modifier) };
+  return (
+    <span className={reason === null ? 'gear-note' : 'gear-note is-recommended'}>
+      {reason === 'spellcast' ? t('wizard.step5.usesSpellcast', params) : t('wizard.step5.usesTrait', params)}
+    </span>
+  );
+}
+
+export function weaponItem(ranked: RankedWeapon): CarouselItem {
+  const { weapon, reason } = ranked;
+  const magic = weapon.damageType !== 'physical';
+  return {
+    id: weapon.id,
+    name: weapon.name,
+    image: artUrl('weapons', weapon.id),
+    fallback: <GearGlyph glyph={weaponGlyph(weapon)} className="gear-glyph" />,
+    className: magic ? 'gear-card is-magic' : 'gear-card',
+    accent: magic ? ARCANE_ACCENT : STEEL_ACCENT,
+    badge: reason === null ? undefined : t('wizard.step5.recommended'),
+    note: weaponNote(ranked),
+    flavor: weapon.feature ? flavorText(weapon.feature.text, 90) : undefined,
+    chips: (
+      <>
+        <span className="carousel-chip">{traitName(ranked.trait ?? weapon.trait)}</span>
+        <span className="carousel-chip">{label(weapon.range)}</span>
+        <span className="carousel-chip-break" aria-hidden="true" />
+        <span className={magic ? 'carousel-chip gear-chip-damage is-magic' : 'carousel-chip gear-chip-damage'}>
+          {t('wizard.step5.damage', { dice: printedDamage(weapon), type: label(weapon.damageType).toLowerCase() })}
+        </span>
+        <span className="carousel-chip">{label(weapon.burden)}</span>
+        {weapon.feature ? <span className="carousel-chip">{weapon.feature.name}</span> : null}
+      </>
+    ),
+    detail: weapon.feature ? (
+      <div className="carousel-detail-grid">
+        <FeatureBlock heading={t('wizard.card.feature')} feature={weapon.feature} />
+      </div>
+    ) : undefined,
+  };
+}
+
+export function armorItem(armor: Armor): CarouselItem {
+  return {
+    id: armor.id,
+    name: armor.name,
+    image: artUrl('armor', armor.id),
+    fallback: <GearGlyph glyph={armorGlyph(armor)} className="gear-glyph" />,
+    className: 'gear-card',
+    accent: HERITAGE_ACCENT,
+    flavor: armor.feature ? flavorText(armor.feature.text, 90) : undefined,
+    chips: (
+      <>
+        <span className="carousel-chip">{t('wizard.step5.armorScore', { score: armor.baseScore })}</span>
+        <span className="carousel-chip">
+          {t('wizard.step5.baseThresholds', { major: armor.baseThresholds.major, severe: armor.baseThresholds.severe })}
+        </span>
+        {armor.feature ? (
+          <>
+            <span className="carousel-chip-break" aria-hidden="true" />
+            <span className="carousel-chip">{armor.feature.name}</span>
+          </>
+        ) : null}
+      </>
+    ),
+    detail: armor.feature ? (
+      <div className="carousel-detail-grid">
+        <FeatureBlock heading={t('wizard.card.feature')} feature={armor.feature} />
+      </div>
+    ) : undefined,
   };
 }
