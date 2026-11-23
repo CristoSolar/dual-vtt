@@ -134,6 +134,11 @@ export const CreationStateSchema = z.object({
   // Step 2
   heritage: HeritageSchema.nullable(),
   communityId: z.string().nullable(),
+  /**
+   * An optional transformation (SRD 2.0 p.42), offered at the GM's discretion. Never
+   * required; null is "none". Defaulted so drafts saved before it still parse.
+   */
+  transformation: z.string().nullable().default(null),
   // Step 3
   traits: TraitAssignmentSchema.nullable(),
   // Step 4 carries no choices: its values derive from the class.
@@ -161,6 +166,7 @@ export type CreationAction =
   | { type: 'chooseAncestry'; ancestryId: string }
   | { type: 'chooseMixedAncestry'; first: AncestryPick; second: AncestryPick }
   | { type: 'chooseCommunity'; communityId: string }
+  | { type: 'chooseTransformation'; transformation: string | null }
   | { type: 'assignTraits'; traits: Record<Trait, number> }
   | { type: 'chooseEquipment'; equipment: Equipment }
   | { type: 'setBackground'; background: string }

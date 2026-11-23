@@ -5,10 +5,16 @@
  */
 const ART_VERSION = '2';
 
-export type ArtKind = 'classes' | 'ancestries' | 'communities' | 'weapons' | 'armor';
+export type ArtKind =
+  | 'classes'
+  | 'ancestries'
+  | 'communities'
+  | 'weapons'
+  | 'armor'
+  | 'transformations';
 
 /**
- * Weapon and armor art may not exist yet for every id; a card using it must draw
+ * Weapon, armor and transformation art may not exist yet for every id; a card using it must draw
  * its own fallback face and drop the picture on `error` (see `CardCarousel`).
  */
 export function artUrl(kind: ArtKind, id: string): string {

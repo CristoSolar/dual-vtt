@@ -20,7 +20,16 @@ import { formatSigned, label as prettify } from '../../state/selectors.js';
 import { DomainHeader } from '../Domain.js';
 import { CardCarousel } from '../CardCarousel.js';
 import { OptionList } from '../OptionList.js';
-import { ancestryItem, armorItem, classItem, communityItem, weaponItem } from './cardItems.js';
+import {
+  ancestryItem,
+  armorItem,
+  classItem,
+  communityItem,
+  NO_TRANSFORMATION,
+  noTransformationItem,
+  transformationItem,
+  weaponItem,
+} from './cardItems.js';
 import { EquipmentSummary } from './EquipmentSummary.js';
 import { DomainCardPick } from './DomainCardPick.js';
 import { FieldErrors, TextField } from './StepFields.js';
@@ -63,7 +72,12 @@ export function StepClass({ state, dispatch, errors }: StepProps) {
   );
 }
 
-/** Step 2 — ancestry (single or mixed) and community. */
+/**
+ * Step 2 — ancestry (single or mixed), community, and an optional transformation.
+ * The transformation sits here rather than in a step of its own: it is part of who
+ * the character is, the SRD's nine steps have no slot for it, and being optional it
+ * never blocks the step.
+ */
 export function StepHeritage({ state, dispatch, errors }: StepProps) {
   const options = availableOptions(state, 2);
   const heritage = state.heritage;
@@ -136,6 +150,19 @@ export function StepHeritage({ state, dispatch, errors }: StepProps) {
         onSelect={(communityId) => dispatch({ type: 'chooseCommunity', communityId })}
       />
       <FieldErrors errors={fieldErrors(errors, 'communityId')} />
+
+      <p className="notice" role="note">
+        {t('wizard.step2.transformationNotice')}
+      </p>
+      <CardCarousel
+        legend={t('wizard.step2.transformationLegend')}
+        items={[noTransformationItem(), ...srd().transformations.map((tr) => transformationItem(tr))]}
+        selectedId={state.transformation ?? NO_TRANSFORMATION}
+        onSelect={(id) =>
+          dispatch({ type: 'chooseTransformation', transformation: id === NO_TRANSFORMATION ? null : id })
+        }
+      />
+      <FieldErrors errors={fieldErrors(errors, 'transformation')} />
     </>
   );
 }

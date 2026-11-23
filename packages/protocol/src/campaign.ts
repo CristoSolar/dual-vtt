@@ -71,7 +71,13 @@ export const CampaignMemberSchema = z.object({
   id: z.string().min(1),
   username: z.string().min(1),
   character: z
-    .object({ name: z.string().nullable(), classId: z.string().min(1), level: z.number().int().positive() })
+    .object({
+      name: z.string().nullable(),
+      classId: z.string().min(1),
+      level: z.number().int().positive(),
+      /** The character's transformation id, if any (SRD 2.0 p.42). */
+      transformation: z.string().min(1).max(40).nullable().default(null),
+    })
     .nullable(),
 });
 export type CampaignMember = z.infer<typeof CampaignMemberSchema>;

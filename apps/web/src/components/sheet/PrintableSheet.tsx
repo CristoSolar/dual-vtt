@@ -1,4 +1,5 @@
 import { MAX_HOPE } from '@daggerheart/rules';
+import { srd } from '@daggerheart/srd-data';
 import { createPortal } from 'react-dom';
 
 import { t, type MessageKey } from '../../i18n/index.js';
@@ -33,6 +34,7 @@ const boxes = (marked: number, total: number): readonly boolean[] =>
 export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
   const character = sheet.character;
   const view = selectSheetView(sheet);
+  const transformation = srd().transformations.find((tr) => tr.id === sheet.transformation) ?? null;
   const experiences = Object.entries(character.experiences);
   const equippedWeapons = [view.primaryWeapon, view.secondaryWeapon] as const;
 
@@ -257,6 +259,14 @@ export function PrintableSheet({ sheet, onClose }: PrintableSheetProps) {
                   { heading: view.subclassName, features: view.subclassFeatures },
                   { heading: view.heritageLabel, features: view.ancestryFeatures },
                   { heading: view.communityName, features: [view.communityFeature] },
+                  ...(transformation === null
+                    ? []
+                    : [
+                        {
+                          heading: `${t('sheet.transformation.title')}: ${transformation.name}`,
+                          features: transformation.features,
+                        },
+                      ]),
                 ].map((group) => (
                   <div key={group.heading}>
                     <p className="ps-feature-group-heading">{group.heading}</p>

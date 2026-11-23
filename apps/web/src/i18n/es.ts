@@ -277,6 +277,7 @@ export const es = {
   'wizard.summary.subclass': 'Subclase',
   'wizard.summary.heritage': 'Herencia',
   'wizard.summary.community': 'Comunidad',
+  'wizard.summary.transformation': 'Transformación',
   'wizard.summary.traits': 'Rasgos',
   'wizard.summary.experiences': 'Experiencias',
   'wizard.summary.cards': 'Cartas de dominio',
@@ -308,6 +309,12 @@ export const es = {
   'wizard.step2.secondSlotLegend': 'Segundo rasgo listado de',
   'wizard.step2.ancestryLegend': 'Ascendencia',
   'wizard.step2.communityLegend': 'Comunidad',
+  'wizard.step2.transformationLegend': 'Transformación (opcional)',
+  'wizard.step2.transformationNotice':
+    'Úsala solo si tu GM lo permite. Una transformación es opcional: da un beneficio a ' +
+    'cambio de un inconveniente, y el GM también puede otorgarla más adelante en la campaña.',
+  'wizard.step2.noTransformation': 'Sin transformación',
+  'wizard.step2.noTransformationFlavor': 'Tu personaje empieza tal como es. Es la opción habitual.',
 
   'wizard.card.evasion': 'Evasión {value}',
   'wizard.card.hp': 'PV {value}',
@@ -406,6 +413,7 @@ export const es = {
   'validation.invalidMixedAncestry': 'Ascendencia mixta inválida: {detail}',
   'validation.communityRequired': 'Elige una comunidad.',
   'validation.unknownCommunity': 'Comunidad desconocida: {id}',
+  'validation.unknownTransformation': 'Transformación desconocida: {id}',
   'validation.traitsRequired': 'Asigna el arreglo de Rasgos.',
   'validation.invalidTraitArray': 'Arreglo de Rasgos inválido: {detail}',
   'validation.equipmentRequired': 'Elige el equipo inicial.',

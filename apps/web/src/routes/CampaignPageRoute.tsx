@@ -13,6 +13,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { JournalPanel } from '../components/journal/JournalPanel.js';
+import { TransformationBadge } from '../components/TransformationBadge.js';
 import { t } from '../i18n/index.js';
 import {
   CAMPAIGN_STATUSES,
@@ -543,7 +544,8 @@ function PlayersTab({
           {detail.members.map((member) => (
             <li key={member.id} className="row spread">
               <span>
-                <strong>{member.username}</strong>
+                <strong>{member.username}</strong>{' '}
+                <TransformationBadge id={member.character?.transformation ?? null} />
                 <br />
                 <span className="muted">
                   {member.character === null

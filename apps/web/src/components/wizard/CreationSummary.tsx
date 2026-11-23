@@ -64,6 +64,12 @@ export function CreationSummary({ state }: { state: CreationState }) {
         label={t('wizard.summary.community')}
         value={nameOf(srd().communities, state.communityId)}
       />
+      {state.transformation !== null ? (
+        <Line
+          label={t('wizard.summary.transformation')}
+          value={nameOf(srd().transformations, state.transformation)}
+        />
+      ) : null}
       <Line label={t('wizard.summary.traits')} value={traits} />
       <Line
         label={t('wizard.summary.experiences')}

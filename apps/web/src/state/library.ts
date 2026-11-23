@@ -148,7 +148,7 @@ export function findLegacyCharacters(storage: StorageLike, keys: readonly string
       if (isComplete(state)) {
         found.importable.push({
           key,
-          sheet: createSheet(finalize(state)),
+          sheet: createSheet(finalize(state), { transformation: state.transformation }),
           importId: `legacy:${key}:${fingerprint(raw)}`,
         });
       }

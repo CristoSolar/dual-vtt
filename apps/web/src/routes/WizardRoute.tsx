@@ -84,7 +84,7 @@ export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
   // The draft is cleared only once the server has the character; a failure (shown
   // by the library's error) leaves this screen and the draft exactly as they were.
   const finish = () => {
-    const sheet = createSheet(finalize(state));
+    const sheet = createSheet(finalize(state), { transformation: state.transformation });
     setSubmitting(true);
     void onSave(sheet).then((saved) => {
       setSubmitting(false);

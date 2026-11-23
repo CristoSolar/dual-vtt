@@ -55,7 +55,12 @@ function toDetail(campaign: CampaignRecord, summary: CampaignSummary, users: Use
         character:
           sheet === undefined
             ? null
-            : { name: sheet.character.name, classId: sheet.character.classId, level: sheet.character.level },
+            : {
+                name: sheet.character.name,
+                classId: sheet.character.classId,
+                level: sheet.character.level,
+                transformation: sheet.transformation,
+              },
       };
     }),
     invited: campaign.invitedIds.map((id) => ({ id, username: usernameOf(id) })),

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
+import { TransformationBadge } from '../components/TransformationBadge.js';
 import { t } from '../i18n/index.js';
 import {
   characterPortrait,
@@ -58,7 +59,8 @@ function LibraryCard({
       <div className="library-card-body">
         <h2>{nameOf(entry.sheet)}</h2>
         <p className="muted">
-          {t('library.levelClass', { level: entry.sheet.character.level, className: view.className })}
+          {t('library.levelClass', { level: entry.sheet.character.level, className: view.className })}{' '}
+          <TransformationBadge id={entry.sheet.transformation} />
         </p>
         <span className={linked ? 'library-chip library-chip--linked' : 'library-chip'}>
           {linked

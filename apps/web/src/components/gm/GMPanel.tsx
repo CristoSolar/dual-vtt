@@ -34,6 +34,7 @@ import { label as prettify } from '../../state/selectors.js';
 import { adversaryTargetOf, newestDamageIds, pcTargetOf } from '../../state/targets.js';
 import { uploadAudio } from '../../state/uploadMap.js';
 import { SectionHead } from '../SectionHead.js';
+import { TransformationBadge } from '../TransformationBadge.js';
 import { ChatBox, DiceLine, EffectLine, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
 
 interface GMPanelProps {
@@ -455,6 +456,7 @@ function PartyOverview({
               <div className="card" key={id}>
                 <div className="card-head">
                   <strong>{sheet.character.name ?? t('gm.party.unnamed')}</strong>
+                  <TransformationBadge id={sheet.transformation} />
                   <button
                     type="button"
                     aria-pressed={spotlit}

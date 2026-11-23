@@ -6,6 +6,7 @@ import {
   type Community,
   type DomainCard,
   type Subclass,
+  type Transformation,
   type Weapon,
 } from '@daggerheart/srd-data';
 
@@ -25,6 +26,9 @@ export const findAncestry = (id: string | null): Ancestry | null =>
 
 export const findCommunity = (id: string | null): Community | null =>
   srd().communities.find((c) => c.id === id) ?? null;
+
+export const findTransformation = (id: string | null): Transformation | null =>
+  srd().transformations.find((tr) => tr.id === id) ?? null;
 
 export const findWeapon = (id: string | null): Weapon | null =>
   srd().weapons.find((w) => w.id === id) ?? null;

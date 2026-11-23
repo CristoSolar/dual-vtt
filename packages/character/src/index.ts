@@ -12,6 +12,7 @@ export {
   findCommunity,
   findDomainCard,
   findSubclass,
+  findTransformation,
   findWeapon,
   requiresSpellcast,
   spellcastTrait,

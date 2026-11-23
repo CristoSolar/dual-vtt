@@ -262,6 +262,7 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.summary.subclass': 'Subclass',
   'wizard.summary.heritage': 'Heritage',
   'wizard.summary.community': 'Community',
+  'wizard.summary.transformation': 'Transformation',
   'wizard.summary.traits': 'Traits',
   'wizard.summary.experiences': 'Experiences',
   'wizard.summary.cards': 'Domain cards',
@@ -293,6 +294,12 @@ export const en: Record<keyof typeof es, string> = {
   'wizard.step2.secondSlotLegend': 'Second-listed feature from',
   'wizard.step2.ancestryLegend': 'Ancestry',
   'wizard.step2.communityLegend': 'Community',
+  'wizard.step2.transformationLegend': 'Transformation (optional)',
+  'wizard.step2.transformationNotice':
+    'Use it only if your GM allows it. A transformation is optional: it grants a benefit ' +
+    'at the cost of a drawback, and the GM can also grant one later in the campaign.',
+  'wizard.step2.noTransformation': 'No transformation',
+  'wizard.step2.noTransformationFlavor': 'Your character starts as they are. This is the usual choice.',
 
   'wizard.card.evasion': 'Evasion {value}',
   'wizard.card.hp': 'HP {value}',
@@ -391,6 +398,7 @@ export const en: Record<keyof typeof es, string> = {
   'validation.invalidMixedAncestry': 'Invalid mixed ancestry: {detail}',
   'validation.communityRequired': 'Choose a community.',
   'validation.unknownCommunity': 'Unknown community: {id}',
+  'validation.unknownTransformation': 'Unknown transformation: {id}',
   'validation.traitsRequired': 'Assign the trait array.',
   'validation.invalidTraitArray': 'Invalid trait array: {detail}',
   'validation.equipmentRequired': 'Choose starting equipment.',

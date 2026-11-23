@@ -1,5 +1,13 @@
 import type { Trait } from '@daggerheart/character';
-import type { Ancestry, AncestrySlot, Armor, CharacterClass, Community, Weapon } from '@daggerheart/srd-data';
+import type {
+  Ancestry,
+  AncestrySlot,
+  Armor,
+  CharacterClass,
+  Community,
+  Transformation,
+  Weapon,
+} from '@daggerheart/srd-data';
 import type { CSSProperties } from 'react';
 
 import { t } from '../../i18n/index.js';
@@ -113,6 +121,59 @@ export function communityItem(c: Community): CarouselItem {
     detail: (
       <div className="carousel-detail-grid">
         <FeatureBlock heading={t('wizard.card.feature')} feature={c.feature} />
+      </div>
+    ),
+  };
+}
+
+/** The id of the "no transformation" card; never an SRD id (those have no dashes at the ends). */
+export const NO_TRANSFORMATION = '-none-';
+
+/** Transformations are a little uncanny: a muted crimson frame. */
+const TRANSFORMATION_ACCENT = { '--card-accent': '#8a3b4a' } as CSSProperties;
+
+/** The first card of the transformation carousel: keep the character as they are. */
+export function noTransformationItem(): CarouselItem {
+  return {
+    id: NO_TRANSFORMATION,
+    name: t('wizard.step2.noTransformation'),
+    fallback: <span className="transformation-glyph">∅</span>,
+    accent: HERITAGE_ACCENT,
+    flavor: t('wizard.step2.noTransformationFlavor'),
+  };
+}
+
+export function transformationItem(tr: Transformation): CarouselItem {
+  return {
+    id: tr.id,
+    name: tr.name,
+    image: artUrl('transformations', tr.id),
+    fallback: <span className="transformation-glyph">{tr.name.slice(0, 1)}</span>,
+    accent: TRANSFORMATION_ACCENT,
+    flavor: flavorText(tr.description),
+    chips: tr.features.map((f) => (
+      <span key={f.name} className="carousel-chip">
+        {f.name}
+      </span>
+    )),
+    detail: (
+      <div className="carousel-detail-grid">
+        <section>
+          <p className="carousel-feature-text mb-4">{tr.description}</p>
+          {tr.features.map((f) => (
+            <FeatureBlock key={f.name} heading={t('wizard.card.feature')} feature={f} />
+          ))}
+        </section>
+        <section>
+          <h4 className="carousel-feature-name">{t('sheet.transformation.questions')}</h4>
+          <ul>
+            {tr.questions.map((q) => (
+              <li key={q} className="carousel-feature-text">
+                {q}
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     ),
   };

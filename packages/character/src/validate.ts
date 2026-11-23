@@ -8,6 +8,7 @@ import {
   findCommunity,
   findDomainCard,
   findSubclass,
+  findTransformation,
   findWeapon,
   classItemOptions,
   requiresSpellcast,
@@ -128,6 +129,19 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
           err(2, 'unknownCommunity', `unknown community: ${state.communityId}`, 'communityId', {
             id: state.communityId,
           }),
+        );
+      }
+
+      // Optional: none is always fine; only an id the SRD does not know is reported.
+      if (state.transformation !== null && findTransformation(state.transformation) === null) {
+        errors.push(
+          err(
+            2,
+            'unknownTransformation',
+            `unknown transformation: ${state.transformation}`,
+            'transformation',
+            { id: state.transformation },
+          ),
         );
       }
       break;

@@ -466,6 +466,21 @@ legend {
   color: var(--c-crimson-bright);
 }
 
+/* A character's transformation, wherever someone other than the sheet sees it. */
+.badge.transformation {
+  border-color: color-mix(in oklab, var(--c-crimson) 70%, var(--c-violet));
+  color: var(--c-crimson-bright);
+}
+
+/* An "ask your GM first" note above an optional choice. */
+.notice {
+  margin: var(--sp-4) 0 var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--c-crimson);
+  background: color-mix(in oklab, var(--c-crimson) 10%, transparent);
+  color: var(--c-text);
+}
+
 /* ====================================================================== help */
 
 .help-tabs {
@@ -1232,6 +1247,15 @@ button.link {
       var(--c-bg) 85%
     );
   color: color-mix(in oklab, var(--card-accent, var(--c-brass-dim)) 45%, var(--c-text));
+}
+
+.transformation-glyph {
+  margin-top: 8%;
+  font-family: var(--font-display, serif);
+  font-size: 7rem;
+  line-height: 1;
+  opacity: 0.8;
+  text-shadow: 0 6px 18px rgb(0 0 0 / 55%);
 }
 
 .gear-glyph {

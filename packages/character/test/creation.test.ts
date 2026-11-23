@@ -446,3 +446,51 @@ describe('classItemOptions across locales', () => {
     expect(en).not.toEqual(es);
   });
 });
+
+describe('step 2 — optional transformation (SRD 2.0 p.42)', () => {
+  it('starts with none, and none never blocks the step or the creation', () => {
+    expect(createInitialState().transformation).toBeNull();
+    const state = buildCharacter('guardian');
+    expect(state.transformation).toBeNull();
+    expect(validateStep(state, 2).ok).toBe(true);
+    expect(isComplete(state)).toBe(true);
+  });
+
+  it('stores a chosen transformation and puts it down again', () => {
+    let state = buildCharacter('guardian');
+    state = applyChoice(state, { type: 'chooseTransformation', transformation: 'vampire' });
+    expect(state.transformation).toBe('vampire');
+    expect(validateStep(state, 2).ok).toBe(true);
+    expect(isComplete(state)).toBe(true);
+    expect(() => finalize(state)).not.toThrow();
+
+    state = applyChoice(state, { type: 'chooseTransformation', transformation: null });
+    expect(state.transformation).toBeNull();
+    expect(isComplete(state)).toBe(true);
+  });
+
+  it('accepts every SRD transformation', () => {
+    expect(srd().transformations).toHaveLength(6);
+    for (const transformation of srd().transformations) {
+      const state = applyChoice(buildCharacter('bard'), {
+        type: 'chooseTransformation',
+        transformation: transformation.id,
+      });
+      expect(validateStep(state, 2).ok, transformation.id).toBe(true);
+    }
+  });
+
+  it('lands an unknown id in state and reports it, rather than dropping it', () => {
+    const state = applyChoice(buildCharacter('guardian'), {
+      type: 'chooseTransformation',
+      transformation: 'lich',
+    });
+    expect(state.transformation).toBe('lich');
+    const result = validateStep(state, 2);
+    expect(result.ok).toBe(false);
+    expect(result.errors.map((e) => e.code)).toContain('unknownTransformation');
+    expect(result.errors[0]?.field).toBe('transformation');
+    expect(state.completed['2']).toBe(false);
+    expect(() => finalize(state)).toThrow(IncompleteCharacterError);
+  });
+});

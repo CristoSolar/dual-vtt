@@ -28,6 +28,22 @@ describe('serialize / deserialize', () => {
     expect(finalize(restored)).toEqual(finalize(state));
   });
 
+  it('round-trips a chosen transformation', () => {
+    const state = applyChoice(buildCharacter('rogue'), {
+      type: 'chooseTransformation',
+      transformation: 'werewolf',
+    });
+    expect(deserialize(serialize(state)).transformation).toBe('werewolf');
+  });
+
+  it('loads a draft saved before transformations existed, with none chosen', () => {
+    const { transformation: _dropped, ...old } = buildCharacter('seraph');
+    expect('transformation' in old).toBe(false);
+    const restored = deserialize(JSON.stringify({ version: SERIALIZATION_VERSION, state: old }));
+    expect(restored.transformation).toBeNull();
+    expect(() => finalize(restored)).not.toThrow();
+  });
+
   it('rejects a payload from another version', () => {
     const payload = JSON.stringify({
       version: SERIALIZATION_VERSION + 1,

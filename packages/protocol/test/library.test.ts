@@ -18,6 +18,19 @@ import { makeCharacter } from './helpers.js';
 
 const sheet = () => createSheet(makeCharacter());
 
+describe('createSheet', () => {
+  it('starts with no transformation unless creation picked one', () => {
+    expect(createSheet(makeCharacter()).transformation).toBeNull();
+    expect(createSheet(makeCharacter(), { transformation: null }).transformation).toBeNull();
+  });
+
+  it('carries the transformation chosen during creation', () => {
+    const sheet = createSheet(makeCharacter(), { transformation: 'ghost' });
+    expect(sheet.transformation).toBe('ghost');
+    expect(LibraryCharacterSchema.shape.sheet.parse(sheet).transformation).toBe('ghost');
+  });
+});
+
 describe('character library schemas', () => {
   it('accepts an unlinked and a linked library entry', () => {
     const base = { id: 'ch-1', ownerId: 'u-1', sheet: sheet(), updatedAt: 1 };

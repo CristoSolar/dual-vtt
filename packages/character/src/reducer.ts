@@ -12,6 +12,7 @@ export function createInitialState(): CreationState {
     subclassId: null,
     heritage: null,
     communityId: null,
+    transformation: null,
     traits: null,
     equipment: null,
     background: null,
@@ -81,6 +82,9 @@ function reduce(state: CreationState, action: CreationAction): CreationState {
 
     case 'chooseCommunity':
       return { ...state, communityId: action.communityId };
+
+    case 'chooseTransformation':
+      return { ...state, transformation: action.transformation };
 
     case 'assignTraits':
       return { ...state, traits: { ...action.traits } };

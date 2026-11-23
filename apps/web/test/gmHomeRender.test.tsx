@@ -105,7 +105,7 @@ describe("a player's campaigns", () => {
 
 const detail = (): CampaignDetail => ({
   campaign: { ...summary('a', 'paused'), memberIds: ['u-ana'], invitedIds: ['u-beto'] },
-  members: [{ id: 'u-ana', username: 'ana', character: { name: 'Brunilda', classId: 'guardian', level: 2 } }],
+  members: [{ id: 'u-ana', username: 'ana', character: { name: 'Brunilda', classId: 'guardian', level: 2, transformation: null } }],
   invited: [{ id: 'u-beto', username: 'beto' }],
   story: { pitch: 'Un robo en Puerto Velo.', body: 'Sesión 1: la bóveda.' },
   prepAdversaries: [{ id: 'p-1', adversaryId: 'acid-burrower', quantity: 2, note: 'en las cloacas' }],

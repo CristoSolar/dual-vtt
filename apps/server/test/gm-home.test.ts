@@ -196,7 +196,7 @@ describe('GET /campaigns/:id (the GM campaign page)', () => {
     const detail = CampaignDetailSchema.parse(response.body);
     expect(detail.campaign.status).toBe('active');
     expect(detail.members).toEqual([
-      { id: ana.id, username: 'ana', character: { name: sheet.character.name, classId: 'guardian', level: 1 } },
+      { id: ana.id, username: 'ana', character: { name: sheet.character.name, classId: 'guardian', level: 1, transformation: null } },
     ]);
     expect(detail.invited).toEqual([{ id: beto.id, username: 'beto' }]);
     expect(detail.story.pitch).toBe('Un robo.');

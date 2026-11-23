@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   AddPlayerRequestSchema,
   CampaignDetailSchema,
+  CampaignMemberSchema,
   CampaignSummarySchema,
   CreateCampaignRequestSchema,
   ManagedPlayerSchema,
@@ -81,7 +82,11 @@ describe('campaign detail (the GM campaign page)', () => {
         status: 'active',
       },
       members: [
-        { id: 'u-2', username: 'ana', character: { name: 'Brunilda', classId: 'guardian', level: 1 } },
+        {
+          id: 'u-2',
+          username: 'ana',
+          character: { name: 'Brunilda', classId: 'guardian', level: 1, transformation: 'demigod' },
+        },
       ],
       invited: [{ id: 'u-3', username: 'beto' }],
       story: { pitch: 'p', body: 'b' },
@@ -89,6 +94,11 @@ describe('campaign detail (the GM campaign page)', () => {
       journal: [],
     };
     expect(CampaignDetailSchema.parse(detail)).toEqual(detail);
+  });
+
+  it('reads a member character without a transformation as none', () => {
+    const member = { id: 'u-2', username: 'ana', character: { name: null, classId: 'bard', level: 1 } };
+    expect(CampaignMemberSchema.parse(member).character?.transformation).toBeNull();
   });
 
   it('a member without a character has null', () => {

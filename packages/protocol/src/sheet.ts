@@ -117,8 +117,15 @@ export const SheetStateSchema = z.object({
  */
 export type SheetState = z.infer<typeof SheetStateSchema>;
 
-/** A fresh sheet for a newly created character. */
-export function createSheet(character: Character): SheetState {
+/**
+ * A fresh sheet for a newly created character. `transformation` is the optional one
+ * picked during creation (`CreationState.transformation`), so the sheet carries it
+ * exactly as if it had been set later with `setTransformation`.
+ */
+export function createSheet(
+  character: Character,
+  { transformation = null }: { transformation?: string | null } = {},
+): SheetState {
   return {
     character,
     hpMarked: 0,
@@ -129,7 +136,7 @@ export function createSheet(character: Character): SheetState {
     unconscious: false,
     dead: false,
     conditions: [],
-    transformation: null,
+    transformation,
     beastform: null,
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
