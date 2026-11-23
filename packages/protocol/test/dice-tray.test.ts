@@ -183,8 +183,12 @@ describe('features and spells in the log', () => {
   });
 
   it('logs a domain card from the loadout when it is used', () => {
-    const state = room();
-    const cardId = state.characters[ALEX.id]?.loadout[0] ?? '';
+    // A card with nothing to pay, so only the log changes.
+    const cardId = 'fortified-armor';
+    const base = room();
+    const sheet = base.characters[ALEX.id];
+    if (sheet === undefined) throw new Error('no sheet');
+    const state = { ...base, characters: { [ALEX.id]: { ...sheet, loadout: [cardId] } } };
     const card = srd().domainCards.find((c) => c.id === cardId);
     const r = accepted(
       applyRoomEvent(state, ALEX, { type: 'useDomainCard', characterId: ALEX.id, cardId }, seededRng(1), NOW),

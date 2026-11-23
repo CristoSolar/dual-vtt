@@ -1,5 +1,5 @@
 import { CharacterSchema, MulticlassSchema, type Character } from '@daggerheart/character';
-import { srd } from '@daggerheart/srd-data';
+import { srd, type CardAbility, type CardCost, type Trait } from '@daggerheart/srd-data';
 import { z } from 'zod';
 import {
   MAX_HOPE,
@@ -290,6 +290,53 @@ export function spendSheetHope(sheet: SheetState, amount = 1): SheetTransition {
     };
   }
   return { sheet: { ...sheet, hope }, effect: noEffect };
+}
+
+/**
+ * The trait a character's Spellcast Rolls use: their subclass's, or the
+ * multiclass subclass's when their own has none (Guardians and Warriors).
+ */
+export function spellcastTraitOf(sheet: SheetState): Trait | null {
+  const subclasses = srd().subclasses;
+  const own = subclasses.find((s) => s.id === sheet.character.subclassId)?.spellcastTrait ?? null;
+  if (own !== null) return own;
+  const multiclass = sheet.character.multiclass;
+  if (multiclass === null) return null;
+  return subclasses.find((s) => s.id === multiclass.subclassId)?.spellcastTrait ?? null;
+}
+
+/** A domain card's usable abilities, read from the SRD card mechanics. */
+export function cardAbilities(cardId: string): readonly CardAbility[] {
+  return srd().cardMechanics.find((entry) => entry.id === cardId)?.abilities ?? [];
+}
+
+export interface CardCostTransition extends SheetTransition {
+  ok: boolean;
+}
+
+/**
+ * Pays what using a card costs: Hope spent, Armor Slots marked, Stress marked.
+ * Hope and Armor Slots the character does not have refuse the whole use. Stress
+ * cannot be refused: with no slot left it marks a Hit Point instead, exactly as
+ * marking Stress anywhere else on the sheet does (SRD p.39).
+ */
+export function payCardCost(sheet: SheetState, cost: CardCost): CardCostTransition {
+  if (sheet.hope < cost.hope) {
+    return {
+      ok: false,
+      sheet,
+      effect: coded('notEnoughHope', `Not enough Hope (need ${cost.hope}).`, { amount: cost.hope }),
+    };
+  }
+  if (sheet.character.armorScore - sheet.armorSlotsMarked < cost.armor) {
+    return { ok: false, sheet, effect: coded('noArmorSlots', 'No Armor Slots available.') };
+  }
+  let next = sheet;
+  if (cost.hope > 0) next = spendSheetHope(next, cost.hope).sheet;
+  if (cost.armor > 0) next = markSheetArmorSlot(next, cost.armor).sheet;
+  if (cost.stress === 0) return { ok: true, sheet: next, effect: noEffect };
+  const marked = markSheetStress(next, cost.stress);
+  return { ok: true, sheet: marked.sheet, effect: marked.effect };
 }
 
 const armorSlots = (sheet: SheetState) => ({

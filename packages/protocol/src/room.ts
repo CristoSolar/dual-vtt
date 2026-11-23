@@ -72,6 +72,7 @@ import {
   gainSheetGold,
   gainSheetHope,
   applyDowntime,
+  cardAbilities,
   coded,
   equipArmorOnSheet,
   dropBeastform,
@@ -84,10 +85,12 @@ import {
   markSheetArmorSlot,
   markSheetHP,
   markSheetStress,
+  payCardCost,
   recallFromVault,
   sendToVault,
   spendSheetGold,
   spendSheetHope,
+  spellcastTraitOf,
   takeDamage,
   wake,
   type SheetEffect,
@@ -481,6 +484,9 @@ export type RoomError =
   | 'unknownCountdown'
   | 'unknownAdversary'
   | 'notEnoughFear'
+  | 'notEnoughHope'
+  | 'noArmorSlots'
+  | 'unknownAbility'
   | 'unknownScene'
   | 'unknownToken'
   | 'notYourToken'
@@ -1764,6 +1770,26 @@ function applyCharacterEvent(
       }
       const card = srd().domainCards.find((c) => c.id === event.cardId);
       if (card === undefined) return fail('rejected', 'that domain card does not exist');
+      const abilities = cardAbilities(card.id);
+      const index = event.ability ?? 0;
+      const ability = abilities[index];
+      if (ability === undefined) return fail('unknownAbility', 'that card has no such ability');
+
+      // The cost is the card's, from the SRD, never a number the client sent.
+      if (event.onSuccess === true) {
+        if (ability.successCost === undefined) {
+          return fail('rejected', 'that ability costs nothing on a success');
+        }
+        const paid = payCardCost(sheet, ability.successCost);
+        if (!paid.ok) return fail(costError(paid.effect), paid.effect.message ?? 'cannot pay');
+        return ok(withCharacter(state, event.characterId, paid.sheet), paid.effect);
+      }
+
+      const paid = payCardCost(sheet, ability.cost ?? NO_COST);
+      if (!paid.ok) return fail(costError(paid.effect), paid.effect.message ?? 'cannot pay');
+      // A grimoire's spell is logged by its place on the card, so each reader
+      // names it in their own language; a single-ability card logs as before.
+      const named = abilities.length > 1 && ability.name !== null;
       const entry = effectEntry(
         now,
         rollerName,
@@ -1771,12 +1797,17 @@ function applyCharacterEvent(
         {
           source: 'domainCard',
           ref: card.id,
-          feature: null,
-          title: card.name,
+          feature: named ? index : null,
+          title: named ? `${card.name} — ${ability.name}` : card.name,
         },
         state,
       );
-      return ok(appendEntries(state, [entry]), null, [entry]);
+      const next = paid.sheet === sheet ? state : withCharacter(state, event.characterId, paid.sheet);
+      return ok(
+        appendEntries(next, [entry]),
+        paid.effect,
+        [entry],
+      );
     }
 
     case 'equipArmor': {
@@ -2076,8 +2107,9 @@ function applyCharacterEvent(
       const roll = makeDamageRoll(
         {
           dice: event.dice,
-          // The character's own Proficiency, not a number the client chose.
-          proficiency: sheet.character.proficiency,
+          // The character's own Proficiency or Spellcast trait, not a number the
+          // client chose.
+          proficiency: damageMultiplier(sheet, event.scale ?? 'proficiency'),
           modifier: event.modifier,
           critical: event.critical,
         },
@@ -2097,6 +2129,29 @@ function applyCharacterEvent(
   }
 }
 
+
+/** Nothing to pay: what a card ability with no printed cost costs. */
+const NO_COST = { hope: 0, stress: 0, armor: 0 } as const;
+
+/** The room error for a card cost the sheet could not pay. */
+function costError(effect: SheetEffect): RoomError {
+  return effect.code === 'notEnoughHope'
+    ? 'notEnoughHope'
+    : effect.code === 'noArmorSlots'
+      ? 'noArmorSlots'
+      : 'rejected';
+}
+
+/**
+ * How many times a damage roll's printed dice are rolled. "Using your Spellcast
+ * trait" rolls one set per point of the trait, so a trait of 0 or less rolls none.
+ */
+function damageMultiplier(sheet: SheetState, scale: 'proficiency' | 'spellcast' | 'none'): number {
+  if (scale === 'none') return 1;
+  if (scale === 'proficiency') return sheet.character.proficiency;
+  const trait = spellcastTraitOf(sheet);
+  return trait === null ? 0 : Math.max(0, sheet.character.traits[trait]);
+}
 
 /** A log line for a feature or spell somebody used. */
 function effectEntry(

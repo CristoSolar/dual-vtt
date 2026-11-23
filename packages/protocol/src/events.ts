@@ -126,11 +126,23 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     characterId,
   }),
   z.object({
-    // Casts a spell or uses an ability off a loadout card. Nothing is spent or
-    // rolled; the card's own text is logged where the table can read it.
+    // Casts a spell or uses an ability off a loadout card. The server pays the
+    // ability's printed cost from the SRD card mechanics and logs the use; the
+    // roll, when there is one, is a separate `rollDuality`.
     type: z.literal('useDomainCard'),
     characterId,
     cardId: z.string().min(1).max(64),
+    /**
+     * Which of the card's abilities, by its place on the card: a grimoire's spells
+     * are 0, 1, 2. An index rather than a name, since names are per language.
+     * Absent (an older client) means the first.
+     */
+    ability: z.number().int().min(0).max(9).optional(),
+    /**
+     * Pays the ability's on-success cost ("On a success, spend a Hope to…") once
+     * its roll has landed, instead of using the card.
+     */
+    onSuccess: z.boolean().optional(),
   }),
   z.object({
     // Changing armor rebuilds the Armor Score and the damage thresholds, which the
@@ -268,6 +280,12 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     }),
     // Proficiency is the character's, read from the sheet on the server.
     modifier: z.number().int().min(-20).max(99),
+    /**
+     * What multiplies the dice: Proficiency (weapons, and absent from older
+     * clients), the Spellcast trait ("d8+3 using your Spellcast trait"), or nothing
+     * ("2d6 magic damage"). The number itself is read off the sheet.
+     */
+    scale: z.enum(['proficiency', 'spellcast', 'none']).optional(),
     critical: z.boolean(),
     visibility: VisibilitySchema.default('public'),
   }),
