@@ -13,7 +13,7 @@ import { GMPanel } from '../src/components/gm/GMPanel.js';
 import { ConfirmDialog } from '../src/components/ConfirmDialog.js';
 import { GuideDialog } from '../src/components/GuideDialog.js';
 import { PartyStrip } from '../src/components/sheet/PartyStrip.js';
-import { RollDialog } from '../src/components/sheet/RollDialog.js';
+import { edgeRequest, RollDialog } from '../src/components/sheet/RollDialog.js';
 import { RollLogPanel } from '../src/components/sheet/RollLogPanel.js';
 import { Toast } from '../src/components/Toast.js';
 import { MapSheetPanel } from '../src/components/map/MapSheetPanel.js';
@@ -628,6 +628,31 @@ describe('chat and private entries', () => {
       t('roll.privateToggle'),
     );
     expect(renderToStaticMarkup(<RollDialog {...props} />)).not.toContain(t('roll.privateToggle'));
+  });
+
+  it('the roll dialog asks for no Difficulty and offers Experiences as cards', () => {
+    const spec = { title: 'Agility Roll', modifiers: 1, modifierLabel: 'Agility' };
+    const html = renderToStaticMarkup(
+      <RollDialog
+        spec={spec}
+        experiences={[{ name: 'Inventor', modifier: 2 }]}
+        hope={2}
+        outcome={null}
+        onRoll={() => {}}
+        onClose={() => {}}
+      />,
+    );
+    expect(html).not.toContain('type="number"');
+    expect(html).toContain('exp-card');
+    expect(html).toContain('role="switch"');
+  });
+
+  it('maps the advantage stepper onto one own die plus allies helping', () => {
+    expect(edgeRequest(0, 0)).toEqual({ advantage: 0, disadvantage: 0, helpDice: 0 });
+    expect(edgeRequest(1, 0)).toEqual({ advantage: 1, disadvantage: 0, helpDice: 0 });
+    // Two more dice are two allies using Help an Ally; the server keeps the highest.
+    expect(edgeRequest(3, 1)).toEqual({ advantage: 1, disadvantage: 1, helpDice: 2 });
+    expect(edgeRequest(0, 2)).toEqual({ advantage: 0, disadvantage: 2, helpDice: 0 });
   });
 });
 

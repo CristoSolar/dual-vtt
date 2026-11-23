@@ -1,12 +1,17 @@
 import { z } from 'zod';
 
-/** The five outcomes of an action roll (SRD p.36). */
+/**
+ * The five outcomes of an action roll (SRD p.36), plus the two a roll has when
+ * it was made without a Difficulty and the GM calls success at the table.
+ */
 export const ActionOutcomeSchema = z.enum([
   'criticalSuccess',
   'successHope',
   'successFear',
   'failureHope',
   'failureFear',
+  'withHope',
+  'withFear',
 ]);
 
 export const DualityRollSchema = z.object({
@@ -81,7 +86,8 @@ export const RollEntrySchema = z.discriminatedUnion('kind', [
     by: z.string().min(1),
     label: z.string().min(1),
     roll: DualityRollSchema,
-    difficulty: z.number().int(),
+    /** Null when the roll had no Difficulty: the GM judges success at the table. */
+    difficulty: z.number().int().nullable(),
     outcome: ActionOutcomeSchema,
     experiences: z.array(z.string()),
     /** Reactions read differently: they earn no Hope or Fear. */
@@ -211,13 +217,18 @@ export const OUTCOME_LABELS: Record<z.infer<typeof ActionOutcomeSchema>, string>
   successFear: 'Success with Fear',
   failureHope: 'Failure with Hope',
   failureFear: 'Failure with Fear',
+  withHope: 'With Hope',
+  withFear: 'With Fear',
 };
 
 /** Outcomes are colour-coded in the UI; this maps one to a stable class name. */
 export function outcomeTone(
   outcome: z.infer<typeof ActionOutcomeSchema>,
-): 'critical' | 'success' | 'failure' {
+): 'critical' | 'success' | 'failure' | 'hope' | 'fear' {
   if (outcome === 'criticalSuccess') return 'critical';
+  // No Difficulty, so no verdict: the tone says only which die won.
+  if (outcome === 'withHope') return 'hope';
+  if (outcome === 'withFear') return 'fear';
   return outcome === 'successHope' || outcome === 'successFear' ? 'success' : 'failure';
 }
 

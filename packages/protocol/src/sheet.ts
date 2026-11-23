@@ -728,11 +728,14 @@ export interface DualityRollRequest {
   label: string;
   /** Trait, Proficiency, or other flat modifiers already summed by the caller. */
   modifiers: number;
-  difficulty: number;
+  /**
+   * The Difficulty to beat, or null when the GM keeps it and calls success at the
+   * table. Hope, Fear and criticals are settled either way.
+   */
+  difficulty: number | null;
   advantage: number;
   disadvantage: number;
-  /** Experiences being spent, each costing 1 Hope (SRD p.38). */
-  /** Names of the Experiences being leveraged; each costs a Hope. */
+  /** Names of the Experiences being leveraged; each costs a Hope (SRD p.38). */
   experiences: readonly string[];
   /** Advantage dice from allies using Help an Ally. Optional; defaults to none. */
   helpDice?: number;
@@ -796,13 +799,17 @@ export function makeDualityRoll(
     const result: ActionResult = {
       outcome: reaction.critical
         ? 'criticalSuccess'
-        : reaction.success
+        : reaction.success === null
           ? roll.withHope
-            ? 'successHope'
-            : 'successFear'
-          : roll.withHope
-            ? 'failureHope'
-            : 'failureFear',
+            ? 'withHope'
+            : 'withFear'
+          : reaction.success
+            ? roll.withHope
+              ? 'successHope'
+              : 'successFear'
+            : roll.withHope
+              ? 'failureHope'
+              : 'failureFear',
       success: reaction.success,
       critical: reaction.critical,
       withHope: roll.withHope,

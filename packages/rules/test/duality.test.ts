@@ -126,6 +126,23 @@ describe('resolveActionRoll', () => {
       'failureFear',
     );
   });
+
+  it('without a Difficulty, reports Hope or Fear and leaves success to the GM', () => {
+    const hope = resolveActionRoll(rollDuality({ rng: scriptedRng([9, 4]) }), null);
+    expect(hope).toMatchObject({ outcome: 'withHope', success: null, hopeGained: 1, fearGained: 0 });
+    const fear = resolveActionRoll(rollDuality({ rng: scriptedRng([4, 9]) }), null);
+    expect(fear).toMatchObject({ outcome: 'withFear', success: null, hopeGained: 0, fearGained: 1 });
+  });
+
+  it('without a Difficulty, a critical is still a Critical Success', () => {
+    const result = resolveActionRoll(rollDuality({ rng: scriptedRng([6, 6]) }), null);
+    expect(result).toMatchObject({
+      outcome: 'criticalSuccess',
+      success: true,
+      hopeGained: 1,
+      stressCleared: 1,
+    });
+  });
 });
 
 describe('resolveReactionRoll', () => {
@@ -144,5 +161,10 @@ describe('resolveReactionRoll', () => {
     expect(resolveReactionRoll(rollDuality({ rng: scriptedRng([2, 5]) }), 13).ignoresEffects).toBe(
       false,
     );
+  });
+
+  it('leaves success open without a Difficulty, unless the dice match', () => {
+    expect(resolveReactionRoll(rollDuality({ rng: scriptedRng([8, 5]) }), null).success).toBe(null);
+    expect(resolveReactionRoll(rollDuality({ rng: scriptedRng([3, 3]) }), null).success).toBe(true);
   });
 });

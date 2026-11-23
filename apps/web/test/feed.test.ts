@@ -79,10 +79,10 @@ describe('canRollPrivately', () => {
   it('refuses a roll that is part of a Tag Team or a group action it does not lead', () => {
     expect(canRollPrivately(room(), 'pc1')).toBe(true);
     expect(
-      canRollPrivately(room({ groupAction: { leadCharacterId: 'pc2', reactions: {} } }), 'pc1'),
+      canRollPrivately(room({ groupAction: { leadCharacterId: 'pc2', difficulty: 10, reactions: {} } }), 'pc1'),
     ).toBe(false);
     expect(
-      canRollPrivately(room({ groupAction: { leadCharacterId: 'pc1', reactions: {} } }), 'pc1'),
+      canRollPrivately(room({ groupAction: { leadCharacterId: 'pc1', difficulty: 10, reactions: {} } }), 'pc1'),
     ).toBe(true);
     const tagTeam = { initiatorId: 'pc2', partnerId: 'pc1', rolls: {} };
     expect(canRollPrivately(room({ tagTeam }), 'pc1')).toBe(false);

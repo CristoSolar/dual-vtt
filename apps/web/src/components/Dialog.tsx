@@ -6,6 +6,8 @@ interface DialogProps {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  /** Extra class on the panel, for a dialog that needs its own frame. */
+  className?: string;
 }
 
 /** Every dialog currently open, innermost last, so Escape only closes the top one. */
@@ -21,7 +23,7 @@ const FOCUSABLE =
  * The stack matters because a dialog can open another one — a confirmation over a
  * level-up, say — and a single Escape should not close both.
  */
-export function Dialog({ title, onClose, children }: DialogProps) {
+export function Dialog({ title, onClose, children, className }: DialogProps) {
   const panel = useRef<HTMLDivElement>(null);
   const headingId = useRef(`dialog-${Math.random().toString(36).slice(2)}`);
 
@@ -30,8 +32,11 @@ export function Dialog({ title, onClose, children }: DialogProps) {
     open.push(token);
     const previous = document.activeElement;
 
-    // Focus the first thing a person can act on, or the panel itself.
-    const first = panel.current?.querySelector<HTMLElement>(FOCUSABLE);
+    // Focus what the dialog marks as its main action, else the first thing a
+    // person can act on, else the panel itself.
+    const first =
+      panel.current?.querySelector<HTMLElement>('[data-autofocus]') ??
+      panel.current?.querySelector<HTMLElement>(FOCUSABLE);
     (first ?? panel.current)?.focus();
 
     const onKey = (event: KeyboardEvent) => {
@@ -70,7 +75,7 @@ export function Dialog({ title, onClose, children }: DialogProps) {
   return (
     <div className="dialog-backdrop" onMouseDown={onClose}>
       <div
-        className="dialog"
+        className={className === undefined ? 'dialog' : `dialog ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={headingId.current}

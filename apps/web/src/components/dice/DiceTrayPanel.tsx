@@ -36,7 +36,6 @@ export function DiceTrayPanel({
   const [visibility, setVisibility] = useState<Visibility>('public');
   const [dualityModifier, setDualityModifier] = useState(0);
   const [edge, setEdge] = useState<Edge>('none');
-  const [difficulty, setDifficulty] = useState(10);
   const [tray, setTray] = useState<TrayCounts>({});
   const [modifier, setModifier] = useState(0);
   const [label, setLabel] = useState('');
@@ -51,7 +50,8 @@ export function DiceTrayPanel({
       request: {
         label: t('tray.dualityLabel'),
         modifiers: Math.max(-20, Math.min(20, dualityModifier)),
-        difficulty: Math.max(0, Math.min(60, difficulty)),
+        // The GM keeps the Difficulty and calls success; a target still supplies its own.
+        difficulty: null,
         advantage: edge === 'advantage' ? 1 : 0,
         disadvantage: edge === 'disadvantage' ? 1 : 0,
         helpDice: 0,
@@ -96,17 +96,6 @@ export function DiceTrayPanel({
                 <option value="advantage">{t('tray.edgeAdvantage')}</option>
                 <option value="disadvantage">{t('tray.edgeDisadvantage')}</option>
               </select>
-            </label>
-            <label htmlFor={`${id}-diff`}>
-              {t('tray.difficulty')}
-              <input
-                id={`${id}-diff`}
-                type="number"
-                min={0}
-                max={60}
-                value={difficulty}
-                onChange={(event) => setDifficulty(Math.max(0, number(event.target.value)))}
-              />
             </label>
           </div>
           <button type="button" className="btn-primary" onClick={rollDuality}>

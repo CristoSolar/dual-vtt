@@ -203,6 +203,11 @@ export const RoomStateSchema = z.object({
   groupAction: z
     .object({
       leadCharacterId: z.string().min(1),
+      /**
+       * What every roll in the action is judged against, set by the GM. Older
+       * snapshots predate it; 10 is the old dialog's default.
+       */
+      difficulty: z.number().int().min(1).max(60).default(10),
       /** Character id -> whether their reaction roll succeeded. */
       reactions: z.record(z.string(), z.boolean()),
     })
@@ -699,7 +704,12 @@ function succeeded(outcome: Outcome): boolean {
 
 /** Whether an outcome was rolled with Hope, which is what a Tag Team choice pays out on. */
 function withHope(outcome: Outcome): boolean {
-  return outcome === 'criticalSuccess' || outcome === 'successHope' || outcome === 'failureHope';
+  return (
+    outcome === 'criticalSuccess' ||
+    outcome === 'successHope' ||
+    outcome === 'failureHope' ||
+    outcome === 'withHope'
+  );
 }
 
 /** +1 for each collaborator who succeeded, -1 for each who failed (SRD 2.0 p.48). */
@@ -905,7 +915,11 @@ export function applyRoomEvent(
       }
       return ok({
         ...state,
-        groupAction: { leadCharacterId: event.leadCharacterId, reactions: {} },
+        groupAction: {
+          leadCharacterId: event.leadCharacterId,
+          difficulty: event.difficulty,
+          reactions: {},
+        },
       });
     }
     case 'cancelGroupAction': {
@@ -1901,9 +1915,11 @@ function applyCharacterEvent(
       }
 
       // A target is checked against what the roller could see, same as `setTargets`;
-      // an adversary's Difficulty comes from its stat block, never the client.
+      // an adversary's Difficulty comes from its stat block, never the client. A
+      // group action is judged against the Difficulty the GM opened it with, since
+      // its collaborators' successes are what move the lead roll.
       let target: Token | null = null;
-      let difficulty = event.request.difficulty;
+      let difficulty = event.request.difficulty ?? group?.difficulty ?? null;
       if (event.targetTokenId !== undefined) {
         const visible = actor.role === 'gm' ? state.map : mapForPlayer(state.map);
         target =

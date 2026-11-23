@@ -12,6 +12,7 @@ import {
   roomForActor,
   roomForRole,
   roomPatch,
+  RoomEventSchema,
   RoomStateSchema,
   type Actor,
   type RoomEvent,
@@ -230,6 +231,128 @@ describe('rolls are server-side and read from the sheet', () => {
     const entry = result.entries[0];
     if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
     expect(entry.reaction).toBe(true);
+  });
+
+  it('rolls without a Difficulty: Hope or Fear still land, success is left to the GM', () => {
+    const base = {
+      label: 'Agility Roll',
+      modifiers: 0,
+      difficulty: null,
+      advantage: 0,
+      disadvantage: 0,
+      helpDice: 0,
+      reaction: false,
+      experiences: [],
+    };
+    // Enough rolls to see both a Hope and a Fear result off the seeded dice.
+    const seen = new Set<string>();
+    let state = room;
+    for (let i = 0; i < 12; i++) {
+      const before = state;
+      const result = applyRoomEvent(
+        before,
+        ALEX,
+        { type: 'rollDuality', visibility: 'public', characterId: ALEX.id, request: base },
+        rng,
+        NOW + i,
+      );
+      if (!result.ok) throw new Error('roll was rejected');
+      const entry = result.entries[0];
+      if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
+      expect(entry.difficulty).toBeNull();
+      expect(['withHope', 'withFear', 'criticalSuccess']).toContain(entry.outcome);
+      seen.add(entry.outcome);
+      const hopeBefore = before.characters[ALEX.id]?.hope ?? 0;
+      const hopeAfter = result.state.characters[ALEX.id]?.hope ?? 0;
+      if (entry.outcome === 'withFear') {
+        expect(result.state.fear).toBe(before.fear + 1);
+        expect(hopeAfter).toBe(hopeBefore);
+      } else {
+        expect(result.state.fear).toBe(before.fear);
+        expect(hopeAfter).toBe(Math.min(6, hopeBefore + 1));
+      }
+      state = result.state;
+    }
+    expect(seen.has('withHope') && seen.has('withFear')).toBe(true);
+  });
+
+  it('reads an old client\u2019s roll, sent without a Difficulty field, as none', () => {
+    const parsed = RoomEventSchema.parse({
+      type: 'rollDuality',
+      characterId: ALEX.id,
+      request: {
+        label: 'Old client',
+        modifiers: 0,
+        advantage: 0,
+        disadvantage: 0,
+        experiences: [],
+      },
+    });
+    if (parsed.type !== 'rollDuality') throw new Error('wrong event');
+    expect(parsed.request.difficulty).toBeNull();
+    expect(parsed.request.helpDice).toBe(0);
+  });
+
+  it('loads log entries and group actions saved before a Difficulty could be absent', () => {
+    const snapshot = {
+      ...room,
+      groupAction: { leadCharacterId: ALEX.id, reactions: {} },
+      rollLog: [
+        {
+          kind: 'duality',
+          id: 'old',
+          at: NOW,
+          by: 'Alex',
+          label: 'Agility Roll',
+          roll: {
+            hope: 8,
+            fear: 5,
+            total: 13,
+            modifiers: 0,
+            critical: false,
+            withHope: true,
+            advantageRoll: null,
+            disadvantageRoll: null,
+          },
+          difficulty: 12,
+          outcome: 'successHope',
+          experiences: [],
+        },
+      ],
+    };
+    const parsed = RoomStateSchema.parse(snapshot);
+    const entry = parsed.rollLog[0];
+    expect(entry?.kind === 'duality' && entry.difficulty).toBe(12);
+    expect(parsed.groupAction?.difficulty).toBe(10);
+  });
+
+  it('judges a group action against the Difficulty the GM opened it with', () => {
+    const opened = apply(room, GM, {
+      type: 'startGroupAction',
+      leadCharacterId: ALEX.id,
+      difficulty: 40,
+    });
+    const request = {
+      label: 'Push the door',
+      modifiers: 0,
+      difficulty: null,
+      advantage: 0,
+      disadvantage: 0,
+      experiences: [],
+      helpDice: 0,
+      reaction: false,
+    };
+    const helped = apply(opened, SAM, {
+      type: 'rollDuality',
+      characterId: SAM.id,
+      request,
+      visibility: 'public',
+    });
+    const entry = helped.rollLog[0];
+    if (entry === undefined || entry.kind !== 'duality') throw new Error('no entry');
+    expect(entry.difficulty).toBe(40);
+    // 2d12 cannot reach 40 without matching, so Sam's help failed unless it crit.
+    expect(helped.groupAction?.reactions[SAM.id]).toBe(entry.roll.critical);
   });
 
   it('refuses a roll naming an Experience the character does not have', () => {
@@ -831,8 +954,8 @@ describe('the GM rolling for an adversary', () => {
 
   it('carries the group action bonus into the lead roll and then closes it', () => {
     const room = roomWithPlayers();
-    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id });
-    expect(refusal(room, ALEX, { type: 'startGroupAction', leadCharacterId: ALEX.id })).toBe(
+    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id, difficulty: 10 });
+    expect(refusal(room, ALEX, { type: 'startGroupAction', leadCharacterId: ALEX.id, difficulty: 10 })).toBe(
       'notGameMaster',
     );
 
@@ -1672,6 +1795,28 @@ describe('rolling against a target and damaging adversaries', () => {
     expect(entry?.kind === 'duality' && entry.target).toBeNull();
   });
 
+  it('rolls against a targeted adversary even when the player sent no Difficulty', () => {
+    const room = roomWith('acid-burrower', adversaryToken);
+    const result = applyRoomEvent(
+      room,
+      ALEX,
+      {
+        type: 'rollDuality',
+        characterId: ALEX.id,
+        request: { ...request, difficulty: null },
+        targetTokenId: 'tok-1',
+        visibility: 'public',
+      },
+      rng,
+      NOW,
+    );
+    if (!result.ok) throw new Error('rejected');
+    const entry = result.entries[0];
+    if (entry === undefined || entry.kind !== 'duality') throw new Error('no duality entry');
+    expect(entry.difficulty).toBe(14);
+    expect(['withHope', 'withFear']).not.toContain(entry.outcome);
+  });
+
   it('refuses a player rolling against a token they cannot see', () => {
     const room = roomWith('acid-burrower', { ...adversaryToken, hidden: true });
     const event: RoomEvent = {
@@ -1907,7 +2052,7 @@ describe('chat and private rolls', () => {
   });
 
   it('refuses a private roll that collaborates on a group action', () => {
-    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id });
+    const opened = apply(room, GM, { type: 'startGroupAction', leadCharacterId: ALEX.id, difficulty: 10 });
     expect(
       refusal(opened, SAM, {
         type: 'rollDuality',

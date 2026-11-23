@@ -135,6 +135,7 @@ button:disabled {
 }
 
 .btn-primary:hover:not(:disabled) {
+  color: #1e1405;
   background: linear-gradient(180deg, #f0c971, #d19e38);
   box-shadow:
     inset 0 var(--size-rule) 0 rgb(255 255 255 / 45%),
@@ -2778,6 +2779,615 @@ button.link {
 
 .outcome[data-tone='failure'] {
   color: var(--c-crimson-bright);
+}
+
+/* A roll made without a Difficulty has no verdict: it reads as its die. */
+.outcome[data-tone='hope'] {
+  color: var(--c-brass-bright);
+}
+
+.outcome[data-tone='fear'] {
+  color: var(--c-violet-bright);
+}
+
+/* ============================================================== roll dialog */
+
+/*
+ * The roll dialog is a small altar: the Duality Dice sit in the middle on a
+ * pool of light, disadvantage to their left and advantage to their right, and
+ * Experiences laid out beneath like cards on a table. The dice are the one
+ * loud thing; everything around them stays quiet.
+ */
+.dialog.roll-dialog {
+  width: min(680px, 100%);
+  box-shadow:
+    var(--shadow-3),
+    inset 0 0 0 var(--size-rule) var(--c-line-bronze),
+    inset 0 0 0 5px var(--c-surface-1),
+    inset 0 0 0 6px var(--c-line-bronze-hover);
+  padding: var(--sp-6);
+}
+
+/* Title and close stay on one row, even where card heads stack on a phone. */
+.dialog.roll-dialog .card-head {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.roll-dialog .card-head h2 {
+  font-size: var(--fs-xl);
+}
+
+.roll-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.roll-modifier {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin: calc(var(--sp-3) * -1) 0 0;
+  color: var(--c-text-muted);
+}
+
+.roll-modifier strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--c-brass-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+.roll-target {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.roll-arena {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: var(--sp-5) 0;
+  background:
+    radial-gradient(closest-side at 44% 46%, var(--c-roll-altar), transparent),
+    radial-gradient(closest-side at 58% 50%, var(--c-roll-altar-fear), transparent);
+}
+
+.roll-centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* The dice themselves are the button. Strip every button chrome off them. */
+.duality-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: var(--sp-2) var(--sp-3);
+  min-height: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: var(--radius-panel);
+  perspective: 600px;
+}
+
+.duality-pair:hover:not(:disabled),
+.duality-pair:active:not(:disabled) {
+  background: none;
+  box-shadow: none;
+}
+
+.duality-pair:disabled {
+  background: none;
+  filter: grayscale(0.8);
+}
+
+.d12 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* Only the drawing tilts; the die's name stays level and readable. */
+.d12 svg {
+  width: 132px;
+  height: 132px;
+  overflow: visible;
+  transition: transform var(--motion-base) var(--ease);
+}
+
+.d12[data-tone='hope'] {
+  z-index: 1;
+}
+
+.d12[data-tone='hope'] svg {
+  transform: rotateY(16deg) rotateZ(-9deg);
+}
+
+.d12[data-tone='fear'] {
+  margin-left: -20px;
+}
+
+.d12[data-tone='fear'] svg {
+  transform: rotateY(-16deg) rotateZ(10deg) translateY(8px);
+}
+
+.duality-pair:hover:not(:disabled) .d12[data-tone='hope'] svg,
+.duality-pair:focus-visible .d12[data-tone='hope'] svg {
+  transform: rotateY(8deg) rotateZ(-16deg) translateY(-6px);
+}
+
+.duality-pair:hover:not(:disabled) .d12[data-tone='fear'] svg,
+.duality-pair:focus-visible .d12[data-tone='fear'] svg {
+  transform: rotateY(-8deg) rotateZ(17deg) translateY(2px);
+}
+
+.d12-facet,
+.d12-face {
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.d12[data-tone='hope'] svg {
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 55%)) drop-shadow(0 0 18px rgb(216 164 65 / 35%));
+}
+
+.d12[data-tone='hope'] .d12-facet,
+.d12[data-tone='hope'] .d12-face {
+  stroke: var(--c-d12-hope-line);
+}
+
+.d12[data-tone='hope'] .d12-face {
+  fill: var(--c-d12-hope-mid);
+}
+
+.d12[data-tone='hope'] .f0,
+.d12[data-tone='hope'] .f4 {
+  fill: var(--c-d12-hope-lit);
+}
+
+.d12[data-tone='hope'] .f3 {
+  fill: var(--c-d12-hope-shade);
+}
+
+.d12[data-tone='hope'] .f1,
+.d12[data-tone='hope'] .f2 {
+  fill: var(--c-d12-hope-deep);
+}
+
+.d12[data-tone='hope'] .d12-num {
+  fill: var(--c-hope-ink);
+}
+
+.d12[data-tone='fear'] svg {
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 60%)) drop-shadow(0 0 16px rgb(123 107 196 / 40%));
+}
+
+.d12[data-tone='fear'] .d12-facet,
+.d12[data-tone='fear'] .d12-face {
+  stroke: var(--c-d12-fear-line);
+}
+
+.d12[data-tone='fear'] .d12-face {
+  fill: var(--c-d12-fear-mid);
+}
+
+.d12[data-tone='fear'] .f0,
+.d12[data-tone='fear'] .f4 {
+  fill: var(--c-d12-fear-lit);
+}
+
+.d12[data-tone='fear'] .f3 {
+  fill: var(--c-d12-fear-shade);
+}
+
+.d12[data-tone='fear'] .f1,
+.d12[data-tone='fear'] .f2 {
+  fill: var(--c-d12-fear-deep);
+}
+
+.d12[data-tone='fear'] .d12-num {
+  fill: var(--c-violet-bright);
+}
+
+.d12-num {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 17px;
+}
+
+.d12-name {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+}
+
+.d12[data-tone='hope'] .d12-name {
+  color: var(--c-brass-bright);
+}
+
+.d12[data-tone='fear'] .d12-name {
+  color: var(--c-violet-bright);
+}
+
+.roll-formula {
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.roll-caption {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+}
+
+.roll-go {
+  min-width: 9rem;
+  margin-top: var(--sp-2);
+}
+
+/* --- advantage / disadvantage steppers ----------------------------------- */
+
+.edge-stepper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  text-align: center;
+}
+
+.edge-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+
+.edge-stepper[data-kind='advantage'] .edge-label {
+  color: var(--c-edge-adv);
+}
+
+.edge-stepper[data-kind='disadvantage'] .edge-label {
+  color: var(--c-edge-dis);
+}
+
+.edge-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.edge-step {
+  width: var(--size-tap);
+  padding: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-lg);
+  line-height: 1;
+}
+
+.edge-count {
+  min-width: 2ch;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+}
+
+.edge-dice {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-1);
+  max-width: 7.5rem;
+  min-height: 22px;
+}
+
+.d6 {
+  width: 20px;
+  height: 20px;
+}
+
+.d6 rect {
+  stroke-width: 1.4;
+}
+
+.edge-stepper[data-kind='advantage'] .d6 rect {
+  fill: rgb(126 208 160 / 16%);
+  stroke: var(--c-edge-adv);
+}
+
+.edge-stepper[data-kind='advantage'] .d6 circle {
+  fill: var(--c-edge-adv);
+}
+
+.edge-stepper[data-kind='disadvantage'] .d6 rect {
+  fill: rgb(232 115 105 / 14%);
+  stroke: var(--c-edge-dis);
+}
+
+.edge-stepper[data-kind='disadvantage'] .d6 circle {
+  fill: var(--c-edge-dis);
+}
+
+.d6[data-ghost='true'] {
+  opacity: 0.28;
+}
+
+/* Hangs below the stepper so showing it does not shift the stepper off the
+   dice's centre line. On a phone it flows normally (see below). */
+.edge-hint {
+  position: absolute;
+  top: calc(100% + var(--sp-2));
+  margin: 0;
+  max-width: 11rem;
+  font-size: var(--fs-xs);
+  color: var(--c-text-muted);
+}
+
+/* --- Experiences as bonus cards ------------------------------------------ */
+
+.roll-experiences h3 {
+  margin-bottom: var(--sp-3);
+  text-align: center;
+  color: var(--c-text-muted);
+  font-size: var(--fs-base);
+}
+
+.exp-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+
+.exp-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  width: 8.5rem;
+  padding: var(--sp-3) var(--sp-2) var(--sp-2);
+  border-radius: var(--radius-panel) var(--radius-panel) var(--radius-ctl) var(--radius-ctl);
+  background: linear-gradient(180deg, var(--c-plaque-top), var(--c-plaque-bottom));
+  color: var(--c-text);
+  text-align: center;
+}
+
+.exp-bonus {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--c-brass-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A Hope diamond with the Experience's initial — Hope is drawn as a diamond
+   everywhere else on the sheet, and this is what the card spends. */
+.exp-sigil {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin: var(--sp-1) 0;
+  transform: rotate(45deg);
+  border: var(--size-rule) solid var(--c-hope-rim);
+  background: var(--c-hope-face);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  color: var(--c-hope-bright);
+}
+
+.exp-sigil > span {
+  transform: rotate(-45deg);
+  line-height: 1;
+}
+
+.exp-name {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.exp-cost {
+  margin-top: auto;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--c-text-faint);
+}
+
+.exp-card[aria-pressed='true'] {
+  background: var(--sel-bg);
+  box-shadow: var(--sel-ring), var(--sel-glow);
+}
+
+.exp-card[aria-pressed='true'] .exp-sigil {
+  background: var(--c-hope-fill);
+  border-color: var(--c-hope-edge);
+  color: var(--c-hope-ink);
+}
+
+.exp-card[aria-pressed='true'] .exp-cost {
+  color: var(--c-brass-bright);
+}
+
+.roll-hope {
+  margin: var(--sp-3) 0 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
+.roll-hope[data-short='true'] {
+  color: var(--c-crimson-bright);
+}
+
+/* --- quiet options: private, reaction ------------------------------------- */
+
+.roll-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3) var(--sp-6);
+  padding-top: var(--sp-4);
+  border-top: var(--size-rule) solid var(--c-line);
+}
+
+.roll-switch-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.roll-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+  font-size: var(--fs-sm);
+}
+
+.roll-switch:hover:not(:disabled),
+.roll-switch:active:not(:disabled) {
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.roll-switch-track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--c-surface-input);
+  border: var(--size-rule) solid var(--c-line-bronze-hover);
+  box-shadow: var(--shadow-field-inset);
+  transition: background var(--motion-base) var(--ease);
+}
+
+.roll-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--c-text-faint);
+  transition:
+    transform var(--motion-base) var(--ease),
+    background var(--motion-base) var(--ease);
+}
+
+.roll-switch[aria-checked='true'] {
+  color: var(--c-brass-bright);
+}
+
+.roll-switch[aria-checked='true'] .roll-switch-track {
+  background: var(--c-brass-deep);
+  border-color: var(--c-brass);
+}
+
+.roll-switch[aria-checked='true'] .roll-switch-thumb {
+  transform: translateX(16px);
+  background: var(--c-brass-pale);
+}
+
+.roll-tip-mark {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-pill);
+  border: var(--size-rule) solid var(--c-line-bronze-hover);
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+  cursor: help;
+}
+
+.roll-tip-text {
+  position: absolute;
+  bottom: calc(100% + var(--sp-2));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(18rem, 80vw);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--c-surface-3);
+  border: var(--size-rule) solid var(--c-line-bronze);
+  border-radius: var(--radius-ctl);
+  box-shadow: var(--shadow-2);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--c-text-muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-base) var(--ease);
+  z-index: 2;
+}
+
+.roll-switch-wrap:hover .roll-tip-text,
+.roll-switch-wrap:focus-within .roll-tip-text {
+  opacity: 1;
+}
+
+/* A phone: the dice take the full width and the steppers sit side by side
+   underneath them, disadvantage still on the left. */
+@media (max-width: 560px) {
+  .dialog.roll-dialog {
+    padding: var(--sp-5) var(--sp-4);
+  }
+
+  .roll-dialog .card-head h2 {
+    font-size: var(--fs-lg);
+  }
+
+  .roll-arena {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'dice dice'
+      'dis adv';
+    align-items: start;
+    gap: var(--sp-4) var(--sp-3);
+  }
+
+  .roll-centre {
+    grid-area: dice;
+  }
+
+  .edge-hint {
+    position: static;
+  }
+
+  .edge-stepper[data-kind='disadvantage'] {
+    grid-area: dis;
+  }
+
+  .edge-stepper[data-kind='advantage'] {
+    grid-area: adv;
+  }
+
+  .d12 svg {
+    width: 104px;
+    height: 104px;
+  }
+
+  .exp-card {
+    width: calc(50% - var(--sp-3) / 2);
+  }
 }
 
 /* ================================================================= roll log */

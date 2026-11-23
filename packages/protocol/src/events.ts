@@ -236,7 +236,11 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     request: z.object({
       label: z.string().min(1).max(80),
       modifiers: z.number().int().min(-20).max(20),
-      difficulty: z.number().int().min(0).max(60),
+      /**
+       * Null (or absent, from an older client) when the player rolls without one:
+       * the GM keeps the Difficulty and judges success. Hope and Fear still apply.
+       */
+      difficulty: z.number().int().min(0).max(60).nullable().default(null),
       advantage: z.number().int().min(0).max(10),
       disadvantage: z.number().int().min(0).max(10),
       /** Allies using Help an Ally, each of whom rolls an advantage die. */
@@ -301,6 +305,11 @@ export const GameMasterRoomEventSchema = z.discriminatedUnion('type', [
     // while it is open is collaborating (SRD 2.0 p.48).
     type: z.literal('startGroupAction'),
     leadCharacterId: z.string().min(1).max(64),
+    /**
+     * The Difficulty every roll in the action is judged against. Players roll
+     * without one, and the collaborators' successes are what shift the lead roll.
+     */
+    difficulty: z.number().int().min(1).max(60).default(10),
   }),
   z.object({
     // Abandons a group action without anyone leading it.

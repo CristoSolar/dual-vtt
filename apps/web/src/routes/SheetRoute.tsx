@@ -314,8 +314,9 @@ export function SheetRoute({
       }),
     );
 
-    // An attack that lands rolls its damage straight away, critical included.
-    if (pending.damage !== null && result.result.success) {
+    // An attack that lands rolls its damage straight away, critical included. With
+    // no Difficulty the GM calls the hit, so the damage is rolled ready for it.
+    if (pending.damage !== null && result.result.success !== false) {
       const damage = makeDamageRoll(
         { ...pending.damage, critical: result.result.criticalDamage },
         rng,

@@ -54,6 +54,10 @@ const DYNAMIC_ADVANCEMENT: Record<ActionOutcome, { progress: number; consequence
   successFear: { progress: 1, consequence: 1 },
   successHope: { progress: 2, consequence: 0 },
   criticalSuccess: { progress: 3, consequence: 0 },
+  // Without a Difficulty there is no success or failure to read the chart by, so
+  // dynamic countdowns wait for the GM to tick them by hand.
+  withHope: { progress: 0, consequence: 0 },
+  withFear: { progress: 0, consequence: 0 },
 };
 
 /**

@@ -1,12 +1,18 @@
 import { rollDie, type Rng } from './rng.js';
 
-/** Outcome of an action roll compared against a Difficulty (SRD p.36). */
+/**
+ * Outcome of an action roll compared against a Difficulty (SRD p.36). A roll made
+ * without one — the GM keeps the Difficulty and judges success at the table — is
+ * only `withHope` or `withFear`; a critical is a success whatever the Difficulty.
+ */
 export type ActionOutcome =
   | 'criticalSuccess'
   | 'successHope'
   | 'successFear'
   | 'failureHope'
-  | 'failureFear';
+  | 'failureFear'
+  | 'withHope'
+  | 'withFear';
 
 export interface DualityRoll {
   /** Face shown on the Hope Die. */
@@ -121,7 +127,8 @@ export function rollDuality(options: RollDualityOptions): DualityRoll {
 
 export interface ActionResult {
   outcome: ActionOutcome;
-  success: boolean;
+  /** Null when there was no Difficulty to compare against: the GM judges it. */
+  success: boolean | null;
   critical: boolean;
   /** A Critical Success counts as a roll "with Hope" (SRD p.36). */
   withHope: boolean;
@@ -135,8 +142,12 @@ export interface ActionResult {
   criticalDamage: boolean;
 }
 
-/** Resolves a Duality roll against a Difficulty as an action roll (SRD p.36). */
-export function resolveActionRoll(roll: DualityRoll, difficulty: number): ActionResult {
+/**
+ * Resolves a Duality roll against a Difficulty as an action roll (SRD p.36). With
+ * no Difficulty the Hope, Fear and critical bookkeeping is the same; only success
+ * is left for the GM to call.
+ */
+export function resolveActionRoll(roll: DualityRoll, difficulty: number | null): ActionResult {
   if (roll.critical) {
     return {
       outcome: 'criticalSuccess',
@@ -150,15 +161,20 @@ export function resolveActionRoll(roll: DualityRoll, difficulty: number): Action
     };
   }
 
-  const success = roll.total >= difficulty;
+  const success = difficulty === null ? null : roll.total >= difficulty;
   const withHope = roll.withHope;
-  const outcome: ActionOutcome = success
-    ? withHope
-      ? 'successHope'
-      : 'successFear'
-    : withHope
-      ? 'failureHope'
-      : 'failureFear';
+  const outcome: ActionOutcome =
+    success === null
+      ? withHope
+        ? 'withHope'
+        : 'withFear'
+      : success
+        ? withHope
+          ? 'successHope'
+          : 'successFear'
+        : withHope
+          ? 'failureHope'
+          : 'failureFear';
 
   return {
     outcome,
@@ -173,7 +189,8 @@ export function resolveActionRoll(roll: DualityRoll, difficulty: number): Action
 }
 
 export interface ReactionResult {
-  success: boolean;
+  /** Null when there was no Difficulty; a critical still succeeds. */
+  success: boolean | null;
   critical: boolean;
   /**
    * A critical reaction roll ignores any effect that would have hit you on a
@@ -187,10 +204,13 @@ export interface ReactionResult {
  * and a critical clears no Stress and grants no Hope, but does negate the effects a
  * mere success would have left in place (SRD p.37).
  */
-export function resolveReactionRoll(roll: DualityRoll, difficulty: number): ReactionResult {
+export function resolveReactionRoll(
+  roll: DualityRoll,
+  difficulty: number | null,
+): ReactionResult {
   const critical = roll.critical;
   return {
-    success: critical || roll.total >= difficulty,
+    success: critical ? true : difficulty === null ? null : roll.total >= difficulty,
     critical,
     ignoresEffects: critical,
   };

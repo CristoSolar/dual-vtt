@@ -59,6 +59,9 @@ const nextId = (prefix: string) => {
 function GroupAction({ room, send }: { room: RoomState; send: (event: RoomEvent) => void }) {
   const party = room.players.filter((player) => player.characterId !== null);
   const [lead, setLead] = useState(party[0]?.characterId ?? '');
+  // Players roll without a Difficulty; a group action needs one to tell the
+  // collaborators' successes from their failures, so the GM sets it here.
+  const [difficulty, setDifficulty] = useState(10);
   const open = room.groupAction;
   const nameOf = (id: string) =>
     room.players.find((player) => player.characterId === id)?.name ?? id;
@@ -79,10 +82,22 @@ function GroupAction({ room, send }: { room: RoomState; send: (event: RoomEvent)
               </option>
             ))}
           </select>
+          <label htmlFor="group-difficulty">{t('gm.groupAction.difficulty')}</label>
+          <input
+            id="group-difficulty"
+            type="number"
+            className="w-auto"
+            min={1}
+            max={60}
+            value={difficulty}
+            onChange={(event) =>
+              setDifficulty(Math.min(60, Math.max(1, Number(event.target.value) || 1)))
+            }
+          />
           <button
             type="button"
             disabled={lead === ''}
-            onClick={() => send({ type: 'startGroupAction', leadCharacterId: lead })}
+            onClick={() => send({ type: 'startGroupAction', leadCharacterId: lead, difficulty })}
           >
             {t('gm.groupAction.start')}
           </button>
@@ -93,7 +108,8 @@ function GroupAction({ room, send }: { room: RoomState; send: (event: RoomEvent)
             {t('gm.groupAction.open', {
               name: nameOf(open.leadCharacterId),
               count: Object.keys(open.reactions).length,
-            })}
+            })}{' '}
+            {t('gm.groupAction.openWith', { difficulty: open.difficulty })}
           </p>
           <button type="button" onClick={() => send({ type: 'cancelGroupAction' })}>
             {t('gm.groupAction.cancel')}
@@ -1603,12 +1619,20 @@ function SharedRollLog({ room, send }: { room: RoomState; send: (event: RoomEven
                 </div>
                 <span className="muted">
                   {entry.kind === 'duality'
-                    ? `${t('gm.rollLog.dualityMeta', {
-                        hope: entry.roll.hope,
-                        fear: entry.roll.fear,
-                        total: entry.roll.total,
-                        difficulty: entry.difficulty,
-                      })}${entry.target === null ? '' : t('sheet.log.target', { target: entry.target })}`
+                    ? `${
+                        entry.difficulty === null
+                          ? t('gm.rollLog.dualityMetaOpen', {
+                              hope: entry.roll.hope,
+                              fear: entry.roll.fear,
+                              total: entry.roll.total,
+                            })
+                          : t('gm.rollLog.dualityMeta', {
+                              hope: entry.roll.hope,
+                              fear: entry.roll.fear,
+                              total: entry.roll.total,
+                              difficulty: entry.difficulty,
+                            })
+                      }${entry.target === null ? '' : t('sheet.log.target', { target: entry.target })}`
                     : entry.kind === 'attack'
                       ? `${t('sheet.log.attackDice', { dice: entry.roll.dice.join(', ') })}${
                           entry.evasion === null

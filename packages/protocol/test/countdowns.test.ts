@@ -20,6 +20,14 @@ const countdown = (over: Partial<Countdown> = {}): Countdown => ({
 });
 
 describe('dynamic countdown advancement chart (SRD p.69)', () => {
+  it('leaves dynamic countdowns to the GM when a roll had no Difficulty', () => {
+    for (const outcome of ['withHope', 'withFear'] as const) {
+      expect(advancementFor('progress', outcome)).toBe(0);
+      expect(advancementFor('consequence', outcome)).toBe(0);
+      expect(advancementFor('standard', outcome)).toBe(1);
+    }
+  });
+
   it('ticks a consequence countdown 3 / 2 / 1 / 0 by outcome', () => {
     expect(advancementFor('consequence', 'failureFear')).toBe(3);
     expect(advancementFor('consequence', 'failureHope')).toBe(2);

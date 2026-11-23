@@ -128,6 +128,24 @@
   --c-hope-face: #191322;
   --c-hope-rim: #4a3a22;
 
+  /* --- the roll dialog's d12 pair: facets lit from the upper left, so the
+   * flat drawing reads as a solid. Hope is lit gold, Fear is a dark violet
+   * stone with a bright rim — the same light-vs-dark split as the result dice. */
+  --c-d12-hope-lit: #f6dc9c;
+  --c-d12-hope-mid: #e2b660;
+  --c-d12-hope-shade: #b5832c;
+  --c-d12-hope-deep: #8a5f1f;
+  --c-d12-hope-line: rgb(42 30 8 / 55%);
+  --c-d12-fear-lit: #3b3160;
+  --c-d12-fear-mid: #2c2449;
+  --c-d12-fear-shade: #211b37;
+  --c-d12-fear-deep: #171228;
+  --c-d12-fear-line: rgb(169 155 232 / 70%);
+  --c-roll-altar: rgb(216 164 65 / 14%);
+  --c-roll-altar-fear: rgb(123 107 196 / 16%);
+  --c-edge-adv: var(--c-success);
+  --c-edge-dis: var(--c-crimson-bright);
+
   /* --- sheet furniture: the "rulebook" surfaces (plaques, hexes, bands) --- */
   --c-on-brass: #1e1405;
   --c-on-brass-dim: #4a3410;
