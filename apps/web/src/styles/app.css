@@ -5119,3 +5119,32 @@ details summary {
 .players-table-campaign {
   display: block;
 }
+
+/* Using a domain card: pick the ability, read its cost and roll, then confirm. */
+.card-use-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-4);
+}
+
+.card-use-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0 0 var(--sp-4);
+}
+
+.card-use-summary dt {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-brass-dim);
+}
+
+.card-use-summary dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-text);
+}

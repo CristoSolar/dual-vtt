@@ -737,6 +737,7 @@ export function MapRoute({
             characterId={viewerId}
             send={send}
             sharedLog={room.rollLog}
+            privateLog={room.privateLog}
             canRollPrivately={canRollPrivately(room, viewerId)}
             target={myTarget}
             requestedRoll={requestedRoll}

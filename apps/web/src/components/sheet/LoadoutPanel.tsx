@@ -22,7 +22,7 @@ interface LoadoutPanelProps {
   onToggleRest: () => void;
   onRecall: (cardId: string, vaulting: string | undefined) => void;
   onVault: (cardId: string) => void;
-  /** Uses or casts a loadout card, logging its text; only in a campaign. */
+  /** Opens the use dialog for a loadout card (pay, roll, damage); only in a campaign. */
   onUse?: ((cardId: string) => void) | undefined;
   /** Lets a loadout card be dragged onto the hotbar, where there is one. */
   draggableCards?: boolean;

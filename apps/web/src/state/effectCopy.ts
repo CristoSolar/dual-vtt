@@ -11,6 +11,15 @@ export function effectCopy(entry: Extract<RollEntry, { kind: 'effect' }>): {
   text: string | null;
 } {
   const data = srd();
+  // A grimoire's spell is logged by its place on the card; its name is read here,
+  // in the reader's language, and the card's text still goes with it.
+  if (entry.source === 'domainCard' && entry.feature !== null) {
+    const card = data.domainCards.find((c) => c.id === entry.ref);
+    const spell = data.cardMechanics.find((m) => m.id === entry.ref)?.abilities[entry.feature]?.name;
+    if (card !== undefined) {
+      return { title: spell == null ? card.name : `${card.name} — ${spell}`, text: card.text };
+    }
+  }
   const feature =
     entry.source === 'domainCard'
       ? data.domainCards.find((card) => card.id === entry.ref)

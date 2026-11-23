@@ -1,10 +1,11 @@
 import { MAX_HOPE } from '@daggerheart/rules';
-import type { RoomEvent, Token, Visibility } from '@daggerheart/protocol';
+import type { PrivateEntry, RoomEvent, Token, Visibility } from '@daggerheart/protocol';
 import { useEffect, useMemo, useState } from 'react';
 
 import { t } from '../../i18n/index.js';
 import { cardTypeLabel, domainName } from '../../state/domains.js';
 import { domainStyle } from '../Domain.js';
+import { CardUseFlow } from '../sheet/CardUseFlow.js';
 import { DamageDialog } from '../sheet/DamageDialog.js';
 import { hotbarDrag } from '../sheet/Hotbar.js';
 import { RollDialog, type RollDialogSpec } from '../sheet/RollDialog.js';
@@ -28,6 +29,8 @@ interface MapSheetPanelProps {
   characterId: string;
   send: (event: RoomEvent) => void;
   sharedLog: readonly RollEntry[] | undefined;
+  /** Private rolls this account may see, where a card's private roll lands. */
+  privateLog?: readonly PrivateEntry[] | undefined;
   /** Whether the roll dialog offers a private roll: not while the roll is shared. */
   canRollPrivately?: boolean;
   /** The viewer's first target, which an action roll is made against. */
@@ -58,6 +61,7 @@ export function MapSheetPanel({
   characterId,
   send,
   sharedLog,
+  privateLog,
   canRollPrivately = false,
   target = null,
   requestedRoll = null,
@@ -68,6 +72,7 @@ export function MapSheetPanel({
   const [pending, setPending] = useState<PendingRoll | null>(null);
   const [showDamage, setShowDamage] = useState(false);
   const [tab, setTab] = useState<Tab>('hoja');
+  const [usingCard, setUsingCard] = useState<string | null>(null);
 
   useEffect(() => {
     if (requestedRoll === null) return;
@@ -346,7 +351,7 @@ export function MapSheetPanel({
                     type="button"
                     className="btn-ghost"
                     title={t('sheet.loadout.useTitle')}
-                    onClick={() => send(forMe({ type: 'useDomainCard', cardId: card.id }))}
+                    onClick={() => setUsingCard(card.id)}
                   >
                     {t('sheet.loadout.use')}
                   </button>
@@ -406,6 +411,25 @@ export function MapSheetPanel({
           onClose={() => setPending(null)}
         />
       ) : null}
+
+      {usingCard === null
+        ? null
+        : (() => {
+            const card = view.loadout.find((c) => c.id === usingCard);
+            return card === undefined ? null : (
+              <CardUseFlow
+                card={card}
+                sheet={sheet}
+                send={(event) => send(forMe(event))}
+                sharedLog={sharedLog ?? []}
+                privateLog={privateLog}
+                experiences={experiences}
+                canRollPrivately={canRollPrivately}
+                target={target}
+                onClose={() => setUsingCard(null)}
+              />
+            );
+          })()}
 
       {showDamage ? (
         <DamageDialog

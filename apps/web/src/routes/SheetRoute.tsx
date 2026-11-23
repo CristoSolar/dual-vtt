@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
+import { CardUseFlow } from '../components/sheet/CardUseFlow.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
 import { DowntimePanel } from '../components/sheet/DowntimePanel.js';
@@ -178,6 +179,8 @@ export function SheetRoute({
   const [showDeathMove, setShowDeathMove] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
+  /** The loadout card being played, while its use dialog is open. */
+  const [usingCard, setUsingCard] = useState<string | null>(null);
   // Offline the player says whether they are resting; in a campaign the GM opens
   // downtime and the server is the one that knows.
   const [localRest, setLocalRest] = useState(false);
@@ -863,7 +866,7 @@ export function SheetRoute({
               )
             }
             onVault={(cardId) => run((s) => sendToVault(s, cardId), forMe({ type: 'vaultCard', cardId }))}
-            onUse={online ? (cardId) => send(forMe({ type: 'useDomainCard', cardId })) : undefined}
+            onUse={online ? setUsingCard : undefined}
             draggableCards={hotbarOn}
           />
           {readOnly ? null : (
@@ -889,6 +892,25 @@ export function SheetRoute({
           onClose={closeRoll}
         />
       ) : null}
+
+      {online && usingCard !== null
+        ? (() => {
+            const card = view.loadout.find((c) => c.id === usingCard);
+            return card === undefined ? null : (
+              <CardUseFlow
+                card={card}
+                sheet={sheet}
+                send={(event) => send(forMe(event))}
+                sharedLog={sharedLog ?? []}
+                privateLog={privateLog}
+                experiences={experiences}
+                canRollPrivately={canRollPrivately}
+                target={target}
+                onClose={() => setUsingCard(null)}
+              />
+            );
+          })()
+        : null}
 
       {showDamage ? (
         <DamageDialog

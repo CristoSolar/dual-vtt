@@ -12,6 +12,11 @@ export interface RollDialogSpec {
   /** Flat modifier already resolved by the caller (trait, Proficiency, and so on). */
   modifiers: number;
   modifierLabel: string;
+  /**
+   * A Difficulty the roll's source prints, like a spell's "Spellcast Roll (13)".
+   * Sent with the roll so the server judges it; absent, the GM or the target does.
+   */
+  difficulty?: number | null;
 }
 
 interface RollDialogProps {
@@ -97,8 +102,9 @@ export function RollDialog({
     onRoll(
       {
         modifiers: spec.modifiers,
-        // The GM keeps the Difficulty; a targeted adversary supplies its own.
-        difficulty: null,
+        // The GM keeps the Difficulty, a targeted adversary supplies its own, and
+        // a card that prints one sends it.
+        difficulty: spec.difficulty ?? null,
         ...edgeRequest(advantage, disadvantage),
         reaction,
         // Names only: the modifiers are read off the character, on the server in
@@ -145,6 +151,11 @@ export function RollDialog({
             <span>{spec.modifierLabel}</span>
             <strong>{formatSigned(spec.modifiers)}</strong>
           </p>
+          {spec.difficulty === undefined || spec.difficulty === null ? null : (
+            <p className="roll-target">
+              <strong>{t('sheet.roll.fixedDifficulty', { difficulty: spec.difficulty })}</strong>
+            </p>
+          )}
           {target === null ? null : (
             <p className="roll-target">
               <strong>{t('sheet.roll.target', { name: target.name })}</strong>
