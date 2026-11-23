@@ -1,45 +1,23 @@
-## Dual VTT: arte nuevo, una mesa de verdad y un inicio para jugadores y GM
+Dual VTT: new art, a real table, and a home for players and GMs
 
-Desde la actualización al SRD 2.0 rehicimos casi todo lo que se ve, y buena parte de cómo se juega una sesión. Todo sigue siendo gratis, en español y en inglés, y lo instalas en tu equipo. Página del proyecto: https://cristosolar.github.io/dual-vtt/
+Since the SRD 2.0 update we have rebuilt almost everything you see, and a good part of how a session plays. It is still free, in English and Spanish, and you run it on your own computer. Project page: https://cristosolar.github.io/dual-vtt/
 
-### Arte nuevo
-- Ilustraciones pintadas para las 13 clases, las 24 ascendencias, las 15 comunidades y todas las armas y armaduras de tier 1.
-- Íconos y colores propios para los 10 dominios.
+New art
+Painted illustrations for all 13 classes, 24 ancestries, 15 communities, and every tier 1 weapon and armor. The 10 domains have their own icons and colours.
 
-### Crear personaje ahora se disfruta
-- Eliges clase, ascendencia, comunidad y equipo en un carrusel de cartas con su arte, sus estadísticas y los dominios de la clase con sus íconos.
-- En el equipo solo ves lo que tu personaje puede usar, y primero las armas que usan tus mejores rasgos.
-- Las cartas de dominio aparecen agrupadas y con el color de su dominio.
+Character creation you will enjoy
+You pick your class, ancestry, community and gear from a card carousel with full art, key stats, and the class domains with their icons. The equipment step only shows what your character can actually use, and lists first the weapons that use your best traits. Domain cards are grouped and coloured by domain.
 
-### Para jugadores: Mis personajes y Mis campañas
-- Crea todos los personajes que quieras, desde cualquier dispositivo, y vincula cada uno a una campaña.
-- Las campañas te llegan como invitaciones que aceptas o rechazas.
+For players: My Characters and My Campaigns
+Create as many characters as you like from any device and link each one to a campaign. Campaigns arrive as invitations you accept or decline.
 
-### Para el GM: Mis campañas y Mis jugadores
-- Campañas activas, en pausa o finalizadas.
-- Cada campaña tiene su página:
-  - **Historia**: solo la ves tú.
-  - **Notas**: las compartes con los jugadores si quieres.
-  - **Monstruos preparados**: los llevas al encuentro con un clic.
-  - **Jugadores e invitaciones.**
+For GMs: My Campaigns and My Players
+Campaigns can be active, paused or finished. Each campaign has its own page with a story only you can see, notes you can share with your players when you want, a list of prepared monsters you can add to the encounter in one click, and its players and invitations.
 
-### En la mesa
-- **Chat** con susurros y tiradas privadas.
-- **Bandeja de dados**: Dualidad o cualquier combinación de d4 a d100.
-- **Dados 3D** que se quedan un momento en pantalla y se desvanecen.
-- **Historial** con tiradas, mensajes y hechizos usados.
-- **Objetivos**: la tirada usa la Dificultad del adversario y el GM aplica el daño por umbrales.
-- **Más herramientas**:
-  - barra rápida con las teclas 1–0
-  - pings en el mapa
-  - diario con notas en el mapa
-  - música sincronizada para toda la mesa
-  - tablas aleatorias
-  - regiones que avisan al GM cuando alguien pisa una trampa
+At the table
+Chat with whispers and private rolls. A dice tray for Duality rolls or any mix of d4 to d100. 3D dice that stay on screen for a moment and then fade. A history panel with rolls, messages and the spells and features people use. Targets, so a roll uses the adversary's Difficulty and the GM applies damage by threshold. A hotbar on the number keys, pings on the map, a journal with notes pinned to the map, music synced for the whole table, random tables, and regions that warn the GM when someone steps into a hazard.
 
-### Arreglos importantes
-- Las tiradas seguidas ya no repiten los mismos números.
-- Terminar un personaje con la conexión inestable ya no falla.
-- Cada GM administra solo a sus propios jugadores.
+Important fixes
+Consecutive rolls no longer repeat the same numbers. Finishing a character on a shaky connection no longer fails. Each GM manages only their own players.
 
-Para jugar, el GM descarga el proyecto desde GitHub, lo inicia y comparte el enlace con sus jugadores. Los pasos están en la página del proyecto.
+To play, the GM downloads the project from GitHub, starts it and shares the link with the players. The steps are on the project page.
