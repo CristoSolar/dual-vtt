@@ -5148,3 +5148,10 @@ details summary {
   font-size: var(--fs-sm);
   color: var(--c-text);
 }
+
+/* Shown on /sheet, /map or /gm while a reload waits for the room. */
+.route-connecting {
+  margin: 4rem auto;
+  text-align: center;
+  color: var(--c-text-muted, inherit);
+}

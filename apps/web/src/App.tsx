@@ -32,6 +32,7 @@ import {
   markGuideSeen,
   saveDicePreference,
 } from './state/storage.js';
+import { campaignRouteGate } from './state/routeGate.js';
 import { firstTarget } from './state/targets.js';
 import { SERVER_URL, useCampaign } from './state/useCampaign.js';
 import { useLibrary } from './state/useLibrary.js';
@@ -105,6 +106,24 @@ function Shell() {
 
   const inCampaign = campaign.activeCampaignId !== null && campaign.room !== null;
   const isGameMaster = campaign.role === 'gm';
+
+  /** A table route right after a reload: wait for the room instead of bouncing home. */
+  const tableRoute = (allowed: boolean, view: () => JSX.Element): JSX.Element => {
+    const gate = campaignRouteGate({
+      activeCampaignId: campaign.activeCampaignId,
+      roomLoaded: campaign.room !== null,
+      status: campaign.status,
+      error: campaign.error,
+      allowed,
+    });
+    if (gate === 'render') return view();
+    if (gate === 'home') return <Navigate to="/" replace />;
+    return (
+      <p className="route-connecting" role="status">
+        {t('campaign.connecting')}
+      </p>
+    );
+  };
 
   const activeCampaignName = useMemo(
     () => campaign.campaigns.find((c) => c.id === campaign.activeCampaignId)?.name ?? '',
@@ -464,8 +483,8 @@ function Shell() {
         <Route path="/create" element={<Navigate to="/create/1" replace />} />
         <Route
           path="/gm"
-          element={
-            campaign.room === null || !isGameMaster ? (
+          element={tableRoute(isGameMaster, () =>
+            campaign.room === null ? (
               <Navigate to="/" replace />
             ) : (
               <GMPanel
@@ -474,12 +493,12 @@ function Shell() {
                 authToken={auth.token}
                 send={campaign.send}
               />
-            )
-          }
+            ),
+          )}
         />
         <Route
           path="/sheet"
-          element={
+          element={tableRoute(mySheet !== null, () =>
             mySheet === null ? (
               <Navigate to="/" replace />
             ) : (
@@ -503,12 +522,12 @@ function Shell() {
                 spotlit={campaign.room?.spotlight === account.id}
                 target={campaign.room === null ? null : firstTarget(campaign.room, account.id)}
               />
-            )
-          }
+            ),
+          )}
         />
         <Route
           path="/map"
-          element={
+          element={tableRoute(true, () =>
             campaign.room === null ? (
               <Navigate to="/" replace />
             ) : (
@@ -525,8 +544,8 @@ function Shell() {
                 diceOn={diceOn}
                 onToggleDice={toggleDice}
               />
-            )
-          }
+            ),
+          )}
         />
         <Route path="/help" element={<HelpRoute role={account.role} />} />
         <Route path="*" element={<Navigate to="/" replace />} />

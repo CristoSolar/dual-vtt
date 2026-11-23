@@ -1239,6 +1239,7 @@ export const es = {
   'campaign.connectFailed': 'No se pudo conectar con el servidor.',
   'campaign.unreadableState': 'El servidor envió un estado que este cliente no puede leer.',
   'campaign.reconnecting': 'Reconectando con la mesa…',
+  'campaign.connecting': 'Conectando con la mesa…',
   'campaign.offline': 'Sin conexión con la mesa. Los cambios no se están guardando.',
   'campaign.offlineTitle': 'Sin conexión',
   'campaign.createFailed': 'No se pudo crear la campaña.',

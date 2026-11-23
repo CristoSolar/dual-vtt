@@ -1219,6 +1219,7 @@ export const en: Record<keyof typeof es, string> = {
   'campaign.connectFailed': 'Could not connect to the server.',
   'campaign.unreadableState': 'The server sent state this client cannot read.',
   'campaign.reconnecting': 'Reconnecting to the table…',
+  'campaign.connecting': 'Connecting to the table…',
   'campaign.offline': 'Not connected to the table. Changes are not being saved.',
   'campaign.offlineTitle': 'Offline',
   'campaign.createFailed': 'The campaign could not be created.',
