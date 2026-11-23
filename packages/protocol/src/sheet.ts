@@ -3,6 +3,7 @@ import { srd, type CardAbility, type CardCost, type Trait } from '@daggerheart/s
 import { z } from 'zod';
 import {
   MAX_HOPE,
+  MAX_LOADOUT,
   applyDamage,
   avoidDeath,
   blazeOfGlory,
@@ -963,8 +964,17 @@ export function applyLevelUp(sheet: SheetState, choices: LevelUpChoices): LevelU
     advancementsTaken: [...leveled.advancementsTaken],
   };
 
+  // A card gained on levelling up is one the PC can play: it goes into the loadout
+  // while there is room, and into the vault once the loadout is full (SRD p.8).
+  const loadout = [...sheet.loadout];
+  const vault = [...sheet.vault];
+  for (const id of gained) {
+    if (loadout.includes(id) || vault.includes(id)) continue;
+    (loadout.length < MAX_LOADOUT ? loadout : vault).push(id);
+  }
+
   return {
-    sheet: { ...sheet, character },
+    sheet: { ...sheet, character, loadout, vault },
     ok: true,
     effect: coded('levelledUp', `Levelled up to ${leveled.level}.`, { level: leveled.level }),
   };

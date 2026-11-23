@@ -78,6 +78,25 @@ describe('SheetEffect codes', () => {
     expect(accepted.ok).toBe(true);
   });
 
+  it('puts a card gained on levelling up where it can be played', () => {
+    const base = sheet();
+    const domains = srd().classes.find((c) => c.id === base.character.classId)?.domains ?? [];
+    const [first, second] = srd().domainCards.filter(
+      (c) => domains.includes(c.domain) && c.level <= 2 && !base.character.domainCards.includes(c.id),
+    );
+    if (first === undefined || second === undefined) throw new Error('no cards to take');
+
+    const levelled = applyLevelUp(base, { advancements: ['domainCard', 'evasion'], extraDomainCardId: first.id });
+    expect(levelled.ok).toBe(true);
+    expect(levelled.sheet.loadout).toEqual([...base.loadout, first.id]);
+
+    // With the loadout full, the new card waits in the vault.
+    const full = { ...base, loadout: ['a', 'b', 'c', 'd', 'e'] };
+    const vaulted = applyLevelUp(full, { advancements: ['domainCard', 'evasion'], extraDomainCardId: second.id });
+    expect(vaulted.sheet.loadout).toEqual(full.loadout);
+    expect(vaulted.sheet.vault).toEqual([second.id]);
+  });
+
   it('a plain effect has code null', () => {
     const { effect } = spendSheetHope({ ...sheet(), hope: 3 }, 1);
     expect(effect.code).toBeNull();
