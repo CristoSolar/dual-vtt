@@ -431,6 +431,8 @@ export const en: Record<keyof typeof es, string> = {
   'validation.traitsRequired': 'Assign the trait array.',
   'validation.invalidTraitArray': 'Invalid trait array: {detail}',
   'validation.equipmentRequired': 'Choose starting equipment.',
+  'validation.primaryWeaponRequired': 'Choose a primary weapon.',
+  'validation.armorRequired': 'Choose armor.',
   'validation.unknownWeapon': 'Unknown weapon: {id}',
   'validation.notPrimaryWeapon': '{name} is a secondary weapon.',
   'validation.weaponTierTooHigh': '{name} is Tier {tier}; characters start at Tier {startingTier}.',

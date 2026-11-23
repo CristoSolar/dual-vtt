@@ -173,7 +173,11 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
       }
 
       const primary = findWeapon(equipment.primaryWeaponId);
-      if (primary === null) {
+      if (equipment.primaryWeaponId === '') {
+        errors.push(
+          err(5, 'primaryWeaponRequired', 'choose a primary weapon', 'equipment.primaryWeaponId'),
+        );
+      } else if (primary === null) {
         errors.push(
           err(
             5,
@@ -293,7 +297,9 @@ export function validateStep(state: CreationState, step: Step): ValidationResult
       }
 
       const armorPiece = findArmor(equipment.armorId);
-      if (armorPiece === null) {
+      if (equipment.armorId === '') {
+        errors.push(err(5, 'armorRequired', 'choose armor', 'equipment.armorId'));
+      } else if (armorPiece === null) {
         errors.push(
           err(5, 'unknownArmor', `unknown armor: ${equipment.armorId}`, 'equipment.armorId', {
             id: equipment.armorId,

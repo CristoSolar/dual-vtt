@@ -5,6 +5,7 @@ import {
   createInitialState,
   deserialize,
   finalize,
+  validateStep,
   serialize,
   SERIALIZATION_VERSION,
 } from '../src/index.js';
@@ -26,6 +27,44 @@ describe('serialize / deserialize', () => {
     const restored = deserialize(serialize(state));
     expect(restored).toEqual(state);
     expect(finalize(restored)).toEqual(finalize(state));
+  });
+
+  it('round-trips equipment chosen halfway, so a reload mid step 5 keeps the draft', () => {
+    const base = buildCharacter('rogue');
+    const state = applyChoice(base, {
+      type: 'chooseEquipment',
+      equipment: {
+        primaryWeaponId: base.equipment?.primaryWeaponId ?? '',
+        secondaryWeaponId: null,
+        armorId: '',
+        potion: 'health',
+        classItem: '',
+        spellCarrier: '',
+      },
+    });
+    const restored = deserialize(serialize(state));
+    expect(restored).toEqual(state);
+    const codes = validateStep(restored, 5).errors.map((e) => e.code);
+    expect(codes).toContain('armorRequired');
+    expect(codes).not.toContain('unknownArmor');
+  });
+
+  it('asks for a primary weapon instead of calling an empty one unknown', () => {
+    const base = buildCharacter('rogue');
+    const state = applyChoice(base, {
+      type: 'chooseEquipment',
+      equipment: {
+        primaryWeaponId: '',
+        secondaryWeaponId: null,
+        armorId: '',
+        potion: 'health',
+        classItem: '',
+        spellCarrier: null,
+      },
+    });
+    const codes = validateStep(state, 5).errors.map((e) => e.code);
+    expect(codes).toContain('primaryWeaponRequired');
+    expect(codes).not.toContain('unknownWeapon');
   });
 
   it('round-trips a chosen transformation', () => {

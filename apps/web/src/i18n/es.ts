@@ -446,6 +446,8 @@ export const es = {
   'validation.traitsRequired': 'Asigna el arreglo de Rasgos.',
   'validation.invalidTraitArray': 'Arreglo de Rasgos inválido: {detail}',
   'validation.equipmentRequired': 'Elige el equipo inicial.',
+  'validation.primaryWeaponRequired': 'Elige un arma principal.',
+  'validation.armorRequired': 'Elige una armadura.',
   'validation.unknownWeapon': 'Arma desconocida: {id}',
   'validation.notPrimaryWeapon': '{name} es un arma secundaria.',
   'validation.weaponTierTooHigh': '{name} es de Tier {tier}; los personajes empiezan en Tier {startingTier}.',

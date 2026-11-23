@@ -38,7 +38,7 @@ export function saveCreation(storage: StorageLike, campaignId: string, state: Cr
  */
 export function loadCreation(storage: StorageLike, campaignId: string): CreationState | null {
   const raw = storage.getItem(inProgressKey(campaignId));
-  if (raw === null) return null;
+  if (raw === null) return recoverSetAside(storage, campaignId);
   try {
     return deserialize(raw);
   } catch {
@@ -48,6 +48,24 @@ export function loadCreation(storage: StorageLike, campaignId: string): Creation
       // Out of quota: nothing more to do, and losing the copy is not worth
       // blocking the wizard over.
     }
+    return null;
+  }
+}
+
+/**
+ * A draft set aside as unreadable may parse after a schema fix (a half-picked step 5
+ * used to be refused), so it is offered back when there is no live draft.
+ */
+function recoverSetAside(storage: StorageLike, campaignId: string): CreationState | null {
+  const asideKey = `${inProgressKey(campaignId)}:unreadable`;
+  const aside = storage.getItem(asideKey);
+  if (aside === null) return null;
+  try {
+    const state = deserialize(aside);
+    storage.setItem(inProgressKey(campaignId), aside);
+    storage.removeItem(asideKey);
+    return state;
+  } catch {
     return null;
   }
 }

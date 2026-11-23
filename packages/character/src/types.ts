@@ -37,20 +37,25 @@ export type Heritage = z.infer<typeof HeritageSchema>;
 export const PotionChoiceSchema = z.enum(['health', 'stamina']);
 export type PotionChoice = z.infer<typeof PotionChoiceSchema>;
 
+/**
+ * Step 5 is filled in one pick at a time, so a draft holds empty strings for what
+ * is not chosen yet. The schema accepts them (rejecting one would make a reload
+ * discard the whole draft); `validateStep` reports them as missing.
+ */
 export const EquipmentSchema = z.object({
-  primaryWeaponId: z.string().min(1),
+  primaryWeaponId: z.string(),
   /** Null when the primary weapon is two-handed. */
   secondaryWeaponId: z.string().min(1).nullable(),
-  armorId: z.string().min(1),
+  armorId: z.string(),
   potion: PotionChoiceSchema,
   /** One of the two options listed in the class's `classItems`. */
-  classItem: z.string().min(1),
+  classItem: z.string(),
   /**
    * "Whichever class-specific item you selected to carry your spells" (SRD p.6).
    * The SRD leaves the item itself to the player, so this is free text, required
    * only when the chosen subclass has a Spellcast trait.
    */
-  spellCarrier: z.string().min(1).nullable(),
+  spellCarrier: z.string().nullable(),
 });
 export type Equipment = z.infer<typeof EquipmentSchema>;
 

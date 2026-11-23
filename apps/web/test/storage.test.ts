@@ -37,6 +37,40 @@ describe('creation persistence', () => {
     expect(validateStep(resumed, 3).ok).toBe(false);
   });
 
+  it('keeps a draft reloaded halfway through step 5 (only a primary weapon picked)', () => {
+    const storage = fakeStorage();
+    const base = buildCreationState('bard');
+    const state = applyChoice(applyChoice(base, { type: 'goToStep', step: 5 }), {
+      type: 'chooseEquipment',
+      equipment: {
+        primaryWeaponId: base.equipment?.primaryWeaponId ?? 'broadsword',
+        secondaryWeaponId: null,
+        armorId: '',
+        potion: 'health',
+        classItem: '',
+        spellCarrier: null,
+      },
+    });
+    saveCreation(storage, 'library', state);
+
+    const resumed = loadCreation(storage, 'library');
+    expect(resumed?.currentStep).toBe(5);
+    expect(resumed?.equipment).toEqual(state.equipment);
+    expect(storage.getItem('daggerheart-vtt:creation:library:unreadable')).toBeNull();
+  });
+
+  it('gives back a draft an older build set aside as unreadable, once it parses', () => {
+    const storage = fakeStorage();
+    saveCreation(storage, 'library', buildCreationState('bard'));
+    const raw = storage.getItem('daggerheart-vtt:creation:library') ?? '';
+    storage.removeItem('daggerheart-vtt:creation:library');
+    storage.setItem('daggerheart-vtt:creation:library:unreadable', raw);
+
+    expect(loadCreation(storage, 'library')?.classId).toBe('bard');
+    expect(storage.getItem('daggerheart-vtt:creation:library:unreadable')).toBeNull();
+    expect(storage.getItem('daggerheart-vtt:creation:library')).toBe(raw);
+  });
+
   it('scopes drafts per campaign: one campaign\'s draft never leaks into another', () => {
     const storage = fakeStorage();
     saveCreation(storage, 'campaign-1', buildCreationState('bard'));
