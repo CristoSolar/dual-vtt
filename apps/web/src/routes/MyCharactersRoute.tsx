@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
+import { EditCharacterDialog } from '../components/EditCharacterDialog.js';
 import { TransformationBadge } from '../components/TransformationBadge.js';
 import { t } from '../i18n/index.js';
 import {
@@ -48,6 +49,8 @@ function LibraryCard({
   onConfirmUnlink: () => void;
   onConfirmDelete: () => void;
 }) {
+  const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
   const [campaignId, setCampaignId] = useState('');
   const view = selectSheetView(entry.sheet);
   const linked = entry.campaignId !== null;
@@ -69,11 +72,15 @@ function LibraryCard({
         </span>
 
         <div className="library-card-actions">
-          <Link to={`/characters/${entry.id}`}>
-            <button type="button" className="btn-ghost">
-              {t('library.viewSheet')}
-            </button>
-          </Link>
+          <button type="button" className="btn-primary" onClick={() => navigate(`/characters/${entry.id}/sheet`)}>
+            {t('library.viewSheet')}
+          </button>
+          <button type="button" className="btn-ghost" disabled={library.pending} onClick={() => setEditing(true)}>
+            {t('library.edit')}
+          </button>
+          <button type="button" className="btn-ghost" onClick={() => navigate(`/characters/${entry.id}/pdf`)}>
+            {t('library.exportPdf')}
+          </button>
           {linked ? (
             <button type="button" className="btn-ghost" disabled={library.pending} onClick={onConfirmUnlink}>
               {t('library.unlink')}
@@ -109,12 +116,19 @@ function LibraryCard({
                 </option>
               ))}
             </select>
-            <button type="submit" className="btn-primary" disabled={campaignId === '' || library.pending}>
+            <button type="submit" className="btn-ghost" disabled={campaignId === '' || library.pending}>
               {t('library.link')}
             </button>
           </form>
         )}
       </div>
+      {editing ? (
+        <EditCharacterDialog
+          entry={entry}
+          onSave={(details) => library.edit(entry.id, details)}
+          onClose={() => setEditing(false)}
+        />
+      ) : null}
     </article>
   );
 }

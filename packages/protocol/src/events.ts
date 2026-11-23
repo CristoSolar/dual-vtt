@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { TrackSchema } from './audio.js';
 import { CountdownKindSchema, CountdownLoopSchema } from './countdowns.js';
+import { CharacterDetailsSchema } from './details.js';
 import { JournalEntrySchema } from './journal.js';
 import { CampaignStorySchema, PrepAdversarySchema } from './prep.js';
 import {
@@ -164,6 +165,14 @@ export const CharacterRoomEventSchema = z.discriminatedUnion('type', [
     type: z.literal('setBeastform'),
     characterId,
     beastformId: z.string().min(1).max(40).nullable(),
+  }),
+  z.object({
+    // Who the character is — name, pronouns, background, connections, what their
+    // Experiences are called. Never mechanics. Only the character's own player may
+    // send it, not the GM: it is the player's story to tell.
+    type: z.literal('editCharacterDetails'),
+    characterId,
+    details: CharacterDetailsSchema,
   }),
   z.object({
     // A character carries at most one transformation; null puts it down.

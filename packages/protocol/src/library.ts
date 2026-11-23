@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { CharacterDetailsSchema } from './details.js';
 import { SheetStateSchema } from './sheet.js';
 
 /**
@@ -37,3 +38,11 @@ export const LinkCharacterRequestSchema = z.object({
   campaignId: z.string().min(1),
 });
 export type LinkCharacterRequest = z.infer<typeof LinkCharacterRequestSchema>;
+
+/**
+ * `PATCH /characters/:id`: the story fields only (see `CharacterDetailsSchema`).
+ * While linked the server applies it to the room's live sheet, as the same
+ * `editCharacterDetails` intent a socket could send.
+ */
+export const EditCharacterRequestSchema = CharacterDetailsSchema;
+export type EditCharacterRequest = z.infer<typeof EditCharacterRequestSchema>;

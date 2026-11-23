@@ -1,4 +1,10 @@
-import type { LibraryCharacter, RoomPatch, SheetState } from '@daggerheart/protocol';
+import {
+  editSheetDetails,
+  type CharacterDetails,
+  type LibraryCharacter,
+  type RoomPatch,
+  type SheetState,
+} from '@daggerheart/protocol';
 
 import type { CampaignStore } from './campaigns.js';
 import type { CharacterRecord, CharacterStore } from './characters.js';
@@ -100,6 +106,44 @@ export function unlinkCharacter(
   if (record === null || record.ownerId !== ownerId) return refuse(404, 'unknownCharacter');
   const { campaignId, ...outcome } = release(characters, campaigns, record);
   return { ok: true, record, outcome, campaignId };
+}
+
+/**
+ * Rewrites the story fields. While linked the room's sheet is the live one, so the
+ * edit goes to the room as the player's own `editCharacterDetails` intent — the
+ * same reducer and permission check a socket would hit — and the library keeps
+ * reading through. Unlinked, the library copy is the only one.
+ */
+export function editCharacter(
+  characters: CharacterStore,
+  campaigns: CampaignStore,
+  ownerId: string,
+  characterId: string,
+  details: CharacterDetails,
+): LibraryResult {
+  const record = characters.get(characterId);
+  if (record === null || record.ownerId !== ownerId) return refuse(404, 'unknownCharacter');
+
+  if (record.campaignId !== null) {
+    const outcome = campaigns.apply(
+      record.campaignId,
+      { id: ownerId, role: 'player' },
+      { type: 'editCharacterDetails', characterId: ownerId, details },
+    );
+    if (!outcome.ok) return refuse(409, outcome.error ?? 'rejected');
+    characters.update(record.id, {});
+    return {
+      ok: true,
+      record,
+      outcome: { patch: outcome.patch, playerPatch: outcome.playerPatch },
+      campaignId: record.campaignId,
+    };
+  }
+
+  const edited = editSheetDetails(record.sheet, details);
+  if (!edited.ok) return refuse(409, edited.error);
+  characters.update(record.id, { sheet: edited.sheet });
+  return { ok: true, record, outcome: { patch: {}, playerPatch: {} }, campaignId: null };
 }
 
 /** Called before a member is removed, so the character they played comes home. */

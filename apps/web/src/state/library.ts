@@ -6,6 +6,7 @@ import {
   SheetStateSchema,
   type CampaignList,
   type CampaignSummary,
+  type EditCharacterRequest,
   type LibraryCharacter,
   type SheetState,
 } from '@daggerheart/protocol';
@@ -61,6 +62,83 @@ export function characterPortrait(sheet: SheetState): string {
   const { heritage } = sheet.character;
   const ancestryId = heritage.kind === 'single' ? heritage.ancestryId : heritage.first.ancestryId;
   return artUrl('ancestries', ancestryId);
+}
+
+/**
+ * Where "Ver hoja" leads: into the campaign, where the room's sheet is live and
+ * playable, when the character is linked to one this account may enter now;
+ * otherwise the read-only library view.
+ */
+export function playableCampaign(
+  entry: LibraryCharacter,
+  campaigns: readonly CampaignSummary[],
+): CampaignSummary | null {
+  if (entry.campaignId === null) return null;
+  const campaign = campaigns.find((c) => c.id === entry.campaignId);
+  return campaign !== undefined && campaign.status === 'active' ? campaign : null;
+}
+
+// --- editing who a character is ------------------------------------------------
+
+/** The edit form's fields, as text boxes hold them. */
+export interface DetailsDraft {
+  name: string;
+  pronouns: string;
+  background: string;
+  /** One per Experience, in the sheet's order. */
+  experiences: string[];
+  connections: { withCharacter: string; description: string }[];
+}
+
+export type DetailsProblem = 'emptyExperience' | 'duplicateExperience' | 'halfConnection';
+
+export function draftFromSheet(sheet: SheetState): DetailsDraft {
+  const c = sheet.character;
+  return {
+    name: c.name ?? '',
+    pronouns: c.pronouns ?? '',
+    background: c.background,
+    experiences: Object.keys(c.experiences),
+    connections: c.connections.map((x) => ({ ...x })),
+  };
+}
+
+/**
+ * Turns the form into a `PATCH /characters/:id` body, or says what is wrong with
+ * it. Blank connection rows are dropped; a half-filled one is a mistake to fix.
+ */
+export function detailsRequest(
+  sheet: SheetState,
+  draft: DetailsDraft,
+): { ok: true; request: EditCharacterRequest } | { ok: false; problem: DetailsProblem } {
+  const names = draft.experiences.map((n) => n.trim());
+  if (names.some((n) => n === '')) return { ok: false, problem: 'emptyExperience' };
+  if (new Set(names).size !== names.length) return { ok: false, problem: 'duplicateExperience' };
+
+  const connections: { withCharacter: string; description: string }[] = [];
+  for (const row of draft.connections) {
+    const withCharacter = row.withCharacter.trim();
+    const description = row.description.trim();
+    if (withCharacter === '' && description === '') continue;
+    if (withCharacter === '' || description === '') return { ok: false, problem: 'halfConnection' };
+    connections.push({ withCharacter, description });
+  }
+
+  const experienceNames = Object.keys(sheet.character.experiences).flatMap((from, i) => {
+    const to = names[i];
+    return to === undefined || to === from ? [] : [{ from, to }];
+  });
+
+  return {
+    ok: true,
+    request: {
+      name: draft.name.trim() === '' ? null : draft.name.trim(),
+      pronouns: draft.pronouns.trim() === '' ? null : draft.pronouns.trim(),
+      background: draft.background.trim(),
+      connections,
+      experienceNames,
+    },
+  };
 }
 
 // --- characters left in this browser by the old flow -------------------------

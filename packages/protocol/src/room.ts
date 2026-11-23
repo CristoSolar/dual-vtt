@@ -32,6 +32,7 @@ import {
   type Countdown,
 } from './countdowns.js';
 import { AudioStateSchema, MAX_TRACKS } from './audio.js';
+import { editSheetDetails } from './details.js';
 import type { CharacterRoomEvent, MapRoomEvent, RoomEvent } from './events.js';
 import { JournalEntrySchema, MAX_JOURNAL_ENTRIES, type JournalEntry } from './journal.js';
 import { MAX_TABLES, RollTableSchema } from './tables.js';
@@ -725,6 +726,22 @@ export function applyRoomEvent(
 
   switch (event.type) {
     // --- character mutations -------------------------------------------------
+    case 'editCharacterDetails': {
+      // Characters are keyed by their player's account id. Unlike every other
+      // character intent the GM may not send this one, and the player needs no
+      // seat: a character linked from the library can be renamed before its
+      // player ever sits down.
+      if (actor.role !== 'player' || event.characterId !== actor.id) {
+        return fail('notYourCharacter', 'only a character\u2019s own player can edit who they are');
+      }
+      const sheet = state.characters[event.characterId];
+      if (sheet === undefined) {
+        return fail('unknownCharacter', `no character ${event.characterId} in this room`);
+      }
+      const edited = editSheetDetails(sheet, event.details);
+      if (!edited.ok) return fail(edited.error, edited.message);
+      return ok(withCharacter(state, event.characterId, edited.sheet));
+    }
     case 'markHP':
     case 'clearHP':
     case 'markStress':
@@ -1605,7 +1622,7 @@ export function applyRoomEvent(
 function applyCharacterEvent(
   state: RoomState,
   actor: Actor,
-  event: CharacterRoomEvent,
+  event: Exclude<CharacterRoomEvent, { type: 'editCharacterDetails' }>,
   sheet: SheetState,
   rng: Rng,
   now: number,

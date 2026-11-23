@@ -1,12 +1,17 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { CreateCharacterRequestSchema, LinkCharacterRequestSchema } from '@daggerheart/protocol';
+import {
+  CreateCharacterRequestSchema,
+  EditCharacterRequestSchema,
+  LinkCharacterRequestSchema,
+} from '@daggerheart/protocol';
 
 import type { CampaignStore } from './campaigns.js';
 import type { CharacterStore } from './characters.js';
 import { actorFor } from './http-auth.js';
 import { json, noContent, readJsonBody } from './http-json.js';
 import {
+  editCharacter,
   linkCharacter,
   listLibrary,
   toLibraryCharacter,
@@ -96,9 +101,25 @@ export async function handleCharacters(
     return true;
   }
 
-  const deleteMatch = /^\/characters\/([^/]+)$/.exec(url);
-  if (method === 'DELETE' && deleteMatch !== null) {
-    const record = characters.get(deleteMatch[1] ?? '');
+  const idMatch = /^\/characters\/([^/]+)$/.exec(url);
+  if (method === 'PATCH' && idMatch !== null) {
+    // Ownership first, so someone else's id answers 404 whatever the body says.
+    const record = characters.get(idMatch[1] ?? '');
+    if (record === null || record.ownerId !== actor.id) {
+      json(response, 404, { error: 'unknownCharacter' });
+      return true;
+    }
+    const parsed = EditCharacterRequestSchema.safeParse(await readJsonBody(request));
+    if (!parsed.success) {
+      json(response, 400, { error: 'badRequest' });
+      return true;
+    }
+    answer(editCharacter(characters, campaigns, actor.id, record.id, parsed.data));
+    return true;
+  }
+
+  if (method === 'DELETE' && idMatch !== null) {
+    const record = characters.get(idMatch[1] ?? '');
     if (record === null || record.ownerId !== actor.id) {
       json(response, 404, { error: 'unknownCharacter' });
       return true;

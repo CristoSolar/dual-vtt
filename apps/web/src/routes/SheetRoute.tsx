@@ -7,7 +7,7 @@ import {
   multiclassCardLevelCap,
 } from '@daggerheart/rules';
 import { srd } from '@daggerheart/srd-data';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
@@ -121,6 +121,13 @@ interface SheetRouteProps {
   spotlit?: boolean;
   /** This account's first target on the map, which an action roll is made against. */
   target?: Token | null;
+  /**
+   * The library view: a character outside any campaign. Play needs a table, so
+   * every control on the sheet is switched off (one disabled <fieldset> around
+   * it) and `actions` replace the in-play buttons in the header.
+   */
+  readOnly?: boolean;
+  actions?: ReactNode;
 }
 
 /** A pending roll: which button opened the dialog, and its resolved modifier. */
@@ -156,6 +163,8 @@ export function SheetRoute({
   fear = null,
   spotlit = false,
   target = null,
+  readOnly = false,
+  actions = null,
 }: SheetRouteProps) {
   const online = characterId !== undefined && send !== undefined;
   const view = useMemo(() => selectSheetView(sheet), [sheet]);
@@ -408,6 +417,7 @@ export function SheetRoute({
         <div>
           <h1>{character.name ?? t('sheet.route.unnamedCharacter')}</h1>
           <p className="muted">
+            {character.pronouns === null ? null : `${character.pronouns} · `}
             {t('sheet.furniture.level')} {character.level} {view.className} · {view.subclassName} ·{' '}
             {view.heritageLabel} · {view.communityName}
             {vulnerable ? (
@@ -419,23 +429,29 @@ export function SheetRoute({
             {sheet.dead ? <span className="badge warn"> {t('sheet.route.dead')}</span> : null}
           </p>
         </div>
-        <div className="row">
-          <button type="button" onClick={() => setShowDamage(true)}>
-            {t('sheet.damage.title')}
-          </button>
-          <button type="button" onClick={() => setShowLevelUp(true)}>
-            {t('sheet.route.levelUp')}
-          </button>
-          <button type="button" onClick={() => setShowPrint(true)}>
-            {t('sheet.route.exportPdf')}
-          </button>
-          <Link to="/characters">
-            <button type="button">{t('sheet.route.charactersLink')}</button>
-          </Link>
-        </div>
+        {readOnly ? (
+          <div className="row">{actions}</div>
+        ) : (
+          <div className="row">
+            <button type="button" onClick={() => setShowDamage(true)}>
+              {t('sheet.damage.title')}
+            </button>
+            <button type="button" onClick={() => setShowLevelUp(true)}>
+              {t('sheet.route.levelUp')}
+            </button>
+            <button type="button" onClick={() => setShowPrint(true)}>
+              {t('sheet.route.exportPdf')}
+            </button>
+            <Link to="/characters">
+              <button type="button">{t('sheet.route.charactersLink')}</button>
+            </Link>
+          </div>
+        )}
       </div>
 
-      <div className="sheet-layout">
+      {readOnly ? <p className="muted sheet-readonly-note">{t('library.readOnlyNote')}</p> : null}
+
+      <fieldset className="sheet-layout sheet-fieldset" disabled={readOnly}>
         <div>
           <div className="panel sheet-document">
             <CornerBrackets />
@@ -661,6 +677,23 @@ export function SheetRoute({
             </div>
           </div>
 
+          {character.background === '' && character.connections.length === 0 ? null : (
+            <div className="panel sheet-story">
+              <SectionHead>{t('sheet.route.storyTitle')}</SectionHead>
+              {character.background === '' ? null : <p>{character.background}</p>}
+              {character.connections.length === 0 ? null : (
+                <>
+                  <h3>{t('sheet.route.connectionsTitle')}</h3>
+                  {character.connections.map((connection, index) => (
+                    <p key={index}>
+                      <strong>{connection.withCharacter}:</strong> {connection.description}
+                    </p>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
+
           <div className="panel">
             <SectionHead>{t('sheet.route.classFeaturesTitle')}</SectionHead>
             {[
@@ -832,9 +865,11 @@ export function SheetRoute({
             onUse={online ? (cardId) => send(forMe({ type: 'useDomainCard', cardId })) : undefined}
             draggableCards={hotbarOn}
           />
-          <RollLogPanel entries={sharedLog ?? log} privateEntries={privateLog} chat={chat} />
+          {readOnly ? null : (
+            <RollLogPanel entries={sharedLog ?? log} privateEntries={privateLog} chat={chat} />
+          )}
         </aside>
-      </div>
+      </fieldset>
 
       {hotbarOn ? (
         <Hotbar bar={hotbar.bar} sheet={sheet} onAssign={hotbar.assign} onUse={rollFromSlot} />

@@ -233,4 +233,62 @@ describe('character library HTTP', () => {
     expect((await call(gm, 'DELETE', `/campaigns/${campaignId}/players/${alexId}`)).status).toBe(204);
     expect(server.characters.get(created.id)?.campaignId).toBeNull();
   });
+  describe('PATCH /characters/:id', () => {
+    it('edits an unlinked character in the library and nothing else', async () => {
+      const created = await create(alex);
+      const before = server.persistCount();
+      const response = await call(alex, 'PATCH', `/characters/${created.id}`, {
+        name: 'Kael',
+        pronouns: 'él',
+        experienceNames: [{ from: 'Blacksmith', to: 'Herrero' }],
+      });
+      expect(response.status).toBe(200);
+      const body = LibraryCharacterSchema.parse(await response.json());
+      expect(body.sheet.character.name).toBe('Kael');
+      expect(body.sheet.character.experiences).toMatchObject({ Herrero: 2 });
+      expect(body.sheet.character.level).toBe(created.sheet.character.level);
+      expect(server.characters.get(created.id)?.sheet.character.name).toBe('Kael');
+      expect(server.persistCount()).toBeGreaterThan(before);
+    });
+
+    it('answers 404 for someone else’s character or an unknown id', async () => {
+      const created = await create(alex);
+      expect((await call(sam, 'PATCH', `/characters/${created.id}`, { name: 'Robado' })).status).toBe(404);
+      expect((await call(alex, 'PATCH', '/characters/nope', { name: 'X' })).status).toBe(404);
+      expect((await call(null, 'PATCH', `/characters/${created.id}`, { name: 'X' })).status).toBe(401);
+      expect(server.characters.get(created.id)?.sheet.character.name).not.toBe('Robado');
+    });
+
+    it('rejects mechanics, unknown fields and oversize text', async () => {
+      const created = await create(alex);
+      for (const body of [{ level: 5 }, { name: 'K', traits: {} }, { name: 'x'.repeat(61) }, { hpMarked: 0 }]) {
+        expect((await call(alex, 'PATCH', `/characters/${created.id}`, body)).status).toBe(400);
+      }
+      const unknownExperience = await call(alex, 'PATCH', `/characters/${created.id}`, {
+        experienceNames: [{ from: 'Nope', to: 'X' }],
+      });
+      expect(unknownExperience.status).toBe(409);
+    });
+
+    it('writes a linked character through the room, and broadcasts it', async () => {
+      const created = await create(alex);
+      const campaignId = campaignWithAlex('Edición');
+      await call(alex, 'POST', `/characters/${created.id}/link`, { campaignId });
+      const before = server.broadcasts.length;
+
+      const response = await call(alex, 'PATCH', `/characters/${created.id}`, { name: 'Kael' });
+      expect(response.status).toBe(200);
+      expect(LibraryCharacterSchema.parse(await response.json()).sheet.character.name).toBe('Kael');
+      expect(server.campaigns.get(campaignId)?.state.characters[alexId]?.character.name).toBe('Kael');
+
+      const sent = server.broadcasts.slice(before);
+      expect(sent.map((b) => b.campaignId)).toEqual([campaignId]);
+      expect(sent[0]?.outcome.patch.characters?.[alexId]?.character.name).toBe('Kael');
+      expect(sent[0]?.outcome.playerPatch.characters?.[alexId]?.character.name).toBe('Kael');
+
+      // The room is the live copy; unlinking brings the new name home.
+      await call(alex, 'POST', `/characters/${created.id}/unlink`);
+      expect(server.characters.get(created.id)?.sheet.character.name).toBe('Kael');
+    });
+  });
 });

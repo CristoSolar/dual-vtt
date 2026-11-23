@@ -3511,6 +3511,61 @@ button.link {
   border-color: var(--c-line-bronze-hover);
 }
 
+/* The card's actions wrap as a row of equals at narrow widths; the danger action
+   is pushed to the end so it never sits between two everyday ones. */
+.library-card-actions .btn-danger {
+  margin-left: auto;
+}
+
+/* The library view of a sheet: the platform sheet with every control switched off
+   by one disabled <fieldset>, which also takes it out of the tab order. */
+.sheet-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.sheet-readonly-note {
+  margin: 0 0 var(--sp-4);
+}
+
+.edit-character textarea {
+  margin-bottom: var(--sp-4);
+}
+
+.edit-character .grid {
+  margin-bottom: var(--sp-4);
+}
+
+.edit-character-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.edit-character-connection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+  gap: var(--sp-2);
+  align-items: end;
+}
+
+@media (max-width: 560px) {
+  .edit-character-connection {
+    grid-template-columns: 1fr;
+  }
+}
+
+.edit-character-actions {
+  justify-content: flex-end;
+}
+
+.sheet-story p {
+  white-space: pre-line;
+}
+
 /* ====================================================================== map */
 
 .map-layout {

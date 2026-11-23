@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter, Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { AudioPlayer } from './components/audio/AudioPlayer.js';
 import { GMPanel } from './components/gm/GMPanel.js';
@@ -12,7 +12,7 @@ import { t } from './i18n/index.js';
 import { CampaignPageRoute } from './routes/CampaignPageRoute.js';
 import { CampaignsRoute } from './routes/CampaignsRoute.js';
 import { GmHomeRoute } from './routes/GmHomeRoute.js';
-import { CharacterViewRoute } from './routes/CharacterViewRoute.js';
+import { CharacterPrintRoute, CharacterSheetRoute } from './routes/CharacterViewRoute.js';
 import { MyCampaignsRoute } from './routes/MyCampaignsRoute.js';
 import { MyCharactersRoute } from './routes/MyCharactersRoute.js';
 import { PlayerHomeRoute } from './routes/PlayerHomeRoute.js';
@@ -374,9 +374,23 @@ function Shell() {
           }
         />
         <Route
-          path="/characters/:id"
-          element={<CharacterViewRoute characters={library.characters} loaded={library.loaded} />}
+          path="/characters/:id/sheet"
+          element={
+            <CharacterSheetRoute
+              library={library}
+              campaigns={campaign.campaigns}
+              activeCampaignId={campaign.activeCampaignId}
+              room={campaign.room}
+              connectionFailed={campaign.status === 'error'}
+              onEnter={campaign.join}
+            />
+          }
         />
+        <Route
+          path="/characters/:id/pdf"
+          element={<CharacterPrintRoute characters={library.characters} loaded={library.loaded} />}
+        />
+        <Route path="/characters/:id" element={<CharacterIdRedirect />} />
         <Route
           path="/campaigns"
           element={
@@ -519,6 +533,12 @@ function Shell() {
       </Routes>
     </div>
   );
+}
+
+/** The old "Ver hoja" address, kept working: it now opens the platform sheet. */
+function CharacterIdRedirect() {
+  const { id } = useParams();
+  return <Navigate to={`/characters/${id ?? ''}/sheet`} replace />;
 }
 
 export function App() {

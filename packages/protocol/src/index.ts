@@ -1,4 +1,5 @@
 export * from './sheet.js';
+export * from './details.js';
 export * from './rollLog.js';
 export * from './countdowns.js';
 export * from './room.js';

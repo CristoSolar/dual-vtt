@@ -1,4 +1,9 @@
-import { LibraryCharacterSchema, type LibraryCharacter, type SheetState } from '@daggerheart/protocol';
+import {
+  LibraryCharacterSchema,
+  type EditCharacterRequest,
+  type LibraryCharacter,
+  type SheetState,
+} from '@daggerheart/protocol';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { t, type MessageKey } from '../i18n/index.js';
@@ -18,6 +23,8 @@ export interface LibraryConnection {
   remove: (characterId: string) => Promise<boolean>;
   link: (characterId: string, campaignId: string) => Promise<boolean>;
   unlink: (characterId: string) => Promise<boolean>;
+  /** Story fields only; while linked the server writes them through the room. */
+  edit: (characterId: string, details: EditCharacterRequest) => Promise<boolean>;
 }
 
 const ERROR_KEYS: Record<string, MessageKey> = {
@@ -25,6 +32,7 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   campaignHasCharacter: 'library.error.campaignHasCharacter',
   forbidden: 'library.error.notAMember',
   linked: 'library.error.linked',
+  unknownExperience: 'library.error.experienceChanged',
 };
 
 async function describeFailure(response: Response): Promise<string> {
@@ -129,10 +137,15 @@ export function useLibrary(token: string | null, onSessionExpired: () => void): 
     async (characterId: string) => (await mutate('POST', `/characters/${characterId}/unlink`)) !== null,
     [mutate],
   );
+  const edit = useCallback(
+    async (characterId: string, details: EditCharacterRequest) =>
+      (await mutate('PATCH', `/characters/${characterId}`, details)) !== null,
+    [mutate],
+  );
   const dismissError = useCallback(() => setError(null), []);
 
   return useMemo(
-    () => ({ characters, loaded, pending, error, dismissError, refresh, create, remove, link, unlink }),
-    [characters, loaded, pending, error, dismissError, refresh, create, remove, link, unlink],
+    () => ({ characters, loaded, pending, error, dismissError, refresh, create, remove, link, unlink, edit }),
+    [characters, loaded, pending, error, dismissError, refresh, create, remove, link, unlink, edit],
   );
 }

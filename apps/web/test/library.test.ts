@@ -5,12 +5,15 @@ import { describe, expect, it } from 'vitest';
 import {
   characterIn,
   characterPortrait,
+  detailsRequest,
+  draftFromSheet,
   DRAFT_SCOPE,
   findLegacyCharacters,
   linkableCampaigns,
   markLegacyImported,
   parseCampaignList,
   parseLibrary,
+  playableCampaign,
 } from '../src/state/library.js';
 import { buildCharacter, buildCreationState, fakeStorage } from './helpers.js';
 
@@ -115,5 +118,54 @@ describe('characters left in this browser by the old flow', () => {
     expect(storage.data.get('daggerheart-vtt:creation:c-1')).toBeUndefined();
     expect(storage.data.get('daggerheart-vtt:imported:daggerheart-vtt:creation:c-1')).toBe('payload');
     expect(findLegacyCharacters(storage, [...storage.data.keys()]).importable).toEqual([]);
+  });
+});
+
+describe('where "Ver hoja" leads', () => {
+  it('into an active campaign the character is linked to', () => {
+    expect(playableCampaign(entry('ch-1', 'c-1'), [summary('c-1')])?.id).toBe('c-1');
+  });
+
+  it('to the library view when unlinked, paused, finished or the campaign is unknown', () => {
+    expect(playableCampaign(entry('ch-1', null), [summary('c-1')])).toBeNull();
+    expect(playableCampaign(entry('ch-1', 'c-1'), [{ ...summary('c-1'), status: 'paused' }])).toBeNull();
+    expect(playableCampaign(entry('ch-1', 'c-1'), [{ ...summary('c-1'), status: 'finished' }])).toBeNull();
+    expect(playableCampaign(entry('ch-1', 'c-1'), [])).toBeNull();
+  });
+});
+
+describe('the edit form', () => {
+  const sheet = () => entry('ch-1', null).sheet;
+
+  it('round-trips a sheet into a request that changes nothing but trimmed text', () => {
+    const built = detailsRequest(sheet(), draftFromSheet(sheet()));
+    if (!built.ok) throw new Error(built.problem);
+    expect(built.request.experienceNames).toEqual([]);
+    expect(built.request.name).toBe(sheet().character.name);
+  });
+
+  it('sends only the Experiences that were renamed, and blank names as null', () => {
+    const draft = draftFromSheet(sheet());
+    const [first, ...rest] = draft.experiences;
+    const built = detailsRequest(sheet(), { ...draft, name: '  ', experiences: [`${first ?? ''} II`, ...rest] });
+    if (!built.ok) throw new Error(built.problem);
+    expect(built.request.name).toBeNull();
+    expect(built.request.experienceNames).toEqual([{ from: first, to: `${first ?? ''} II` }]);
+  });
+
+  it('drops blank connection rows and refuses half-filled ones', () => {
+    const draft = draftFromSheet(sheet());
+    const blank = detailsRequest(sheet(), { ...draft, connections: [{ withCharacter: ' ', description: '' }] });
+    expect(blank.ok && blank.request.connections).toEqual([]);
+    const half = detailsRequest(sheet(), { ...draft, connections: [{ withCharacter: 'Mira', description: '' }] });
+    expect(half.ok ? null : half.problem).toBe('halfConnection');
+  });
+
+  it('refuses an empty or repeated Experience name', () => {
+    const draft = draftFromSheet(sheet());
+    const empty = detailsRequest(sheet(), { ...draft, experiences: draft.experiences.map(() => '') });
+    expect(empty.ok ? null : empty.problem).toBe('emptyExperience');
+    const same = detailsRequest(sheet(), { ...draft, experiences: draft.experiences.map(() => 'Igual') });
+    expect(same.ok ? null : same.problem).toBe('duplicateExperience');
   });
 });
