@@ -24,7 +24,7 @@ Then, from this directory:
 
 ```sh
 for g in gen-equipment gen-classes gen-heritage gen-transformations gen-cards \
-         gen-adversaries \
+         gen-card-mechanics gen-adversaries \
          gen-environments gen-loot gen-beastforms; do node "$g.mjs"; done
 ```
 
@@ -46,6 +46,13 @@ a short `TABLE_FEATURES` list: two features are printed as tables whose cells a
 column reader cannot put back into reading order, so their text is written out there.
 Each one is checked against what the reader did extract, so a later SRD edit makes the
 script complain rather than silently keep stale text.
+
+`gen-card-mechanics.mjs` writes `card-mechanics.json` in both locales: what each
+domain card's "Use" rolls, the Difficulty it prints, its damage dice and what it costs
+the user. It reads the extracted card text, not the PDF — patterns over the English
+text, then an `OVERRIDES` table of hand-checked corrections. Only sub-ability names
+differ between locales, read from each locale's own card text; run it again after
+editing either `domain-cards.json`.
 
 ## Why bbox instead of plain text
 

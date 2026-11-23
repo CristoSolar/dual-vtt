@@ -140,6 +140,55 @@ export const DomainCardSchema = z.object({
 });
 export type DomainCard = z.infer<typeof DomainCardSchema>;
 
+/** What a card costs its user: Hope spent, Stress marked, Armor Slots marked. */
+export const CardCostSchema = z.object({
+  hope: z.number().int().nonnegative(),
+  stress: z.number().int().nonnegative(),
+  armor: z.number().int().nonnegative(),
+});
+export type CardCost = z.infer<typeof CardCostSchema>;
+
+/**
+ * Damage a card deals. `count` is the printed count; `scale` says what multiplies
+ * it — "using your Proficiency" as weapons do, or "using your Spellcast trait".
+ * `type` is null where the card prints none.
+ */
+export const CardDamageSchema = z.object({
+  count: z.number().int().positive(),
+  die: DieSizeSchema,
+  modifier: z.number().int(),
+  type: DamageTypeSchema.nullable(),
+  scale: z.enum(['proficiency', 'spellcast']).nullable(),
+});
+export type CardDamage = z.infer<typeof CardDamageSchema>;
+
+/**
+ * One usable ability on a card: a grimoire spell, a named option, or the card
+ * itself. Read from the card text (see `extract/gen-card-mechanics.mjs`); a card
+ * with nothing mechanical still has one, with no roll, so it can be used.
+ */
+export const CardAbilitySchema = z.object({
+  /** The sub-ability's printed name; null when it is the card itself. */
+  name: z.string().min(1).nullable(),
+  /** The user's roll: a Spellcast Roll, a trait roll, or none. */
+  roll: WeaponTraitSchema.nullable(),
+  /** The Difficulty the card prints, e.g. "Spellcast Roll (13)". */
+  difficulty: z.number().int().positive().optional(),
+  damage: CardDamageSchema.optional(),
+  /** Paid on use. */
+  cost: CardCostSchema.optional(),
+  /** Paid only after the roll succeeds ("On a success, spend a Hope to…"). */
+  successCost: CardCostSchema.optional(),
+});
+export type CardAbility = z.infer<typeof CardAbilitySchema>;
+
+/** A domain card's abilities, keyed by the card's id. */
+export const CardMechanicsSchema = z.object({
+  id: z.string().min(1),
+  abilities: z.array(CardAbilitySchema).min(1),
+});
+export type CardMechanics = z.infer<typeof CardMechanicsSchema>;
+
 /**
  * Adversary and environment features are typed by how they're used (SRD 2.0 p.94).
  * `evolution` is new in 2.0: a one-shot feature an adversary gains mid-scene.

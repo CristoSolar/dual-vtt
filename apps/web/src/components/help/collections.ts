@@ -1,7 +1,10 @@
 import type { SrdData } from '@daggerheart/srd-data';
 
-/** One of the SRD arrays the compendium browses. */
-export type CollectionKey = keyof SrdData;
+/**
+ * One of the SRD arrays the compendium browses. Card mechanics are not one: they
+ * have no name or text of their own, only what a card's text already says.
+ */
+export type CollectionKey = Exclude<keyof SrdData, 'cardMechanics'>;
 
 export const COLLECTIONS: readonly CollectionKey[] = [
   'classes',

@@ -13,8 +13,8 @@ import {
 
 describe('schema validation', () => {
   it('parses every dataset against its schema', () => {
-    // Fourteen files per locale, both locales.
-    expect(datasets).toHaveLength(28);
+    // Fifteen files per locale, both locales.
+    expect(datasets).toHaveLength(30);
     for (const { name, schema, raw } of datasets) {
       const result = schema.safeParse(raw);
       expect(result.success, `${name}: ${JSON.stringify(result.error?.issues)}`).toBe(true);
@@ -138,6 +138,55 @@ describe.each(LOCALES)('referential integrity (%s)', (locale) => {
       const ids = data[key].map((entry) => entry.id);
       expect(new Set(ids).size, key).toBe(ids.length);
     }
+  });
+});
+
+describe.each(LOCALES)('card mechanics (%s)', (locale) => {
+  const { domainCards, cardMechanics } = srdByLocale[locale];
+
+  it('has an entry for every domain card, and only for real cards', () => {
+    const cardIds = new Set(domainCards.map((card) => card.id));
+    const mechanicIds = new Set(cardMechanics.map((entry) => entry.id));
+    for (const id of cardIds) expect(mechanicIds.has(id), `missing ${id}`).toBe(true);
+    for (const id of mechanicIds) expect(cardIds.has(id), `unknown ${id}`).toBe(true);
+  });
+
+  it('names every sub-ability of a multi-ability card, and no single-ability card', () => {
+    for (const entry of cardMechanics) {
+      const named = entry.abilities.map((a) => a.name !== null);
+      expect(named.every((n) => n === (entry.abilities.length > 1)), entry.id).toBe(true);
+    }
+  });
+
+  it('gives every grimoire its named spells', () => {
+    for (const card of domainCards.filter((c) => c.type === 'grimoire')) {
+      const entry = cardMechanics.find((m) => m.id === card.id);
+      expect(entry?.abilities.length ?? 0, card.id).toBeGreaterThan(1);
+      // Each name is printed in the card's own text.
+      for (const ability of entry?.abilities ?? []) {
+        expect(card.text, card.id).toContain(`${ability.name ?? ''}:`);
+      }
+    }
+  });
+
+  it('reads Book of Tyfar as the SRD prints it', () => {
+    const tyfar = cardMechanics.find((m) => m.id === 'book-of-tyfar');
+    expect(tyfar?.abilities.map(({ name: _name, ...rest }) => rest)).toEqual([
+      { roll: 'spellcast', damage: { count: 2, die: 6, modifier: 0, type: 'magic', scale: null } },
+      { roll: null },
+      { roll: 'spellcast', difficulty: 13 },
+    ]);
+  });
+});
+
+describe('card mechanics across locales', () => {
+  it('is the same in both locales except for the names', () => {
+    const strip = (locale: (typeof LOCALES)[number]) =>
+      srdByLocale[locale].cardMechanics.map((entry) => ({
+        id: entry.id,
+        abilities: entry.abilities.map(({ name: _name, ...rest }) => rest),
+      }));
+    expect(strip('es')).toEqual(strip('en'));
   });
 });
 

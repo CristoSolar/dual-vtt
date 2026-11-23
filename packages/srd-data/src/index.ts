@@ -8,6 +8,7 @@ import enTransformations from '../data/en/transformations.json' with { type: 'js
 import enClasses from '../data/en/classes.json' with { type: 'json' };
 import enCommunities from '../data/en/communities.json' with { type: 'json' };
 import enConsumables from '../data/en/consumables.json' with { type: 'json' };
+import enCardMechanics from '../data/en/card-mechanics.json' with { type: 'json' };
 import enDomainCards from '../data/en/domain-cards.json' with { type: 'json' };
 import enDomains from '../data/en/domains.json' with { type: 'json' };
 import enEnvironments from '../data/en/environments.json' with { type: 'json' };
@@ -22,6 +23,7 @@ import esTransformations from '../data/es/transformations.json' with { type: 'js
 import esClasses from '../data/es/classes.json' with { type: 'json' };
 import esCommunities from '../data/es/communities.json' with { type: 'json' };
 import esConsumables from '../data/es/consumables.json' with { type: 'json' };
+import esCardMechanics from '../data/es/card-mechanics.json' with { type: 'json' };
 import esDomainCards from '../data/es/domain-cards.json' with { type: 'json' };
 import esDomains from '../data/es/domains.json' with { type: 'json' };
 import esEnvironments from '../data/es/environments.json' with { type: 'json' };
@@ -35,6 +37,7 @@ import {
   ArmorSchema,
   BeastformSchema,
   TransformationSchema,
+  CardMechanicsSchema,
   CharacterClassSchema,
   CommunitySchema,
   DomainCardSchema,
@@ -60,6 +63,7 @@ const schemas = {
   weapons: z.array(WeaponSchema),
   armor: z.array(ArmorSchema),
   domainCards: z.array(DomainCardSchema),
+  cardMechanics: z.array(CardMechanicsSchema),
   adversaries: z.array(AdversarySchema),
   environments: z.array(EnvironmentSchema),
   loot: z.array(ItemSchema),
@@ -80,6 +84,7 @@ const raw: Record<Locale, Raw> = {
     weapons: enWeapons,
     armor: enArmor,
     domainCards: enDomainCards,
+    cardMechanics: enCardMechanics,
     adversaries: enAdversaries,
     environments: enEnvironments,
     loot: enLoot,
@@ -96,6 +101,7 @@ const raw: Record<Locale, Raw> = {
     weapons: esWeapons,
     armor: esArmor,
     domainCards: esDomainCards,
+    cardMechanics: esCardMechanics,
     adversaries: esAdversaries,
     environments: esEnvironments,
     loot: esLoot,
@@ -115,6 +121,7 @@ const fileNames: Record<keyof typeof schemas, string> = {
   weapons: 'weapons.json',
   armor: 'armor.json',
   domainCards: 'domain-cards.json',
+  cardMechanics: 'card-mechanics.json',
   adversaries: 'adversaries.json',
   environments: 'environments.json',
   loot: 'loot.json',

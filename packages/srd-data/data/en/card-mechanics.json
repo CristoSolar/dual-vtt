@@ -1,0 +1,2701 @@
+[
+  {
+    "id": "rune-ward",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "unleash-chaos",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "wall-walk",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "cinder-grasp",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 20,
+          "modifier": 3,
+          "type": "magic",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "floating-eye",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "counterspell",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "flight",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15
+      }
+    ]
+  },
+  {
+    "id": "blink-out",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 12,
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "preservation-blast",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 3,
+          "type": "magic",
+          "scale": "spellcast"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chain-lightning",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 2,
+          "die": 8,
+          "modifier": 4,
+          "type": "magic",
+          "scale": null
+        },
+        "cost": {
+          "hope": 0,
+          "stress": 2,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "premonition",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "rift-walker",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15
+      }
+    ]
+  },
+  {
+    "id": "telekinesis",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 12,
+          "modifier": 4,
+          "type": "physical",
+          "scale": "proficiency"
+        }
+      }
+    ]
+  },
+  {
+    "id": "arcana-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "cloaking-blast",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "arcane-reflection",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "confusing-aura",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 14
+      }
+    ]
+  },
+  {
+    "id": "earthquake",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 16,
+        "damage": {
+          "count": 3,
+          "die": 10,
+          "modifier": 8,
+          "type": "physical",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "sensory-projection",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15
+      }
+    ]
+  },
+  {
+    "id": "adjust-reality",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 5,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "falling-sky",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "get-back-up",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "not-good-enough",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "whirlwind",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "a-soldiers-bond",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "reckless",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "scramble",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "versatile-fighter",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "deadly-focus",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "fortified-armor",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "champions-edge",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "vitality",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "battle-hardened",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "rage-up",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "blade-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "glancing-blow",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "battle-cry",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "frenzy",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "gore-and-glory",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "deft-maneuvers",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "i-see-it-coming",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "untouchable",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "ferocity",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "reapers-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "battle-monster",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 4,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "onslaught",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "strategic-approach",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "brace",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "tactician",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "boost",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "redirect",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "know-thy-enemy",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "instinct",
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "signature-move",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "rapid-riposte",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "recovery",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "bone-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "cruel-precision",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "breaking-blow",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "wrangle",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "agility",
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "on-the-brink",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "splintering-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "deathrun",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 3,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "swift-step",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "book-of-ava",
+    "abilities": [
+      {
+        "name": "Power Push",
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 10,
+          "modifier": 2,
+          "type": "magic",
+          "scale": "proficiency"
+        }
+      },
+      {
+        "name": "Tava’s Armor",
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Ice Spike",
+        "roll": "spellcast",
+        "difficulty": 12,
+        "damage": {
+          "count": 1,
+          "die": 6,
+          "modifier": 0,
+          "type": "physical",
+          "scale": "proficiency"
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-illiat",
+    "abilities": [
+      {
+        "name": "Slumber",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Arcane Barrage",
+        "roll": null
+      },
+      {
+        "name": "Telepathy",
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-tyfar",
+    "abilities": [
+      {
+        "name": "Wild Flame",
+        "roll": "spellcast",
+        "damage": {
+          "count": 2,
+          "die": 6,
+          "modifier": 0,
+          "type": "magic",
+          "scale": null
+        }
+      },
+      {
+        "name": "Magic Hand",
+        "roll": null
+      },
+      {
+        "name": "Mysterious Mist",
+        "roll": "spellcast",
+        "difficulty": 13
+      }
+    ]
+  },
+  {
+    "id": "book-of-sitil",
+    "abilities": [
+      {
+        "name": "Adjust Appearance",
+        "roll": null
+      },
+      {
+        "name": "Parallela",
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Illusion",
+        "roll": "spellcast",
+        "difficulty": 14
+      }
+    ]
+  },
+  {
+    "id": "book-of-vagras",
+    "abilities": [
+      {
+        "name": "Runic Lock",
+        "roll": "spellcast",
+        "difficulty": 15
+      },
+      {
+        "name": "Arcane Door",
+        "roll": "spellcast",
+        "difficulty": 13,
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Reveal",
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "book-of-korvax",
+    "abilities": [
+      {
+        "name": "Levitation",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Recant",
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Rune Circle",
+        "roll": null,
+        "damage": {
+          "count": 2,
+          "die": 12,
+          "modifier": 4,
+          "type": "magic",
+          "scale": null
+        },
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-norai",
+    "abilities": [
+      {
+        "name": "Mystic Tether",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Fireball",
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 20,
+          "modifier": 5,
+          "type": "magic",
+          "scale": "proficiency"
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-exota",
+    "abilities": [
+      {
+        "name": "Repudiate",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Create Construct",
+        "roll": "spellcast",
+        "damage": {
+          "count": 2,
+          "die": 10,
+          "modifier": 3,
+          "type": "physical",
+          "scale": null
+        },
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-grynn",
+    "abilities": [
+      {
+        "name": "Arcane Deflection",
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Time Lock",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Wall of Flame",
+        "roll": "spellcast",
+        "difficulty": 15,
+        "damage": {
+          "count": 4,
+          "die": 10,
+          "modifier": 3,
+          "type": "magic",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "manifest-wall",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15,
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "teleport",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 16
+      }
+    ]
+  },
+  {
+    "id": "banish",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "sigil-of-retribution",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "book-of-homet",
+    "abilities": [
+      {
+        "name": "Pass Through",
+        "roll": "spellcast",
+        "difficulty": 13
+      },
+      {
+        "name": "Plane Gate",
+        "roll": "spellcast",
+        "difficulty": 14
+      }
+    ]
+  },
+  {
+    "id": "codex-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "book-of-vyola",
+    "abilities": [
+      {
+        "name": "Memory Delve",
+        "roll": "spellcast"
+      },
+      {
+        "name": "Shared Clarity",
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "safe-haven",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-ronin",
+    "abilities": [
+      {
+        "name": "Transform",
+        "roll": "spellcast",
+        "difficulty": 15
+      },
+      {
+        "name": "Eternal Enervation",
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "disintegration-wave",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 18
+      }
+    ]
+  },
+  {
+    "id": "blighting-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "umbral-veil",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "voice-of-dread",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "hideous-retribution",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 6,
+          "modifier": 0,
+          "type": "magic",
+          "scale": "proficiency"
+        },
+        "successCost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-of-yarrow",
+    "abilities": [
+      {
+        "name": "Timejammer",
+        "roll": "spellcast",
+        "difficulty": 18
+      },
+      {
+        "name": "Magic Immunity",
+        "roll": null,
+        "cost": {
+          "hope": 5,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "transcendent-union",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 5,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "siphon-essence",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 12,
+          "modifier": 4,
+          "type": "magic",
+          "scale": "proficiency"
+        }
+      }
+    ]
+  },
+  {
+    "id": "shared-trauma",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "terrify",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "chains-of-affliction",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 2,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "summon-horror",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 1,
+          "type": "magic",
+          "scale": "spellcast"
+        },
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "dire-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "spectral-mist",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "darkfire",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 6,
+          "type": "magic",
+          "scale": "spellcast"
+        }
+      }
+    ]
+  },
+  {
+    "id": "jump-scare",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "dread-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "wall-of-hunger",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 10,
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "dark-army",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 14
+      }
+    ]
+  },
+  {
+    "id": "eldritch-flesh",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "damnation",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "savor-the-anguish",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "avatar-of-terror",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "invoke-torment",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "deft-deceiver",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "enrapture",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "inspirational-words",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "tell-no-lies",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "troublemaker",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "presence"
+      }
+    ]
+  },
+  {
+    "id": "hypnotic-shimmer",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "invisibility",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 10,
+        "successCost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "soothing-speech",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "through-your-eyes",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "thought-delver",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "words-of-discord",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13
+      }
+    ]
+  },
+  {
+    "id": "never-upstaged",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "share-the-burden",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "endless-charisma",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "grace-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "astral-projection",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "pick-and-pull",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "rain-of-blades",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 2,
+          "type": "magic",
+          "scale": "proficiency"
+        },
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "mass-enrapture",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "copycat",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "master-of-the-craft",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "encore",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "notorious",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "uncanny-disguise",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "midnight-spirit",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 6,
+          "modifier": 0,
+          "type": "magic",
+          "scale": "spellcast"
+        },
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "shadowbind",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "chokehold",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "veil-of-night",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13
+      }
+    ]
+  },
+  {
+    "id": "stealth-expertise",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "glyph-of-nightfall",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "hush",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "phantom-retreat",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "dark-whispers",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "mass-disguise",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "midnight-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "vanishing-dodge",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "shadowhunter",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "spellcharge",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "night-terror",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "gifted-tracker",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "twilight-toll",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "eclipse",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 16
+      }
+    ]
+  },
+  {
+    "id": "specter-of-the-dark",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "natures-tongue",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "instinct",
+        "difficulty": 12
+      }
+    ]
+  },
+  {
+    "id": "vicious-entangle",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 1,
+          "type": "physical",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "conjure-swarm",
+    "abilities": [
+      {
+        "name": "Tekaira Armored Beetles",
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      },
+      {
+        "name": "Fire Flies",
+        "roll": "spellcast",
+        "damage": {
+          "count": 2,
+          "die": 8,
+          "modifier": 3,
+          "type": "magic",
+          "scale": null
+        },
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "natural-familiar",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "corrosive-projectile",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 6,
+          "modifier": 4,
+          "type": "magic",
+          "scale": "proficiency"
+        }
+      }
+    ]
+  },
+  {
+    "id": "towering-stalk",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 0,
+          "type": "physical",
+          "scale": "proficiency"
+        },
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "death-grip",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 3,
+          "die": 6,
+          "modifier": 2,
+          "type": "physical",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "healing-field",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "thorn-skin",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "wild-fortress",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13,
+        "successCost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "conjured-steeds",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "forager",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "sage-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "wild-surge",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "forest-sprites",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13
+      }
+    ]
+  },
+  {
+    "id": "rejuvenation-barrier",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15
+      }
+    ]
+  },
+  {
+    "id": "fane-of-the-wilds",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "plant-dominion",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 18
+      }
+    ]
+  },
+  {
+    "id": "force-of-nature",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "tempest",
+    "abilities": [
+      {
+        "name": "Blizzard",
+        "roll": "spellcast",
+        "damage": {
+          "count": 2,
+          "die": 20,
+          "modifier": 8,
+          "type": "magic",
+          "scale": null
+        }
+      },
+      {
+        "name": "Hurricane",
+        "roll": "spellcast",
+        "damage": {
+          "count": 3,
+          "die": 10,
+          "modifier": 10,
+          "type": "magic",
+          "scale": null
+        }
+      },
+      {
+        "name": "Sandstorm",
+        "roll": "spellcast",
+        "damage": {
+          "count": 5,
+          "die": 6,
+          "modifier": 9,
+          "type": "magic",
+          "scale": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "bolt-beacon",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "damage": {
+          "count": 1,
+          "die": 8,
+          "modifier": 2,
+          "type": "magic",
+          "scale": "proficiency"
+        },
+        "successCost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "mending-touch",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "reassurance",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "final-words",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13
+      }
+    ]
+  },
+  {
+    "id": "healing-hands",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 13,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "second-wind",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "voice-of-reason",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "divination",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 3,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "life-ward",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 3,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "shape-material",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "smite",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 3,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "restoration",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "zone-of-protection",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 16
+      }
+    ]
+  },
+  {
+    "id": "healing-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "splendor-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "shield-aura",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "bare-bones",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "stunning-sunlight",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast"
+      }
+    ]
+  },
+  {
+    "id": "overwhelming-aura",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 15,
+        "successCost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "salvation-beam",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 16
+      }
+    ]
+  },
+  {
+    "id": "invigoration",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "resurrection",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "spellcast",
+        "difficulty": 20
+      }
+    ]
+  },
+  {
+    "id": "forceful-push",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "i-am-your-shield",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "body-basher",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "bold-presence",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "critical-inspiration",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "lean-on-me",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "goad-them-on",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "presence"
+      }
+    ]
+  },
+  {
+    "id": "support-tank",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "armorer",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "rousing-strike",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "inevitable",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "rise-up",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "shrug-it-off",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "valor-touched",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "full-surge",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 3,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "ground-pound",
+    "abilities": [
+      {
+        "name": null,
+        "roll": "strength",
+        "damage": {
+          "count": 4,
+          "die": 10,
+          "modifier": 8,
+          "type": null,
+          "scale": null
+        },
+        "cost": {
+          "hope": 2,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "hold-the-line",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 1,
+          "stress": 0,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "lead-by-example",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null,
+        "cost": {
+          "hope": 0,
+          "stress": 1,
+          "armor": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "unbreakable",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  },
+  {
+    "id": "unyielding-armor",
+    "abilities": [
+      {
+        "name": null,
+        "roll": null
+      }
+    ]
+  }
+]
