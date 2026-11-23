@@ -3,7 +3,7 @@
  * cached the old picture would keep showing it. Bump this whenever art is replaced:
  * the new query string is a new URL, fetched fresh.
  */
-const ART_VERSION = '2';
+const ART_VERSION = '3';
 
 export type ArtKind =
   | 'classes'
