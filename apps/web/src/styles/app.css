@@ -281,6 +281,10 @@ legend {
   max-width: var(--size-content);
   margin: 0 auto;
   padding: var(--sp-5) var(--sp-5) var(--sp-8);
+  /* The viewport extends under a phone's notch and home bar (viewport-fit=cover),
+     so the page keeps clear of them. Zero insets elsewhere: same as above. */
+  padding: max(var(--sp-5), env(safe-area-inset-top, 0px)) max(var(--sp-5), env(safe-area-inset-right, 0px))
+    max(var(--sp-8), env(safe-area-inset-bottom, 0px)) max(var(--sp-5), env(safe-area-inset-left, 0px));
 }
 
 .topbar {
@@ -4210,6 +4214,9 @@ button.link {
   max-width: none;
   padding: 0;
   height: 100vh;
+  /* A phone's 100vh includes the space under its address bar, which pushed the
+     bottom HUD (hotbar, zoom) off screen. dvh is the visible height. */
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -4236,6 +4243,7 @@ button.link {
   position: relative;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: var(--c-bg);
 }
@@ -4491,6 +4499,107 @@ button.link {
   font-size: 10px;
   color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* ===================================================== fullscreen map, phones
+ *
+ * At phone width the nav wrapped into a second and third row that hung below
+ * the overlay bar's fixed height, over the scene bar: its links took the taps
+ * meant for "Colocar mi ficha". The hotbar, as wide as the screen, sat on the
+ * zoom bar. So on a narrow map:
+ * - the top bar is one row whose nav scrolls sideways, and its height (safe
+ *   area included) is --size-map-topbar, which the scene bar already sits under;
+ * - the HUD is stacked bottom-up, hotbar, then zoom, then the selection bar,
+ *   each offset by the height of what is under it;
+ * - the rail scrolls rather than running under the top or bottom bars;
+ * - every edge keeps clear of the phone's safe-area insets.
+ * Desktop never reaches these rules.
+ */
+@media (max-width: 700px) {
+  .app--map {
+    --size-map-topbar: calc(3.75rem + env(safe-area-inset-top, 0px));
+    --map-edge-bottom: calc(var(--sp-3) + env(safe-area-inset-bottom, 0px));
+    --map-edge-left: calc(var(--sp-2) + env(safe-area-inset-left, 0px));
+    --map-edge-right: calc(var(--sp-2) + env(safe-area-inset-right, 0px));
+    /* One 48px slot plus the bar's padding and borders. */
+    --map-hotbar-height: calc(48px + 2 * var(--sp-1) + 2 * var(--size-rule));
+    /* One 30px zoom button plus the bar's padding and borders. */
+    --map-zoom-height: calc(30px + 2 * var(--sp-1) + 2 * var(--size-rule));
+  }
+
+  .topbar--overlay {
+    flex-wrap: nowrap;
+    gap: var(--sp-3);
+    align-items: center;
+    padding: env(safe-area-inset-top, 0px) var(--map-edge-right) 0 var(--map-edge-left);
+  }
+
+  .topbar--overlay .brand {
+    flex: none;
+    font-size: var(--fs-sm);
+  }
+
+  .topbar--overlay nav {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0;
+    scrollbar-width: none;
+  }
+
+  .topbar--overlay nav button {
+    white-space: nowrap;
+  }
+
+  .map-scene-bar {
+    flex-wrap: wrap;
+    padding: var(--sp-2) var(--map-edge-right) var(--sp-2) var(--map-edge-left);
+  }
+
+  .map-rail {
+    left: var(--map-edge-left);
+    max-height: calc(100% - 2 * (var(--size-map-topbar) + 4.5rem));
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+  }
+
+  .map-rail-button {
+    flex: none;
+  }
+
+  .map-fullscreen .hotbar {
+    bottom: var(--map-edge-bottom);
+    max-width: calc(100% - var(--map-edge-left) - var(--map-edge-right));
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .map-fullscreen .hotbar-slot {
+    flex: none;
+    width: 52px;
+  }
+
+  .map-fear-bar {
+    bottom: var(--map-edge-bottom);
+    left: var(--map-edge-left);
+  }
+
+  /* Lifted over the hotbar's row. Lifted for the GM too, who has no hotbar but
+     whose Fear bar fills that row from the left. */
+  .map-zoom-bar {
+    bottom: calc(var(--map-edge-bottom) + var(--map-hotbar-height) + var(--sp-2));
+    right: var(--map-edge-right);
+  }
+
+  .map-selection-bar {
+    bottom: calc(
+      var(--map-edge-bottom) + var(--map-hotbar-height) + var(--map-zoom-height) + 2 * var(--sp-2)
+    );
+    max-width: calc(100% - var(--map-edge-left) - var(--map-edge-right));
+  }
 }
 
 /* A small editor anchored to a selected token on the map — tracks the canvas's
