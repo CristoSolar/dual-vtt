@@ -190,6 +190,7 @@ describe('wizard renders', () => {
                 storage={store}
                 onSave={() => Promise.resolve(true)}
                 onFinish={() => {}}
+                authToken={null}
               />
             }
           />

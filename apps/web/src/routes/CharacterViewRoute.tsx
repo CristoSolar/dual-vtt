@@ -23,7 +23,9 @@ export function CharacterSheetRoute({
   room,
   connectionFailed,
   onEnter,
+  authToken,
 }: {
+  authToken: string | null;
   library: LibraryConnection;
   campaigns: readonly CampaignSummary[];
   activeCampaignId: string | null;
@@ -85,6 +87,7 @@ export function CharacterSheetRoute({
       {editing ? (
         <EditCharacterDialog
           entry={entry}
+          authToken={authToken}
           onSave={(details) => library.edit(entry.id, details)}
           onClose={() => setEditing(false)}
         />

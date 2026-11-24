@@ -33,6 +33,8 @@ import { encounterEvents } from '../../state/gmHome.js';
 import { label as prettify } from '../../state/selectors.js';
 import { adversaryTargetOf, newestDamageIds, pcTargetOf } from '../../state/targets.js';
 import { uploadAudio } from '../../state/uploadMap.js';
+import { avatarImage } from '../../state/avatar.js';
+import { AvatarPortrait } from '../avatar/AvatarPortrait.js';
 import { SectionHead } from '../SectionHead.js';
 import { TransformationBadge } from '../TransformationBadge.js';
 import { ChatBox, DiceLine, EffectLine, MessageLine, PrivateBadge } from '../sheet/RollLogPanel.js';
@@ -471,8 +473,11 @@ function PartyOverview({
             return (
               <div className="card" key={id}>
                 <div className="card-head">
-                  <strong>{sheet.character.name ?? t('gm.party.unnamed')}</strong>
-                  <TransformationBadge id={sheet.transformation} />
+                  <span className="party-name">
+                    <AvatarPortrait image={avatarImage(sheet)} className="avatar-portrait avatar-portrait--small" />
+                    <strong>{sheet.character.name ?? t('gm.party.unnamed')}</strong>
+                    <TransformationBadge id={sheet.transformation} />
+                  </span>
                   <button
                     type="button"
                     aria-pressed={spotlit}

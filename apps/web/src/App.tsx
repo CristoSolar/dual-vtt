@@ -378,6 +378,7 @@ function Shell() {
               storage={storage}
               onSave={async (sheet) => (await library.create(sheet)) !== null}
               onFinish={() => navigate('/characters')}
+              authToken={auth.token}
             />
           }
         />
@@ -389,6 +390,7 @@ function Shell() {
               storage={storage}
               library={library}
               campaigns={campaign.campaigns}
+              authToken={auth.token}
             />
           }
         />
@@ -396,6 +398,7 @@ function Shell() {
           path="/characters/:id/sheet"
           element={
             <CharacterSheetRoute
+              authToken={auth.token}
               library={library}
               campaigns={campaign.campaigns}
               activeCampaignId={campaign.activeCampaignId}

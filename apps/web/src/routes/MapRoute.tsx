@@ -25,6 +25,7 @@ import { RegionForm } from '../components/map/RegionForm.js';
 import { Hotbar, isTypingTarget, useHotbar, useHotbarKeys } from '../components/sheet/Hotbar.js';
 import { TokenPopover } from '../components/map/TokenPopover.js';
 import { t } from '../i18n/index.js';
+import { avatarImage, type AvatarImage } from '../state/avatar.js';
 import { canRollPrivately, chatRecipients } from '../state/feed.js';
 import { newlyShared } from '../state/journal.js';
 import type { PanelLayout } from '../state/floatingPanel.js';
@@ -296,6 +297,25 @@ export function MapRoute({
     }
     return byToken;
   }, [scene, room.characters, room.adversaryInstances]);
+
+  /**
+   * A PC token with no picture of its own shows its character's avatar. Paths
+   * under the web app's `/images` are made absolute: the canvas resolves a bare
+   * path against the server, which does not serve the app's art in dev.
+   */
+  const tokenPortraits = useMemo(() => {
+    const byToken: Record<string, AvatarImage> = {};
+    for (const token of scene?.tokens ?? []) {
+      if (token.kind !== 'pc' || token.refId === null || token.image !== null) continue;
+      const sheet = room.characters[token.refId];
+      if (sheet === undefined) continue;
+      const portrait = avatarImage(sheet);
+      byToken[token.id] = portrait.src.startsWith('/images/')
+        ? { ...portrait, src: new URL(portrait.src, window.location.href).href }
+        : portrait;
+    }
+    return byToken;
+  }, [scene, room.characters]);
 
   /**
    * A PC token wears whatever conditions their sheet says, so a player toggling
@@ -576,6 +596,7 @@ export function MapRoute({
             measuring={measuring}
             snapping={snapping}
             health={tokenHealth}
+            portraits={tokenPortraits}
             targetRings={rings}
             pings={scenePings}
             {...(onPing === undefined ? {} : { onPing: (x: number, y: number) => onPing(scene.id, x, y) })}

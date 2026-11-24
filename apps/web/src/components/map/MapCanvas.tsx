@@ -13,6 +13,7 @@ import { Circle, Group, Image as KonvaImage, Layer, Line, Rect, Stage, Text } fr
 import type Konva from 'konva';
 
 import { t, type MessageKey } from '../../i18n/index.js';
+import { cropRect, type AvatarImage } from '../../state/avatar.js';
 import { DragThrottle } from '../../state/dragCommit.js';
 import { snapToGrid } from '../../state/gridSnap.js';
 import { PING_DURATION_MS } from '../../state/useCampaign.js';
@@ -69,6 +70,8 @@ export interface MapCanvasProps {
    * tokens the caller has real numbers for get one — no bar is drawn for a
    * token whose HP nobody tracks. */
   health?: Readonly<Record<string, { marked: number; total: number }>>;
+  /** Per PC token id with no image of its own, its character's avatar. */
+  portraits?: Readonly<Record<string, AvatarImage>>;
   /** Per token id, the colour of each account targeting it; each gets a dashed ring. */
   targetRings?: Readonly<Record<string, readonly string[]>>;
   /** Pings on this scene, each already in its sender's colour. */
@@ -136,6 +139,7 @@ export function MapCanvas({
   onToggleDoor,
   onViewChange,
   health,
+  portraits,
   targetRings,
   pings = NO_PINGS,
   onPing,
@@ -634,6 +638,7 @@ export function MapCanvas({
             spotlit={spotlightId !== null && token.ownerId === spotlightId}
             draggable={canDrag(token)}
             health={health?.[token.id]}
+            portrait={portraits?.[token.id]}
             targetedBy={targetRings?.[token.id] ?? NO_RINGS}
             onSelect={() => {
               if (!pingGesture.current) onSelectToken(token.id);
@@ -996,6 +1001,8 @@ interface TokenShapeProps {
   spotlit: boolean;
   draggable: boolean;
   health: { marked: number; total: number } | undefined;
+  /** The character's avatar, drawn when the token has no image of its own. */
+  portrait: AvatarImage | undefined;
   /** The colour of each account targeting this token. */
   targetedBy: readonly string[];
   onSelect: () => void;
@@ -1019,12 +1026,19 @@ function TokenShape({
   spotlit,
   draggable,
   health,
+  portrait,
   targetedBy,
   onSelect,
   onDragMove,
   onDragEnd,
 }: TokenShapeProps) {
-  const image = useTokenImage(token.image?.url ?? null);
+  const image = useTokenImage(token.image?.url ?? portrait?.src ?? null);
+  // An avatar is framed like its circle elsewhere: a centred (or cropped) square
+  // of the picture, never stretched to the token.
+  const crop =
+    token.image === null && portrait !== undefined && image !== null
+      ? cropRect({ width: image.naturalWidth, height: image.naturalHeight }, portrait.crop)
+      : undefined;
   const radius = token.kind === 'adversary' ? 4 : token.width / 2;
   const chipY = token.height + CHIP_GAP;
   // Pips run the token's width, one per HP slot, so a glance reads both how
@@ -1074,7 +1088,7 @@ function TokenShape({
       />
       {image !== null ? (
         <Group clipFunc={(ctx) => roundedRectPath(ctx, token.width, token.height, radius)}>
-          <KonvaImage image={image} width={token.width} height={token.height} />
+          <KonvaImage image={image} width={token.width} height={token.height} {...(crop === undefined ? {} : { crop })} />
         </Group>
       ) : (
         <Rect width={token.width} height={token.height} fill={token.color} cornerRadius={radius} />

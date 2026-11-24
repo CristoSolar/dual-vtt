@@ -5,6 +5,7 @@ import {
   LibraryCharacterSchema,
   SheetStateSchema,
   type CampaignList,
+  type Avatar,
   type CampaignSummary,
   type EditCharacterRequest,
   type LibraryCharacter,
@@ -13,7 +14,7 @@ import {
 import { z } from 'zod';
 
 import type { StorageLike } from './storage.js';
-import { artUrl } from './art.js';
+import { avatarImage } from './avatar.js';
 
 /**
  * The player's character library, as pure functions over what the server sends.
@@ -57,11 +58,9 @@ export function linkableCampaigns(
   return campaigns.filter((c) => c.ownerId !== accountId && characterIn(characters, c.id) === null);
 }
 
-/** The ancestry art the wizard already shows, as a portrait for the list. */
+/** The picture a character is drawn with — its avatar, or its ancestry's art. */
 export function characterPortrait(sheet: SheetState): string {
-  const { heritage } = sheet.character;
-  const ancestryId = heritage.kind === 'single' ? heritage.ancestryId : heritage.first.ancestryId;
-  return artUrl('ancestries', ancestryId);
+  return avatarImage(sheet).src;
 }
 
 /**
@@ -88,6 +87,8 @@ export interface DetailsDraft {
   /** One per Experience, in the sheet's order. */
   experiences: string[];
   connections: { withCharacter: string; description: string }[];
+  /** Null is the ancestry's art. */
+  avatar: Avatar | null;
 }
 
 export type DetailsProblem = 'emptyExperience' | 'duplicateExperience' | 'halfConnection';
@@ -100,6 +101,7 @@ export function draftFromSheet(sheet: SheetState): DetailsDraft {
     background: c.background,
     experiences: Object.keys(c.experiences),
     connections: c.connections.map((x) => ({ ...x })),
+    avatar: sheet.avatar,
   };
 }
 
@@ -137,6 +139,8 @@ export function detailsRequest(
       background: draft.background.trim(),
       connections,
       experienceNames,
+      // Only sent when changed, so an edit of the other fields leaves it alone.
+      ...(JSON.stringify(draft.avatar) === JSON.stringify(sheet.avatar) ? {} : { avatar: draft.avatar }),
     },
   };
 }

@@ -11,6 +11,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import { describeEffect, t, type MessageKey } from '../i18n/index.js';
+import { AvatarPortrait } from '../components/avatar/AvatarPortrait.js';
+import { avatarImage } from '../state/avatar.js';
 import { CardUseFlow } from '../components/sheet/CardUseFlow.js';
 import { DamageDialog } from '../components/sheet/DamageDialog.js';
 import { ConditionsPanel } from '../components/sheet/ConditionsPanel.js';
@@ -418,7 +420,9 @@ export function SheetRoute({
   return (
     <section className="sheet-backdrop">
       <div className="card-head">
-        <div>
+        <div className="sheet-identity">
+          <AvatarPortrait image={avatarImage(sheet)} className="avatar-portrait avatar-portrait--sheet" />
+          <div>
           <h1>{character.name ?? t('sheet.route.unnamedCharacter')}</h1>
           <p className="muted">
             {character.pronouns === null ? null : `${character.pronouns} · `}
@@ -432,6 +436,7 @@ export function SheetRoute({
             ) : null}
             {sheet.dead ? <span className="badge warn"> {t('sheet.route.dead')}</span> : null}
           </p>
+          </div>
         </div>
         {readOnly ? (
           <div className="row">{actions}</div>

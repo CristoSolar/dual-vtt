@@ -1,5 +1,6 @@
 import { finalize, STEPS, validateStep, type Step } from '@daggerheart/character';
-import { useState } from 'react';
+import type { Avatar } from '@daggerheart/protocol';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
@@ -14,10 +15,12 @@ import {
   StepTraits,
   type StepProps,
 } from '../components/wizard/Steps.js';
+import { AvatarPicker } from '../components/avatar/AvatarPicker.js';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { CreationSummary } from '../components/wizard/CreationSummary.js';
 import { ErrorSummary, TextField } from '../components/wizard/StepFields.js';
 import { t, type MessageKey } from '../i18n/index.js';
+import { fitAvatar, loadDraftAvatar, saveDraftAvatar } from '../state/avatar.js';
 import { DRAFT_SCOPE } from '../state/library.js';
 import { createSheet, type SheetState } from '../state/sheet.js';
 import { useCreation } from '../state/useCreation.js';
@@ -54,6 +57,8 @@ interface WizardRouteProps {
    * the server has it; false leaves the draft in place to try again. */
   onSave: (sheet: SheetState) => Promise<boolean>;
   onFinish: () => void;
+  /** For uploading an avatar picture. */
+  authToken: string | null;
 }
 
 /**
@@ -61,12 +66,15 @@ interface WizardRouteProps {
  * browser until the character is finished; then it goes to the account's library,
  * not to any campaign — linking is a separate, later choice.
  */
-export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
+export function WizardRoute({ storage, onSave, onFinish, authToken }: WizardRouteProps) {
   const { step: stepParam } = useParams();
   const navigate = useNavigate();
   const { state, dispatch, discard, reset } = useCreation(storage, DRAFT_SCOPE);
   const [submitting, setSubmitting] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
+  // The portrait is not one of the nine steps: optional, and never blocks finishing.
+  const [avatar, setAvatar] = useState<Avatar | null>(() => loadDraftAvatar(storage, DRAFT_SCOPE));
+  useEffect(() => saveDraftAvatar(storage, DRAFT_SCOPE, avatar), [storage, avatar]);
 
   const parsed = Number(stepParam ?? '1');
   const step: Step = isStep(parsed) ? parsed : 1;
@@ -84,12 +92,17 @@ export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
   // The draft is cleared only once the server has the character; a failure (shown
   // by the library's error) leaves this screen and the draft exactly as they were.
   const finish = () => {
-    const sheet = createSheet(finalize(state), { transformation: state.transformation });
+    const character = finalize(state);
+    const sheet = createSheet(character, {
+      transformation: state.transformation,
+      avatar: fitAvatar(avatar, character.heritage),
+    });
     setSubmitting(true);
     void onSave(sheet).then((saved) => {
       setSubmitting(false);
       if (!saved) return;
       discard();
+      saveDraftAvatar(storage, DRAFT_SCOPE, null);
       onFinish();
     });
   };
@@ -112,6 +125,7 @@ export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
           onConfirm={() => {
             setConfirmingReset(false);
             reset();
+            setAvatar(null);
             navigate('/create/1');
           }}
         />
@@ -156,6 +170,18 @@ export function WizardRoute({ storage, onSave, onFinish }: WizardRouteProps) {
 
         <StepComponent state={state} dispatch={dispatch} errors={validation.errors} />
       </div>
+
+      {isLast && state.heritage !== null ? (
+        <div className="panel">
+          <p className="muted">{t('avatar.wizardHint')}</p>
+          <AvatarPicker
+            heritage={state.heritage}
+            value={fitAvatar(avatar, state.heritage)}
+            onChange={setAvatar}
+            authToken={authToken}
+          />
+        </div>
+      ) : null}
 
       {isLast ? <CreationSummary state={state} /> : null}
 

@@ -3,11 +3,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
+import { AvatarPortrait } from '../components/avatar/AvatarPortrait.js';
 import { EditCharacterDialog } from '../components/EditCharacterDialog.js';
+import { avatarImage } from '../state/avatar.js';
 import { TransformationBadge } from '../components/TransformationBadge.js';
 import { t } from '../i18n/index.js';
 import {
-  characterPortrait,
   DRAFT_SCOPE,
   findLegacyCharacters,
   linkableCampaigns,
@@ -23,18 +24,11 @@ interface MyCharactersRouteProps {
   library: LibraryConnection;
   /** Campaigns this account is a member of, for the link picker. */
   campaigns: readonly CampaignSummary[];
+  /** For uploading an avatar from the edit dialog. */
+  authToken: string | null;
 }
 
 const nameOf = (sheet: SheetState): string => sheet.character.name ?? t('library.unnamed');
-
-/** A portrait that simply disappears if its image is missing — no broken icon. */
-function Portrait({ sheet }: { sheet: SheetState }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) return <span className="library-portrait library-portrait--empty" aria-hidden="true" />;
-  return (
-    <img className="library-portrait" src={characterPortrait(sheet)} alt="" onError={() => setFailed(true)} />
-  );
-}
 
 function LibraryCard({
   entry,
@@ -42,7 +36,9 @@ function LibraryCard({
   library,
   onConfirmUnlink,
   onConfirmDelete,
+  authToken,
 }: {
+  authToken: string | null;
   entry: LibraryCharacter;
   linkable: readonly CampaignSummary[];
   library: LibraryConnection;
@@ -58,7 +54,7 @@ function LibraryCard({
 
   return (
     <article className="library-card" data-linked={linked}>
-      <Portrait sheet={entry.sheet} />
+      <AvatarPortrait image={avatarImage(entry.sheet)} className="library-portrait" />
       <div className="library-card-body">
         <h2>{nameOf(entry.sheet)}</h2>
         <p className="muted">
@@ -125,6 +121,7 @@ function LibraryCard({
       {editing ? (
         <EditCharacterDialog
           entry={entry}
+          authToken={authToken}
           onSave={(details) => library.edit(entry.id, details)}
           onClose={() => setEditing(false)}
         />
@@ -134,7 +131,7 @@ function LibraryCard({
 }
 
 /** The account's characters: create, read, link to a campaign, unlink, delete. */
-export function MyCharactersRoute({ accountId, storage, library, campaigns }: MyCharactersRouteProps) {
+export function MyCharactersRoute({ accountId, storage, library, campaigns, authToken }: MyCharactersRouteProps) {
   const navigate = useNavigate();
   const [confirm, setConfirm] = useState<{ kind: 'unlink' | 'delete'; entry: LibraryCharacter } | null>(null);
   // Re-scanned after an import or a resumed draft moves keys aside.
@@ -245,6 +242,7 @@ export function MyCharactersRoute({ accountId, storage, library, campaigns }: My
             <LibraryCard
               key={entry.id}
               entry={entry}
+              authToken={authToken}
               linkable={linkable}
               library={library}
               onConfirmUnlink={() => setConfirm({ kind: 'unlink', entry })}

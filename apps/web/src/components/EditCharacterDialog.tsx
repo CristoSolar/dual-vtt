@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 import { t, type MessageKey } from '../i18n/index.js';
 import { detailsRequest, draftFromSheet, type DetailsDraft, type DetailsProblem } from '../state/library.js';
+import { AvatarPicker } from './avatar/AvatarPicker.js';
 import { Dialog } from './Dialog.js';
 
 const PROBLEM_KEYS: Record<DetailsProblem, MessageKey> = {
@@ -20,15 +21,17 @@ const PROBLEM_KEYS: Record<DetailsProblem, MessageKey> = {
 };
 
 /**
- * Edits who a character is — name, pronouns, background, Experience names,
- * connections. Mechanics are not offered: play and level-up change those.
+ * Edits who a character is — portrait, name, pronouns, background, Experience
+ * names, connections. Mechanics are not offered: play and level-up change those.
  */
 export function EditCharacterDialog({
   entry,
+  authToken,
   onSave,
   onClose,
 }: {
   entry: LibraryCharacter;
+  authToken: string | null;
   /** Resolves true once the server accepted it. */
   onSave: (details: EditCharacterRequest) => Promise<boolean>;
   onClose: () => void;
@@ -73,6 +76,13 @@ export function EditCharacterDialog({
             {t('library.editDialog.linkedNote', { campaign: entry.campaignName ?? '—' })}
           </p>
         ) : null}
+
+        <AvatarPicker
+          heritage={sheet.character.heritage}
+          value={draft.avatar}
+          onChange={(avatar) => set({ avatar })}
+          authToken={authToken}
+        />
 
         <div className="grid cols-2">
           <div>
