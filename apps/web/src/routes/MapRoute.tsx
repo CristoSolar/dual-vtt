@@ -1,4 +1,5 @@
 import {
+  cellsToPx,
   DEFAULT_GRID,
   MAX_SCENE_REGIONS,
   type Grid,
@@ -427,8 +428,9 @@ export function MapRoute({
         // never have scrolled to.
         x: Math.round((stageSize.width / 2 - canvasView.x) / canvasView.scale),
         y: Math.round((stageSize.height / 2 - canvasView.y) / canvasView.scale),
-        width: 50,
-        height: 50,
+        // One cell; the server sizes a player's own token to the grid anyway.
+        width: cellsToPx(1, scene.grid),
+        height: cellsToPx(1, scene.grid),
         rotation: 0,
         ownerId: viewerId,
         hidden: false,
@@ -616,6 +618,7 @@ export function MapRoute({
           <TokenPopover
             token={selected}
             room={room}
+            grid={scene?.grid ?? DEFAULT_GRID}
             x={selected.x * canvasView.scale + canvasView.x}
             y={(selected.y + selected.height) * canvasView.scale + canvasView.y}
             onUpdate={updateSelected}
@@ -926,6 +929,7 @@ export function MapRoute({
         >
           <TokenTools
             room={room}
+            grid={scene.grid}
             onAdd={(token) => send({ type: 'addToken', sceneId: scene.id, token })}
             onDeploy={deployAdversary}
           />
@@ -1291,6 +1295,8 @@ function GridControls({ grid, onChange }: { grid: Grid; onChange: (grid: Grid) =
 
 interface TokenToolsProps {
   room: RoomState;
+  /** New tokens are one cell of this grid. */
+  grid: Grid;
   onAdd: (token: Token) => void;
   /** Deploys a bestiary adversary into `room.adversaryInstances` and returns its
    * new instance id, so the caller can place a token for it in the same click. */
@@ -1302,7 +1308,7 @@ interface TokenToolsProps {
  * selected token live in the on-map `TokenPopover` instead, so this panel doesn't
  * turn into a single crowded box.
  */
-function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
+function TokenTools({ room, grid, onAdd, onDeploy }: TokenToolsProps) {
   const characters = Object.entries(room.characters);
   const [query, setQuery] = useState('');
 
@@ -1321,8 +1327,8 @@ function TokenTools({ room, onAdd, onDeploy }: TokenToolsProps) {
     name,
     x: 200,
     y: 200,
-    width: 50,
-    height: 50,
+    width: cellsToPx(1, grid),
+    height: cellsToPx(1, grid),
     rotation: 0,
     hidden: false,
     conditions: [],

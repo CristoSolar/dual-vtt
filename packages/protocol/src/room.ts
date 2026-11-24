@@ -42,11 +42,13 @@ import {
   MapStateSchema,
   cellsInBrush,
   cellsInPolygon,
+  cellsToPx,
   createMapState,
   createScene,
   fitFogToImage,
   hide,
   mapForPlayer,
+  refitTokensToGrid,
   reveal,
   type MapState,
   type Scene,
@@ -1530,7 +1532,12 @@ export function applyRoomEvent(
       }
       // dragFrom tracks an in-progress drag and is server-owned (see moveToken);
       // a freshly added token is never mid-drag, whatever the client sent.
-      const newToken = { ...event.token, dragFrom: null };
+      // A player's own token is one cell, whatever size the client asked for.
+      const oneCell = cellsToPx(1, scene.grid);
+      const newToken =
+        actor.role === 'gm'
+          ? { ...event.token, dragFrom: null }
+          : { ...event.token, width: oneCell, height: oneCell, dragFrom: null };
       const withToken = { ...scene, tokens: [...scene.tokens, newToken] };
       return ok(withScene(state, scene.id, revealVisionFor(withToken, newToken, newToken.x, newToken.y)));
     }
@@ -2270,7 +2277,14 @@ function applyMapEvent(
     case 'setSceneGrid': {
       const scene = findScene(event.sceneId);
       if (scene === undefined) return fail('unknownScene', 'no such scene');
-      return ok(withScene(state, scene.id, { ...scene, grid: event.grid }));
+      // Tokens are sized in cells, so a bigger or smaller grid rescales them all.
+      return ok(
+        withScene(state, scene.id, {
+          ...scene,
+          grid: event.grid,
+          tokens: refitTokensToGrid(scene.tokens, scene.grid, event.grid),
+        }),
+      );
     }
 
     case 'updateToken': {

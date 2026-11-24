@@ -189,6 +189,106 @@ export function createScene(id: string, name: string): Scene {
   };
 }
 
+// --- token sizing ----------------------------------------------------------
+
+/**
+ * A token's footprint is stored in map pixels (`width`/`height`), because vision,
+ * regions and the renderer all work in pixels. What it *means* is a number of grid
+ * cells: the reducer keeps `width = cells × grid.size`, rescaling every token on a
+ * scene when the GM changes the grid (`refitTokensToGrid`), so the pixels never
+ * drift from the cells. Old tokens need no migration: whatever pixel size they had
+ * is simply read as `width / grid.size` cells from then on.
+ */
+
+/** The sizes the token popover offers, in cells (SRD creature sizes, plus tiny). */
+export const TOKEN_CELL_SIZES = [0.5, 1, 2, 3, 4] as const;
+
+/** The schema's ceiling on a token's pixel size. */
+const MAX_TOKEN_PX = 4000;
+
+/** How many cells a token spans along its width. */
+export function tokenCells(token: Pick<Token, 'width'>, grid: Pick<Grid, 'size'>): number {
+  return token.width / grid.size;
+}
+
+/** The pixel size of a footprint `cells` wide on this grid, within the schema's bounds. */
+export function cellsToPx(cells: number, grid: Pick<Grid, 'size'>): number {
+  return Math.min(MAX_TOKEN_PX, Math.max(1, cells * grid.size));
+}
+
+/** The footprint being snapped, when it is bigger or smaller than one cell. */
+export interface SnapSize {
+  width: number;
+  height: number;
+}
+
+/** Aligns one axis: the footprint lands on whole cells and sits centred in them. */
+function snapAxis(value: number, extent: number, offset: number, size: number): number {
+  const cells = Math.max(1, Math.round(extent / size));
+  const span = cells * size;
+  const centre = value + extent / 2;
+  const left = offset + Math.round((centre - offset - span / 2) / size) * size;
+  // A token narrower than the cells it occupies sits in the middle of them rather
+  // than against the left-hand line.
+  return left + (span - extent) / 2;
+}
+
+/**
+ * Snaps a token to the grid — a no-op when the scene has no square grid.
+ *
+ * Passing the token's size makes the snap aware of its footprint: a two-cell
+ * creature lands on two whole cells, and a token smaller than a cell sits in the
+ * middle of it rather than in a corner.
+ */
+export function snapToGrid(
+  x: number,
+  y: number,
+  grid: Grid,
+  size?: SnapSize,
+): { x: number; y: number } {
+  if (grid.mode !== 'square') return { x, y };
+  if (size === undefined) {
+    return {
+      x: grid.offsetX + Math.round((x - grid.offsetX) / grid.size) * grid.size,
+      y: grid.offsetY + Math.round((y - grid.offsetY) / grid.size) * grid.size,
+    };
+  }
+  return {
+    x: snapAxis(x, size.width, grid.offsetX, grid.size),
+    y: snapAxis(y, size.height, grid.offsetY, grid.size),
+  };
+}
+
+/** True when a token sits exactly where the snap would put it on this grid. */
+function isSnapped(token: Token, grid: Grid): boolean {
+  if (grid.mode !== 'square') return false;
+  const snapped = snapToGrid(token.x, token.y, grid, token);
+  return Math.abs(snapped.x - token.x) < 0.5 && Math.abs(snapped.y - token.y) < 0.5;
+}
+
+/**
+ * Re-fits every token to a new grid: each keeps the number of cells it spans, and
+ * keeps its centre where it was on the map image (the picture did not move, the
+ * grid was re-laid over it). A token that sat snapped to the old grid is snapped
+ * to the new one, so it stays inside whole cells; a token placed freely stays free.
+ * Returns the same array when the change cannot affect any token.
+ */
+export function refitTokensToGrid(tokens: Token[], from: Grid, to: Grid): Token[] {
+  const sameCells = from.size === to.size;
+  const sameLines =
+    sameCells && from.mode === to.mode && from.offsetX === to.offsetX && from.offsetY === to.offsetY;
+  if (sameLines || tokens.length === 0) return tokens;
+
+  return tokens.map((token) => {
+    const width = sameCells ? token.width : cellsToPx(token.width / from.size, to);
+    const height = sameCells ? token.height : cellsToPx(token.height / from.size, to);
+    const centre = { x: token.x + token.width / 2, y: token.y + token.height / 2 };
+    const resized = { ...token, width, height, x: centre.x - width / 2, y: centre.y - height / 2 };
+    if (!isSnapped(token, from) || to.mode !== 'square') return resized;
+    return { ...resized, ...snapToGrid(resized.x, resized.y, to, resized) };
+  });
+}
+
 // --- fog helpers -------------------------------------------------------------
 
 /** Fits the fog grid to an image, preserving whatever was already revealed. */

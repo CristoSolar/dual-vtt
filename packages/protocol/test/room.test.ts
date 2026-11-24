@@ -8,6 +8,7 @@ import {
   createRoomState,
   createScene,
   createSheet,
+  DEFAULT_GRID,
   recallCostOf,
   roomForActor,
   roomForRole,
@@ -1492,6 +1493,38 @@ describe('map events', () => {
     expect(refusal(room, GM, { type: 'addToken', sceneId: 's-1', token: pcToken({ id: 'tok-9' }) })).toBe(
       'tokenExists',
     );
+  });
+
+  it('sizes a player-placed token to one cell of the scene grid', () => {
+    let room = apply(roomWithScene(), GM, {
+      type: 'setSceneGrid',
+      sceneId: 's-1',
+      grid: { ...DEFAULT_GRID, mode: 'square', size: 70 },
+    });
+    room = apply(room, ALEX, { type: 'addToken', sceneId: 's-1', token: pcToken({ width: 50, height: 50 }) });
+    const placed = room.map.scenes[0]?.tokens[0];
+    expect(placed?.width).toBe(70);
+    expect(placed?.height).toBe(70);
+  });
+
+  it('rescales every token on the scene when the GM changes the grid size', () => {
+    const square = { ...DEFAULT_GRID, mode: 'square' as const, size: 50 };
+    let room = apply(roomWithScene(), GM, { type: 'setSceneGrid', sceneId: 's-1', grid: square });
+    // A one-cell PC snapped into cell (3, 4) and a two-cell adversary at (100, 100).
+    room = apply(room, GM, { type: 'addToken', sceneId: 's-1', token: pcToken({ x: 150, y: 200 }) });
+    room = apply(room, GM, {
+      type: 'addToken',
+      sceneId: 's-1',
+      token: pcToken({ id: 'tok-big', kind: 'adversary', refId: null, ownerId: null, x: 100, y: 100, width: 100, height: 100 }),
+    });
+
+    room = apply(room, GM, { type: 'setSceneGrid', sceneId: 's-1', grid: { ...square, size: 100 } });
+    const [pc, big] = room.map.scenes[0]?.tokens ?? [];
+    expect(pc).toMatchObject({ width: 100, height: 100 });
+    // Still exactly on a cell: the one under its old centre (175, 225).
+    expect(pc).toMatchObject({ x: 100, y: 200 });
+    expect(big).toMatchObject({ width: 200, height: 200, x: 100, y: 100 });
+    expect(room.map.scenes[0]?.grid.size).toBe(100);
   });
 
   it('fills a polygon of fog, and hides it again', () => {

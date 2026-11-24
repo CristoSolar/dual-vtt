@@ -4,12 +4,16 @@ import {
   SceneSchema,
   cellsInBrush,
   cellsInPolygon,
+  cellsToPx,
   createScene,
+  DEFAULT_GRID,
   fitFogToImage,
   hide,
   isRevealed,
   mapForPlayer,
+  refitTokensToGrid,
   reveal,
+  tokenCells,
   type Fog,
   type MapState,
   type Token,
@@ -200,5 +204,49 @@ describe('walls', () => {
     };
     const view = mapForPlayer(withWalls);
     expect(view.scenes[0]?.walls).toEqual([]);
+  });
+});
+
+describe('tokens sized in grid cells', () => {
+  const square = { ...DEFAULT_GRID, mode: 'square' as const, size: 50 };
+
+  it('reads a token as cells of the grid, and cells back as pixels', () => {
+    expect(tokenCells(token({ width: 100 }), square)).toBe(2);
+    expect(tokenCells(token({ width: 25 }), square)).toBe(0.5);
+    expect(cellsToPx(3, { size: 70 })).toBe(210);
+    // Never past the schema's ceiling.
+    expect(cellsToPx(10, { size: 500 })).toBe(4000);
+  });
+
+  it('keeps a snapped token in whole cells when the grid shrinks', () => {
+    const [fitted] = refitTokensToGrid([token({ x: 150, y: 200 })], square, { ...square, size: 25 });
+    expect(fitted).toMatchObject({ width: 25, height: 25 });
+    // Centre was (175, 225); the 25px cell holding it starts at (175, 225).
+    expect(fitted).toMatchObject({ x: 175, y: 225 });
+  });
+
+  it('keeps a freely placed token where it was, only resized', () => {
+    const [fitted] = refitTokensToGrid([token({ x: 113, y: 87 })], square, { ...square, size: 100 });
+    expect(fitted).toMatchObject({ width: 100, height: 100, x: 88, y: 62 });
+  });
+
+  it('keeps an old odd-sized token in proportion rather than forcing it to a cell', () => {
+    const [fitted] = refitTokensToGrid([token({ width: 35, height: 35 })], { ...square, size: 70 }, {
+      ...square,
+      size: 140,
+    });
+    expect(fitted).toMatchObject({ width: 70, height: 70 });
+  });
+
+  it('re-snaps tokens when only the offset moves, and returns the same array when nothing changes', () => {
+    const tokens = [token({ x: 150, y: 200 })];
+    expect(refitTokensToGrid(tokens, square, { ...square })).toBe(tokens);
+    const [moved] = refitTokensToGrid(tokens, square, { ...square, offsetX: 10, offsetY: 10 });
+    expect(moved).toMatchObject({ x: 160, y: 210, width: 50 });
+  });
+
+  it('rescales tokens on a gridless scene too, where the size is pixels per inch', () => {
+    const [fitted] = refitTokensToGrid([token({ x: 100, y: 100 })], DEFAULT_GRID, { ...DEFAULT_GRID, size: 100 });
+    expect(fitted).toMatchObject({ width: 100, x: 75, y: 75 });
   });
 });

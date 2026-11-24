@@ -1,5 +1,5 @@
 import { srd } from '@daggerheart/srd-data';
-import type { RoomEvent, RoomState, Token } from '@daggerheart/protocol';
+import { TOKEN_CELL_SIZES, cellsToPx, tokenCells, type Grid, type RoomEvent, type RoomState, type Token } from '@daggerheart/protocol';
 import { useState } from 'react';
 
 import { t } from '../../i18n/index.js';
@@ -8,6 +8,8 @@ import { SERVER_URL } from '../../state/useCampaign.js';
 interface TokenPopoverProps {
   token: Token;
   room: RoomState;
+  /** The token's scene grid: its size is chosen in cells of it. */
+  grid: Grid;
   /** Screen position (relative to the map stage's own container), in pixels. */
   x: number;
   y: number;
@@ -34,6 +36,7 @@ type TabId = 'stats' | 'settings' | 'image';
 export function TokenPopover({
   token,
   room,
+  grid,
   x,
   y,
   onUpdate,
@@ -46,6 +49,11 @@ export function TokenPopover({
   targeted,
   onToggleTarget,
 }: TokenPopoverProps) {
+  // An old token may span an odd fraction of a cell; it stays listed until changed.
+  const currentCells = Math.round(tokenCells(token, grid) * 100) / 100;
+  const cellOptions: number[] = (TOKEN_CELL_SIZES as readonly number[]).includes(currentCells)
+    ? [...TOKEN_CELL_SIZES]
+    : [...TOKEN_CELL_SIZES, currentCells].sort((a, b) => a - b);
   const adversaryInstance =
     token.kind === 'adversary' && token.refId !== null
       ? room.adversaryInstances.find((a) => a.instanceId === token.refId) ?? null
@@ -197,17 +205,20 @@ export function TokenPopover({
             <div className="grid cols-2">
               <div>
                 <label htmlFor="popover-token-size">{t('map.token.sizeLabel')}</label>
-                <input
+<select
                   id="popover-token-size"
-                  type="number"
-                  min={10}
-                  max={500}
-                  value={token.width}
+                  value={String(currentCells)}
                   onChange={(event) => {
-                    const size = Math.max(10, Number(event.target.value));
+                    const size = cellsToPx(Number(event.target.value), grid);
                     onUpdate({ width: size, height: size });
                   }}
-                />
+                >
+                  {cellOptions.map((cells) => (
+                    <option key={cells} value={String(cells)}>
+                      {cells === 0.5 ? '½' : String(cells)}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label htmlFor="popover-token-rotation">{t('map.token.rotationLabel')}</label>

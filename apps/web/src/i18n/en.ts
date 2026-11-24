@@ -1197,7 +1197,7 @@ export const en: Record<keyof typeof es, string> = {
   'map.token.tabSettings': 'Settings',
   'map.token.tabImage': 'Image',
   'map.token.difficulty': 'Difficulty {difficulty}',
-  'map.token.sizeLabel': 'Size',
+  'map.token.sizeLabel': 'Size (squares)',
   'map.token.rotationLabel': 'Rotation',
   'map.token.visionRadiusLabel': 'Vision radius (px)',
   'map.token.colorFrameOn': 'Color frame on',

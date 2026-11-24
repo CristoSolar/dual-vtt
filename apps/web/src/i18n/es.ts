@@ -1217,7 +1217,7 @@ export const es = {
   'map.token.tabSettings': 'Ajustes',
   'map.token.tabImage': 'Imagen',
   'map.token.difficulty': 'Dificultad {difficulty}',
-  'map.token.sizeLabel': 'Tamaño',
+  'map.token.sizeLabel': 'Tamaño (casillas)',
   'map.token.rotationLabel': 'Rotación',
   'map.token.visionRadiusLabel': 'Radio de visión (px)',
   'map.token.colorFrameOn': 'Marco de color activo',
