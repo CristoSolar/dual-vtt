@@ -1,6 +1,8 @@
 import { CharacterSchema, MulticlassSchema, type Character } from '@daggerheart/character';
 import { srd, type CardAbility, type CardCost, type Trait } from '@daggerheart/srd-data';
 import { z } from 'zod';
+
+import { AvatarSchema, type Avatar } from './avatar.js';
 import {
   MAX_HOPE,
   MAX_LOADOUT,
@@ -106,6 +108,12 @@ export const SheetStateSchema = z.object({
    * state the character enters and drops, not a possession, so it is not a card.
    */
   beastform: z.string().min(1).max(40).nullable().default(null),
+  /**
+   * The character's portrait (see `AvatarSchema`), or null for their ancestry's
+   * art. Kept on the sheet so it travels with the character between the library
+   * and a room. Defaulted so a character created before avatars still parses.
+   */
+  avatar: AvatarSchema.nullable().default(null),
 });
 
 /**
@@ -125,7 +133,7 @@ export type SheetState = z.infer<typeof SheetStateSchema>;
  */
 export function createSheet(
   character: Character,
-  { transformation = null }: { transformation?: string | null } = {},
+  { transformation = null, avatar = null }: { transformation?: string | null; avatar?: Avatar | null } = {},
 ): SheetState {
   return {
     character,
@@ -139,6 +147,7 @@ export function createSheet(
     conditions: [],
     transformation,
     beastform: null,
+    avatar,
     // Characters start with a handful of gold (SRD p.6).
     gold: { handfuls: 1, bags: 0, chests: 0 },
     loadout: [...character.domainCards],

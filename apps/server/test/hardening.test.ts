@@ -96,6 +96,30 @@ describe('upload authentication', () => {
     expect(response.status).toBe(415);
   });
 
+  it('takes an avatar from any account, but only an image and only a small one', async () => {
+    const post = (body: Uint8Array, auth = true) =>
+      fetch(`${server.url}/uploads/avatar`, {
+        method: 'POST',
+        headers: auth ? { authorization: `Bearer ${token}` } : {},
+        body,
+      });
+
+    expect((await post(PNG, false)).status).toBe(401);
+
+    const accepted = await post(PNG);
+    expect(accepted.status).toBe(201);
+    const { url } = (await accepted.json()) as { url: string };
+    // The shape AvatarSchema insists on.
+    expect(url).toMatch(/^\/uploads\/[0-9a-f]{24}\.png$/);
+
+    // Audio passes the map door's magic-byte check but not this one.
+    expect((await post(new Uint8Array([0x4f, 0x67, 0x67, 0x53, 1, 2, 3, 4]))).status).toBe(415);
+
+    const big = new Uint8Array(2 * 1024 * 1024 + 1);
+    big.set(PNG);
+    expect((await post(big)).status).toBe(413);
+  });
+
   it('serves byte ranges, so an audio track can be joined mid-song', async () => {
     const ogg = new Uint8Array([0x4f, 0x67, 0x67, 0x53, 1, 2, 3, 4, 5, 6]);
     const response = await fetch(`${server.url}/uploads`, {

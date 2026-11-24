@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { AvatarSchema } from './avatar.js';
 import type { SheetState } from './sheet.js';
 
 /**
@@ -50,6 +51,8 @@ export const CharacterDetailsSchema = z
       )
       .max(20)
       .optional(),
+    /** The portrait; null goes back to the ancestry's art. */
+    avatar: AvatarSchema.nullable().optional(),
   })
   .strict();
 export type CharacterDetails = z.infer<typeof CharacterDetailsSchema>;
@@ -99,5 +102,6 @@ export function editSheetDetails(sheet: SheetState, details: CharacterDetails): 
       description: c.description,
     }));
   }
-  return { ok: true, sheet: { ...sheet, character } };
+  const avatar = details.avatar === undefined ? sheet.avatar : details.avatar;
+  return { ok: true, sheet: { ...sheet, character, avatar } };
 }

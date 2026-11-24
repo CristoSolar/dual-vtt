@@ -3,12 +3,14 @@ import { describe, expect, it } from 'vitest';
 
 import {
   applyRoomEvent,
+  AvatarSchema,
   CharacterDetailsSchema,
   createRoomState,
   createSheet,
   editSheetDetails,
   EditCharacterRequestSchema,
   RoomEventSchema,
+  SheetStateSchema,
   type Actor,
   type RoomState,
   type SheetState,
@@ -145,5 +147,37 @@ describe('editCharacterDetails intent', () => {
       0,
     );
     expect(result.ok ? null : result.error).toBe('unknownCharacter');
+  });
+});
+
+describe('avatar', () => {
+  const upload = { kind: 'upload', url: '/uploads/0123456789abcdef01234567.png', crop: { x: 40, y: 60, zoom: 1.5 } };
+
+  it('accepts the three kinds, and only server paths for an upload', () => {
+    expect(AvatarSchema.safeParse({ kind: 'ancestry', ancestryId: 'elf' }).success).toBe(true);
+    expect(AvatarSchema.safeParse({ kind: 'gallery', id: 'elf-2' }).success).toBe(true);
+    expect(AvatarSchema.safeParse(upload).success).toBe(true);
+    for (const url of ['https://evil.example/x.png', 'javascript:alert(1)', '/uploads/../users.json', '/uploads/abc.ogg']) {
+      expect(AvatarSchema.safeParse({ kind: 'upload', url }).success).toBe(false);
+    }
+    expect(AvatarSchema.safeParse({ kind: 'gallery', id: '../secret' }).success).toBe(false);
+    expect(AvatarSchema.safeParse({ ...upload, crop: { x: 0, y: 0, zoom: 9 } }).success).toBe(false);
+  });
+
+  it('defaults to null — the ancestry art — on a sheet saved before avatars', () => {
+    const { avatar: _dropped, ...old } = sheet();
+    const parsed = SheetStateSchema.parse(old);
+    expect(parsed.avatar).toBeNull();
+  });
+
+  it('is changed, and cleared, by a details edit', () => {
+    const edited = editSheetDetails(sheet(), EditCharacterRequestSchema.parse({ avatar: upload }));
+    expect(edited.ok && edited.sheet.avatar).toEqual(upload);
+    if (!edited.ok) return;
+    // Leaving it out keeps it; null goes back to the ancestry art.
+    const renamed = editSheetDetails(edited.sheet, { name: 'Kael' });
+    expect(renamed.ok && renamed.sheet.avatar).toEqual(upload);
+    const cleared = editSheetDetails(edited.sheet, { avatar: null });
+    expect(cleared.ok && cleared.sheet.avatar).toBeNull();
   });
 });

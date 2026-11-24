@@ -18,6 +18,8 @@ import type { UserStore } from './users.js';
  */
 
 export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+/** A character portrait is drawn at token size; nothing needs more than this. */
+export const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
 interface FileType {
   extension: string;
@@ -64,9 +66,14 @@ export interface StoredUpload {
 }
 
 /** Writes an upload, giving it a random name and a verified extension. */
-export async function storeUpload(directory: string, bytes: Uint8Array): Promise<StoredUpload> {
+export async function storeUpload(
+  directory: string,
+  bytes: Uint8Array,
+  { imagesOnly = false }: { imagesOnly?: boolean } = {},
+): Promise<StoredUpload> {
   const type = detectFileType(bytes);
   if (type === null) throw new Error('unsupported file type');
+  if (imagesOnly && !type.mime.startsWith('image/')) throw new Error('unsupported file type');
 
   await mkdir(directory, { recursive: true });
   const name = `${randomBytes(12).toString('hex')}${type.extension}`;
@@ -138,7 +145,10 @@ export async function handleUploads(
 ): Promise<boolean> {
   const url = request.url ?? '';
 
-  if (request.method === 'POST' && url === '/uploads') {
+  // `/uploads/avatar` is the character-portrait door: any account may use it (a
+  // player picks their own avatar), but it takes images only and caps them small.
+  const isAvatar = url === '/uploads/avatar';
+  if (request.method === 'POST' && (url === '/uploads' || isAvatar)) {
     // Writing to the server's disk is for people with an account. Without this a
     // public tunnel lets anyone fill it up.
     if (actorFor(request, sessions, users) === null) {
@@ -146,8 +156,8 @@ export async function handleUploads(
       return true;
     }
     try {
-      const bytes = await readBody(request, MAX_UPLOAD_BYTES);
-      const stored = await storeUpload(directory, bytes);
+      const bytes = await readBody(request, isAvatar ? MAX_AVATAR_BYTES : MAX_UPLOAD_BYTES);
+      const stored = await storeUpload(directory, bytes, { imagesOnly: isAvatar });
       json(response, 201, { url: stored.url, bytes: stored.bytes });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'upload failed';

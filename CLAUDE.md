@@ -155,7 +155,12 @@ srd-data  →  rules  →  character  →  protocol  →  server
 - **Trust boundaries stay validated**: `localStorage` reads
   (`apps/web/src/state/storage.ts`), every HTTP body and socket message (Zod schemas
   from `protocol`), and map uploads (checked by magic bytes, not the browser's content
-  type).
+  type). `POST /uploads/avatar` is the door any account may use for a character
+  portrait: images only, 2 MB. A sheet's `avatar` (`protocol/src/avatar.ts`) names
+  its picture by ancestry id, gallery id or `/uploads/<hex>` path — never a free URL.
+- **Tokens are sized in grid cells.** `width`/`height` stay in map pixels, but the
+  reducer keeps them at `cells × grid.size`: `setSceneGrid` refits every token
+  (`refitTokensToGrid`), and a player's own token is one cell whatever it sent.
 - **Characters live on the server, tied to the account.** Campaigns, users and the
   character library snapshot to `.data/` (`campaigns.json`, `users.json`,
   `characters.json`); losing `.data/` loses characters too. Only an unfinished wizard

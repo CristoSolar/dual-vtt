@@ -1,3 +1,4 @@
+export * from './avatar.js';
 export * from './sheet.js';
 export * from './details.js';
 export * from './rollLog.js';
