@@ -33,6 +33,7 @@ import { colorFor } from '../state/playerColor.js';
 import { rollRequestFor, type HotbarRoll } from '../state/hotbar.js';
 import { firstTarget, targetRings, toggleTarget } from '../state/targets.js';
 import type { ActivePing } from '../state/useCampaign.js';
+import { snapToGrid } from '../state/gridSnap.js';
 import { useElementSize } from '../state/useElementSize.js';
 import { uploadImage } from '../state/uploadMap.js';
 import { adversaryTokenColor, tokenColorAt } from '../styles/canvasTokens.js';
@@ -436,6 +437,15 @@ export function MapRoute({
 
   const placeMyToken = () => {
     if (scene === null || viewerId === null || mySheet === null) return;
+    const cell = cellsToPx(1, scene.grid);
+    // Where the player is looking, not a fixed corner of a map they may never
+    // have scrolled to — and on a whole cell, like a dropped token.
+    const at = snapToGrid(
+      (stageSize.width / 2 - canvasView.x) / canvasView.scale - cell / 2,
+      (stageSize.height / 2 - canvasView.y) / canvasView.scale - cell / 2,
+      scene.grid,
+      { width: cell, height: cell },
+    );
     send({
       type: 'addToken',
       sceneId: scene.id,
@@ -444,13 +454,11 @@ export function MapRoute({
         kind: 'pc',
         refId: viewerId,
         name: mySheet.character.name ?? t('map.tokenTools.pcFallback'),
-        // Where the player is looking, not a fixed corner of a map they may
-        // never have scrolled to.
-        x: Math.round((stageSize.width / 2 - canvasView.x) / canvasView.scale),
-        y: Math.round((stageSize.height / 2 - canvasView.y) / canvasView.scale),
-        // One cell; the server sizes a player's own token to the grid anyway.
-        width: cellsToPx(1, scene.grid),
-        height: cellsToPx(1, scene.grid),
+        x: Math.round(at.x),
+        y: Math.round(at.y),
+        // The server sizes a player's own token to one cell anyway.
+        width: cell,
+        height: cell,
         rotation: 0,
         ownerId: viewerId,
         hidden: false,
@@ -1343,11 +1351,12 @@ function TokenTools({ room, grid, onAdd, onDeploy }: TokenToolsProps) {
       .slice(0, 8);
   }, [query]);
 
+  const start = snapToGrid(200, 200, grid, { width: cellsToPx(1, grid), height: cellsToPx(1, grid) });
   const base = (name: string, color: string): Omit<Token, 'kind' | 'refId' | 'ownerId'> => ({
     id: nextId('tok'),
     name,
-    x: 200,
-    y: 200,
+    x: start.x,
+    y: start.y,
     width: cellsToPx(1, grid),
     height: cellsToPx(1, grid),
     rotation: 0,
