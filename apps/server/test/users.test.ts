@@ -127,3 +127,24 @@ describe('users snapshot file', () => {
     expect(await readUsersSnapshot(path)).toEqual([]);
   });
 });
+
+describe('usernames ignore case and surrounding spaces', () => {
+  it('refuses "ANA" and " ana " once "ana" exists, and stores the trimmed name', async () => {
+    const store = new UserStore();
+    const ana = await created(store, ' ana ', 'password-1', 'player');
+    expect(ana.username).toBe('ana');
+    expect(await store.createUser('ANA', 'password-1', 'player')).toBeNull();
+    expect(await store.createUser('  Ana', 'password-1', 'player')).toBeNull();
+  });
+
+  it('refuses a blank username', async () => {
+    const store = new UserStore();
+    expect(await store.createUser('   ', 'password-1', 'player')).toBeNull();
+  });
+
+  it('logs in whatever the case or spacing the phone keyboard adds', async () => {
+    const store = new UserStore();
+    await created(store, 'ana', 'password-1', 'player');
+    expect(await store.verifyLogin('Ana ', 'password-1')).not.toBeNull();
+  });
+});

@@ -163,6 +163,9 @@ export function PlayersView({ players, campaigns, accountId, loading, onCreate, 
           id="new-player-username"
           name="new-username"
           autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           value={username}
           onChange={(event) => setUsername(event.target.value)}
         />

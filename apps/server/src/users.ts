@@ -45,9 +45,15 @@ export class UserStore {
     return this.users.size;
   }
 
+  /**
+   * Usernames match ignoring case and surrounding spaces: a phone keyboard turns
+   * "ana" into "Ana ", and "ANA" next to "ana" is two accounts nobody can tell apart.
+   */
   findByUsername(username: string): StoredUser | null {
+    const wanted = normalizeUsername(username);
+    if (wanted === '') return null;
     for (const user of this.users.values()) {
-      if (user.username === username) return user;
+      if (normalizeUsername(user.username) === wanted) return user;
     }
     return null;
   }
@@ -96,11 +102,12 @@ export class UserStore {
     role: UserRole,
     createdBy: string | null = null,
   ): Promise<User | null> {
-    if (this.findByUsername(username) !== null) return null;
+    const trimmed = username.trim();
+    if (trimmed === '' || this.findByUsername(trimmed) !== null) return null;
     const id = `u-${randomBytes(8).toString('hex')}`;
     const user: StoredUser = {
       id,
-      username,
+      username: trimmed,
       role,
       mustChangePassword: true,
       passwordHash: '',
@@ -140,4 +147,9 @@ export class UserStore {
   serialize(): StoredUser[] {
     return [...this.users.values()];
   }
+}
+
+/** The form two usernames are compared in. Display keeps the name as typed (trimmed). */
+export function normalizeUsername(username: string): string {
+  return username.trim().toLowerCase();
 }

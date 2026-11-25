@@ -18,7 +18,7 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>;
 
 export const LoginRequestSchema = z.object({
-  username: z.string().min(1),
+  username: z.string().trim().min(1),
   password: z.string().min(1),
 });
 export type LoginRequest = z.infer<typeof LoginRequestSchema>;
@@ -38,7 +38,8 @@ export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 export const MIN_PASSWORD_LENGTH = 8;
 
 export const CreatePlayerRequestSchema = z.object({
-  username: z.string().min(1),
+  /** Trimmed here; the server also compares usernames without case. */
+  username: z.string().trim().min(1).max(40),
   password: z.string().min(MIN_PASSWORD_LENGTH),
 });
 export type CreatePlayerRequest = z.infer<typeof CreatePlayerRequestSchema>;

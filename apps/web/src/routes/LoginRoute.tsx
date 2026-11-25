@@ -53,6 +53,9 @@ export function LoginRoute({ error, pending, onLogin }: LoginRouteProps) {
               id="login-username"
               name="username"
               autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder={t('common.usernamePlaceholder')}
