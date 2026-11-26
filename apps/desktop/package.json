@@ -1,0 +1,27 @@
+{
+  "name": "@daggerheart/desktop",
+  "productName": "Dual VTT",
+  "version": "0.4.0",
+  "description": "Dual VTT — a self-hosted, Daggerheart-compatible virtual tabletop, as a desktop app.",
+  "author": "Cristobal Solar",
+  "license": "MIT",
+  "homepage": "https://cristosolar.github.io/dual-vtt/",
+  "private": true,
+  "main": "out/main.cjs",
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "bundle": "node scripts/bundle.mjs",
+    "start": "pnpm build:web && pnpm bundle && electron .",
+    "dist": "pnpm build:web && pnpm bundle && electron-builder --config electron-builder.config.cjs --publish never",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@daggerheart/server": "workspace:*",
+    "@types/node": "^22.10.2",
+    "electron": "45.5.0",
+    "electron-builder": "26.18.0",
+    "esbuild": "0.28.2",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,5 +1,6 @@
 {
   "name": "daggerheart-vtt",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -12,7 +13,9 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "validate": "pnpm -r validate"
+    "validate": "pnpm -r validate",
+    "desktop": "pnpm -F @daggerheart/desktop start",
+    "desktop:dist": "pnpm -F @daggerheart/desktop dist"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

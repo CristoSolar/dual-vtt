@@ -3,4 +3,6 @@ packages:
   - 'apps/*'
 allowBuilds:
   cloudflared: true
+  electron: true
+  electron-winstaller: false
   esbuild: true

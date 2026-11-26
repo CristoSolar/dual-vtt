@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Dual VTT app mark: an original d12 with a "D", bronze on obsidian.
+       Placeholder until proper art replaces it; not derived from any Darrington Press logo. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1626"/><stop offset="1" stop-color="#0b0812"/>
+    </linearGradient>
+    <linearGradient id="bronze" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1d58e"/><stop offset="0.5" stop-color="#d8a441"/><stop offset="1" stop-color="#8a6424"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="200" fill="url(#bg)"/>
+  <rect x="32" y="32" width="960" height="960" rx="200" fill="none" stroke="#3a2e1c" stroke-width="12"/>
+  <polygon points="512.0,307.0 512.0,122.0 741.2,196.5 882.9,391.5 707.0,448.7" fill="#2a2033"/><polygon points="707.0,448.7 882.9,391.5 882.9,632.5 741.2,827.5 632.5,677.8" fill="#221a2b"/><polygon points="632.5,677.8 741.2,827.5 512.0,902.0 282.8,827.5 391.5,677.8" fill="#17121f"/><polygon points="391.5,677.8 282.8,827.5 141.1,632.5 141.1,391.5 317.0,448.7" fill="#17121f"/><polygon points="317.0,448.7 141.1,391.5 282.8,196.5 512.0,122.0 512.0,307.0" fill="#221a2b"/>
+  <polygon points="512.0,307.0 707.0,448.7 632.5,677.8 391.5,677.8 317.0,448.7" fill="#2f2440"/>
+  <g fill="none" stroke="url(#bronze)" stroke-linejoin="round" stroke-linecap="round">
+    <polygon points="512.0,122.0 741.2,196.5 882.9,391.5 882.9,632.5 741.2,827.5 512.0,902.0 282.8,827.5 141.1,632.5 141.1,391.5 282.8,196.5" stroke-width="30"/>
+    <g stroke-width="16"><polygon points="512.0,307.0 707.0,448.7 632.5,677.8 391.5,677.8 317.0,448.7"/><line x1="512.0" y1="307.0" x2="512.0" y2="122.0"/><line x1="707.0" y1="448.7" x2="882.9" y2="391.5"/><line x1="632.5" y1="677.8" x2="741.2" y2="827.5"/><line x1="391.5" y1="677.8" x2="282.8" y2="827.5"/><line x1="317.0" y1="448.7" x2="141.1" y2="391.5"/></g>
+  </g>
+  <path fill="url(#bronze)" fill-rule="evenodd" d="M447 420 H530 C590 420 630 462 630 525 C630 588 590 630 530 630 H447 Z M487 456 V594 H526 C566 594 588 566 588 525 C588 484 566 456 526 456 Z"/>
+</svg>

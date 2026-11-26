@@ -9,3 +9,6 @@ dist
 
 # Darrington logo pack: only the two files the app uses are committed, under apps/web/public
 Darrington-Press-Community-Content-Logos*
+
+# Desktop app: esbuild bundle (electron-builder output goes to dist, ignored above)
+apps/desktop/out

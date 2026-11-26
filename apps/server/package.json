@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "exports": {
+    "./server": "./src/server.ts"
+  },
   "scripts": {
     "dev": "tsx watch --include 'src/**' --exclude '**/node_modules/**' src/main.ts",
     "start": "tsx src/main.ts",
