@@ -58,7 +58,7 @@
           <span data-l="en">A free Daggerheart virtual tabletop you run on your own computer. You host from home; your players join with a link.</span>
         </p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">
+          <a class="btn btn-primary" href="#descargar">
             <span data-l="es">Descargar</span><span data-l="en">Download</span>
           </a>
           <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt">
@@ -227,37 +227,48 @@
 
       <div class="play-grid">
         <div class="play-main">
-          <h3><span data-l="es">Necesitas</span><span data-l="en">You need</span></h3>
-          <p class="needs">
-            <span data-l="es"><a href="https://nodejs.org/">Node.js</a> 20 o superior y <a href="https://pnpm.io/installation">pnpm</a>. Si no tienes pnpm, instálalo con <code>npm install -g pnpm</code>.</span>
-            <span data-l="en"><a href="https://nodejs.org/">Node.js</a> 20 or newer and <a href="https://pnpm.io/installation">pnpm</a>. Without pnpm, install it with <code>npm install -g pnpm</code>.</span>
+          <h3 id="descargar"><span data-l="es">Descarga la aplicación</span><span data-l="en">Download the app</span></h3>
+          <div class="downloads">
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-win-x64.exe">Windows <span class="dl-kind">.exe</span></a>
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-mac-arm64.dmg">macOS Apple Silicon <span class="dl-kind">.dmg</span></a>
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-mac-x64.dmg">macOS Intel <span class="dl-kind">.dmg</span></a>
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-linux-x86_64.AppImage">Linux <span class="dl-kind">AppImage</span></a>
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-linux-amd64.deb">Debian / Ubuntu <span class="dl-kind">.deb</span></a>
+            <a class="btn btn-ghost" href="https://github.com/CristoSolar/dual-vtt/releases/latest/download/Dual-VTT-linux-x86_64.rpm">Fedora <span class="dl-kind">.rpm</span></a>
+          </div>
+          <p class="needs small">
+            <span data-l="es">Las versiones aún no están firmadas. En Windows, si aparece SmartScreen, pulsa <b>Más información → Ejecutar de todas formas</b>. En macOS, la primera vez abre la app con clic derecho → <b>Abrir</b> (o en Ajustes → Privacidad y seguridad → <b>Abrir igualmente</b>). En Linux, da permiso de ejecución al AppImage (<code>chmod +x</code>) o instala el .deb / .rpm.</span>
+            <span data-l="en">Releases are not signed yet. On Windows, if SmartScreen shows up, click <b>More info → Run anyway</b>. On macOS, open the app the first time with right-click → <b>Open</b> (or Settings → Privacy &amp; Security → <b>Open Anyway</b>). On Linux, make the AppImage executable (<code>chmod +x</code>) or install the .deb / .rpm.</span>
           </p>
 
           <h3><span data-l="es">Para el DJ</span><span data-l="en">For the GM</span></h3>
           <ol class="steps">
             <li>
-              <p><span data-l="es">Descarga el <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">zip</a> y descomprímelo, o clona el repositorio. Abre una terminal en esa carpeta.</span><span data-l="en">Download the <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">zip</a> and unpack it, or clone the repository. Open a terminal in that folder.</span></p>
-              <div class="code"><pre><code>git clone https://github.com/CristoSolar/dual-vtt.git
-cd dual-vtt</code></pre><button class="copy" type="button">Copiar</button></div>
+              <p><span data-l="es">Instala y abre <b>Dual VTT</b>. La primera vez te pide crear tu cuenta de DJ: elige usuario y contraseña.</span><span data-l="en">Install and open <b>Dual VTT</b>. The first time, it asks you to create your GM account: choose a username and password.</span></p>
             </li>
             <li>
-              <p><span data-l="es">Instala las dependencias.</span><span data-l="en">Install the dependencies.</span></p>
-              <div class="code"><pre><code>pnpm install</code></pre><button class="copy" type="button">Copiar</button></div>
+              <p><span data-l="es">En <b>Mis jugadores</b> crea una cuenta para cada jugador, y en <b>Mis campañas</b> crea la campaña e invítalos.</span><span data-l="en">Under <b>My players</b> create an account for each player, then create the campaign under <b>My campaigns</b> and invite them.</span></p>
             </li>
             <li>
-              <p><span data-l="es">Arranca el servidor. Compila la app y la sirve en <code>http://localhost:4000</code>.</span><span data-l="en">Start the server. It builds the app and serves it at <code>http://localhost:4000</code>.</span></p>
-              <div class="code"><pre><code>pnpm -F @daggerheart/server host</code></pre><button class="copy" type="button">Copiar</button></div>
+              <p><span data-l="es">Si juegan en tu misma red (casa, Wi-Fi), usa <b>Ayuda → Copiar enlace LAN</b> y compártelo.</span><span data-l="en">If they play on your network (home, Wi-Fi), use <b>Help → Copy LAN link</b> and share it.</span></p>
             </li>
             <li>
-              <p><span data-l="es">Entra como <code>gm</code> / <code>gm</code>; te pedirá cambiar la contraseña. En <b>Mis jugadores</b> crea una cuenta para cada jugador, y en <b>Mis campañas</b> crea la campaña e invítalos.</span><span data-l="en">Sign in as <code>gm</code> / <code>gm</code>; you will be asked to change the password. Under <b>My players</b> create an account for each player, then create the campaign under <b>My campaigns</b> and invite them.</span></p>
-            </li>
-            <li>
-              <p><span data-l="es">Al final de <b>Mis campañas</b>, pulsa <b>Generar enlace para jugadores</b>. Se abre un túnel de Cloudflare con una dirección pública: compártela. Dura mientras el servidor siga encendido.</span><span data-l="en">At the bottom of <b>My campaigns</b>, click <b>Generate link for players</b>. It opens a Cloudflare tunnel with a public address: share it. It lasts as long as the server keeps running.</span></p>
+              <p><span data-l="es">Para jugar por internet, al final de <b>Mis campañas</b> pulsa <b>Generar enlace para jugadores</b>. Se abre un túnel de Cloudflare con una dirección pública: compártela. Dura mientras la app siga abierta.</span><span data-l="en">To play over the internet, at the bottom of <b>My campaigns</b> click <b>Generate link for players</b>. It opens a Cloudflare tunnel with a public address: share it. It lasts as long as the app stays open.</span></p>
             </li>
           </ol>
         </div>
 
         <aside class="play-side">
+          <div class="side-block">
+            <h3><span data-l="es">Desde el código</span><span data-l="en">From source</span></h3>
+            <p><span data-l="es">Con <a href="https://nodejs.org/">Node.js</a> 20+ y <a href="https://pnpm.io/installation">pnpm</a>, descarga el <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">código fuente</a> o clona el repositorio:</span><span data-l="en">With <a href="https://nodejs.org/">Node.js</a> 20+ and <a href="https://pnpm.io/installation">pnpm</a>, download the <a href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip">source code</a> or clone the repository:</span></p>
+            <div class="code"><pre><code>git clone https://github.com/CristoSolar/dual-vtt.git
+cd dual-vtt
+pnpm install
+pnpm -F @daggerheart/server host</code></pre><button class="copy" type="button">Copiar</button></div>
+            <p class="small"><span data-l="es">Queda en <code>http://localhost:4000</code>; entra como <code>gm</code> / <code>gm</code> y cambia la contraseña.</span><span data-l="en">It runs at <code>http://localhost:4000</code>; sign in as <code>gm</code> / <code>gm</code> and change the password.</span></p>
+          </div>
+
           <div class="side-block">
             <h3><span data-l="es">Con Docker</span><span data-l="en">With Docker</span></h3>
             <p><span data-l="es">Si prefieres no instalar Node, desde la carpeta del proyecto:</span><span data-l="en">If you would rather not install Node, from the project folder:</span></p>
@@ -272,13 +283,14 @@ cd dual-vtt</code></pre><button class="copy" type="button">Copiar</button></div>
             <p class="small"><span data-l="es">Cualquiera con el enlace llega a la pantalla de acceso, así que usa contraseñas de verdad.</span><span data-l="en">Anyone with the link reaches the sign-in screen, so use real passwords.</span></p>
           </div>
 
-          <p class="small backup"><span data-l="es">Campañas, cuentas y personajes se guardan en <code>apps/server/.data/</code>. Haz copia de esa carpeta.</span><span data-l="en">Campaigns, accounts and characters are saved in <code>apps/server/.data/</code>. Back that folder up.</span></p>
+          <p class="small backup"><span data-l="es">Campañas, cuentas y personajes se guardan en la carpeta de datos de la app (<b>Ayuda → Abrir carpeta de datos</b>), o en <code>apps/server/.data/</code> si usas el código. Haz copia de esa carpeta.</span><span data-l="en">Campaigns, accounts and characters are saved in the app's data folder (<b>Help → Open data folder</b>), or in <code>apps/server/.data/</code> when running from source. Back that folder up.</span></p>
         </aside>
       </div>
 
       <div class="cta-row cta-end">
-        <a class="btn btn-primary" href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip"><span data-l="es">Descargar</span><span data-l="en">Download</span></a>
+        <a class="btn btn-primary" href="#descargar"><span data-l="es">Descargar</span><span data-l="en">Download</span></a>
         <a class="text-link" href="https://github.com/CristoSolar/dual-vtt/releases/latest"><span data-l="es">Versiones publicadas</span><span data-l="en">Published releases</span></a>
+        <a class="text-link" href="https://github.com/CristoSolar/dual-vtt/archive/refs/heads/main.zip"><span data-l="es">Código fuente (zip)</span><span data-l="en">Source code (zip)</span></a>
       </div>
     </section>
   </main>

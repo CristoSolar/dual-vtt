@@ -717,6 +717,28 @@ code {
   color: var(--muted);
 }
 
+/* One button per installer; the file type in a quieter weight. */
+.downloads {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.7rem;
+}
+.downloads .btn {
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+.dl-kind {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--faint);
+}
+#descargar {
+  scroll-margin-top: 2rem;
+}
+.needs.small {
+  margin-top: 1rem;
+}
+
 /* A real sequence, so it carries real numbers. */
 .steps {
   list-style: none;

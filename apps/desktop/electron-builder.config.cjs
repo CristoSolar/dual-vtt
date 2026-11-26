@@ -29,7 +29,9 @@ module.exports = {
   // Everything is bundled into out/main.cjs; there are no native modules to rebuild.
   npmRebuild: false,
   nodeGypRebuild: false,
-  artifactName: 'Dual-VTT-${version}-${os}-${arch}.${ext}',
+  // No version in the name, so the project page can link to
+  // releases/latest/download/<file> for every release.
+  artifactName: 'Dual-VTT-${os}-${arch}.${ext}',
 
   win: {
     target: [{ target: 'nsis', arch: ['x64'] }],

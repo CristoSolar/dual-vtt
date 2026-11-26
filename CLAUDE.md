@@ -20,9 +20,12 @@ pnpm -F @daggerheart/protocol typecheck   # one package's tsc
 pnpm -F @daggerheart/srd-data validate    # re-parse the JSON against the schemas
 pnpm -F @daggerheart/server start         # server without watch
 pnpm -F @daggerheart/server host          # build web same-origin, then serve app + API from :4000
+pnpm -F @daggerheart/desktop start        # Electron app from source (builds web + bundle first)
+pnpm -F @daggerheart/desktop dist         # installers for this OS into apps/desktop/dist
 ```
 
-Package names: `@daggerheart/srd-data`, `rules`, `character`, `protocol`, `server`, `web`.
+Package names: `@daggerheart/srd-data`, `rules`, `character`, `protocol`, `server`, `web`,
+`desktop`.
 
 There is no linter or formatter — `typecheck` under a strict tsconfig is the only
 static gate. Do not add one unasked.
@@ -39,7 +42,7 @@ app talks to its own origin. `/health` on the server reports campaign count.
 Dependencies run strictly one way; nothing imports upward.
 
 ```
-srd-data  →  rules  →  character  →  protocol  →  server
+srd-data  →  rules  →  character  →  protocol  →  server  →  desktop
                                               ↘  web
 ```
 
@@ -73,7 +76,11 @@ srd-data  →  rules  →  character  →  protocol  →  server
   server (`CampaignRecord.partyIds`: once per account per campaign, so swapping
   characters adds none) and passed in as `isNewToTheParty`. There is no socket
   claim: the only way into a room is the library link, which refuses an occupied seat.
-- **server** — transport only. Two layers:
+- **server** — transport only. `main.ts` only reads env vars and calls
+  `startServer(options)` (`server.ts`), which restores the stores, wires the routes and
+  the gateway, listens, and returns `{ port, close }`; `close()` is the shutdown path
+  (tunnel stop + final snapshots + `io.close()`). The desktop app calls the same
+  function with its own options. Two layers:
   - HTTP (`auth-http.ts`, `campaigns-http.ts`, `characters-http.ts`, `uploads.ts`,
     `tunnel-http.ts`, `static.ts`): login issues a token (`sessions.ts`, in-memory —
     restart signs everyone out, by design); GM creates player accounts and campaigns
@@ -85,7 +92,14 @@ srd-data  →  rules  →  character  →  protocol  →  server
     another GM's player answers 404 like a missing one. A reset or invite claims a
     legacy player for that GM unless it also sits at another GM's table. The GM's campaign page uses
     `GET /campaigns/:id` (detail), `PATCH /campaigns/:id` (name/status) and
-    `POST /campaigns/:id/prep` (one prep intent, broadcast to live sockets). All are
+    `POST /campaigns/:id/prep` (one prep intent, broadcast to live sockets).
+    `GET`/`POST /setup` (`setup-http.ts`) is the first-run door: only when
+    `startServer` gets `firstRunSetup: true` (desktop) and no GM account exists, it
+    creates the first GM (`SetupRequestSchema`, not flagged `mustChangePassword`) and
+    returns a `LoginResponse`; loopback callers only, rate-limited, 409 once a GM exists.
+    `pnpm start`/`host`/Docker pass `bootGm` from `GM_USERNAME`/`GM_PASSWORD` instead and
+    keep `/setup` closed. The web shows `SetupRoute` while `GET /setup` says
+    `needsSetup` (auth status `setup`). All are
     owner-only (403 otherwise, unknown id included). `/characters` is each account's own library (owner-only;
     someone else's id answers 404). HTTP routes that change a room get a `broadcast`
     callback (the gateway's `broadcastPatches`) so live sockets see the change.
@@ -113,6 +127,17 @@ srd-data  →  rules  →  character  →  protocol  →  server
     and unlinks entries whose room no longer holds them. Idempotent.
   - `tunnel.ts` opens at most one Cloudflare quick tunnel for the whole server,
     triggered by the GM from the UI.
+- **desktop** (`apps/desktop`) — Electron shell, no game logic. `src/main.ts` calls
+  `startServer` in the main process: data under `app.getPath('userData')/data`, web
+  build from `resources/web` (electron-builder `extraResources`), port 4000 or the next
+  free (`net.ts`), host `0.0.0.0` for LAN players, `bootGm: null` + `firstRunSetup`,
+  cloudflared downloaded to `userData/bin` (the asar is read-only). `before-quit` waits
+  for `close()`. Sandboxed renderer, no preload, navigation pinned to the local origin.
+  `scripts/bundle.mjs` (esbuild) bundles main + server + workspace packages into
+  `out/main.cjs`, so the package ships no `node_modules`; keep server deps bundleable
+  (no native modules). Config: `electron-builder.config.cjs` (version from the root
+  `package.json`). CI: `.github/workflows/desktop.yml` on `v*` tags. The icon in
+  `resources/` is a placeholder.
 - **web** — renders and dispatches. No game logic; state transitions live in
   `apps/web/src/state` as pure functions. Routing is `HashRouter`, so the static
   server never sees app paths. UI text goes through `t()` from `apps/web/src/i18n`;

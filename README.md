@@ -35,6 +35,7 @@ Regenerate with `pnpm dev` running: copy `docs/screenshots/shots.mts` into
 | `packages/protocol` | Shared wire types and the pure reducers the server and client both run |
 | `apps/server` | Node + Socket.io campaign rooms, authoritative state, JSON snapshots |
 | `apps/web` | React app: creation wizard, character sheet, GM panel, tactical map |
+| `apps/desktop` | Electron shell: runs the server in-process and opens a window on it |
 
 ## Commands
 
@@ -50,7 +51,67 @@ pnpm validate    # parse every JSON against its schema; fails the build on misma
 
 Requires Node 20+ and pnpm.
 
+## Instalar como aplicación
+
+The easiest way to run a table: download the installer for your system from
+[Releases](https://github.com/CristoSolar/dual-vtt/releases/latest). Nothing else
+to install — the app carries its own server.
+
+| System | File |
+|---|---|
+| Windows 10/11 (x64) | `Dual-VTT-win-x64.exe` — installs for your user only, no admin prompt; desktop and Start-menu shortcuts |
+| macOS Apple Silicon / Intel | `Dual-VTT-mac-arm64.dmg` / `Dual-VTT-mac-x64.dmg` — drag Dual VTT to Applications |
+| Linux | `Dual-VTT-linux-x86_64.AppImage`, `Dual-VTT-linux-amd64.deb` or `Dual-VTT-linux-x86_64.rpm` |
+
+The builds are **not signed** yet, so the system warns the first time:
+
+- **Windows**: SmartScreen says "Windows protected your PC". Click **More info →
+  Run anyway**.
+- **macOS**: "cannot be opened because Apple cannot check it". Right-click the app →
+  **Open**, or go to **System Settings → Privacy & Security** and click **Open
+  Anyway**. If macOS says the app "is damaged", it is the quarantine flag on an
+  unsigned download: `xattr -dr com.apple.quarantine "/Applications/Dual VTT.app"`.
+- **Linux**: make the AppImage executable (`chmod +x Dual-VTT-linux-x86_64.AppImage`,
+  then run it), or install the package (`sudo apt install ./Dual-VTT-linux-amd64.deb`,
+  `sudo dnf install ./Dual-VTT-linux-x86_64.rpm`).
+
+On first launch the app asks you to **create the GM account** (username and a
+password of 8+ characters) and signs you straight in; there is no default
+`gm`/`gm` in the app. Later launches open on the login screen.
+
+**Where your data lives** (campaigns, accounts, characters, uploaded maps). It
+survives updates and uninstalling; **Help → Open data folder** opens it, back it up:
+
+| System | Folder |
+|---|---|
+| Windows | `%APPDATA%\Dual VTT\data` |
+| macOS | `~/Library/Application Support/Dual VTT/data` |
+| Linux | `~/.config/Dual VTT/data` |
+
+**How players connect.** They install nothing; they open a link in their browser:
+
+- Same network (home Wi-Fi): **Help → Copy LAN link** copies
+  `http://<your-ip>:4000`. Allow Dual VTT through the firewall if your system asks.
+- Over the internet: at the bottom of **My campaigns**, click **Generate link for
+  players** (Cloudflare quick tunnel; it lasts while the app is open).
+
+The app uses port 4000, or the next free one if something else holds it (the LAN
+link always shows the real port). Closing the window stops the server and saves
+everything. A second launch just brings the open window forward.
+
+Building the installers yourself: `pnpm desktop:dist` (current OS; Linux builds
+AppImage/deb/rpm, rpm needs `rpmbuild`). `pnpm desktop` runs the app from source.
+Releases are built by `.github/workflows/desktop.yml` when a `v*` tag matching
+`package.json`'s version is pushed; it leaves a draft release to publish by hand.
+Optional signing secrets: `WIN_CSC_LINK`/`WIN_CSC_KEY_PASSWORD` (Windows),
+`MAC_CSC_LINK`/`MAC_CSC_KEY_PASSWORD` plus `APPLE_ID`/`APPLE_APP_SPECIFIC_PASSWORD`/
+`APPLE_TEAM_ID` (macOS notarization). The app icon in `apps/desktop/resources` is a
+placeholder (an original d12 mark, regenerated from `icon.svg`) until proper art
+replaces it.
+
 ## Run it on your machine
+
+From source, for development or a server you keep running:
 
 ```sh
 git clone https://github.com/CristoSolar/dual-vtt.git
