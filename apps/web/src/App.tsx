@@ -18,6 +18,7 @@ import { MyCharactersRoute } from './routes/MyCharactersRoute.js';
 import { PlayerHomeRoute } from './routes/PlayerHomeRoute.js';
 import { ChangePasswordRoute } from './routes/ChangePasswordRoute.js';
 import { LoginRoute } from './routes/LoginRoute.js';
+import { SetupRoute } from './routes/SetupRoute.js';
 import { MapRoute } from './routes/MapRoute.js';
 import { HelpRoute } from './routes/HelpRoute.js';
 import { PlayersRoute } from './routes/PlayersRoute.js';
@@ -174,6 +175,15 @@ function Shell() {
         <LocaleToggle floating />
         <p className="muted">{t('common.loading')}</p>
       </div>
+    );
+  }
+
+  if (auth.status === 'setup') {
+    return (
+      <>
+        <LocaleToggle floating />
+        <SetupRoute error={auth.error} pending={auth.pending} onSetup={auth.setup} />
+      </>
     );
   }
 

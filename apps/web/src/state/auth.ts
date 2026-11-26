@@ -1,4 +1,4 @@
-import { UserSchema, type User } from '@daggerheart/protocol';
+import { LoginResponseSchema, SetupStatusSchema, UserSchema, type User } from '@daggerheart/protocol';
 import { useCallback, useEffect, useState } from 'react';
 
 import { t } from '../i18n/index.js';
@@ -58,7 +58,28 @@ export function isAuthRejection(error: { message: string }): boolean {
   return error.message === 'unauthorized';
 }
 
-export type AuthStatus = 'loading' | 'signedOut' | 'signedIn';
+/**
+ * Whether the server still has no GM and offers to create one (desktop app, first
+ * run). Anything but a clear yes — an older server without the route, a network
+ * error — means "no": the login screen is the safe default.
+ */
+export function parseSetupStatus(body: unknown): boolean {
+  const parsed = SetupStatusSchema.safeParse(body);
+  return parsed.success && parsed.data.needsSetup;
+}
+
+async function fetchNeedsSetup(): Promise<boolean> {
+  try {
+    const response = await fetch(`${SERVER_URL}/setup`);
+    if (!response.ok) return false;
+    return parseSetupStatus(await response.json());
+  } catch {
+    return false;
+  }
+}
+
+/** `setup` is the first-run screen: no GM exists yet, so there is nobody to sign in as. */
+export type AuthStatus = 'loading' | 'setup' | 'signedOut' | 'signedIn';
 
 export interface AuthConnection {
   status: AuthStatus;
@@ -75,6 +96,8 @@ export interface AuthConnection {
    * again. Only the token goes: drafts and the active campaign stay put. */
   expire: () => void;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  /** Creates the first GM (status `setup` only) and signs it in. */
+  setup: (username: string, password: string) => Promise<void>;
 }
 
 /**
@@ -89,8 +112,11 @@ export function useAuth(storage: StorageLike): AuthConnection {
 
   useEffect(() => {
     const saved = loadAuth(storage);
+    const signedOut = (): void => {
+      void fetchNeedsSetup().then((needed) => setStatus(needed ? 'setup' : 'signedOut'));
+    };
     if (saved === null) {
-      setStatus('signedOut');
+      signedOut();
       return;
     }
     fetch(`${SERVER_URL}/me`, { headers: { authorization: `Bearer ${saved.token}` } })
@@ -106,7 +132,7 @@ export function useAuth(storage: StorageLike): AuthConnection {
       })
       .catch(() => {
         saveAuth(storage, null);
-        setStatus('signedOut');
+        signedOut();
       });
   }, [storage]);
 
@@ -186,6 +212,44 @@ export function useAuth(storage: StorageLike): AuthConnection {
     [auth, storage],
   );
 
+  const setup = useCallback(
+    async (username: string, password: string) => {
+      setError(null);
+      setPending(true);
+      try {
+        const response = await fetch(`${SERVER_URL}/setup`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        }).catch(() => null);
+        if (response === null) {
+          setError(t('setup.failed'));
+          return;
+        }
+        if (response.status === 409) {
+          setError(t('setup.alreadyDone'));
+          setStatus('signedOut');
+          return;
+        }
+        if (response.status === 400) {
+          setError(t('setup.invalid'));
+          return;
+        }
+        const parsed = LoginResponseSchema.safeParse(await response.json().catch(() => null));
+        if (!response.ok || !parsed.success) {
+          setError(t('setup.failed'));
+          return;
+        }
+        saveAuth(storage, parsed.data);
+        setAuth(parsed.data);
+        setStatus('signedIn');
+      } finally {
+        setPending(false);
+      }
+    },
+    [storage],
+  );
+
   return {
     status,
     user: auth?.user ?? null,
@@ -196,5 +260,6 @@ export function useAuth(storage: StorageLike): AuthConnection {
     logout,
     expire,
     changePassword,
+    setup,
   };
 }

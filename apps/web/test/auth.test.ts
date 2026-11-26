@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isAuthRejection, loadAuth, saveAuth } from '../src/state/auth.js';
+import { isAuthRejection, loadAuth, parseSetupStatus, saveAuth } from '../src/state/auth.js';
 import { fakeStorage } from './helpers.js';
 
 const user = { id: 'u-1', username: 'alex', role: 'player' as const, mustChangePassword: false };
@@ -54,5 +54,15 @@ describe('isAuthRejection', () => {
     expect(isAuthRejection(new Error('websocket error'))).toBe(false);
     expect(isAuthRejection(new Error('timeout'))).toBe(false);
     expect(isAuthRejection(new Error('xhr poll error'))).toBe(false);
+  });
+});
+
+describe('parseSetupStatus', () => {
+  it('is true only for a well-formed yes', () => {
+    expect(parseSetupStatus({ needsSetup: true })).toBe(true);
+    expect(parseSetupStatus({ needsSetup: false })).toBe(false);
+    expect(parseSetupStatus({ needsSetup: 'yes' })).toBe(false);
+    expect(parseSetupStatus(null)).toBe(false);
+    expect(parseSetupStatus({})).toBe(false);
   });
 });

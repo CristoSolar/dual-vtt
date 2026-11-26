@@ -289,6 +289,17 @@ export const es = {
   'auth.unexpectedResponse': 'El servidor respondió algo inesperado.',
   'auth.wrongCurrentPassword': 'La contraseña actual no es correcta.',
 
+  // first-run setup (desktop app, no GM account yet)
+  'setup.overline': 'Primera vez',
+  'setup.title': 'Crea tu cuenta de DJ',
+  'setup.description':
+    'Esta mesa todavía no tiene Director de Juego. Elige tu usuario y contraseña: con ellos entrarás siempre y crearás las cuentas de tus jugadores.',
+  'setup.submit': 'Crear cuenta y entrar',
+  'setup.submitting': 'Creando…',
+  'setup.invalid': 'Revisa el usuario (máximo 40 caracteres) y la contraseña.',
+  'setup.alreadyDone': 'Esta mesa ya tiene DJ. Inicia sesión.',
+  'setup.failed': 'No se pudo crear la cuenta. Inténtalo de nuevo.',
+
   // character-creation wizard
   'wizard.stepTitle.1': 'Clase y Subclase',
   'wizard.stepTitle.2': 'Herencia',

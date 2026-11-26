@@ -274,6 +274,16 @@ export const en: Record<keyof typeof es, string> = {
   'auth.unexpectedResponse': 'The server responded with something unexpected.',
   'auth.wrongCurrentPassword': 'The current password is incorrect.',
 
+  'setup.overline': 'First run',
+  'setup.title': 'Create your GM account',
+  'setup.description':
+    'This table has no Game Master yet. Choose your username and password: you will sign in with them and create your players’ accounts.',
+  'setup.submit': 'Create account and sign in',
+  'setup.submitting': 'Creating…',
+  'setup.invalid': 'Check the username (40 characters at most) and the password.',
+  'setup.alreadyDone': 'This table already has a GM. Sign in.',
+  'setup.failed': 'The account could not be created. Try again.',
+
   // character-creation wizard
   'wizard.stepTitle.1': 'Class and Subclass',
   'wizard.stepTitle.2': 'Heritage',
