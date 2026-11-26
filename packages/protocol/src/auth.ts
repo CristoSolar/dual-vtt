@@ -71,3 +71,18 @@ export const ManagedPlayerSchema = z.object({
   lastLoginAt: z.number().nullable(),
 });
 export type ManagedPlayer = z.infer<typeof ManagedPlayerSchema>;
+
+/**
+ * First-run setup (desktop app): while the server has no GM account at all, `GET
+ * /setup` says so and `POST /setup` creates the first one — once. The password is
+ * the GM's own choice, so it is not flagged for change. The reply is a
+ * `LoginResponse`, signing the new GM straight in.
+ */
+export const SetupStatusSchema = z.object({ needsSetup: z.boolean() });
+export type SetupStatus = z.infer<typeof SetupStatusSchema>;
+
+export const SetupRequestSchema = z.object({
+  username: z.string().trim().min(1).max(40),
+  password: z.string().min(MIN_PASSWORD_LENGTH),
+});
+export type SetupRequest = z.infer<typeof SetupRequestSchema>;

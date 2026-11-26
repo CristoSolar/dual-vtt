@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
-import { bin, install, Tunnel } from 'cloudflared';
+import { bin, install, Tunnel, use } from 'cloudflared';
 
 /**
  * Owns the lifecycle of the (at most one) Cloudflare quick tunnel this server ever
@@ -19,6 +19,10 @@ export class TunnelManager {
     /** Where the web app's build lives, so a tunnel is never opened onto a server
      * with nothing to serve at `/`. */
     private readonly webDistDir: string,
+    /** Where cloudflared lives (downloaded there on first use). Default: inside the
+     * npm package, which is read-only once packaged — the desktop app passes a path
+     * under its userData instead. */
+    private readonly cloudflaredBin: string = bin,
   ) {}
 
   getUrl(): string | null {
@@ -46,7 +50,8 @@ export class TunnelManager {
   private async start(): Promise<string> {
     this.ensureWebBuilt();
 
-    if (!existsSync(bin)) await install(bin);
+    if (!existsSync(this.cloudflaredBin)) await install(this.cloudflaredBin);
+    use(this.cloudflaredBin);
 
     const tunnel = Tunnel.quick(`http://localhost:${this.port}`);
     this.tunnel = tunnel;

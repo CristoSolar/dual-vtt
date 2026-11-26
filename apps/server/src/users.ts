@@ -88,8 +88,9 @@ export class UserStore {
   }
 
   /**
-   * New accounts always start `mustChangePassword: true` — a GM-set password is
-   * temporary by design. Returns null if the username is already taken.
+   * New accounts start `mustChangePassword: true` — a GM-set password is temporary
+   * by design. The first-run GM, who chose their own, passes false. Returns null if
+   * the username is already taken.
    *
    * The record is inserted before the hash is awaited, so two concurrent creates
    * cannot both pass the name check and end up with one unreachable duplicate.
@@ -101,6 +102,7 @@ export class UserStore {
     password: string,
     role: UserRole,
     createdBy: string | null = null,
+    mustChangePassword = true,
   ): Promise<User | null> {
     const trimmed = username.trim();
     if (trimmed === '' || this.findByUsername(trimmed) !== null) return null;
@@ -109,7 +111,7 @@ export class UserStore {
       id,
       username: trimmed,
       role,
-      mustChangePassword: true,
+      mustChangePassword,
       passwordHash: '',
       createdBy,
       lastLoginAt: null,
